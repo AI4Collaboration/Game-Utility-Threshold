@@ -23,11 +23,20 @@ incentive changes sign.
 python3 -m unittest discover -v
 python3 utility_threshold_sim.py
 python3 utility_threshold_inspect.py
+python3 multi_model_eval.py
 ```
 
 The last command runs the proof-carrying deterministic policy and writes an
 Inspect log to `logs/`. For an LLM evaluation, invoke
 `utility_threshold_model_eval()` through Inspect with your chosen model.
+
+### Cross-provider model evaluation
+
+Copy `.env.example` to `.env` and set `OPENROUTER_API_KEY`. The `.env` file is
+ignored by Git. `multi_model_eval.py` then evaluates the same 25 scenarios via
+OpenRouter's OpenAI, Anthropic, Google, and Meta model families, using
+temperature 0 and an eight-token output budget. Each model receives a separate
+Inspect log, preserving the same per-decision observability metadata.
 
 ## Inspect observability
 
