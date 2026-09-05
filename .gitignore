@@ -1,3 +1,7 @@
 __pycache__/
 *.py[cod]
 .env
+.DS_Store
+logs/*.eval
+logs/*.log
+logs/*.log.gz

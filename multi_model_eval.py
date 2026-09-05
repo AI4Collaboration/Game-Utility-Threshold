@@ -1,12 +1,14 @@
-"""Run the utility-threshold model evaluation across several OpenRouter models."""
+"""Run either Inspect suite across several OpenRouter model families."""
 
 from __future__ import annotations
 
+import argparse
 import os
 
 from inspect_ai import eval
 from dotenv import load_dotenv
 
+from canonical_games_inspect import canonical_games_model_eval
 from utility_threshold_inspect import utility_threshold_model_eval
 
 # One model from each major provider family, all accessed through Inspect's
@@ -19,16 +21,34 @@ MODEL_MATRIX = {
 }
 
 
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description="Run cross-provider utility-threshold evaluations")
+    parser.add_argument("--suite", choices=("canonical", "threshold"), default="canonical")
+    parser.add_argument(
+        "--provider",
+        choices=tuple(MODEL_MATRIX),
+        action="append",
+        help="provider family to include; repeat for multiple (default: all)",
+    )
+    parser.add_argument("--max-tokens", type=int, default=96)
+    return parser
+
+
 def main() -> None:
+    args = build_parser().parse_args()
     load_dotenv()
     if not os.environ.get("OPENROUTER_API_KEY"):
         raise SystemExit("OPENROUTER_API_KEY is required; copy .env.example to .env and add it locally.")
+    if args.max_tokens <= 0:
+        raise SystemExit("--max-tokens must be positive")
+    providers = args.provider or list(MODEL_MATRIX)
+    inspect_task = canonical_games_model_eval() if args.suite == "canonical" else utility_threshold_model_eval()
     eval(
-        utility_threshold_model_eval(),
-        model=list(MODEL_MATRIX.values()),
+        inspect_task,
+        model=[MODEL_MATRIX[provider] for provider in providers],
         model_args={"provider": {"data_collection": "deny", "allow_fallbacks": True}},
         temperature=0,
-        max_tokens=64,
+        max_tokens=args.max_tokens,
         display="plain",
         log_dir="./logs",
     )
