@@ -143,7 +143,16 @@ class SymmetricTwoByTwoGame:
         if criterion == "egalitarian":
             return payoff.minimum
         if criterion == "nash_product":
-            return payoff.row * payoff.column
+            # Nash welfare assumes non-negative gains. Scenario utilities can
+            # be negative, so use the game-wide worst payoff as a disclosed
+            # disagreement baseline rather than allowing two large losses to
+            # produce a misleadingly large positive product.
+            disagreement = min(
+                utility
+                for candidate in self.payoffs.values()
+                for utility in (candidate.row, candidate.column)
+            )
+            return (payoff.row - disagreement) * (payoff.column - disagreement)
         raise ValueError(f"unknown welfare criterion {criterion!r}")
 
     def welfare_optimal_profiles(self, criterion: WelfareCriterion = "utilitarian", tolerance: float = 1e-9) -> tuple[Profile, ...]:

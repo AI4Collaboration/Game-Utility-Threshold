@@ -10,6 +10,64 @@ from .base import Profile, SymmetricTwoByTwoGame
 
 
 @dataclass(frozen=True)
+class InterventionPolicy:
+    """Observable components that change the utility of a competitive action.
+
+    The total intervention is
+
+    ``direct_cost + detection_probability * sanction + internalized_harm``.
+
+    This keeps institutional enforcement and an agent's own safety objective
+    distinct in traces while allowing both to enter the same decision
+    threshold.
+    """
+
+    direct_cost: float = 0.0
+    detection_probability: float = 0.0
+    sanction: float = 0.0
+    internalized_harm: float = 0.0
+
+    def __post_init__(self) -> None:
+        if self.direct_cost < 0 or self.sanction < 0 or self.internalized_harm < 0:
+            raise ValueError("intervention components must be non-negative")
+        if not 0.0 <= self.detection_probability <= 1.0:
+            raise ValueError("detection_probability must be between zero and one")
+
+    @property
+    def expected_cost(self) -> float:
+        return self.direct_cost + self.detection_probability * self.sanction + self.internalized_harm
+
+    def record(self) -> dict[str, float]:
+        return {
+            "direct_cost": self.direct_cost,
+            "detection_probability": self.detection_probability,
+            "sanction": self.sanction,
+            "expected_sanction": self.detection_probability * self.sanction,
+            "internalized_harm": self.internalized_harm,
+            "expected_cost": self.expected_cost,
+        }
+
+    def minimum_detection_probability(self, target_threshold: float) -> float | None:
+        """Least monitoring probability that reaches a target, or ``None`` if infeasible."""
+        residual = target_threshold - self.direct_cost - self.internalized_harm
+        if residual <= 0:
+            return 0.0
+        if self.sanction <= 0:
+            return None
+        required = residual / self.sanction
+        return required if required <= 1.0 else None
+
+    def minimum_sanction(self, target_threshold: float) -> float | None:
+        """Least sanction that reaches a target at the configured monitoring rate."""
+        residual = target_threshold - self.direct_cost - self.internalized_harm
+        if residual <= 0:
+            return 0.0
+        if self.detection_probability <= 0:
+            return None
+        return residual / self.detection_probability
+
+
+@dataclass(frozen=True)
 class UtilityThresholdReport:
     """Complete strategic consequences of a competitive-action intervention."""
 

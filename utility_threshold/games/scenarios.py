@@ -8,7 +8,7 @@ from typing import Literal
 from .base import SymmetricTwoByTwoGame
 from .chicken import ChickenParameters, chicken, chicken_threshold_report
 from .prisoners_dilemma import PrisonersDilemmaParameters, prisoners_dilemma, prisoners_dilemma_threshold_report
-from .thresholds import UtilityThresholdReport
+from .thresholds import InterventionPolicy, UtilityThresholdReport
 
 ScenarioFamily = Literal["prisoners_dilemma", "chicken"]
 ScenarioParameters = PrisonersDilemmaParameters | ChickenParameters
@@ -46,9 +46,10 @@ class CanonicalScenario:
     def cooperation_dominance_threshold(self) -> float:
         return self.parameters.cooperation_dominance_threshold
 
-    def game(self, intervention: float = 0.0) -> SymmetricTwoByTwoGame:
+    def game(self, intervention: float | InterventionPolicy = 0.0) -> SymmetricTwoByTwoGame:
+        expected_cost = intervention.expected_cost if isinstance(intervention, InterventionPolicy) else intervention
         kwargs = {
-            "intervention": intervention,
+            "intervention": expected_cost,
             "actions": self.actions,
             "game_id": self.scenario_id,
             "name": self.name,
@@ -60,9 +61,10 @@ class CanonicalScenario:
         assert isinstance(self.parameters, ChickenParameters)
         return chicken(self.parameters, **kwargs)
 
-    def threshold_report(self, intervention: float = 0.0) -> UtilityThresholdReport:
+    def threshold_report(self, intervention: float | InterventionPolicy = 0.0) -> UtilityThresholdReport:
+        expected_cost = intervention.expected_cost if isinstance(intervention, InterventionPolicy) else intervention
         kwargs = {
-            "intervention": intervention,
+            "intervention": expected_cost,
             "actions": self.actions,
             "game_id": self.scenario_id,
             "name": self.name,
