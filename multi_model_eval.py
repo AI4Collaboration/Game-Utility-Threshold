@@ -30,7 +30,7 @@ def build_parser() -> argparse.ArgumentParser:
         action="append",
         help="provider family to include; repeat for multiple (default: all)",
     )
-    parser.add_argument("--max-tokens", type=int, default=96)
+    parser.add_argument("--max-tokens", type=int, default=256)
     return parser
 
 
@@ -49,6 +49,7 @@ def main() -> None:
         model_args={"provider": {"data_collection": "deny", "allow_fallbacks": True}},
         temperature=0,
         max_tokens=args.max_tokens,
+        reasoning_effort="minimal",
         display="plain",
         log_dir="./logs",
     )

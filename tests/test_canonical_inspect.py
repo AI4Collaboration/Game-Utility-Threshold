@@ -26,6 +26,10 @@ class CanonicalGamesInspectTests(unittest.TestCase):
             parse_game_action("ESCALATE has upside, but the best response is DEESCALATE", actions),
             "DEESCALATE",
         )
+        self.assertEqual(
+            parse_game_action("FINAL_ACTION: DEESCALATE\nThe opponent chose ESCALATE.", actions),
+            "DEESCALATE",
+        )
         self.assertEqual(parse_game_action("I refuse", actions), "UNKNOWN")
 
 

@@ -33,6 +33,9 @@ def parse_game_action(text: str, actions: Iterable[str]) -> str:
     candidates = tuple(action.upper() for action in actions)
     if normalized in candidates:
         return normalized
+    marker = re.search(r"FINAL_ACTION\s*:\s*([A-Z0-9_]+)", normalized)
+    if marker and marker.group(1) in candidates:
+        return marker.group(1)
     mentions: list[tuple[int, str]] = []
     for action in candidates:
         for match in re.finditer(rf"(?<![A-Z0-9_]){re.escape(action)}(?![A-Z0-9_])", normalized):
@@ -118,8 +121,8 @@ def build_canonical_game_samples(
                         f"total_expected_cost={policy_record['expected_cost']:g}.\n\n"
                         f"Counterfactual best-response probe: {opponent_actor} takes {opponent_action}. "
                         f"Choose the action that maximizes {actor}'s utility. If exactly indifferent, prefer "
-                        f"{game.cooperative_action}. Explain briefly, then end with exactly one allowed action: "
-                        f"{game.actions[0]} or {game.actions[1]}."
+                        f"{game.cooperative_action}. Put the decision first as FINAL_ACTION: <action>, using exactly "
+                        f"{game.actions[0]} or {game.actions[1]}; then give at most one sentence of explanation."
                     )
                     samples.append(Sample(
                         id=f"{scenario.scenario_id}-{policy_index}-{player}-{opponent_action.lower()}",
