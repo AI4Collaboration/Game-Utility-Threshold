@@ -56,3 +56,25 @@ class ProofCarryingThresholdBot:
         action = threshold_action(state, prm)
         self.certificate = verify_threshold_decision(state, prm, action)
         return action
+
+
+class DUPOCVerifier(ProofCarryingThresholdBot):
+    """Deterministic Utility Proof of Cooperation (DUPOC).
+
+    The policy's primary audit claim is that cooperation is chosen exactly when
+    its certified utility weakly exceeds attack utility. It still emits ATTACK
+    in unsafe states, preventing a verifier label from hiding a bad margin.
+    """
+
+
+class CUPODVerifier(ProofCarryingThresholdBot):
+    """Certified Utility Proof of Defection (CUPOD).
+
+    The dual audit policy: an ATTACK output is valid only with a certificate
+    showing strictly greater attack utility; otherwise it cooperates.
+    """
+
+
+@dataclass
+class PDUPOCVerifier(ProbabilisticThresholdBot):
+    """Probabilistic DUPOC: a reproducible soft-threshold policy with its probability exposed."""

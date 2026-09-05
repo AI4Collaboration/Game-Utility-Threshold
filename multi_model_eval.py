@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 
 from inspect_ai import eval
-from inspect_ai.model import GenerateConfig
+from dotenv import load_dotenv
 
 from utility_threshold_inspect import utility_threshold_model_eval
 
@@ -20,13 +20,15 @@ MODEL_MATRIX = {
 
 
 def main() -> None:
+    load_dotenv()
     if not os.environ.get("OPENROUTER_API_KEY"):
         raise SystemExit("OPENROUTER_API_KEY is required; copy .env.example to .env and add it locally.")
     eval(
         utility_threshold_model_eval(),
         model=list(MODEL_MATRIX.values()),
         model_args={"provider": {"data_collection": "deny", "allow_fallbacks": True}},
-        config=GenerateConfig(temperature=0, max_tokens=8),
+        temperature=0,
+        max_tokens=64,
         display="plain",
         log_dir="./logs",
     )

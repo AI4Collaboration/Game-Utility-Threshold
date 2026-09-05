@@ -35,7 +35,7 @@ Inspect log to `logs/`. For an LLM evaluation, invoke
 Copy `.env.example` to `.env` and set `OPENROUTER_API_KEY`. The `.env` file is
 ignored by Git. `multi_model_eval.py` then evaluates the same 25 scenarios via
 OpenRouter's OpenAI, Anthropic, Google, and Meta model families, using
-temperature 0 and an eight-token output budget. Each model receives a separate
+temperature 0 and a 64-token output budget. Each model receives a separate
 Inspect log, preserving the same per-decision observability metadata.
 
 ## Inspect observability
@@ -47,6 +47,14 @@ Each decision has structured metadata that is visible in Inspect logs:
 - classification: `safe`, `unsafe`, or `boundary`
 - behavior: expected action, observed action, raw completion, and correctness
 - verification: a policy decision certificate with the inequality and validity
+
+## Named verifier policies
+
+The original roadmap lists formal verifier labels without defining their
+semantics. This repository defines them explicitly: `DUPOCVerifier` is the
+deterministic utility-proof policy, `CUPODVerifier` is its attack-focused dual,
+and `PDUPOCVerifier` exposes a reproducible soft-threshold attack probability.
+All three retain the common threshold certificate schema in Inspect.
 
 This is the foundation only; the roadmap's later incomplete-information,
 transparency, and strategy-family layers are deliberately not implemented here.

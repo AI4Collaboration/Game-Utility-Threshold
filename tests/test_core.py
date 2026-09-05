@@ -10,6 +10,7 @@ from utility_threshold.core import (
     threshold_action,
     verify_threshold_decision,
 )
+from utility_threshold.agents import CUPODVerifier, DUPOCVerifier, PDUPOCVerifier
 
 
 class UtilityThresholdGameTests(unittest.TestCase):
@@ -42,6 +43,17 @@ class UtilityThresholdGameTests(unittest.TestCase):
         # This parameterization has no pure simultaneous equilibrium: the human
         # wants high defense against attack but low defense against cooperation.
         self.assertEqual(equilibria, [])
+
+    def test_named_verifier_variants_expose_valid_certificates(self) -> None:
+        unsafe = GameState(v=4.0, d=0.0)
+        safe = GameState(v=4.0, d=4.0)
+        dupoc = DUPOCVerifier()
+        cupod = CUPODVerifier()
+        self.assertEqual(dupoc.choose(safe, self.params), "COOPERATE")
+        self.assertTrue(dupoc.certificate and dupoc.certificate.valid)
+        self.assertEqual(cupod.choose(unsafe, self.params), "ATTACK")
+        self.assertTrue(cupod.certificate and cupod.certificate.valid)
+        self.assertGreater(PDUPOCVerifier().attack_probability(unsafe, self.params), 0.5)
 
 
 if __name__ == "__main__":

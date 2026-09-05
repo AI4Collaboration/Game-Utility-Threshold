@@ -1,12 +1,12 @@
 # Lean foundation
 
 `UtilityThreshold.lean` is a Lean 4 formalization of the unsaturated base
-utility-threshold game. It proves the two threshold implications and defines a
-proof-carrying `DecisionWitness` that mirrors the Python certificate recorded
+utility-threshold game. It uses utilities scaled by 20 to keep the linear game
+in exact integer arithmetic, proves the two threshold implications, and defines
+a proof-carrying `DecisionWitness` that mirrors the Python certificate recorded
 in Inspect logs.
 
-The repository does not currently include a Lean toolchain, so this artifact is
-not validated in CI yet. Once Lean 4 is available, verify it with:
+Verify it with Lean 4:
 
 ```bash
 lean UtilityThreshold.lean

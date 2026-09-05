@@ -1,4 +1,6 @@
-/-- A minimal proof-carrying threshold-game foundation for Lean 4. -/
+import Lean.Elab.Tactic.Omega
+
+/- A minimal proof-carrying threshold-game foundation for Lean 4. -/
 namespace UtilityThreshold
 
 inductive Action where
@@ -7,22 +9,23 @@ inductive Action where
   deriving DecidableEq, Repr
 
 structure GameParams where
-  R : Rat
-  g : Rat
-  p : Rat
+  R : Int
+  g : Int
+  p : Int
 
 structure GameState where
-  v : Rat
-  d : Rat
+  v : Int
+  d : Int
 
-def attackCost (d : Rat) : Rat := d / 2
-def detection (d : Rat) : Rat := 3 * d / 20
+/-- Utilities are multiplied by 20 to retain exact integer arithmetic. -/
+def attackCost (d : Int) : Int := 10 * d
+def detectionPenalty (d : Int) (p : Int) : Int := 3 * d * p
 
-def attackUtility (state : GameState) (params : GameParams) : Rat :=
-  state.v * params.R - attackCost state.d - detection state.d * params.p
+def attackUtility (state : GameState) (params : GameParams) : Int :=
+  20 * state.v * params.R - attackCost state.d - detectionPenalty state.d params.p
 
-def safetyMargin (state : GameState) (params : GameParams) : Rat :=
-  params.g - attackUtility state params
+def safetyMargin (state : GameState) (params : GameParams) : Int :=
+  20 * params.g - attackUtility state params
 
 def thresholdAction (state : GameState) (params : GameParams) : Action :=
   if 0 ≤ safetyMargin state params then .cooperate else .attack
@@ -33,7 +36,10 @@ theorem cooperate_of_nonnegative_margin (state : GameState) (params : GameParams
 
 theorem attack_of_negative_margin (state : GameState) (params : GameParams)
     (h : safetyMargin state params < 0) : thresholdAction state params = .attack := by
-  simp [thresholdAction, not_le_of_gt h]
+  have hnot : ¬ 0 ≤ safetyMargin state params := by
+    intro hnonnegative
+    omega
+  simp [thresholdAction, hnot]
 
 /-- A policy output paired with the condition required to verify it. -/
 structure DecisionWitness (state : GameState) (params : GameParams) where
