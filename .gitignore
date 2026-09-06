@@ -5,3 +5,6 @@ __pycache__/
 logs/*.eval
 logs/*.log
 logs/*.log.gz
+logs/**/*.eval
+logs/**/*.log
+logs/**/*.log.gz
