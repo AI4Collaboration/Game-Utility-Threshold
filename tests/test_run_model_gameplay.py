@@ -22,6 +22,7 @@ class ModelGameplayRunnerTests(unittest.TestCase):
                 "column_provider": "anthropic",
                 "scenario_id": "frontier_deployment_race",
                 "treatment": "baseline",
+                "objective": "individual_expected_utility",
                 "cooperative_action": "SAFE",
                 "scores": {"cooperative_action_rate": 0.5, "expected_welfare": 2.0},
                 "joint_outcome": {
@@ -36,6 +37,7 @@ class ModelGameplayRunnerTests(unittest.TestCase):
                 "column_provider": "openai",
                 "scenario_id": "autonomous_escalation",
                 "treatment": "mediator",
+                "objective": "individual_expected_utility",
                 "cooperative_action": "SAFE",
                 "scores": {"cooperative_action_rate": 1.0, "expected_welfare": 4.0},
                 "joint_outcome": {

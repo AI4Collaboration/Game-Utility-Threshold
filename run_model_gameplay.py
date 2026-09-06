@@ -16,6 +16,7 @@ from inspect_ai import eval
 from inspect_ai.model import get_model
 
 from model_gameplay_inspect import (
+    GAMEPLAY_OBJECTIVES,
     GAMEPLAY_SCENARIOS,
     GAMEPLAY_TREATMENTS,
     model_gameplay_eval,
@@ -47,10 +48,12 @@ def _numeric_means(records: Iterable[Mapping[str, Any]]) -> dict[str, float]:
 def aggregate_gameplay_records(records: list[dict[str, Any]]) -> dict[str, Any]:
     by_treatment: dict[str, list[dict[str, Any]]] = defaultdict(list)
     by_scenario: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    by_objective: dict[str, list[dict[str, Any]]] = defaultdict(list)
     by_pair: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for record in records:
         by_treatment[record["treatment"]].append(record)
         by_scenario[record["scenario_id"]].append(record)
+        by_objective[record["objective"]].append(record)
         by_pair[f"{record['row_provider']}->{record['column_provider']}"].append(record)
 
     model_roles: dict[str, dict[str, list[float]]] = defaultdict(
@@ -96,6 +99,10 @@ def aggregate_gameplay_records(records: list[dict[str, Any]]) -> dict[str, Any]:
             key: {"games": len(group), **_numeric_means(group)}
             for key, group in sorted(by_scenario.items())
         },
+        "by_objective": {
+            key: {"games": len(group), **_numeric_means(group)}
+            for key, group in sorted(by_objective.items())
+        },
         "by_ordered_pair": {
             key: {"games": len(group), **_numeric_means(group)}
             for key, group in sorted(by_pair.items())
@@ -124,6 +131,7 @@ def _record_from_sample(
         "column_model": metadata.get("column_model", MODEL_MATRIX[column_provider]),
         "scenario_id": metadata["scenario_id"],
         "treatment": metadata["treatment"],
+        "objective": metadata.get("objective", "open_ended"),
         "replicate": metadata["replicate"],
         "resolution_seed": metadata["resolution_seed"],
         "cooperative_action": actions[0],
@@ -142,6 +150,7 @@ def _write_csv(path: Path, records: list[dict[str, Any]]) -> None:
         "column_provider",
         "scenario_id",
         "treatment",
+        "objective",
         "replicate",
         "row_action",
         "column_action",
@@ -161,6 +170,7 @@ def _write_csv(path: Path, records: list[dict[str, Any]]) -> None:
                     "column_provider",
                     "scenario_id",
                     "treatment",
+                    "objective",
                     "replicate",
                 )
             }
@@ -199,6 +209,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--provider", choices=tuple(MODEL_MATRIX), action="append")
     parser.add_argument("--scenario", choices=GAMEPLAY_SCENARIOS, action="append")
     parser.add_argument("--treatment", choices=GAMEPLAY_TREATMENTS, action="append")
+    parser.add_argument("--objective", choices=GAMEPLAY_OBJECTIVES, action="append")
     parser.add_argument("--replicates", type=int, default=1)
     parser.add_argument("--max-tokens", type=int, default=700)
     parser.add_argument("--temperature", type=float, default=0.0)
@@ -227,11 +238,13 @@ def main() -> int:
         pairings = (("openai", "anthropic"),)
         scenarios = ("frontier_deployment_race",)
         treatments = ("baseline",)
+        objectives = ("individual_expected_utility",)
     else:
         providers = tuple(args.provider or MODEL_MATRIX)
         pairings = ordered_pairings(providers)
         scenarios = tuple(args.scenario or GAMEPLAY_SCENARIOS)
         treatments = tuple(args.treatment or GAMEPLAY_TREATMENTS)
+        objectives = tuple(args.objective or ("individual_expected_utility",))
 
     output_path = Path(args.output)
     records: list[dict[str, Any]] = []
@@ -251,6 +264,7 @@ def main() -> int:
         "ordered_pair_count": len(pairings),
         "scenarios": list(scenarios),
         "treatments": list(treatments),
+        "objectives": list(objectives),
         "replicates": args.replicates,
         "max_tokens": args.max_tokens,
         "temperature": args.temperature,
@@ -263,7 +277,8 @@ def main() -> int:
         pair_id = f"{row_provider}->{column_provider}"
         if pair_id in completed_pairs:
             continue
-        print(f"Running {pair_id} ({len(scenarios) * len(treatments) * args.replicates} games)", flush=True)
+        game_count = len(scenarios) * len(treatments) * len(objectives) * args.replicates
+        print(f"Running {pair_id} ({game_count} games)", flush=True)
         try:
             row_model = get_model(
                 MODEL_MATRIX[row_provider],
@@ -279,6 +294,7 @@ def main() -> int:
                 model_gameplay_eval(
                     scenario_ids=scenarios,
                     treatments=treatments,
+                    objectives=objectives,
                     replicates=args.replicates,
                     max_tokens=args.max_tokens,
                     temperature=args.temperature,

@@ -23,6 +23,21 @@ class ModelGameplayInspectTests(unittest.TestCase):
             )
             self.assertTrue(sample.metadata["observability_contract"]["role_isolation"])
 
+    def test_utility_maximization_is_an_explicit_experimental_condition(self) -> None:
+        dataset = build_model_gameplay_samples(
+            scenario_ids=("frontier_deployment_race",),
+            treatments=("baseline",),
+            objectives=("individual_expected_utility",),
+        )
+        sample = dataset[0]
+        self.assertEqual(sample.metadata["objective"], "individual_expected_utility")
+        case = build_gameplay_case(
+            "frontier_deployment_race",
+            "baseline",
+            objective="individual_expected_utility",
+        )
+        self.assertEqual(case.objective, "individual_expected_utility")
+
     def test_action_and_message_parsers_preserve_structured_worksheets(self) -> None:
         actions = ("DEESCALATE", "ESCALATE")
         action_text = (
