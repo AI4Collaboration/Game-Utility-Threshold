@@ -9,6 +9,7 @@ from inspect_ai import eval
 from dotenv import load_dotenv
 
 from canonical_games_inspect import canonical_games_model_eval
+from uncertainty_mechanisms_inspect import uncertainty_mechanisms_model_eval
 from utility_threshold_inspect import utility_threshold_model_eval
 
 # One model from each major provider family, all accessed through Inspect's
@@ -23,7 +24,11 @@ MODEL_MATRIX = {
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Run cross-provider utility-threshold evaluations")
-    parser.add_argument("--suite", choices=("canonical", "threshold"), default="canonical")
+    parser.add_argument(
+        "--suite",
+        choices=("canonical", "threshold", "uncertainty_mechanisms"),
+        default="canonical",
+    )
     parser.add_argument(
         "--provider",
         choices=tuple(MODEL_MATRIX),
@@ -42,7 +47,12 @@ def main() -> None:
     if args.max_tokens <= 0:
         raise SystemExit("--max-tokens must be positive")
     providers = args.provider or list(MODEL_MATRIX)
-    inspect_task = canonical_games_model_eval() if args.suite == "canonical" else utility_threshold_model_eval()
+    if args.suite == "canonical":
+        inspect_task = canonical_games_model_eval()
+    elif args.suite == "threshold":
+        inspect_task = utility_threshold_model_eval()
+    else:
+        inspect_task = uncertainty_mechanisms_model_eval()
     eval(
         inspect_task,
         model=[MODEL_MATRIX[provider] for provider in providers],

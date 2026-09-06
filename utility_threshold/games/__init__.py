@@ -55,6 +55,8 @@ from .institutions import (
     fair_welfare_mediator,
 )
 from .institutional_simulation import (
+    analyze_institutional_decision,
+    build_state_applications,
     FixedInstitutionalStrategy,
     InstitutionalChoice,
     InstitutionalMatchResult,
@@ -185,12 +187,14 @@ __all__ = [
     "add_competitive_action_cost",
     "analyze_ambiguity",
     "analyze_decision",
+    "analyze_institutional_decision",
     "autonomous_escalation_uncertainty",
     "as_application",
     "chicken_threshold_report",
     "cooperation_subsidy",
     "default_strategies",
     "binary_communication_model",
+    "build_state_applications",
     "format_payoff_matrix",
     "frontier_deployment_uncertainty",
     "imperfect_monitoring_model",

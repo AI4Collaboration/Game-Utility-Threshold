@@ -367,7 +367,7 @@ class InstitutionalRules:
         }
 
 
-def _state_applications(
+def build_state_applications(
     game: UncertainPayoffGame,
     stack: MechanismStack,
 ) -> tuple[tuple[PayoffState, MechanismApplication], ...]:
@@ -384,6 +384,38 @@ def _state_applications(
             stack.mediator.analyze(application)
         applications.append((state, application))
     return tuple(applications)
+
+
+def analyze_institutional_decision(
+    game: UncertainPayoffGame,
+    player: Player,
+    opponent_belief: ActionBelief,
+    *,
+    stack: MechanismStack = MechanismStack(),
+    criterion: RiskCriterion = ExpectedValueCriterion(),
+    mediator_recommendation: str | None = None,
+    follow_mediator: bool = True,
+    reputation: ReputationLedger = ReputationLedger(),
+) -> InstitutionalChoice:
+    """Return a fully auditable one-shot decision under an institution stack."""
+    if opponent_belief.actions != game.actions:
+        raise ValueError("opponent belief must match the game actions")
+    return RiskAwareInstitutionalStrategy(
+        criterion=criterion,
+        follow_mediator=follow_mediator,
+    ).choose(
+        InstitutionalRoundContext(
+            uncertain_game=game,
+            state_applications=build_state_applications(game, stack),
+            player=player,
+            round_index=0,
+            opponent_belief=opponent_belief,
+            reputation=reputation,
+            mediator_recommendation=mediator_recommendation,
+            history=(),
+        ),
+        Random(0),
+    )
 
 
 def _draw_state(game: UncertainPayoffGame, rng: Random) -> tuple[PayoffState, float]:
@@ -520,7 +552,7 @@ def play_institutional_match(
     beliefs = initial_beliefs or AsymmetricBeliefs(neutral, neutral)
     if beliefs.row_about_column.actions != game.actions:
         raise ValueError("initial beliefs must match the game actions")
-    applications = _state_applications(game, rules.stack)
+    applications = build_state_applications(game, rules.stack)
     rng = Random(seed)
     reputation = initial_reputation
     history: list[InstitutionalRoundResult] = []
