@@ -67,7 +67,9 @@ from .institutional_simulation import (
     MonitoringEvent,
     PenaltyEvent,
     RiskAwareInstitutionalStrategy,
+    ResolvedInstitutionalProfile,
     play_institutional_match,
+    resolve_institutional_profile,
 )
 from .chicken import ChickenParameters, chicken, chicken_threshold_report
 from .prisoners_dilemma import PrisonersDilemmaParameters, prisoners_dilemma, prisoners_dilemma_threshold_report
@@ -162,6 +164,7 @@ __all__ = [
     "RandomStrategy",
     "RiskAdjustedThreshold",
     "RiskAwareInstitutionalStrategy",
+    "ResolvedInstitutionalProfile",
     "RiskEvaluation",
     "RoundContext",
     "RoundResult",
@@ -206,6 +209,7 @@ __all__ = [
     "prisoners_dilemma",
     "prisoners_dilemma_threshold_report",
     "round_robin",
+    "resolve_institutional_profile",
     "scenario_from_id",
     "solve_risk_adjusted_threshold",
     "threshold_sweep",

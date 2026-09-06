@@ -367,6 +367,53 @@ class InstitutionalRules:
         }
 
 
+@dataclass(frozen=True)
+class ResolvedInstitutionalProfile:
+    """Expected and realized consequences of one fixed joint action."""
+
+    profile: Profile
+    seed: int
+    expected_payoff: Payoff
+    catastrophe_probability: float
+    state_id: str
+    state_probability: float
+    state_draw: float
+    base_payoff: Payoff
+    transfers: Payoff
+    penalties: Payoff
+    realized_payoff: Payoff
+    catastrophic: bool
+    penalty_events: tuple[PenaltyEvent, ...]
+
+    def record(self) -> dict[str, object]:
+        return {
+            "profile": self.profile,
+            "seed": self.seed,
+            "expected_payoff": {
+                "row": self.expected_payoff.row,
+                "column": self.expected_payoff.column,
+            },
+            "expected_welfare": self.expected_payoff.total,
+            "catastrophe_probability": self.catastrophe_probability,
+            "state_id": self.state_id,
+            "state_probability": self.state_probability,
+            "state_draw": self.state_draw,
+            "base_payoff": {
+                "row": self.base_payoff.row,
+                "column": self.base_payoff.column,
+            },
+            "transfers": {"row": self.transfers.row, "column": self.transfers.column},
+            "penalties": {"row": self.penalties.row, "column": self.penalties.column},
+            "realized_payoff": {
+                "row": self.realized_payoff.row,
+                "column": self.realized_payoff.column,
+            },
+            "realized_welfare": self.realized_payoff.total,
+            "catastrophic": self.catastrophic,
+            "penalty_events": [event.record() for event in self.penalty_events],
+        }
+
+
 def build_state_applications(
     game: UncertainPayoffGame,
     stack: MechanismStack,
@@ -524,6 +571,48 @@ def _monitor(
             belief_update=update.record(),
         ),
         update.posterior,
+    )
+
+
+def resolve_institutional_profile(
+    game: UncertainPayoffGame,
+    profile: Profile,
+    *,
+    stack: MechanismStack = MechanismStack(),
+    seed: int = 0,
+) -> ResolvedInstitutionalProfile:
+    """Resolve one joint action using expected and actually sampled mechanisms."""
+    applications = build_state_applications(game, stack)
+    if profile not in applications[0][1].allowed_profiles:
+        raise ValueError(f"profile {profile!r} is prohibited by the mechanism stack")
+    expected = Payoff(
+        sum(state.probability * application.payoff(profile).row for state, application in applications),
+        sum(state.probability * application.payoff(profile).column for state, application in applications),
+    )
+    rng = Random(seed)
+    state, state_draw = _draw_state(game, rng)
+    base = state.game.payoff(profile)
+    transfers, penalties, penalty_events = _realize_mechanisms(
+        profile, stack.payoff_mechanisms, rng
+    )
+    realized = Payoff(
+        base.row + transfers.row - penalties.row,
+        base.column + transfers.column - penalties.column,
+    )
+    return ResolvedInstitutionalProfile(
+        profile=profile,
+        seed=seed,
+        expected_payoff=expected,
+        catastrophe_probability=game.catastrophe_probability(profile),
+        state_id=state.state_id,
+        state_probability=state.probability,
+        state_draw=state_draw,
+        base_payoff=base,
+        transfers=transfers,
+        penalties=penalties,
+        realized_payoff=realized,
+        catastrophic=profile in state.game.catastrophic_profiles,
+        penalty_events=penalty_events,
     )
 
 

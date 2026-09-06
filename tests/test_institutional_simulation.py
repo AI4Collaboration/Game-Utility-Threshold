@@ -12,6 +12,7 @@ from utility_threshold.games import (
     autonomous_escalation_uncertainty,
     frontier_deployment_uncertainty,
     play_institutional_match,
+    resolve_institutional_profile,
 )
 
 
@@ -114,6 +115,29 @@ class InstitutionalSimulationTests(unittest.TestCase):
             seed=5,
         )
         self.assertAlmostEqual(result.catastrophe_rate, 0.45, delta=0.035)
+
+    def test_fixed_profile_resolution_reports_expected_and_realized_outcomes(self) -> None:
+        game = frontier_deployment_uncertainty()
+        safe, competitive = game.actions
+        stack = MechanismStack(payoff_mechanisms=(
+            ContractPenalty(
+                (safe, safe),
+                penalty=5.0,
+                deviation_detection_probability=1.0,
+                enforcement_probability=1.0,
+            ),
+        ))
+        resolution = resolve_institutional_profile(
+            game, (competitive, safe), stack=stack, seed=13
+        )
+        self.assertEqual(resolution.profile, (competitive, safe))
+        self.assertEqual(resolution.penalties.row, 5.0)
+        self.assertEqual(len(resolution.penalty_events), 2)
+        self.assertEqual(resolution.catastrophe_probability, 0.0)
+        self.assertEqual(
+            resolution.realized_payoff.row,
+            resolution.base_payoff.row - 5.0,
+        )
 
 
 if __name__ == "__main__":
