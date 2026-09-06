@@ -1,6 +1,15 @@
 """Complete canonical 2x2 games and experiment infrastructure."""
 
 from .base import Payoff, Player, Profile, SymmetricTwoByTwoGame, format_payoff_matrix
+from .beliefs import (
+    ActionBelief,
+    AsymmetricBeliefs,
+    BeliefTracker,
+    BeliefUpdate,
+    SignalModel,
+    binary_communication_model,
+    imperfect_monitoring_model,
+)
 from .chicken import ChickenParameters, chicken, chicken_threshold_report
 from .prisoners_dilemma import PrisonersDilemmaParameters, prisoners_dilemma, prisoners_dilemma_threshold_report
 from .scenarios import AUTONOMOUS_ESCALATION, FRONTIER_DEPLOYMENT_RACE, SCENARIOS, CanonicalScenario, scenario_from_id
@@ -35,6 +44,10 @@ from .uncertainty import (
 
 __all__ = [
     "AUTONOMOUS_ESCALATION",
+    "ActionBelief",
+    "AsymmetricBeliefs",
+    "BeliefTracker",
+    "BeliefUpdate",
     "FRONTIER_DEPLOYMENT_RACE",
     "SCENARIOS",
     "CanonicalScenario",
@@ -57,6 +70,7 @@ __all__ = [
     "RandomStrategy",
     "RoundContext",
     "RoundResult",
+    "SignalModel",
     "SymmetricTwoByTwoGame",
     "ThresholdSweepPoint",
     "TitForTatStrategy",
@@ -67,7 +81,9 @@ __all__ = [
     "chicken",
     "chicken_threshold_report",
     "default_strategies",
+    "binary_communication_model",
     "format_payoff_matrix",
+    "imperfect_monitoring_model",
     "play_match",
     "payoff_states",
     "prisoners_dilemma",
