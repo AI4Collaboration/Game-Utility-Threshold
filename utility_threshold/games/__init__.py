@@ -85,6 +85,12 @@ from .uncertainty import (
     WeightedOutcome,
     payoff_states,
 )
+from .uncertain_scenarios import (
+    UNCERTAIN_SCENARIOS,
+    autonomous_escalation_uncertainty,
+    frontier_deployment_uncertainty,
+    uncertain_scenario_from_id,
+)
 
 __all__ = [
     "AUTONOMOUS_ESCALATION",
@@ -148,6 +154,7 @@ __all__ = [
     "TournamentResult",
     "TrustedMediator",
     "UncertainPayoffGame",
+    "UNCERTAIN_SCENARIOS",
     "UtilityThresholdReport",
     "WeightedOutcome",
     "chicken",
@@ -155,12 +162,14 @@ __all__ = [
     "add_competitive_action_cost",
     "analyze_ambiguity",
     "analyze_decision",
+    "autonomous_escalation_uncertainty",
     "as_application",
     "chicken_threshold_report",
     "cooperation_subsidy",
     "default_strategies",
     "binary_communication_model",
     "format_payoff_matrix",
+    "frontier_deployment_uncertainty",
     "imperfect_monitoring_model",
     "exploitation_transfer",
     "fair_welfare_mediator",
@@ -172,5 +181,6 @@ __all__ = [
     "scenario_from_id",
     "solve_risk_adjusted_threshold",
     "threshold_sweep",
+    "uncertain_scenario_from_id",
     "zero_transfers",
 ]
