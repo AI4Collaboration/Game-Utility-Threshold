@@ -1,0 +1,43 @@
+import json
+import unittest
+
+from utility_threshold.games.cli import build_parser, run_command
+
+
+class ExtendedCliTests(unittest.TestCase):
+    def test_uncertain_command_emits_full_decision_analysis(self) -> None:
+        args = build_parser().parse_args([
+            "uncertain",
+            "--scenario", "autonomous_escalation",
+            "--risk-criterion", "cvar",
+            "--tail-probability", "0.2",
+        ])
+        result = run_command(args)
+        self.assertEqual(result["decision_analysis"]["criterion"], "lower_tail_cvar")
+        self.assertEqual(len(result["uncertain_game"]["states"]), 3)
+        json.dumps(result)
+
+    def test_institutional_cli_composes_mechanisms(self) -> None:
+        args = build_parser().parse_args([
+            "institutional-match",
+            "--scenario", "autonomous_escalation",
+            "--mechanism", "communication",
+            "--mechanism", "contract",
+            "--mechanism", "mediator",
+            "--rounds", "3",
+            "--seed", "17",
+        ])
+        result = run_command(args)
+        match = result["institutional_match"]
+        self.assertEqual(match["round_count"], 3)
+        self.assertEqual(
+            match["rules"]["payoff_mechanisms"], ["contract_with_penalties"]
+        )
+        self.assertEqual(match["rules"]["communication"], "pre_play_communication")
+        self.assertEqual(match["rules"]["mediator"], "trusted_mediator")
+        self.assertTrue(all(round_["communication"] for round_ in match["rounds"]))
+        json.dumps(result)
+
+
+if __name__ == "__main__":
+    unittest.main()
