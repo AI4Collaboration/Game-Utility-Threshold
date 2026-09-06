@@ -25,6 +25,13 @@ from .simulation import (
     threshold_sweep,
 )
 from .thresholds import InterventionPolicy, UtilityThresholdReport
+from .uncertainty import (
+    DiscreteDistribution,
+    PayoffState,
+    UncertainPayoffGame,
+    WeightedOutcome,
+    payoff_states,
+)
 
 __all__ = [
     "AUTONOMOUS_ESCALATION",
@@ -38,9 +45,11 @@ __all__ = [
     "GameStrategy",
     "GrimTriggerStrategy",
     "InterventionPolicy",
+    "DiscreteDistribution",
     "MatchResult",
     "MixedNashStrategy",
     "Payoff",
+    "PayoffState",
     "Player",
     "PrisonersDilemmaParameters",
     "Profile",
@@ -52,12 +61,15 @@ __all__ = [
     "ThresholdSweepPoint",
     "TitForTatStrategy",
     "TournamentResult",
+    "UncertainPayoffGame",
     "UtilityThresholdReport",
+    "WeightedOutcome",
     "chicken",
     "chicken_threshold_report",
     "default_strategies",
     "format_payoff_matrix",
     "play_match",
+    "payoff_states",
     "prisoners_dilemma",
     "prisoners_dilemma_threshold_report",
     "round_robin",
