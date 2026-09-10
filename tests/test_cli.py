@@ -49,6 +49,18 @@ class ExtendedCliTests(unittest.TestCase):
         self.assertTrue(all(round_["communication"] for round_ in match["rounds"]))
         json.dumps(result)
 
+    def test_battle_institutional_cli_uses_coordination_subsidy(self) -> None:
+        args = build_parser().parse_args([
+            "institutional-match",
+            "--scenario", "incident_response_protocol",
+            "--mechanism", "side_payment",
+            "--rounds", "1",
+        ])
+        result = run_command(args)
+        trace = result["institutional_match"]["rules"]["payoff_mechanisms"]
+        self.assertEqual(trace, ["coordination_subsidy"])
+        json.dumps(result)
+
 
 if __name__ == "__main__":
     unittest.main()

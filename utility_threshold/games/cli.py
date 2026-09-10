@@ -25,10 +25,11 @@ from .institutional_simulation import (
     play_institutional_match,
 )
 from .institutions import MechanismStack, NonBindingCommunication, TrustedMediator
-from .mechanisms import BindingCommitment, ContractPenalty, cooperation_subsidy
+from .mechanisms import BindingCommitment, ContractPenalty
 from .scenarios import SCENARIOS, ScenarioThresholdReport, scenario_from_id
 from .simulation import default_strategies, play_match, round_robin, threshold_sweep
 from .thresholds import InterventionPolicy
+from .treatments import treatment_design, treatment_subsidy
 from .uncertain_scenarios import uncertain_scenario_from_id
 
 
@@ -167,25 +168,25 @@ def _institutional_strategy(name: str, criterion):
 
 
 def _mechanism_stack(args: argparse.Namespace, game):
-    safe = game.cooperative_action
-    competitive = game.competitive_action
+    design = treatment_design(game)
+    target = design.target_profile
     payoff_mechanisms = []
     communication = None
     mediator = None
     for mechanism in args.mechanism:
         if mechanism == "communication":
             communication = NonBindingCommunication(
-                safe,
-                safe,
+                target[0],
+                target[1],
                 row_credibility=args.communication_credibility,
                 column_credibility=args.communication_credibility,
             )
         elif mechanism == "commitment":
-            payoff_mechanisms.append(BindingCommitment(safe, safe))
+            payoff_mechanisms.append(BindingCommitment(target[0], target[1]))
         elif mechanism == "contract":
             payoff_mechanisms.append(
                 ContractPenalty(
-                    (safe, safe),
+                    target,
                     penalty=args.contract_penalty,
                     deviation_detection_probability=args.detection_probability,
                     false_positive_probability=args.false_positive_probability,
@@ -193,14 +194,12 @@ def _mechanism_stack(args: argparse.Namespace, game):
                 )
             )
         elif mechanism == "side_payment":
-            payoff_mechanisms.append(cooperation_subsidy(game.expected_game(), args.side_payment))
+            payoff_mechanisms.append(treatment_subsidy(game.expected_game(), args.side_payment))
         elif mechanism == "mediator":
-            distribution = (
-                {(safe, competitive): 0.5, (competitive, safe): 0.5}
-                if game.family == "chicken"
-                else {(safe, safe): 1.0}
+            mediator = TrustedMediator(
+                design.mediator_distribution,
+                objective=design.mediator_objective,
             )
-            mediator = TrustedMediator(distribution, objective="safe_symmetric_coordination")
     return MechanismStack(tuple(payoff_mechanisms), communication, mediator)
 
 
