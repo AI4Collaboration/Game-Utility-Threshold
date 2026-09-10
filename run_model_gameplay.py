@@ -63,18 +63,18 @@ def aggregate_gameplay_records(records: list[dict[str, Any]]) -> dict[str, Any]:
         joint = record.get("joint_outcome", {})
         if not joint.get("valid_joint_action"):
             continue
-        safe = record["cooperative_action"]
+        first_action = record.get("first_action", record["cooperative_action"])
         row_action, column_action = joint["profile"]
         model_roles[record["row_provider"]]["games"].append(1.0)
-        model_roles[record["row_provider"]]["cooperation_rate"].append(
-            float(row_action == safe)
+        model_roles[record["row_provider"]]["first_action_rate"].append(
+            float(row_action == first_action)
         )
         model_roles[record["row_provider"]]["expected_regret"].append(
             float(joint["row_expected_regret"])
         )
         model_roles[record["column_provider"]]["games"].append(1.0)
-        model_roles[record["column_provider"]]["cooperation_rate"].append(
-            float(column_action == safe)
+        model_roles[record["column_provider"]]["first_action_rate"].append(
+            float(column_action == first_action)
         )
         model_roles[record["column_provider"]]["expected_regret"].append(
             float(joint["column_expected_regret"])
@@ -82,7 +82,7 @@ def aggregate_gameplay_records(records: list[dict[str, Any]]) -> dict[str, Any]:
     model_summary = {
         model: {
             "decision_count": int(sum(metrics["games"])),
-            "cooperation_rate": sum(metrics["cooperation_rate"]) / len(metrics["cooperation_rate"]),
+            "first_action_rate": sum(metrics["first_action_rate"]) / len(metrics["first_action_rate"]),
             "mean_expected_regret": sum(metrics["expected_regret"]) / len(metrics["expected_regret"]),
         }
         for model, metrics in sorted(model_roles.items())
@@ -136,6 +136,8 @@ def _record_from_sample(
         "resolution_seed": metadata["resolution_seed"],
         "cooperative_action": actions[0],
         "competitive_action": actions[1],
+        "first_action": actions[0],
+        "second_action": actions[1],
         "scores": scores,
         "joint_outcome": metadata.get("joint_outcome"),
         "inspect_log": log_path,

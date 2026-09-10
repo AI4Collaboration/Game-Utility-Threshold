@@ -12,6 +12,8 @@ from typing import Any, Iterable, Mapping
 METRICS = (
     "valid_joint_action",
     "cooperative_action_rate",
+    "first_action_rate",
+    "second_action_rate",
     "mutual_cooperation",
     "mutual_competition",
     "catastrophic_realization",
@@ -19,6 +21,13 @@ METRICS = (
     "expected_welfare",
     "expected_payoff_nash",
     "pareto_efficient",
+    "coordination_success",
+    "miscoordination",
+    "structural_success",
+    "utilitarian_optimal",
+    "egalitarian_optimal",
+    "expected_utilitarian_welfare_regret",
+    "expected_egalitarian_welfare_regret",
 )
 
 
@@ -82,8 +91,14 @@ def audit_summary(payload: Mapping[str, Any]) -> dict[str, Any]:
 def _means(records: Iterable[Mapping[str, Any]]) -> dict[str, float]:
     groups = list(records)
     return {
-        metric: sum(float(record["scores"][metric]) for record in groups) / len(groups)
+        metric: sum(
+            float(record["scores"][metric])
+            for record in groups
+            if metric in record["scores"]
+        )
+        / sum(metric in record["scores"] for record in groups)
         for metric in METRICS
+        if any(metric in record["scores"] for record in groups)
     }
 
 
@@ -97,10 +112,10 @@ def summarize(payload: Mapping[str, Any]) -> dict[str, Any]:
 
     model_choices: dict[str, list[bool]] = defaultdict(list)
     for record in records:
-        cooperative = record["cooperative_action"]
+        first_action = record.get("first_action", record["cooperative_action"])
         row_action, column_action = record["joint_outcome"]["profile"]
-        model_choices[record["row_provider"]].append(row_action == cooperative)
-        model_choices[record["column_provider"]].append(column_action == cooperative)
+        model_choices[record["row_provider"]].append(row_action == first_action)
+        model_choices[record["column_provider"]].append(column_action == first_action)
 
     return {
         "overall": _means(records),
@@ -115,7 +130,7 @@ def summarize(payload: Mapping[str, Any]) -> dict[str, Any]:
         "by_model_across_roles": {
             model: {
                 "decisions": len(choices),
-                "cooperation_rate": sum(choices) / len(choices),
+                "first_action_rate": sum(choices) / len(choices),
             }
             for model, choices in sorted(model_choices.items())
         },
@@ -132,14 +147,16 @@ def compare(
         if grouping == "overall":
             output[grouping] = {
                 metric: right[grouping][metric] - left[grouping][metric]
-                for metric in METRICS
+                for metric in sorted(set(left[grouping]) & set(right[grouping]))
             }
             continue
         shared = sorted(set(left[grouping]) & set(right[grouping]))
         output[grouping] = {
             key: {
                 metric: right[grouping][key][metric] - left[grouping][key][metric]
-                for metric in METRICS
+                for metric in sorted(
+                    set(left[grouping][key]) & set(right[grouping][key]) - {"games"}
+                )
             }
             for key in shared
         }

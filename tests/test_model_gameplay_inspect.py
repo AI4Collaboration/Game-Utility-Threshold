@@ -9,6 +9,7 @@ from model_gameplay_inspect import (
     parse_action_decision,
     parse_public_message,
 )
+from utility_threshold.games import build_state_applications
 
 
 class ModelGameplayInspectTests(unittest.TestCase):
@@ -83,6 +84,33 @@ class ModelGameplayInspectTests(unittest.TestCase):
             {"action": case.game.cooperative_action, "valid": True},
         )
         self.assertFalse(joint["valid_joint_action"])
+
+    def test_battle_metrics_separate_coordination_from_focal_preference(self) -> None:
+        case = build_gameplay_case("incident_response_protocol", "baseline")
+        first, _ = case.game.actions
+        joint = analyze_joint_outcome(
+            case,
+            {"action": first, "valid": True, "confidence": 1.0},
+            {"action": first, "valid": True, "confidence": 1.0},
+        )
+        self.assertTrue(joint["coordination_success"])
+        self.assertTrue(joint["structural_success"])
+        self.assertTrue(joint["row_preferred_coordination"])
+        self.assertFalse(joint["column_preferred_coordination"])
+        self.assertFalse(joint["miscoordination"])
+
+    def test_new_game_treatments_have_family_specific_effects(self) -> None:
+        stag = build_gameplay_case("cross_lab_incident_response", "binding_commitment")
+        self.assertEqual(
+            stag.treatment_design["target_profile"],
+            (stag.game.cooperative_action, stag.game.cooperative_action),
+        )
+        battle = build_gameplay_case("incident_response_protocol", "side_payment")
+        applications = build_state_applications(battle.game, battle.stack)
+        self.assertEqual(
+            applications[0][1].mechanism_trace[0]["mechanism_id"],
+            "coordination_subsidy",
+        )
 
 
 if __name__ == "__main__":

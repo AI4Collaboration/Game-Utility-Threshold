@@ -53,6 +53,7 @@ class ModelGameplayRunnerTests(unittest.TestCase):
         self.assertAlmostEqual(summary["overall"]["expected_welfare"], 3.0)
         self.assertEqual(len(summary["by_treatment"]), 2)
         self.assertEqual(summary["by_model_across_roles"]["openai"]["decision_count"], 2)
+        self.assertIn("first_action_rate", summary["by_model_across_roles"]["openai"])
 
 
 if __name__ == "__main__":
