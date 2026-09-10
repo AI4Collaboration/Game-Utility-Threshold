@@ -87,7 +87,16 @@ from .institutional_simulation import (
 from .chicken import ChickenParameters, chicken, chicken_threshold_report
 from .prisoners_dilemma import PrisonersDilemmaParameters, prisoners_dilemma, prisoners_dilemma_threshold_report
 from .stag_hunt import StagHuntParameters, stag_hunt, stag_hunt_threshold_report
-from .scenarios import AUTONOMOUS_ESCALATION, FRONTIER_DEPLOYMENT_RACE, SCENARIOS, CanonicalScenario, scenario_from_id
+from .scenarios import (
+    AUTONOMOUS_ESCALATION,
+    CROSS_LAB_INCIDENT_RESPONSE,
+    FRONTIER_DEPLOYMENT_RACE,
+    INCIDENT_RESPONSE_PROTOCOL,
+    SCENARIOS,
+    CanonicalScenario,
+    ScenarioThresholdReport,
+    scenario_from_id,
+)
 from .simulation import (
     CompetitiveStrategy,
     CooperativeStrategy,
@@ -135,6 +144,7 @@ __all__ = [
     "BindingCommitment",
     "BetaReputation",
     "CARACriterion",
+    "CROSS_LAB_INCIDENT_RESPONSE",
     "FRONTIER_DEPLOYMENT_RACE",
     "FixedInstitutionalStrategy",
     "SCENARIOS",
@@ -157,6 +167,7 @@ __all__ = [
     "InstitutionalRoundResult",
     "InstitutionalRules",
     "InstitutionalStrategy",
+    "INCIDENT_RESPONSE_PROTOCOL",
     "LowerCVaRCriterion",
     "MaximinCriterion",
     "MeanVarianceCriterion",
@@ -182,6 +193,7 @@ __all__ = [
     "RiskAwareInstitutionalStrategy",
     "ResolvedInstitutionalProfile",
     "RiskEvaluation",
+    "ScenarioThresholdReport",
     "RoundContext",
     "RoundResult",
     "RobustDecisionAnalysis",
