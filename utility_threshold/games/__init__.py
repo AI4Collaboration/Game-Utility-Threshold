@@ -17,6 +17,12 @@ from .beliefs import (
     binary_communication_model,
     imperfect_monitoring_model,
 )
+from .battle_of_the_sexes import (
+    BattleOfTheSexesParameters,
+    BattleOfTheSexesReport,
+    battle_of_the_sexes,
+    battle_of_the_sexes_report,
+)
 from .decision import (
     AmbiguousActionBelief,
     CARACriterion,
@@ -124,6 +130,8 @@ __all__ = [
     "AsymmetricBeliefs",
     "BeliefTracker",
     "BeliefUpdate",
+    "BattleOfTheSexesParameters",
+    "BattleOfTheSexesReport",
     "BindingCommitment",
     "BetaReputation",
     "CARACriterion",
@@ -207,6 +215,8 @@ __all__ = [
     "cooperation_subsidy",
     "default_strategies",
     "binary_communication_model",
+    "battle_of_the_sexes",
+    "battle_of_the_sexes_report",
     "build_state_applications",
     "format_payoff_matrix",
     "frontier_deployment_uncertainty",
