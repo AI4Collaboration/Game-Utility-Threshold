@@ -94,6 +94,35 @@ class UtilityThresholdReport:
             and self.cooperation_margin_against_competition > 0
         )
 
+    def record(self) -> dict[str, object]:
+        return {
+            "game_id": self.game_id,
+            "family": self.family,
+            "intervention": self.intervention,
+            "threshold_kind": "action_incentive",
+            "threshold_against_cooperation": self.threshold_against_cooperation,
+            "threshold_against_competition": self.threshold_against_competition,
+            "minimum_intervention_for_cooperation_dominance": (
+                self.minimum_intervention_for_cooperation_dominance
+            ),
+            "cooperation_margin_against_cooperation": (
+                self.cooperation_margin_against_cooperation
+            ),
+            "cooperation_margin_against_competition": (
+                self.cooperation_margin_against_competition
+            ),
+            "regime": self.regime,
+            "pure_nash_equilibria": self.pure_nash_equilibria,
+            "symmetric_mixed_equilibrium": (
+                dict(self.symmetric_mixed_equilibrium)
+                if self.symmetric_mixed_equilibrium
+                else None
+            ),
+            "symmetric_catastrophe_probability": (
+                self.symmetric_catastrophe_probability
+            ),
+        }
+
 
 def strategic_regime(
     game: SymmetricTwoByTwoGame,
