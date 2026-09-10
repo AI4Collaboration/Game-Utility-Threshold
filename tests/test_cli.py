@@ -5,6 +5,17 @@ from utility_threshold.games.cli import build_parser, run_command
 
 
 class ExtendedCliTests(unittest.TestCase):
+    def test_analyze_supports_asymmetric_equilibrium_selection_thresholds(self) -> None:
+        args = build_parser().parse_args([
+            "analyze",
+            "--scenario", "incident_response_protocol",
+        ])
+        result = run_command(args)
+        self.assertEqual(result["threshold"]["threshold_kind"], "belief_in_preferred_coordination")
+        self.assertIn("mixed_equilibrium", result["threshold"])
+        self.assertEqual(len(result["threshold"]["pure_nash_equilibria"]), 2)
+        json.dumps(result)
+
     def test_uncertain_command_emits_full_decision_analysis(self) -> None:
         args = build_parser().parse_args([
             "uncertain",

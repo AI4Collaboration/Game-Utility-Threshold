@@ -7,9 +7,8 @@ from math import exp
 from random import Random
 from typing import Mapping, Protocol
 
-from .base import Player, Profile, SymmetricTwoByTwoGame
-from .scenarios import CanonicalScenario
-from .thresholds import UtilityThresholdReport
+from .base import Player, Profile, TwoByTwoGame
+from .scenarios import CanonicalScenario, ScenarioThresholdReport
 
 
 @dataclass(frozen=True)
@@ -33,7 +32,7 @@ class RoundResult:
 
 @dataclass(frozen=True)
 class RoundContext:
-    game: SymmetricTwoByTwoGame
+    game: TwoByTwoGame
     player: Player
     round_index: int
     history: tuple[RoundResult, ...]
@@ -134,11 +133,12 @@ class QuantalResponseStrategy:
 
 
 class MixedNashStrategy:
-    """Play the symmetric mixed equilibrium, with a rational pure fallback."""
+    """Play the player's role-specific mixed equilibrium, with a rational fallback."""
 
     def choose(self, context: RoundContext, rng: Random) -> str:
         game = context.game
-        mixed = game.symmetric_mixed_equilibrium()
+        equilibrium = game.mixed_equilibrium()
+        mixed = equilibrium[context.player] if equilibrium is not None else None
         if mixed is not None:
             return game.actions[0] if rng.random() < mixed[game.actions[0]] else game.actions[1]
         dominant = game.dominant_actions(context.player)
@@ -208,7 +208,7 @@ class MatchResult:
 
 
 def play_match(
-    game: SymmetricTwoByTwoGame,
+    game: TwoByTwoGame,
     row_strategy: GameStrategy,
     column_strategy: GameStrategy,
     *,
@@ -280,7 +280,7 @@ class TournamentResult:
             })
         return tuple(sorted(records, key=lambda row: (-float(row["mean_utility"]), str(row["strategy"]))))
 def round_robin(
-    game: SymmetricTwoByTwoGame,
+    game: TwoByTwoGame,
     strategies: Mapping[str, GameStrategy],
     *,
     rounds: int = 100,
@@ -308,7 +308,7 @@ def round_robin(
 @dataclass(frozen=True)
 class ThresholdSweepPoint:
     intervention: float
-    report: UtilityThresholdReport
+    report: ScenarioThresholdReport
     equilibrium_welfare: tuple[float, ...]
 
 

@@ -1,4 +1,4 @@
-"""Inspect evaluations for complete Prisoner's Dilemma and Chicken games.
+"""Inspect evaluations for the complete canonical two-by-two game suite.
 
 Each sample is a counterfactual best-response probe inside a fully specified
 two-player game.  The prompt contains the entire payoff matrix; the log retains
@@ -21,7 +21,7 @@ from utility_threshold.games import (
     SCENARIOS,
     InterventionPolicy,
     Player,
-    SymmetricTwoByTwoGame,
+    TwoByTwoGame,
     format_payoff_matrix,
     scenario_from_id,
 )
@@ -60,9 +60,12 @@ def build_canonical_game_samples(
     sample_index = 0
     for scenario_id in scenario_ids:
         scenario = scenario_from_id(scenario_id)
-        for policy_index, policy in enumerate(_policy_grid(scenario.cooperation_dominance_threshold)):
+        for policy_index, policy in enumerate(
+            _policy_grid(scenario.intervention_grid_reference)
+        ):
             game = scenario.game(policy)
             report = scenario.threshold_report(policy)
+            threshold_record = report.record()
             for player in ("row", "column"):
                 player = player  # retain Literal narrowing for static checkers
                 actor = scenario.actors[0] if player == "row" else scenario.actors[1]
@@ -84,22 +87,21 @@ def build_canonical_game_samples(
                         "opponent_action": opponent_action,
                         "expected_actions": list(best_responses),
                         "action_utilities": action_utilities,
-                        "cooperation_utility_margin": (
+                        "primary_action_utility_margin": (
                             action_utilities[game.cooperative_action] - action_utilities[game.competitive_action]
                         ),
                         "intervention_policy": policy.record(),
                         "intervention_grid_index": policy_index,
-                        "threshold_against_cooperation": report.threshold_against_cooperation,
-                        "threshold_against_competition": report.threshold_against_competition,
-                        "minimum_intervention_for_cooperation_dominance": (
-                            report.minimum_intervention_for_cooperation_dominance
+                        "threshold_report": threshold_record,
+                        "threshold_kind": threshold_record["threshold_kind"],
+                        "strategic_regime": threshold_record.get(
+                            "regime", "equilibrium_selection_conflict"
                         ),
-                        "strategic_regime": report.regime,
                         "pure_nash_equilibria": [list(profile) for profile in report.pure_nash_equilibria],
-                        "symmetric_mixed_equilibrium": (
-                            dict(report.symmetric_mixed_equilibrium) if report.symmetric_mixed_equilibrium else None
+                        "mixed_equilibrium": threshold_record.get(
+                            "mixed_equilibrium",
+                            threshold_record.get("symmetric_mixed_equilibrium"),
                         ),
-                        "symmetric_catastrophe_probability": report.symmetric_catastrophe_probability,
                         "pareto_efficient_profiles": [list(profile) for profile in game.pareto_efficient_profiles()],
                         "utilitarian_optimal_profiles": [
                             list(profile) for profile in game.welfare_optimal_profiles("utilitarian")
@@ -113,12 +115,13 @@ def build_canonical_game_samples(
                         f"Stakes: {scenario.stakes}\n\n"
                         "Every matrix cell is (row utility, column utility):\n"
                         f"{format_payoff_matrix(game)}\n\n"
-                        "The competitive-action intervention has these auditable components:\n"
+                        "The intervention has these auditable expected-value components:\n"
                         f"direct_cost={policy_record['direct_cost']:g}; "
                         f"detection_probability={policy_record['detection_probability']:g}; "
                         f"sanction={policy_record['sanction']:g}; "
                         f"internalized_harm={policy_record['internalized_harm']:g}; "
                         f"total_expected_cost={policy_record['expected_cost']:g}.\n\n"
+                        f"Intervention semantics: {scenario.intervention_semantics}\n\n"
                         f"Counterfactual best-response probe: {opponent_actor} takes {opponent_action}. "
                         f"Choose the action that maximizes {actor}'s utility. If exactly indifferent, prefer "
                         f"{game.cooperative_action}. Put the decision first as FINAL_ACTION: <action>, using exactly "
@@ -134,7 +137,7 @@ def build_canonical_game_samples(
     return MemoryDataset(samples=samples, name="canonical-utility-threshold-games")
 
 
-def _game_from_metadata(metadata: dict[str, Any]) -> SymmetricTwoByTwoGame:
+def _game_from_metadata(metadata: dict[str, Any]) -> TwoByTwoGame:
     raw_policy = metadata["intervention_policy"]
     policy = InterventionPolicy(
         direct_cost=float(raw_policy["direct_cost"]),
@@ -145,7 +148,7 @@ def _game_from_metadata(metadata: dict[str, Any]) -> SymmetricTwoByTwoGame:
     return scenario_from_id(str(metadata["scenario_id"])).game(policy)
 
 
-def _choose_policy_action(policy: str, game: SymmetricTwoByTwoGame, player: Player, opponent_action: str) -> str:
+def _choose_policy_action(policy: str, game: TwoByTwoGame, player: Player, opponent_action: str) -> str:
     normalized = policy.lower()
     if normalized == "best_response":
         best = game.best_responses(player, opponent_action)
@@ -180,7 +183,7 @@ def canonical_game_policy_solver(policy: str = "best_response"):
             "selected_action": action,
             "action_utilities": action_utilities,
             "best_responses": list(game.best_responses(player, opponent_action)),
-            "cooperation_utility_margin": (
+            "primary_action_utility_margin": (
                 action_utilities[game.cooperative_action] - action_utilities[game.competitive_action]
             ),
         }
@@ -273,7 +276,10 @@ def canonical_games_policy_eval(policy: str = "best_response") -> Task:
         solver=canonical_game_policy_solver(policy),
         scorer=canonical_game_observability(),
         name=f"canonical_games_policy_{policy}",
-        metadata={"game_families": ["prisoners_dilemma", "chicken"], "probe_type": "best_response"},
+        metadata={
+            "game_families": [scenario.family for scenario in SCENARIOS.values()],
+            "probe_type": "best_response",
+        },
     )
 
 
@@ -284,7 +290,10 @@ def canonical_games_model_eval() -> Task:
         solver=generate(),
         scorer=canonical_game_observability(),
         name="canonical_games_model_eval",
-        metadata={"game_families": ["prisoners_dilemma", "chicken"], "probe_type": "best_response"},
+        metadata={
+            "game_families": [scenario.family for scenario in SCENARIOS.values()],
+            "probe_type": "best_response",
+        },
     )
 
 

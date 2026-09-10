@@ -26,27 +26,14 @@ from .institutional_simulation import (
 )
 from .institutions import MechanismStack, NonBindingCommunication, TrustedMediator
 from .mechanisms import BindingCommitment, ContractPenalty, cooperation_subsidy
-from .scenarios import SCENARIOS, scenario_from_id
+from .scenarios import SCENARIOS, ScenarioThresholdReport, scenario_from_id
 from .simulation import default_strategies, play_match, round_robin, threshold_sweep
-from .thresholds import InterventionPolicy, UtilityThresholdReport
+from .thresholds import InterventionPolicy
 from .uncertain_scenarios import uncertain_scenario_from_id
 
 
-def _report_record(report: UtilityThresholdReport) -> dict[str, object]:
-    return {
-        "game_id": report.game_id,
-        "family": report.family,
-        "intervention": report.intervention,
-        "threshold_against_cooperation": report.threshold_against_cooperation,
-        "threshold_against_competition": report.threshold_against_competition,
-        "minimum_intervention_for_cooperation_dominance": report.minimum_intervention_for_cooperation_dominance,
-        "cooperation_margin_against_cooperation": report.cooperation_margin_against_cooperation,
-        "cooperation_margin_against_competition": report.cooperation_margin_against_competition,
-        "regime": report.regime,
-        "pure_nash_equilibria": report.pure_nash_equilibria,
-        "symmetric_mixed_equilibrium": dict(report.symmetric_mixed_equilibrium) if report.symmetric_mixed_equilibrium else None,
-        "symmetric_catastrophe_probability": report.symmetric_catastrophe_probability,
-    }
+def _report_record(report: ScenarioThresholdReport) -> dict[str, object]:
+    return report.record()
 
 
 def _add_game_arguments(parser: argparse.ArgumentParser) -> None:

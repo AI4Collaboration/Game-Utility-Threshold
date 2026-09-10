@@ -223,6 +223,30 @@ class ScenarioAndSimulationTests(unittest.TestCase):
             "competition_dominant", "anti_coordination", "cooperation_dominant"
         ])
 
+    def test_asymmetric_mixed_strategy_uses_each_players_distribution(self) -> None:
+        from utility_threshold.games import INCIDENT_RESPONSE_PROTOCOL
+
+        game = INCIDENT_RESPONSE_PROTOCOL.game()
+        result = play_match(
+            game,
+            MixedNashStrategy(),
+            MixedNashStrategy(),
+            rounds=10_000,
+            seed=31,
+        )
+        row_first_rate = sum(
+            round_.row_action == game.actions[0] for round_ in result.rounds
+        ) / len(result.rounds)
+        column_first_rate = sum(
+            round_.column_action == game.actions[0] for round_ in result.rounds
+        ) / len(result.rounds)
+        mixed = game.mixed_equilibrium()
+        assert mixed is not None
+        self.assertAlmostEqual(row_first_rate, mixed["row"][game.actions[0]], delta=0.02)
+        self.assertAlmostEqual(
+            column_first_rate, mixed["column"][game.actions[0]], delta=0.02
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
