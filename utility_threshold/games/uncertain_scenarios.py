@@ -1,13 +1,20 @@
-"""Research-ready latent payoff states for the two concrete AI-safety games."""
+"""Research-ready latent payoff states for the concrete AI-safety games."""
 
 from __future__ import annotations
 
 from dataclasses import replace
 from typing import Callable
 
+from .battle_of_the_sexes import BattleOfTheSexesParameters, battle_of_the_sexes
 from .chicken import ChickenParameters, chicken
 from .prisoners_dilemma import PrisonersDilemmaParameters, prisoners_dilemma
-from .scenarios import AUTONOMOUS_ESCALATION, FRONTIER_DEPLOYMENT_RACE
+from .scenarios import (
+    AUTONOMOUS_ESCALATION,
+    CROSS_LAB_INCIDENT_RESPONSE,
+    FRONTIER_DEPLOYMENT_RACE,
+    INCIDENT_RESPONSE_PROTOCOL,
+)
+from .stag_hunt import StagHuntParameters, stag_hunt
 from .uncertainty import PayoffState, UncertainPayoffGame
 
 
@@ -142,9 +149,149 @@ def autonomous_escalation_uncertainty(*, intervention: float = 0.0) -> Uncertain
     )
 
 
+def cross_lab_incident_response_uncertainty(
+    *, intervention: float = 0.0
+) -> UncertainPayoffGame:
+    """Unknown exploit severity and reciprocal readiness in the assurance game."""
+
+    scenario = CROSS_LAB_INCIDENT_RESPONSE
+    cooperative, safe = scenario.actions
+    specifications = (
+        (
+            "false_alarm",
+            0.45,
+            StagHuntParameters(4.0, 3.0, 2.0, 0.5),
+            "The alert is containable; unilateral information sharing has limited downside.",
+            False,
+        ),
+        (
+            "active_cross_platform_exploit",
+            0.35,
+            StagHuntParameters(7.0, 4.0, 1.0, -8.0),
+            "A live exploit rewards joint containment and punishes an unmatched open response.",
+            True,
+        ),
+        (
+            "cascading_ecosystem_compromise",
+            0.20,
+            StagHuntParameters(12.0, 5.0, -4.0, -40.0),
+            "Compromise is cascading; failed unilateral containment creates systemic exposure.",
+            True,
+        ),
+    )
+    states: list[PayoffState] = []
+    for state_id, probability, parameters, description, catastrophic in specifications:
+        game = stag_hunt(
+            parameters,
+            intervention=intervention,
+            actions=scenario.actions,
+            game_id=f"{scenario.scenario_id}_{state_id}",
+            name=f"{scenario.name}: {state_id.replace('_', ' ').title()}",
+            description=description,
+        )
+        catastrophic_profiles = (
+            frozenset({(cooperative, safe), (safe, cooperative)})
+            if catastrophic
+            else frozenset()
+        )
+        game = replace(game, catastrophic_profiles=catastrophic_profiles)
+        states.append(
+            PayoffState(
+                state_id,
+                probability,
+                game,
+                description,
+                {
+                    "mutual_cooperation": parameters.mutual_cooperation,
+                    "safe_against_cooperation": parameters.safe_against_cooperation,
+                    "mutual_safety": parameters.mutual_safety,
+                    "failed_cooperation": parameters.failed_cooperation,
+                    "intervention": intervention,
+                    "mismatch_catastrophic": float(catastrophic),
+                },
+            )
+        )
+    return UncertainPayoffGame(
+        game_id=f"{scenario.scenario_id}_uncertain",
+        name=f"{scenario.name} with latent exploit severity",
+        states=tuple(states),
+    )
+
+
+def incident_response_protocol_uncertainty(
+    *, intervention: float = 0.0
+) -> UncertainPayoffGame:
+    """Unknown incident severity in an asymmetric protocol-selection conflict."""
+
+    scenario = INCIDENT_RESPONSE_PROTOCOL
+    specifications = (
+        (
+            "routine_vulnerability",
+            0.50,
+            BattleOfTheSexesParameters(4.0, 3.0, -1.0),
+            "The vulnerability is routine; a protocol mismatch delays containment.",
+            False,
+        ),
+        (
+            "active_exploitation",
+            0.35,
+            BattleOfTheSexesParameters(7.0, 4.0, -18.0),
+            "Active exploitation makes simultaneous incompatible responses catastrophic.",
+            True,
+        ),
+        (
+            "cascading_supply_chain_exploit",
+            0.15,
+            BattleOfTheSexesParameters(12.0, 7.0, -60.0),
+            "A supply-chain exploit cascades while the labs execute incompatible protocols.",
+            True,
+        ),
+    )
+    states: list[PayoffState] = []
+    for state_id, probability, parameters, description, catastrophic in specifications:
+        game = battle_of_the_sexes(
+            parameters,
+            intervention=intervention,
+            actions=scenario.actions,
+            game_id=f"{scenario.scenario_id}_{state_id}",
+            name=f"{scenario.name}: {state_id.replace('_', ' ').title()}",
+            description=description,
+        )
+        game = replace(
+            game,
+            catastrophic_profiles=(
+                frozenset(game.miscoordination_profiles)
+                if catastrophic
+                else frozenset()
+            ),
+        )
+        states.append(
+            PayoffState(
+                state_id,
+                probability,
+                game,
+                description,
+                {
+                    "preferred_coordination": parameters.preferred_coordination,
+                    "concession_coordination": parameters.concession_coordination,
+                    "miscoordination": parameters.miscoordination,
+                    "coordination_bonus": intervention,
+                    "mismatch_catastrophic": float(catastrophic),
+                },
+            )
+        )
+    return UncertainPayoffGame(
+        game_id=f"{scenario.scenario_id}_uncertain",
+        name=f"{scenario.name} with latent incident severity",
+        states=tuple(states),
+    )
+
+
 UNCERTAIN_SCENARIOS: dict[str, Callable[..., UncertainPayoffGame]] = {
     FRONTIER_DEPLOYMENT_RACE.scenario_id: frontier_deployment_uncertainty,
     AUTONOMOUS_ESCALATION.scenario_id: autonomous_escalation_uncertainty,
+    CROSS_LAB_INCIDENT_RESPONSE.scenario_id: cross_lab_incident_response_uncertainty,
+    INCIDENT_RESPONSE_PROTOCOL.scenario_id: incident_response_protocol_uncertainty,
 }
 
 

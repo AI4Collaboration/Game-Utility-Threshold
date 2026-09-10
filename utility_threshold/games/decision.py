@@ -7,7 +7,7 @@ from math import exp, isclose, log
 from types import MappingProxyType
 from typing import Mapping, Protocol
 
-from .base import Payoff, Player, Profile, SymmetricTwoByTwoGame
+from .base import Payoff, Player, Profile, SymmetricTwoByTwoGame, TwoByTwoGame
 from .beliefs import ActionBelief
 from .uncertainty import DiscreteDistribution, PayoffState, UncertainPayoffGame, WeightedOutcome
 
@@ -440,7 +440,8 @@ def add_competitive_action_cost(game: UncertainPayoffGame, cost: float) -> Uncer
                 payoff.row - (cost if profile[0] == original.competitive_action else 0.0),
                 payoff.column - (cost if profile[1] == original.competitive_action else 0.0),
             )
-        adjusted = SymmetricTwoByTwoGame(
+        game_type = SymmetricTwoByTwoGame if original.is_symmetric else TwoByTwoGame
+        adjusted = game_type(
             game_id=f"{original.game_id}_cost_{cost:g}",
             name=original.name,
             family=original.family,

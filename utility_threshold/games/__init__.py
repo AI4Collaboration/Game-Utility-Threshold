@@ -128,7 +128,9 @@ from .uncertainty import (
 from .uncertain_scenarios import (
     UNCERTAIN_SCENARIOS,
     autonomous_escalation_uncertainty,
+    cross_lab_incident_response_uncertainty,
     frontier_deployment_uncertainty,
+    incident_response_protocol_uncertainty,
     uncertain_scenario_from_id,
 )
 
@@ -232,7 +234,9 @@ __all__ = [
     "build_state_applications",
     "format_payoff_matrix",
     "frontier_deployment_uncertainty",
+    "cross_lab_incident_response_uncertainty",
     "imperfect_monitoring_model",
+    "incident_response_protocol_uncertainty",
     "exploitation_transfer",
     "fair_welfare_mediator",
     "play_match",

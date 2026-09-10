@@ -3,12 +3,14 @@ import unittest
 
 from utility_threshold.games import (
     ChickenParameters,
+    BattleOfTheSexesParameters,
     DiscreteDistribution,
     Payoff,
     PayoffState,
     PrisonersDilemmaParameters,
     UncertainPayoffGame,
     WeightedOutcome,
+    battle_of_the_sexes,
     chicken,
     prisoners_dilemma,
 )
@@ -95,6 +97,22 @@ class UncertainPayoffGameTests(unittest.TestCase):
                     PayoffState("chicken", 0.5, chicken()),
                 ),
             )
+
+    def test_expected_game_supports_asymmetric_payoff_states(self) -> None:
+        low = battle_of_the_sexes(BattleOfTheSexesParameters(4.0, 3.0, -1.0))
+        high = battle_of_the_sexes(BattleOfTheSexesParameters(8.0, 5.0, -9.0))
+        uncertain = UncertainPayoffGame(
+            "uncertain_battle",
+            "Uncertain protocol conflict",
+            (
+                PayoffState("low", 0.75, low),
+                PayoffState("high", 0.25, high),
+            ),
+        )
+        expected = uncertain.expected_game()
+        self.assertFalse(expected.is_symmetric)
+        self.assertEqual(expected.payoff(("OPTION_A", "OPTION_A")), Payoff(5.0, 3.5))
+        self.assertEqual(expected.payoff(("OPTION_B", "OPTION_B")), Payoff(3.5, 5.0))
 
 
 if __name__ == "__main__":

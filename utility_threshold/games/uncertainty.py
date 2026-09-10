@@ -7,7 +7,7 @@ from math import isclose, log
 from types import MappingProxyType
 from typing import Callable, Generic, Iterable, Mapping, TypeVar
 
-from .base import Payoff, Player, Profile, SymmetricTwoByTwoGame
+from .base import Payoff, Player, Profile, SymmetricTwoByTwoGame, TwoByTwoGame
 
 T = TypeVar("T")
 
@@ -120,7 +120,7 @@ class PayoffState:
 
     state_id: str
     probability: float
-    game: SymmetricTwoByTwoGame
+    game: TwoByTwoGame
     description: str = ""
     parameters: Mapping[str, float] = field(default_factory=dict)
 
@@ -180,7 +180,7 @@ class UncertainPayoffGame:
         return self.state_distribution.entropy
 
     @property
-    def state_distribution(self) -> DiscreteDistribution[SymmetricTwoByTwoGame]:
+    def state_distribution(self) -> DiscreteDistribution[TwoByTwoGame]:
         return DiscreteDistribution(tuple(
             WeightedOutcome(
                 state.state_id,
@@ -216,14 +216,15 @@ class UncertainPayoffGame:
             if profile in state.game.catastrophic_profiles
         )
 
-    def expected_game(self) -> SymmetricTwoByTwoGame:
+    def expected_game(self) -> TwoByTwoGame:
         reference = self.states[0].game
         catastrophic = frozenset(
             profile
             for profile in reference.profiles
             if self.catastrophe_probability(profile) > 0
         )
-        return SymmetricTwoByTwoGame(
+        game_type = SymmetricTwoByTwoGame if reference.is_symmetric else TwoByTwoGame
+        return game_type(
             game_id=f"{self.game_id}_expected",
             name=f"{self.name} (expected payoffs)",
             family=reference.family,
