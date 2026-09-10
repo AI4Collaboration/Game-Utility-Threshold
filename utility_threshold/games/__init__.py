@@ -80,6 +80,7 @@ from .institutional_simulation import (
 )
 from .chicken import ChickenParameters, chicken, chicken_threshold_report
 from .prisoners_dilemma import PrisonersDilemmaParameters, prisoners_dilemma, prisoners_dilemma_threshold_report
+from .stag_hunt import StagHuntParameters, stag_hunt, stag_hunt_threshold_report
 from .scenarios import AUTONOMOUS_ESCALATION, FRONTIER_DEPLOYMENT_RACE, SCENARIOS, CanonicalScenario, scenario_from_id
 from .simulation import (
     CompetitiveStrategy,
@@ -184,6 +185,7 @@ __all__ = [
     "SidePaymentMechanism",
     "SymmetricTwoByTwoGame",
     "StateActionBelief",
+    "StagHuntParameters",
     "ThresholdSweepPoint",
     "TitForTatStrategy",
     "TournamentResult",
@@ -220,6 +222,8 @@ __all__ = [
     "resolve_institutional_profile",
     "scenario_from_id",
     "solve_risk_adjusted_threshold",
+    "stag_hunt",
+    "stag_hunt_threshold_report",
     "threshold_sweep",
     "uncertain_scenario_from_id",
     "zero_transfers",
