@@ -7,7 +7,7 @@ from math import isclose
 from types import MappingProxyType
 from typing import Mapping, Protocol
 
-from .base import Payoff, Player, Profile, SymmetricTwoByTwoGame
+from .base import Payoff, Player, Profile, TwoByTwoGame
 
 
 @dataclass(frozen=True)
@@ -19,7 +19,7 @@ class MechanismApplication:
     base-game class.
     """
 
-    base_game: SymmetricTwoByTwoGame
+    base_game: TwoByTwoGame
     payoffs: Mapping[Profile, Payoff]
     permitted_actions: Mapping[Player, tuple[str, ...]]
     mechanism_trace: tuple[Mapping[str, object], ...] = ()
@@ -45,7 +45,7 @@ class MechanismApplication:
         )
 
     @classmethod
-    def baseline(cls, game: SymmetricTwoByTwoGame) -> MechanismApplication:
+    def baseline(cls, game: TwoByTwoGame) -> MechanismApplication:
         return cls(
             base_game=game,
             payoffs=game.payoffs,
@@ -136,7 +136,7 @@ class MechanismApplication:
         }
 
 
-MechanismInput = SymmetricTwoByTwoGame | MechanismApplication
+MechanismInput = TwoByTwoGame | MechanismApplication
 
 
 def as_application(game: MechanismInput) -> MechanismApplication:
@@ -296,11 +296,11 @@ class SidePaymentMechanism:
         })
 
 
-def zero_transfers(game: SymmetricTwoByTwoGame) -> dict[Profile, Payoff]:
+def zero_transfers(game: TwoByTwoGame) -> dict[Profile, Payoff]:
     return {profile: Payoff(0.0, 0.0) for profile in game.profiles}
 
 
-def exploitation_transfer(game: SymmetricTwoByTwoGame, amount: float) -> SidePaymentMechanism:
+def exploitation_transfer(game: TwoByTwoGame, amount: float) -> SidePaymentMechanism:
     """Make a competitive player compensate a cooperative player off diagonal."""
     if amount < 0:
         raise ValueError("transfer amount must be non-negative")
@@ -312,7 +312,7 @@ def exploitation_transfer(game: SymmetricTwoByTwoGame, amount: float) -> SidePay
     return SidePaymentMechanism(transfers, require_budget_balance=True)
 
 
-def cooperation_subsidy(game: SymmetricTwoByTwoGame, amount: float) -> SidePaymentMechanism:
+def cooperation_subsidy(game: TwoByTwoGame, amount: float) -> SidePaymentMechanism:
     """Externally fund each cooperative action by ``amount`` at every profile."""
     if amount < 0:
         raise ValueError("subsidy amount must be non-negative")
@@ -324,3 +324,21 @@ def cooperation_subsidy(game: SymmetricTwoByTwoGame, amount: float) -> SidePayme
         for profile in game.profiles
     }
     return SidePaymentMechanism(transfers, require_budget_balance=False, mechanism_id="cooperation_subsidy")
+
+
+def coordination_subsidy(game: TwoByTwoGame, amount: float) -> SidePaymentMechanism:
+    """Externally fund both players at either same-action coordination profile."""
+    if amount < 0:
+        raise ValueError("subsidy amount must be non-negative")
+    coordinated = set(game.coordination_profiles)
+    transfers = {
+        profile: (
+            Payoff(amount, amount) if profile in coordinated else Payoff(0.0, 0.0)
+        )
+        for profile in game.profiles
+    }
+    return SidePaymentMechanism(
+        transfers,
+        require_budget_balance=False,
+        mechanism_id="coordination_subsidy",
+    )

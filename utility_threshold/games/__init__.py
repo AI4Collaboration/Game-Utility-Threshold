@@ -50,6 +50,7 @@ from .mechanisms import (
     SidePaymentMechanism,
     as_application,
     cooperation_subsidy,
+    coordination_subsidy,
     exploitation_transfer,
     zero_transfers,
 )
@@ -118,6 +119,7 @@ from .simulation import (
     threshold_sweep,
 )
 from .thresholds import InterventionPolicy, UtilityThresholdReport
+from .treatments import TreatmentDesign, treatment_design, treatment_subsidy
 from .uncertainty import (
     DiscreteDistribution,
     PayoffState,
@@ -156,6 +158,7 @@ __all__ = [
     "CommunicationOutcome",
     "ContractPenalty",
     "CooperativeStrategy",
+    "coordination_subsidy",
     "DecisionAnalysis",
     "ExpectedUtilityStrategy",
     "ExpectedValueCriterion",
@@ -209,6 +212,7 @@ __all__ = [
     "StateActionBelief",
     "StagHuntParameters",
     "ThresholdSweepPoint",
+    "TreatmentDesign",
     "TitForTatStrategy",
     "TournamentResult",
     "TwoByTwoGame",
@@ -251,6 +255,8 @@ __all__ = [
     "stag_hunt",
     "stag_hunt_threshold_report",
     "threshold_sweep",
+    "treatment_design",
+    "treatment_subsidy",
     "uncertain_scenario_from_id",
     "zero_transfers",
 ]

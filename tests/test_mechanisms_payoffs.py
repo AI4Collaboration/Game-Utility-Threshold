@@ -7,8 +7,12 @@ from utility_threshold.games import (
     SidePaymentMechanism,
     as_application,
     cooperation_subsidy,
+    coordination_subsidy,
     exploitation_transfer,
     prisoners_dilemma,
+    battle_of_the_sexes,
+    treatment_design,
+    treatment_subsidy,
     zero_transfers,
 )
 
@@ -102,6 +106,26 @@ class TransferTests(unittest.TestCase):
         application = as_application(self.game)
         self.assertEqual(application.pure_nash_equilibria(), self.game.pure_nash_equilibria())
         self.assertEqual(application.outcome_records()[0]["payoff_delta"], {"row": 0.0, "column": 0.0})
+
+    def test_neutral_coordination_subsidy_preserves_opposed_preferences(self) -> None:
+        game = battle_of_the_sexes()
+        application = coordination_subsidy(game, 2.0).apply(game)
+        first, second = game.actions
+        self.assertEqual(
+            application.payoff((first, first)),
+            Payoff(game.payoff((first, first)).row + 2.0, game.payoff((first, first)).column + 2.0),
+        )
+        self.assertEqual(application.payoff((first, second)), game.payoff((first, second)))
+        self.assertGreater(application.payoff((first, first)).row, application.payoff((second, second)).row)
+        self.assertGreater(application.payoff((second, second)).column, application.payoff((first, first)).column)
+
+    def test_family_aware_treatments_balance_equilibrium_selection(self) -> None:
+        game = battle_of_the_sexes()
+        first = treatment_design(game, focal_index=0)
+        second = treatment_design(game, focal_index=1)
+        self.assertNotEqual(first.target_profile, second.target_profile)
+        self.assertEqual(set(first.mediator_distribution), set(game.coordination_profiles))
+        self.assertEqual(treatment_subsidy(game, 1.0).mechanism_id, "coordination_subsidy")
 
 
 if __name__ == "__main__":

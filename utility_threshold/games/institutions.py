@@ -14,7 +14,7 @@ from random import Random
 from types import MappingProxyType
 from typing import Mapping
 
-from .base import Player, Profile, SymmetricTwoByTwoGame
+from .base import Player, Profile, TwoByTwoGame
 from .beliefs import ActionBelief, AsymmetricBeliefs, BeliefUpdate, binary_communication_model
 from .mechanisms import Mechanism, MechanismApplication, MechanismInput, as_application
 
@@ -217,7 +217,7 @@ class ReputationLedger:
             return ReputationLedger(row=self.row.update(observation), column=self.column)
         return ReputationLedger(row=self.row, column=self.column.update(observation))
 
-    def asymmetric_beliefs(self, game: SymmetricTwoByTwoGame) -> AsymmetricBeliefs:
+    def asymmetric_beliefs(self, game: TwoByTwoGame) -> AsymmetricBeliefs:
         return AsymmetricBeliefs(
             row_about_column=self.column.action_belief(
                 game.cooperative_action, game.competitive_action
@@ -473,7 +473,7 @@ class MechanismStack:
 
     def apply(
         self,
-        game: SymmetricTwoByTwoGame,
+        game: TwoByTwoGame,
         *,
         priors: AsymmetricBeliefs | None = None,
         reputation: ReputationLedger | None = None,
