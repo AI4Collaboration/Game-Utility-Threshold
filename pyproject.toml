@@ -1,6 +1,6 @@
 [project]
 name = "utility-threshold-games"
-version = "0.3.0"
+version = "0.4.0"
 description = "Complete canonical utility-threshold games with AISI Inspect observability."
 requires-python = ">=3.11"
 dependencies = ["inspect-ai>=0.3.259", "openai>=1", "python-dotenv>=1"]
