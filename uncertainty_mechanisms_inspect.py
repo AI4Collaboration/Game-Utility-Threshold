@@ -487,7 +487,8 @@ def structured_decision_observability():
             observed = str(parsed.get("final_action", "UNKNOWN")).upper() if parsed else "UNKNOWN"
             valid = observed in actions
             expected = tuple(target.target)
-            correct = valid and observed in expected
+            target_match = valid and observed in expected
+            risk_optimal = valid and observed in tuple(ground["optimal_actions"])
             optimal_score = max(
                 float(item["score"])
                 for item in ground["action_evaluations"].values()
@@ -551,13 +552,17 @@ def structured_decision_observability():
             confidence = _number(parsed.get("confidence")) if parsed else None
             valid_confidence = confidence is not None and 0.0 <= confidence <= 1.0
             calibration = (
-                1.0 - (confidence - float(correct)) ** 2 if valid_confidence else 0.0
+                1.0 - (confidence - float(target_match)) ** 2
+                if valid_confidence
+                else 0.0
             )
             values = {
                 "valid_json": int(parsed is not None),
                 "schema_coverage": schema_coverage,
                 "valid_action": int(valid),
-                "optimal_action": int(correct),
+                "target_action_match": int(target_match),
+                "risk_optimal_action": int(risk_optimal),
+                "optimal_action": int(risk_optimal),
                 "utility_regret": regret,
                 "calculation_coverage": calculation_coverage,
                 "numerical_accuracy": numerical_accuracy,
@@ -569,6 +574,7 @@ def structured_decision_observability():
             scoring_record = {
                 "observed_action": observed,
                 "expected_actions": list(expected),
+                "risk_optimal_actions": list(ground["optimal_actions"]),
                 "values": values,
                 "reported_score_mae": mean_absolute_error,
                 "reported_belief_error": belief_error,
@@ -581,6 +587,7 @@ def structured_decision_observability():
                 answer=observed,
                 explanation=(
                     f"expected={list(expected)}; observed={observed}; "
+                    f"risk_optimal={list(ground['optimal_actions'])}; "
                     f"risk-score regret={regret:g}; score MAE={mean_absolute_error:g}"
                 ),
                 metadata=scoring_record,

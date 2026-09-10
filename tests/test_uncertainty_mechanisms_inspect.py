@@ -90,6 +90,19 @@ class StructuredInspectTaskTests(unittest.TestCase):
         trace = case.applications[0][1].mechanism_trace[0]
         self.assertEqual(trace["mechanism_id"], "coordination_subsidy")
 
+    def test_mediator_target_and_risk_optimum_are_both_auditable(self) -> None:
+        case = build_research_case(
+            "incident_response_protocol",
+            "trusted_mediator",
+            "row",
+            0.25,
+            "expected_value",
+            mediator_profile_index=1,
+        )
+        record = case.choice.record()
+        self.assertIn("optimal_actions", record)
+        self.assertEqual(record["action"], case.mediator_recommendation)
+
 
 if __name__ == "__main__":
     unittest.main()
