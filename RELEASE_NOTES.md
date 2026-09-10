@@ -65,7 +65,7 @@ matrices.
 
 ### Validation and limitations
 
-- Expanded the unit suite to 108 tests covering asymmetric games, uncertainty,
+- Expanded the unit suite to 109 tests covering asymmetric games, uncertainty,
   mechanisms, runners, Inspect datasets, and outcome analysis.
 - Both executed matrices use one deterministic replicate per cell, so results
   are descriptive rather than inferential.
