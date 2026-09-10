@@ -13,6 +13,7 @@ from utility_threshold.games import (
     PrisonersDilemmaParameters,
     RandomStrategy,
     SymmetricTwoByTwoGame,
+    TwoByTwoGame,
     TitForTatStrategy,
     chicken,
     chicken_threshold_report,
@@ -25,6 +26,50 @@ from utility_threshold.games import (
 
 
 class NormalFormEngineTests(unittest.TestCase):
+    def test_general_game_supports_asymmetric_mixed_equilibrium(self) -> None:
+        game = TwoByTwoGame(
+            game_id="battle",
+            name="Battle of the Sexes",
+            family="battle_of_the_sexes",
+            actions=("A", "B"),
+            cooperative_action="A",
+            competitive_action="B",
+            payoffs={
+                ("A", "A"): Payoff(4, 3),
+                ("A", "B"): Payoff(0, 0),
+                ("B", "A"): Payoff(0, 0),
+                ("B", "B"): Payoff(3, 4),
+            },
+        )
+        self.assertFalse(game.is_symmetric)
+        self.assertEqual(game.pure_nash_equilibria(), (("A", "A"), ("B", "B")))
+        mixed = game.mixed_equilibrium()
+        assert mixed is not None
+        self.assertAlmostEqual(mixed["row"]["A"], 4 / 7)
+        self.assertAlmostEqual(mixed["column"]["A"], 3 / 7)
+        self.assertAlmostEqual(
+            game.coordination_probability(mixed["row"], mixed["column"]),
+            24 / 49,
+        )
+        self.assertIsNone(game.symmetric_mixed_equilibrium())
+
+    def test_symmetric_subclass_retains_strict_validation(self) -> None:
+        with self.assertRaisesRegex(ValueError, "not symmetric"):
+            SymmetricTwoByTwoGame(
+                game_id="bad",
+                name="Bad",
+                family="test",
+                actions=("A", "B"),
+                cooperative_action="A",
+                competitive_action="B",
+                payoffs={
+                    ("A", "A"): Payoff(2, 1),
+                    ("A", "B"): Payoff(0, 0),
+                    ("B", "A"): Payoff(0, 0),
+                    ("B", "B"): Payoff(1, 2),
+                },
+            )
+
     def test_matrix_validation_rejects_missing_and_asymmetric_payoffs(self) -> None:
         with self.assertRaises(ValueError):
             SymmetricTwoByTwoGame(

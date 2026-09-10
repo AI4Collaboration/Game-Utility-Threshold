@@ -1,6 +1,13 @@
 """Complete canonical 2x2 games and experiment infrastructure."""
 
-from .base import Payoff, Player, Profile, SymmetricTwoByTwoGame, format_payoff_matrix
+from .base import (
+    Payoff,
+    Player,
+    Profile,
+    SymmetricTwoByTwoGame,
+    TwoByTwoGame,
+    format_payoff_matrix,
+)
 from .beliefs import (
     ActionBelief,
     AsymmetricBeliefs,
@@ -180,6 +187,7 @@ __all__ = [
     "ThresholdSweepPoint",
     "TitForTatStrategy",
     "TournamentResult",
+    "TwoByTwoGame",
     "TrustedMediator",
     "UncertainPayoffGame",
     "UNCERTAIN_SCENARIOS",

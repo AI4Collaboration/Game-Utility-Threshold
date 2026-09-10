@@ -1,4 +1,4 @@
-"""Reusable normal-form machinery for symmetric two-player, two-action games.
+"""Reusable normal-form machinery for two-player, two-action games.
 
 The original project models a leader choosing oversight and a follower making a
 single threshold decision.  This module supplies the missing *game*: both
@@ -35,13 +35,14 @@ class Payoff:
 
 
 @dataclass(frozen=True)
-class SymmetricTwoByTwoGame:
-    """A validated symmetric 2x2 normal-form game.
+class TwoByTwoGame:
+    """A validated 2x2 normal-form game with a shared action vocabulary.
 
     Action strings are deliberately scenario-specific (for example,
     ``PAUSE_FOR_AUDIT`` and ``RACE_TO_DEPLOY``).  ``cooperative_action`` and
-    ``competitive_action`` preserve their game-theoretic roles without forcing
-    vague COOPERATE/ATTACK labels onto every application.
+    ``competitive_action`` retain the original project's first/second action
+    semantics.  Coordination games should use the profile- and welfare-based
+    APIs rather than assuming the second action is harmful.
     """
 
     game_id: str
@@ -67,14 +68,17 @@ class SymmetricTwoByTwoGame:
             raise ValueError(f"payoff matrix must contain all four profiles; missing={missing}, extra={extra}")
 
         copied = {profile: payoff for profile, payoff in self.payoffs.items()}
-        for row, column in expected:
-            forward = copied[(row, column)]
-            reverse = copied[(column, row)]
-            if not isclose(forward.row, reverse.column) or not isclose(forward.column, reverse.row):
-                raise ValueError("payoffs are not symmetric under exchange of players")
         if not set(self.catastrophic_profiles) <= expected:
             raise ValueError("catastrophic profiles must occur in the payoff matrix")
         object.__setattr__(self, "payoffs", MappingProxyType(copied))
+
+    @property
+    def is_symmetric(self) -> bool:
+        return all(
+            isclose(self.payoff((row, column)).row, self.payoff((column, row)).column)
+            and isclose(self.payoff((row, column)).column, self.payoff((column, row)).row)
+            for row, column in self.profiles
+        )
 
     @property
     def profiles(self) -> tuple[Profile, ...]:
@@ -176,6 +180,80 @@ class SymmetricTwoByTwoGame:
                 efficient.append(candidate)
         return tuple(efficient)
 
+    @property
+    def coordination_profiles(self) -> tuple[Profile, Profile]:
+        """Profiles in which both players select the same public action."""
+        first, second = self.actions
+        return (first, first), (second, second)
+
+    @property
+    def miscoordination_profiles(self) -> tuple[Profile, Profile]:
+        first, second = self.actions
+        return (first, second), (second, first)
+
+    def mixed_equilibrium(
+        self, tolerance: float = 1e-9
+    ) -> Mapping[Player, Mapping[str, float]] | None:
+        """Return the unique fully mixed equilibrium of a non-degenerate 2x2 game.
+
+        The row distribution makes the column player indifferent and the
+        column distribution makes the row player indifferent. Boundary and
+        degenerate solutions are represented by the pure-equilibrium API.
+        """
+        first, second = self.actions
+        row_first_first = self.utility("row", first, first)
+        row_first_second = self.utility("row", first, second)
+        row_second_first = self.utility("row", second, first)
+        row_second_second = self.utility("row", second, second)
+        row_denominator = (
+            row_first_first
+            - row_second_first
+            - row_first_second
+            + row_second_second
+        )
+        if isclose(row_denominator, 0.0, abs_tol=tolerance):
+            return None
+        column_probability_first = (
+            row_second_second - row_first_second
+        ) / row_denominator
+
+        column_first_first = self.utility("column", first, first)
+        column_first_second = self.utility("column", first, second)
+        column_second_first = self.utility("column", second, first)
+        column_second_second = self.utility("column", second, second)
+        column_denominator = (
+            column_first_first
+            - column_second_first
+            - column_first_second
+            + column_second_second
+        )
+        if isclose(column_denominator, 0.0, abs_tol=tolerance):
+            return None
+        row_probability_first = (
+            column_second_second - column_first_second
+        ) / column_denominator
+        if not (
+            tolerance < row_probability_first < 1.0 - tolerance
+            and tolerance < column_probability_first < 1.0 - tolerance
+        ):
+            return None
+        return MappingProxyType(
+            {
+                "row": MappingProxyType(
+                    {
+                        first: row_probability_first,
+                        second: 1.0 - row_probability_first,
+                    }
+                ),
+                "column": MappingProxyType(
+                    {
+                        first: column_probability_first,
+                        second: 1.0 - column_probability_first,
+                    }
+                ),
+            }
+        )
+
     def symmetric_mixed_equilibrium(self, tolerance: float = 1e-9) -> Mapping[str, float] | None:
         """Return a fully mixed symmetric equilibrium, when one exists.
 
@@ -183,18 +261,15 @@ class SymmetricTwoByTwoGame:
         actions. Degenerate boundary solutions are omitted because the pure
         equilibrium API already represents them without ambiguity.
         """
-        first, second = self.actions
-        u_first_first = self.utility("row", first, first)
-        u_first_second = self.utility("row", first, second)
-        u_second_first = self.utility("row", second, first)
-        u_second_second = self.utility("row", second, second)
-        denominator = u_first_first - u_second_first - u_first_second + u_second_second
-        if isclose(denominator, 0.0, abs_tol=tolerance):
+        mixed = self.mixed_equilibrium(tolerance)
+        if mixed is None:
             return None
-        probability_first = (u_second_second - u_first_second) / denominator
-        if probability_first <= tolerance or probability_first >= 1.0 - tolerance:
+        first = self.actions[0]
+        if not isclose(
+            mixed["row"][first], mixed["column"][first], abs_tol=tolerance
+        ):
             return None
-        return MappingProxyType({first: probability_first, second: 1.0 - probability_first})
+        return mixed["row"]
 
     def expected_utility(
         self,
@@ -224,6 +299,39 @@ class SymmetricTwoByTwoGame:
             for row, column in self.catastrophic_profiles
         )
 
+    def coordination_probability(
+        self,
+        row_distribution: Mapping[str, float],
+        column_distribution: Mapping[str, float],
+    ) -> float:
+        self._validate_distribution(row_distribution)
+        self._validate_distribution(column_distribution)
+        return sum(
+            row_distribution[action] * column_distribution[action]
+            for action in self.actions
+        )
+
+    def strategic_summary(self) -> dict[str, object]:
+        mixed = self.mixed_equilibrium()
+        return {
+            "game_id": self.game_id,
+            "family": self.family,
+            "is_symmetric": self.is_symmetric,
+            "actions": self.actions,
+            "pure_nash_equilibria": self.pure_nash_equilibria(),
+            "mixed_equilibrium": (
+                {player: dict(distribution) for player, distribution in mixed.items()}
+                if mixed
+                else None
+            ),
+            "coordination_profiles": self.coordination_profiles,
+            "miscoordination_profiles": self.miscoordination_profiles,
+            "pareto_efficient_profiles": self.pareto_efficient_profiles(),
+            "utilitarian_optima": self.welfare_optimal_profiles("utilitarian"),
+            "egalitarian_optima": self.welfare_optimal_profiles("egalitarian"),
+            "nash_product_optima": self.welfare_optimal_profiles("nash_product"),
+        }
+
     def matrix_records(self) -> tuple[dict[str, object], ...]:
         """JSON-friendly payoff records for logs, prompts, and result files."""
         return tuple(
@@ -246,7 +354,17 @@ class SymmetricTwoByTwoGame:
             raise ValueError("probabilities must sum to one")
 
 
-def format_payoff_matrix(game: SymmetricTwoByTwoGame) -> str:
+@dataclass(frozen=True)
+class SymmetricTwoByTwoGame(TwoByTwoGame):
+    """A 2x2 game invariant under exchange of player roles."""
+
+    def __post_init__(self) -> None:
+        super().__post_init__()
+        if not self.is_symmetric:
+            raise ValueError("payoffs are not symmetric under exchange of players")
+
+
+def format_payoff_matrix(game: TwoByTwoGame) -> str:
     """Render a compact plain-text matrix suitable for prompts and terminals."""
     first, second = game.actions
 
