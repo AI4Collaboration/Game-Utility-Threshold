@@ -36,6 +36,7 @@ class CanonicalScenarioTests(unittest.TestCase):
         report = scenario.threshold_report()
         self.assertIsInstance(report, UtilityThresholdReport)
         self.assertEqual(report.minimum_intervention_for_cooperation_dominance, 2.0)
+        self.assertAlmostEqual(report.mixed_catastrophe_probability, 4.0 / 9.0)
 
     def test_battle_scenario_preserves_opposed_focal_preferences(self) -> None:
         scenario = scenario_from_id("incident_response_protocol")
@@ -54,6 +55,10 @@ class CanonicalScenarioTests(unittest.TestCase):
         self.assertIsInstance(report, BattleOfTheSexesReport)
         self.assertAlmostEqual(report.mixed_coordination_probability, 264.0 / 529.0)
         self.assertAlmostEqual(report.mixed_miscoordination_probability, 265.0 / 529.0)
+        self.assertAlmostEqual(
+            report.mixed_catastrophe_probability,
+            report.mixed_miscoordination_probability,
+        )
 
     def test_every_scenario_record_and_threshold_report_are_json_serializable(self) -> None:
         for scenario in SCENARIOS.values():

@@ -40,6 +40,17 @@ class StagHuntTests(unittest.TestCase):
         self.assertAlmostEqual(parameters.assurance_threshold(1.0), 1 / 3)
         self.assertEqual(parameters.risk_dominant_action(cooperation_subsidy=1.0), "COOPERATE")
 
+        report = stag_hunt_threshold_report()
+        self.assertAlmostEqual(report.assurance_belief_threshold, 2 / 3)
+        self.assertAlmostEqual(report.risk_dominance_margin, -1 / 6)
+        self.assertEqual(report.payoff_dominant_profile, ("COOPERATE", "COOPERATE"))
+        self.assertEqual(report.risk_dominant_profile, ("SAFE", "SAFE"))
+        self.assertAlmostEqual(report.mixed_miscoordination_probability, 4 / 9)
+        self.assertEqual(
+            report.record()["threshold_kind"],
+            "assurance_belief_and_action_incentive",
+        )
+
     def test_intervention_crosses_cooperation_dominance_boundary(self) -> None:
         boundary = stag_hunt_threshold_report(intervention=2.0)
         self.assertEqual(boundary.regime, "boundary")

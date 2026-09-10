@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, fields
 
 from .base import SymmetricTwoByTwoGame, Payoff, unique_actions
 from .thresholds import UtilityThresholdReport, build_threshold_report
@@ -84,6 +84,37 @@ class StagHuntParameters:
         )
 
 
+@dataclass(frozen=True)
+class StagHuntReport(UtilityThresholdReport):
+    """Action-incentive and belief thresholds for assurance coordination."""
+
+    assurance_belief_threshold: float
+    risk_dominance_margin: float
+    payoff_dominant_profile: tuple[str, str]
+    risk_dominant_profile: tuple[str, str]
+    mixed_miscoordination_probability: float
+    mixed_catastrophe_probability: float
+
+    def record(self) -> dict[str, object]:
+        record = super().record()
+        record.update(
+            {
+                "threshold_kind": "assurance_belief_and_action_incentive",
+                "assurance_belief_threshold": self.assurance_belief_threshold,
+                "risk_dominance_margin": self.risk_dominance_margin,
+                "payoff_dominant_profile": self.payoff_dominant_profile,
+                "risk_dominant_profile": self.risk_dominant_profile,
+                "mixed_miscoordination_probability": (
+                    self.mixed_miscoordination_probability
+                ),
+                "mixed_catastrophe_probability": (
+                    self.mixed_catastrophe_probability
+                ),
+            }
+        )
+        return record
+
+
 def stag_hunt(
     parameters: StagHuntParameters = StagHuntParameters(),
     *,
@@ -143,7 +174,7 @@ def stag_hunt_threshold_report(
         "High-value cooperation succeeds only with reciprocal assurance; a "
         "lower-value safe action is individually robust."
     ),
-) -> UtilityThresholdReport:
+) -> StagHuntReport:
     game = stag_hunt(
         parameters,
         intervention=intervention,
@@ -152,9 +183,33 @@ def stag_hunt_threshold_report(
         name=name,
         description=description,
     )
-    return build_threshold_report(
+    base = build_threshold_report(
         game,
         intervention,
         parameters.threshold_against_cooperation,
         parameters.threshold_against_safety,
+    )
+    assurance = parameters.assurance_threshold(intervention)
+    risk_dominant_action = parameters.risk_dominant_action(
+        game.actions,
+        cooperation_subsidy=intervention,
+    )
+    mixed = game.symmetric_mixed_equilibrium()
+    miscoordination = (
+        2.0 * mixed[game.actions[0]] * mixed[game.actions[1]]
+        if mixed is not None
+        else 0.0
+    )
+    inherited = {
+        field.name: getattr(base, field.name)
+        for field in fields(UtilityThresholdReport)
+    }
+    return StagHuntReport(
+        **inherited,
+        assurance_belief_threshold=assurance,
+        risk_dominance_margin=0.5 - assurance,
+        payoff_dominant_profile=(game.actions[0], game.actions[0]),
+        risk_dominant_profile=(risk_dominant_action, risk_dominant_action),
+        mixed_miscoordination_probability=miscoordination,
+        mixed_catastrophe_probability=base.symmetric_catastrophe_probability,
     )

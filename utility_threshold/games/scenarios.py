@@ -129,9 +129,29 @@ class CanonicalScenario:
             return chicken_threshold_report(self.parameters, **kwargs)
         if self.family == "stag_hunt":
             assert isinstance(self.parameters, StagHuntParameters)
-            return stag_hunt_threshold_report(self.parameters, **kwargs)
+            report = stag_hunt_threshold_report(self.parameters, **kwargs)
+            game = self.game(intervention)
+            mixed = game.symmetric_mixed_equilibrium()
+            catastrophe = (
+                game.catastrophe_probability(mixed, mixed)
+                if mixed is not None
+                else 0.0
+            )
+            return replace(
+                report,
+                symmetric_catastrophe_probability=catastrophe,
+                mixed_catastrophe_probability=catastrophe,
+            )
         assert isinstance(self.parameters, BattleOfTheSexesParameters)
-        return battle_of_the_sexes_report(self.parameters, **kwargs)
+        report = battle_of_the_sexes_report(self.parameters, **kwargs)
+        game = self.game(intervention)
+        mixed = game.mixed_equilibrium()
+        catastrophe = (
+            game.catastrophe_probability(mixed["row"], mixed["column"])
+            if mixed is not None
+            else 0.0
+        )
+        return replace(report, mixed_catastrophe_probability=catastrophe)
 
     def record(self) -> dict[str, object]:
         return {

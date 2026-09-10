@@ -87,7 +87,7 @@ from .institutional_simulation import (
 )
 from .chicken import ChickenParameters, chicken, chicken_threshold_report
 from .prisoners_dilemma import PrisonersDilemmaParameters, prisoners_dilemma, prisoners_dilemma_threshold_report
-from .stag_hunt import StagHuntParameters, stag_hunt, stag_hunt_threshold_report
+from .stag_hunt import StagHuntParameters, StagHuntReport, stag_hunt, stag_hunt_threshold_report
 from .scenarios import (
     AUTONOMOUS_ESCALATION,
     CROSS_LAB_INCIDENT_RESPONSE,
@@ -211,6 +211,7 @@ __all__ = [
     "SymmetricTwoByTwoGame",
     "StateActionBelief",
     "StagHuntParameters",
+    "StagHuntReport",
     "ThresholdSweepPoint",
     "TreatmentDesign",
     "TitForTatStrategy",

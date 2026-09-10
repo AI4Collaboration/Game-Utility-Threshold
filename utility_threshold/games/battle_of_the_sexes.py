@@ -63,6 +63,7 @@ class BattleOfTheSexesReport:
     mixed_equilibrium: Mapping[Player, Mapping[str, float]]
     mixed_coordination_probability: float
     mixed_miscoordination_probability: float
+    mixed_catastrophe_probability: float
     mixed_expected_utilities: Payoff
     preferred_action_belief_threshold: float
     preference_advantage: float
@@ -84,6 +85,7 @@ class BattleOfTheSexesReport:
             },
             "mixed_coordination_probability": self.mixed_coordination_probability,
             "mixed_miscoordination_probability": self.mixed_miscoordination_probability,
+            "mixed_catastrophe_probability": self.mixed_catastrophe_probability,
             "mixed_expected_utilities": {
                 "row": self.mixed_expected_utilities.row,
                 "column": self.mixed_expected_utilities.column,
@@ -183,6 +185,9 @@ def battle_of_the_sexes_report(
         ),
         mixed_miscoordination_probability=1.0
         - game.coordination_probability(mixed["row"], mixed["column"]),
+        mixed_catastrophe_probability=game.catastrophe_probability(
+            mixed["row"], mixed["column"]
+        ),
         mixed_expected_utilities=Payoff(row_expected, column_expected),
         preferred_action_belief_threshold=parameters.preferred_action_belief_threshold(
             intervention
