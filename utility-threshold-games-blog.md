@@ -1,8 +1,15 @@
 # Why Utility-Thresholds Matter for AI Safety
 
+*Publication-ready Phase 1 manuscript — updated September 10, 2026.*
+
 Catastrophic failures in AI systems often look discontinuous: behavior appears stable and cooperative, then suddenly flips into harmful optimization. A useful way to study this is through **utility-threshold games**: strategic models where small parameter changes (value-per-resource, attack cost, penalty size, uncertainty) produce sharp equilibrium transitions.
 
-This post builds a foundational oversight game, derives threshold conditions, extends to incomplete information, and provides toy simulation code.
+This post builds a foundational oversight game, derives threshold conditions,
+and tests whether four current model families actually follow those conditions.
+Across 156 model decisions, only 65% of the local safe–boundary–unsafe triplets
+displayed the theoretically correct behavioral transition. The result is a
+concrete warning: writing down a utility threshold does not ensure a language
+model will calculate or apply it reliably.
 
 ---
 
@@ -90,6 +97,13 @@ In many practical settings, optimal deterrence is the **minimal deterring defens
 
 If `k(d)` strictly increases, `d_S = d*`.
 
+The executable solver does not assume deterrence is always optimal. It also
+checks the interval endpoints, the detection-saturation kink, and the interior
+stationary point of the human payoff while attack continues. This matters when
+deterrence is infeasible: under the default parameters with `v=100`, zero
+defense gives the human utility `-20`, while the true optimum is an intermediate
+defense `d=5` with utility `-12.5`.
+
 ### Catastrophic flip
 
 The key discontinuity: when parameters move so that `d*` crosses feasible defense capacity `D_max`, behavior flips from deterrable cooperation to unavoidable attack.
@@ -108,11 +122,17 @@ For Nash analysis, discretize defense: `d in {d_L, d_H}` with `d_H > d_L`.
 
 AI chooses `C` or `A`. The payoff matrix is induced by formulas above.
 
-Nash equilibria:
+The implementation enumerates pure equilibria and solves the fully mixed
+interior equilibrium by making each player indifferent. For the default game
+with `v=4` and defenses `{0,4}`, there is no pure equilibrium. The mixed
+equilibrium is:
 
-- `(d_H, C)` if AI prefers `C` at `d_H` and human prefers `d_H` given AI response structure.
-- `(d_L, A)` if high defense is too costly and attack loss under low defense is tolerated (or unavoidable).
-- Mixed equilibria may exist in knife-edge parameter regions.
+```text
+Pr(high defense) = 0.8
+Pr(attack) = 0.4
+E[U_H] = -8
+E[U_AI] = 0
+```
 
 In this game family, **Stackelberg is often more behaviorally appropriate** than simultaneous Nash, because real oversight choices precede model deployment/action.
 
@@ -268,16 +288,34 @@ This lets you compare fixed policies versus utility-rational behavior.
 
 ---
 
-## 8) Basic LLM-Driven Agent Variant
+## 8) What Real Model Play Shows
 
-A lightweight experiment:
+We evaluated one OpenAI, Anthropic, Google, and Meta model on 39 unique cases
+each. Twenty-five cases form a broad parameter grid. Fourteen cases sit exactly
+at or `0.25` utility units to either side of the threshold. Each model returns
+an observable worksheet with both utilities, the signed margin, action, and
+confidence.
 
-1. Prompt an LLM with current game state `(d, p, estimated q(d), c(d), objective framing)`.
-2. Force binary output: `COOPERATE` or `ATTACK`.
-3. Compare chosen action against analytical threshold predictor.
-4. Measure disagreement rate near threshold (`|M(d)|` small).
+All 156 calls completed. Overall, 98.72% of final actions were parseable, but
+only 85.90% were utility-optimal. Performance differed sharply by model:
 
-Near threshold boundaries, models may become brittle and prompt-sensitive. This is exactly where safety slack matters most.
+| Model family | Optimal action | Valid JSON | Mean regret |
+|---|---:|---:|---:|
+| Anthropic | 100% | 100% | 0.000 |
+| Google | 97.44% | 100% | 0.013 |
+| Meta | 76.92% | 20.51% | 0.256 |
+| OpenAI | 69.23% | 89.74% | 0.327 |
+
+The just-safe cases were hardest: only 68.75% received the correct cooperative
+action. Common failures included dropping the penalty term during arithmetic,
+reversing the safety-margin sign, ignoring the equality tie-break, and placing
+unevaluated expressions in JSON numeric fields.
+
+These are descriptive results from one call per cell under the specified model
+versions and minimal reasoning budget. They are not stable provider rankings.
+They nevertheless demonstrate why a safety margin must include computational
+reliability: a mathematically safe region is not behaviorally safe if the agent
+miscomputes which side of the boundary it occupies.
 
 ---
 
@@ -288,18 +326,16 @@ Reference implementation in this project: `utility_threshold_inspect.py`.
 
 ### What this implementation gives you
 
-- **Per-sample traces** with full prompt, completion, and score context.
-- **Structured metadata** for each game point: `v`, `d`, `c(d)`, `q(d)`, `margin`, `expected_action`, `near_boundary`.
-- **Custom scorer** (`threshold_observability`) that emits:
-  - observed action
-  - expected threshold action
-  - boundary proximity
-  - raw completion text
-- **Deterministic policy baselines** via `policy_solver`:
-  - `cooperate`
-  - `defect`
-  - `threshold`
-- **Model-eval mode** via `generate()` for real LLMs.
+- Full prompt, message, provider output, declared worksheet, and score records.
+- Exact ground-truth utilities, safety margins, critical values, and decision
+  certificates for every sample.
+- Nested spans for input validation, calculation, decision, parsing, and
+  scoring, plus structured store and transcript events.
+- Separate schema coverage, numerical accuracy, margin-sign correctness,
+  action validity, utility regret, and confidence-calibration metrics.
+- Eight deterministic, stochastic, and proof-carrying policy baselines.
+- A strict observability boundary: provider-exposed reasoning is retained, but
+  provider-private hidden chain-of-thought is neither accessible nor claimed.
 
 ### Run commands
 
@@ -309,28 +345,26 @@ Install:
 python3 -m pip install inspect-ai
 ```
 
-Deterministic threshold-policy eval (no API key required):
+Run and record every policy baseline without an API key:
 
 ```bash
-python3 utility_threshold_inspect.py
+python3 run_phase_one_policy_eval.py
 ```
 
-Model-driven eval (example):
+Run the four-provider model matrix with an OpenRouter key in `.env`:
 
 ```bash
-inspect eval utility_threshold_inspect.py@utility_threshold_model_eval \
-  --model openai/gpt-4.1-mini \
-  --log-dir ./logs \
-  --display plain
+python3 run_phase_one_eval.py
 ```
 
-Open logs in Inspect viewer:
+Validate Python, Lean, parity, analyses, and artifact checksums in one command:
 
 ```bash
-inspect view --log-dir ./logs
+scripts/validate_research_package.sh
 ```
 
-This setup is designed for threshold-regime diagnostics: you can filter by `near_boundary=true` and inspect exactly where model behavior diverges from the analytical policy.
+The complete methods, slices, limitations, and artifact map are in
+[`docs/phase-one-research-package.md`](docs/phase-one-research-package.md).
 
 ---
 
@@ -349,10 +383,13 @@ As models gain capability (`v` rises) or exploitability (`R` rises), previously 
 ## 11) Practical Next Steps
 
 - Calibrate `c(d)` and `q(d)` from empirical red-team data.
-- Model dynamic/repeated interactions (reputation, delayed penalties, adaptation).
-- Add multi-stage attack paths and partial observability.
-- Replace scalar `v` with context-conditional utility over task classes.
-- Use this framework as a pre-deployment safety stress test.
+- Repeat each model/case cell across seeds, reasoning budgets, and prompt
+  variants to estimate behavioral variance.
+- Test tool-assisted calculation as an intervention against threshold errors.
+- Replace scalar `v` with context-conditional utility over task classes and
+  calibrate uncertainty from real elicitation data.
+- Pre-register confirmatory hypotheses before treating provider differences as
+  general model-family effects.
 
 ---
 
