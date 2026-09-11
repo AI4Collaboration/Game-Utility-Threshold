@@ -317,6 +317,14 @@ communication achieved only 37.50% and 25.00%.
 Read [docs/coordination-game-results.md](docs/coordination-game-results.md) for
 the design, per-game mechanism interactions, observability record, and limits.
 
+A fresh combined replication adds 768 live joint games across all four games,
+both objective instructions, every treatment, and all 16 ordered model pairs.
+All cells and native AISI Inspect samples passed the completeness and linkage
+audit. Read
+[docs/model-gameplay-replication-02.md](docs/model-gameplay-replication-02.md)
+for the new results, matched first-run deltas, trace inventory, checksums, and
+limitations.
+
 ## Strategy infrastructure
 
 The repeated-game layer includes cooperative, competitive, seeded random,
