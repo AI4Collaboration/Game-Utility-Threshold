@@ -2,6 +2,7 @@ import unittest
 
 from analyze_phase_one_results import (
     analyze,
+    audit_policy_summary,
     audit_phase_one_summary,
     threshold_transition_analysis,
 )
@@ -79,6 +80,27 @@ class PhaseOneAnalysisTests(unittest.TestCase):
         self.assertTrue(audit["complete"])
         self.assertFalse(audit["all_worksheets_valid_json"])
         self.assertTrue(audit["all_actions_parseable"])
+
+    def test_policy_baseline_audit_checks_exact_and_stochastic_certificates(self) -> None:
+        records = []
+        for policy in ("threshold", "pdupoc"):
+            records.append({
+                "sample_id": "one",
+                "policy": policy,
+                "scores": {"optimal_action": 1},
+                "probabilistic_certificate": (
+                    {"valid": True} if policy == "pdupoc" else None
+                ),
+            })
+        payload = {
+            "configuration": {
+                "policies": ["threshold", "pdupoc"],
+                "samples_per_policy": 1,
+            },
+            "statuses": {"threshold": "success", "pdupoc": "success"},
+            "records": records,
+        }
+        self.assertTrue(audit_policy_summary(payload)["complete"])
 
 
 if __name__ == "__main__":

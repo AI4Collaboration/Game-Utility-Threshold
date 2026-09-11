@@ -29,6 +29,7 @@ jobs:
         run: |
           python analyze_phase_one_results.py \
             results/phase_one_model_eval.json \
+            --policies results/phase_one_policy_baselines.json \
             --output /tmp/phase_one_analysis.json
           cmp results/phase_one_analysis.json /tmp/phase_one_analysis.json
 

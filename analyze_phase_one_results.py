@@ -142,7 +142,60 @@ def threshold_transition_analysis(payload: Mapping[str, Any]) -> dict[str, Any]:
     }
 
 
-def analyze(payload: Mapping[str, Any]) -> dict[str, Any]:
+def audit_policy_summary(payload: Mapping[str, Any]) -> dict[str, Any]:
+    records = list(payload["records"])
+    configuration = dict(payload.get("configuration", {}))
+    policies = tuple(configuration.get("policies", ()))
+    samples_per_policy = int(configuration.get("samples_per_policy", 0))
+    expected = len(policies) * samples_per_policy
+    counts = Counter((record.get("policy"), record.get("sample_id")) for record in records)
+    duplicates = [list(key) for key, count in counts.items() if count > 1]
+    wrong_counts = {
+        policy: sum(record.get("policy") == policy for record in records)
+        for policy in policies
+        if sum(record.get("policy") == policy for record in records) != samples_per_policy
+    }
+    statuses = dict(payload.get("statuses", {}))
+    invalid_probabilistic_certificates = [
+        record["sample_id"] + "@" + record["policy"]
+        for record in records
+        if record.get("probabilistic_certificate") is not None
+        and not bool(record["probabilistic_certificate"].get("valid"))
+    ]
+    exact_policies = {"threshold", "proof", "dupoc", "cupod"}
+    invalid_exact_policy_decisions = [
+        record["sample_id"] + "@" + record["policy"]
+        for record in records
+        if record.get("policy") in exact_policies
+        and not bool(record.get("scores", {}).get("optimal_action"))
+    ]
+    complete = (
+        len(records) == expected
+        and set(statuses) == set(policies)
+        and all(status == "success" for status in statuses.values())
+        and not duplicates
+        and not wrong_counts
+        and not invalid_probabilistic_certificates
+        and not invalid_exact_policy_decisions
+    )
+    return {
+        "complete": complete,
+        "record_count": len(records),
+        "expected_record_count": expected,
+        "policies": list(policies),
+        "samples_per_policy": samples_per_policy,
+        "statuses": statuses,
+        "duplicate_cells": duplicates,
+        "wrong_sample_counts": wrong_counts,
+        "invalid_probabilistic_certificates": invalid_probabilistic_certificates,
+        "invalid_exact_policy_decisions": invalid_exact_policy_decisions,
+    }
+
+
+def analyze(
+    payload: Mapping[str, Any],
+    policy_payload: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
     records = list(payload["records"])
     incorrect = [
         {
@@ -158,12 +211,18 @@ def analyze(payload: Mapping[str, Any]) -> dict[str, Any]:
         for record in records
         if not bool(record.get("scores", {}).get("optimal_action"))
     ]
-    return {
+    result = {
         "audit": audit_phase_one_summary(payload),
         "summary": aggregate_phase_one_records(records),
         "threshold_transitions": threshold_transition_analysis(payload),
         "incorrect_decisions": incorrect,
     }
+    if policy_payload is not None:
+        result["policy_baselines"] = {
+            "audit": audit_policy_summary(policy_payload),
+            "aggregates": policy_payload.get("aggregates", {}),
+        }
+    return result
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -171,19 +230,26 @@ def build_parser() -> argparse.ArgumentParser:
         description="Audit and analyze a Phase 1 model-evaluation summary"
     )
     parser.add_argument("summary", help="Phase 1 JSON summary")
+    parser.add_argument("--policies", help="optional Phase 1 policy-baseline JSON")
     parser.add_argument("--output", help="optional JSON analysis output")
     return parser
 
 
 def main() -> int:
     args = build_parser().parse_args()
-    result = analyze(load_summary(args.summary))
+    result = analyze(
+        load_summary(args.summary),
+        load_summary(args.policies) if args.policies else None,
+    )
     rendered = json.dumps(result, indent=2, sort_keys=True) + "\n"
     if args.output:
         Path(args.output).write_text(rendered, encoding="utf-8")
     else:
         print(rendered, end="")
-    return 0 if result["audit"]["complete"] else 1
+    audits = [result["audit"]]
+    if "policy_baselines" in result:
+        audits.append(result["policy_baselines"]["audit"])
+    return 0 if all(audit["complete"] for audit in audits) else 1
 
 
 if __name__ == "__main__":

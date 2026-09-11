@@ -9,6 +9,7 @@ cd "$project_root"
 python3 -m unittest discover -s tests
 python3 analyze_phase_one_results.py \
   results/phase_one_model_eval.json \
+  --policies results/phase_one_policy_baselines.json \
   --output "$analysis_copy"
 cmp results/phase_one_analysis.json "$analysis_copy"
 
