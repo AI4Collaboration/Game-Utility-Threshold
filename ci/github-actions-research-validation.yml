@@ -36,6 +36,8 @@ jobs:
         run: |
           python scripts/verify_artifact_manifest.py results/phase_one_checksums.sha256
           python scripts/verify_artifact_manifest.py results/coordination_games_checksums.sha256
+          python scripts/verify_artifact_manifest.py results/model_gameplay_replication_02_checksums.sha256
+          python scripts/verify_artifact_manifest.py logs/model_gameplay_replication_02/checksums.sha256
 
   lean:
     name: Lean proofs and Python parity

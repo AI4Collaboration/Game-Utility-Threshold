@@ -17,6 +17,8 @@ python3 analyze_phase_one_results.py \
 cmp results/phase_one_analysis.json "$analysis_copy"
 python3 scripts/verify_artifact_manifest.py results/phase_one_checksums.sha256
 python3 scripts/verify_artifact_manifest.py results/coordination_games_checksums.sha256
+python3 scripts/verify_artifact_manifest.py results/model_gameplay_replication_02_checksums.sha256
+python3 scripts/verify_artifact_manifest.py logs/model_gameplay_replication_02/checksums.sha256
 
 cd "$project_root/lean"
 lake build
