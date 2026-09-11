@@ -69,20 +69,21 @@ def audit_phase_one_summary(payload: Mapping[str, Any]) -> dict[str, Any]:
     ]
     failures = list(payload.get("failed_providers", []))
     completed = tuple(payload.get("completed_providers", ()))
-    complete = (
+    factorial_complete = (
         len(records) == expected_total
         and set(completed) == set(providers)
         and not duplicates
         and not missing_by_provider
         and not wrong_sample_counts
-        and not invalid_json
-        and not invalid_actions
         and not missing_prompts
         and not missing_outputs
         and not failures
     )
     return {
-        "complete": complete,
+        "complete": factorial_complete,
+        "factorial_complete": factorial_complete,
+        "all_actions_parseable": not invalid_actions,
+        "all_worksheets_valid_json": not invalid_json,
         "record_count": len(records),
         "expected_record_count": expected_total,
         "providers": list(providers),

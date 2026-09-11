@@ -66,6 +66,20 @@ class PhaseOneAnalysisTests(unittest.TestCase):
         self.assertTrue(audit["duplicate_cells"])
         self.assertTrue(audit["invalid_actions"])
 
+    def test_schema_noncompliance_is_preserved_as_behavioral_data(self) -> None:
+        record = _record("openai", "one", "just_safe", "COOPERATE")
+        record["scores"]["valid_json"] = 0
+        payload = {
+            "configuration": {"providers": ["openai"], "samples_per_provider": 1},
+            "completed_providers": ["openai"],
+            "failed_providers": [],
+            "records": [record],
+        }
+        audit = audit_phase_one_summary(payload)
+        self.assertTrue(audit["complete"])
+        self.assertFalse(audit["all_worksheets_valid_json"])
+        self.assertTrue(audit["all_actions_parseable"])
+
 
 if __name__ == "__main__":
     unittest.main()
