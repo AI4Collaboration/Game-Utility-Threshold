@@ -4,3 +4,7 @@ defaultTargets = ["UtilityThreshold"]
 
 [[lean_lib]]
 name = "UtilityThreshold"
+
+[[lean_exe]]
+name = "parity_check"
+root = "ParityCheck"

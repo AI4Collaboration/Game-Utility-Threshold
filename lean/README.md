@@ -16,3 +16,8 @@ declares the proof as the default library target. Verify it with:
 ```bash
 lake build
 ```
+
+`ParityCheck.lean` emits the exact scaled decision record for the 25-point
+Phase 1 research grid. `tests/test_lean_parity.py` executes that oracle and
+asserts equality with Python for detection, both utilities, the safety margin,
+and the chosen action.
