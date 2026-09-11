@@ -1,5 +1,19 @@
 # Release notes
 
+## Unreleased
+
+### Game parameter validation
+
+- Added an independent audit of the defining payoff inequalities and strategic
+  structure for Prisoner's Dilemma, Chicken, Stag Hunt, and Battle of the Sexes.
+- Extended the audit across all canonical scenarios, twelve latent payoff
+  states, four expected-payoff matrices, probability normalization,
+  catastrophe semantics, and ordered severity assumptions.
+- Added a deterministic JSON report with named operands, signed margins, and
+  diagnostic failures for 262 checks across 29 subjects.
+- Wired the validation artifact and its SHA-256 manifest into the complete
+  Python/Lean research-package gate.
+
 ## 0.5.0 — 2026-09-10
 
 This release turns the Months 1–3 sequential oversight prototype into a

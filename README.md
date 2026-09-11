@@ -97,6 +97,26 @@ to concede. The mixed equilibrium catastrophically mismatches with probability
 See [docs/canonical-games.md](docs/canonical-games.md) for the deterministic
 derivations and strategic regimes.
 
+## Validate payoff assumptions
+
+Audit every canonical game, all twelve latent payoff states, and all four
+expected-payoff matrices against their defining inequalities and strategic
+claims:
+
+```bash
+python3 -m utility_threshold.games validate-catalog
+```
+
+The audit currently checks 262 explicit claims, including `T > R > P > S` and
+`2R > T + S` for every Prisoner's Dilemma matrix, the corresponding Chicken,
+Stag Hunt, and Battle-of-the-Sexes inequalities, equilibrium structure,
+probability normalization, finite utilities, catastrophe semantics, and latent
+severity ordering. It exits nonzero on failure and records both compared values
+and the inequality margin. See
+[docs/game-parameter-validation.md](docs/game-parameter-validation.md) for the
+full contract and the distinction between malformed base settings and intended
+post-intervention regime changes.
+
 ## Utility uncertainty and thresholds
 
 For Prisoner's Dilemma and Chicken, the intervention applied to the competitive
