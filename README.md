@@ -11,6 +11,24 @@ latent-state payoff lotteries, Bayesian beliefs, six risk criteria, executable
 institutional mechanisms, repeated play, true multi-provider model gameplay,
 and granular AISI Inspect traces.
 
+## Research-grade Phase 1
+
+The original Months 1–3 sequential oversight milestone is now a standalone
+research package rather than a toy precursor. It includes a globally solved
+continuous Stackelberg leader problem, pure and fully mixed normal-form
+analysis, exact threshold certificates, a pinned Lean proof project, executable
+Python–Lean parity checks, 312 Inspect policy-baseline samples, and 156 real
+cross-provider model decisions.
+
+The model matrix is factorially complete. Overall, 98.72% of actions were
+parseable and 85.90% were utility-optimal, but only 65% of provider/defense
+triplets exhibited the correct local transition from just-safe through the
+boundary to just-unsafe. See
+[docs/phase-one-research-package.md](docs/phase-one-research-package.md) for the
+formal specification, methods, results, error analysis, limitations, artifact
+map, and reproduction commands. The publication-ready milestone manuscript is
+[utility-threshold-games-blog.md](utility-threshold-games-blog.md).
+
 ## Implemented games
 
 ### Frontier AI Deployment Race (Prisoner's Dilemma)
@@ -137,7 +155,7 @@ Requires Python 3.11 or newer.
 
 ```bash
 python3 -m pip install -e .
-python3 -m unittest discover -v
+scripts/validate_research_package.sh
 ```
 
 Analyze the full payoff matrix and its equilibria:
@@ -298,16 +316,25 @@ tit-for-tat, and grim-trigger strategies. Every round records both utilities,
 total welfare, both players' deviation regret, Nash and Pareto flags, and the
 catastrophe flag.
 
-## Earlier oversight foundation
+## Sequential oversight foundation
 
-The original leader-follower defense model remains supported in
-`utility_threshold/core.py`, along with deterministic, probabilistic, and
-proof-carrying agents; Stackelberg and reduced normal-form solvers; the original
-Inspect grid; and the Lean threshold proof. Run it with:
+The leader-follower defense model lives in `utility_threshold/core.py`, with
+deterministic, stochastic, and proof-carrying agents; complete supported
+Stackelberg and normal-form solvers; a threshold-stratified Inspect dataset; and
+the pinned Lean formalization. Run the analytic policies or real-model matrix
+with:
 
 ```bash
-python3 utility_threshold_sim.py
-python3 utility_threshold_inspect.py
+python3 run_phase_one_policy_eval.py
+python3 run_phase_one_eval.py
+```
+
+Recompute and strictly audit both committed matrices with:
+
+```bash
+python3 analyze_phase_one_results.py \
+  results/phase_one_model_eval.json \
+  --policies results/phase_one_policy_baselines.json
 ```
 
 ## Scope
