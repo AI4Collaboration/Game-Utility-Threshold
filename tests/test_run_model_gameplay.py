@@ -1,9 +1,23 @@
 import unittest
+from pathlib import Path
+from tempfile import TemporaryDirectory
 
-from run_model_gameplay import aggregate_gameplay_records, ordered_pairings
+from run_model_gameplay import (
+    aggregate_gameplay_records,
+    ordered_pairings,
+    portable_log_path,
+)
 
 
 class ModelGameplayRunnerTests(unittest.TestCase):
+    def test_log_paths_are_relative_inside_the_repository(self) -> None:
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            log = root / "logs" / "experiment.eval"
+            self.assertEqual(
+                portable_log_path(log, root=root), "logs/experiment.eval"
+            )
+
     def test_ordered_pairings_include_self_and_both_cross_play_orders(self) -> None:
         self.assertEqual(
             ordered_pairings(("openai", "anthropic")),

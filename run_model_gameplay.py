@@ -32,6 +32,16 @@ def ordered_pairings(providers: Iterable[str]) -> tuple[tuple[str, str], ...]:
     return tuple((row, column) for row in names for column in names)
 
 
+def portable_log_path(path: str | Path, *, root: Path | None = None) -> str:
+    """Prefer a repository-relative Inspect log reference when possible."""
+    base = (root or Path.cwd()).resolve()
+    resolved = Path(path).resolve()
+    try:
+        return resolved.relative_to(base).as_posix()
+    except ValueError:
+        return str(resolved)
+
+
 def _numeric_means(records: Iterable[Mapping[str, Any]]) -> dict[str, float]:
     values: dict[str, list[float]] = defaultdict(list)
     for record in records:
@@ -140,7 +150,7 @@ def _record_from_sample(
         "second_action": actions[1],
         "scores": scores,
         "joint_outcome": metadata.get("joint_outcome"),
-        "inspect_log": log_path,
+        "inspect_log": portable_log_path(log_path),
     }
 
 
@@ -257,6 +267,9 @@ def main() -> int:
             raise SystemExit(f"{output_path} already exists; pass --resume or choose another output")
         existing = json.loads(output_path.read_text(encoding="utf-8"))
         records = list(existing.get("records", []))
+        for record in records:
+            if record.get("inspect_log"):
+                record["inspect_log"] = portable_log_path(record["inspect_log"])
         completed_pairs = list(existing.get("completed_pairs", []))
         failed_pairs = list(existing.get("failed_pairs", []))
 
@@ -330,6 +343,15 @@ def main() -> int:
                 })
         except Exception as exc:
             failed_pairs.append({"pair": pair_id, "error": f"{type(exc).__name__}: {exc}"})
+        _save_checkpoint(
+            output_path,
+            configuration=configuration,
+            completed_pairs=completed_pairs,
+            failed_pairs=failed_pairs,
+            records=records,
+        )
+
+    if records:
         _save_checkpoint(
             output_path,
             configuration=configuration,
