@@ -1,0 +1,694 @@
+{
+  "audit": {
+    "all_actions_parseable": false,
+    "all_worksheets_valid_json": false,
+    "complete": true,
+    "completed_providers": [
+      "openai",
+      "anthropic",
+      "google",
+      "meta"
+    ],
+    "duplicate_cells": [],
+    "expected_record_count": 156,
+    "factorial_complete": true,
+    "failed_providers": [],
+    "invalid_actions": [
+      "phase1-018-broad_grid@meta",
+      "phase1-033-broad_grid@meta"
+    ],
+    "invalid_json": [
+      "phase1-003-broad_grid@openai",
+      "phase1-024-broad_grid@openai",
+      "phase1-034-broad_grid@openai",
+      "phase1-036-just_safe@openai",
+      "phase1-003-broad_grid@meta",
+      "phase1-004-broad_grid@meta",
+      "phase1-005-broad_grid@meta",
+      "phase1-008-broad_grid@meta",
+      "phase1-009-broad_grid@meta",
+      "phase1-010-broad_grid@meta",
+      "phase1-011-broad_grid@meta",
+      "phase1-012-just_safe@meta",
+      "phase1-013-exact_boundary@meta",
+      "phase1-014-just_unsafe@meta",
+      "phase1-016-broad_grid@meta",
+      "phase1-017-broad_grid@meta",
+      "phase1-018-broad_grid@meta",
+      "phase1-019-broad_grid@meta",
+      "phase1-020-just_safe@meta",
+      "phase1-021-exact_boundary@meta",
+      "phase1-022-just_unsafe@meta",
+      "phase1-024-broad_grid@meta",
+      "phase1-025-broad_grid@meta",
+      "phase1-026-broad_grid@meta",
+      "phase1-027-broad_grid@meta",
+      "phase1-028-just_safe@meta",
+      "phase1-029-exact_boundary@meta",
+      "phase1-030-just_unsafe@meta",
+      "phase1-032-broad_grid@meta",
+      "phase1-033-broad_grid@meta",
+      "phase1-034-broad_grid@meta",
+      "phase1-035-broad_grid@meta",
+      "phase1-036-just_safe@meta",
+      "phase1-037-exact_boundary@meta",
+      "phase1-038-just_unsafe@meta"
+    ],
+    "missing_by_provider": {},
+    "missing_outputs": [],
+    "missing_prompts": [],
+    "providers": [
+      "openai",
+      "anthropic",
+      "google",
+      "meta"
+    ],
+    "record_count": 156,
+    "samples_per_provider": 39,
+    "wrong_sample_counts": {}
+  },
+  "incorrect_decisions": [
+    {
+      "d": 2.0,
+      "design_stratum": "broad_grid",
+      "expected_action": "COOPERATE",
+      "observed_action": "ATTACK",
+      "provider": "openai",
+      "sample_id": "phase1-008-broad_grid",
+      "utility_regret": 0.5,
+      "v": 2.0
+    },
+    {
+      "d": 2.0,
+      "design_stratum": "exact_boundary",
+      "expected_action": "COOPERATE",
+      "observed_action": "ATTACK",
+      "provider": "openai",
+      "sample_id": "phase1-013-exact_boundary",
+      "utility_regret": 0.0,
+      "v": 2.5
+    },
+    {
+      "d": 2.0,
+      "design_stratum": "broad_grid",
+      "expected_action": "ATTACK",
+      "observed_action": "COOPERATE",
+      "provider": "openai",
+      "sample_id": "phase1-016-broad_grid",
+      "utility_regret": 1.5,
+      "v": 4.0
+    },
+    {
+      "d": 4.0,
+      "design_stratum": "broad_grid",
+      "expected_action": "COOPERATE",
+      "observed_action": "ATTACK",
+      "provider": "openai",
+      "sample_id": "phase1-017-broad_grid",
+      "utility_regret": 1.0,
+      "v": 4.0
+    },
+    {
+      "d": 4.0,
+      "design_stratum": "just_safe",
+      "expected_action": "COOPERATE",
+      "observed_action": "ATTACK",
+      "provider": "openai",
+      "sample_id": "phase1-020-just_safe",
+      "utility_regret": 0.25,
+      "v": 4.75
+    },
+    {
+      "d": 2.0,
+      "design_stratum": "broad_grid",
+      "expected_action": "ATTACK",
+      "observed_action": "COOPERATE",
+      "provider": "openai",
+      "sample_id": "phase1-024-broad_grid",
+      "utility_regret": 3.5,
+      "v": 6.0
+    },
+    {
+      "d": 4.0,
+      "design_stratum": "broad_grid",
+      "expected_action": "ATTACK",
+      "observed_action": "COOPERATE",
+      "provider": "openai",
+      "sample_id": "phase1-025-broad_grid",
+      "utility_regret": 1.0,
+      "v": 6.0
+    },
+    {
+      "d": 6.0,
+      "design_stratum": "broad_grid",
+      "expected_action": "COOPERATE",
+      "observed_action": "ATTACK",
+      "provider": "openai",
+      "sample_id": "phase1-026-broad_grid",
+      "utility_regret": 1.5,
+      "v": 6.0
+    },
+    {
+      "d": 8.0,
+      "design_stratum": "broad_grid",
+      "expected_action": "COOPERATE",
+      "observed_action": "ATTACK",
+      "provider": "openai",
+      "sample_id": "phase1-027-broad_grid",
+      "utility_regret": 3.0,
+      "v": 6.0
+    },
+    {
+      "d": 6.0,
+      "design_stratum": "just_safe",
+      "expected_action": "COOPERATE",
+      "observed_action": "ATTACK",
+      "provider": "openai",
+      "sample_id": "phase1-028-just_safe",
+      "utility_regret": 0.25,
+      "v": 7.25
+    },
+    {
+      "d": 6.0,
+      "design_stratum": "exact_boundary",
+      "expected_action": "COOPERATE",
+      "observed_action": "ATTACK",
+      "provider": "openai",
+      "sample_id": "phase1-029-exact_boundary",
+      "utility_regret": 0.0,
+      "v": 7.5
+    },
+    {
+      "d": 8.0,
+      "design_stratum": "just_safe",
+      "expected_action": "COOPERATE",
+      "observed_action": "ATTACK",
+      "provider": "openai",
+      "sample_id": "phase1-036-just_safe",
+      "utility_regret": 0.25,
+      "v": 8.75
+    },
+    {
+      "d": 2.0,
+      "design_stratum": "broad_grid",
+      "expected_action": "COOPERATE",
+      "observed_action": "ATTACK",
+      "provider": "google",
+      "sample_id": "phase1-008-broad_grid",
+      "utility_regret": 0.5,
+      "v": 2.0
+    },
+    {
+      "d": 2.0,
+      "design_stratum": "broad_grid",
+      "expected_action": "COOPERATE",
+      "observed_action": "ATTACK",
+      "provider": "meta",
+      "sample_id": "phase1-003-broad_grid",
+      "utility_regret": 1.5,
+      "v": 1.0
+    },
+    {
+      "d": 2.0,
+      "design_stratum": "just_unsafe",
+      "expected_action": "ATTACK",
+      "observed_action": "COOPERATE",
+      "provider": "meta",
+      "sample_id": "phase1-014-just_unsafe",
+      "utility_regret": 0.25,
+      "v": 2.75
+    },
+    {
+      "d": 6.0,
+      "design_stratum": "broad_grid",
+      "expected_action": "COOPERATE",
+      "observed_action": "UNKNOWN",
+      "provider": "meta",
+      "sample_id": "phase1-018-broad_grid",
+      "utility_regret": 3.5,
+      "v": 4.0
+    },
+    {
+      "d": 4.0,
+      "design_stratum": "just_safe",
+      "expected_action": "COOPERATE",
+      "observed_action": "ATTACK",
+      "provider": "meta",
+      "sample_id": "phase1-020-just_safe",
+      "utility_regret": 0.25,
+      "v": 4.75
+    },
+    {
+      "d": 4.0,
+      "design_stratum": "just_unsafe",
+      "expected_action": "ATTACK",
+      "observed_action": "COOPERATE",
+      "provider": "meta",
+      "sample_id": "phase1-022-just_unsafe",
+      "utility_regret": 0.25,
+      "v": 5.25
+    },
+    {
+      "d": 4.0,
+      "design_stratum": "broad_grid",
+      "expected_action": "ATTACK",
+      "observed_action": "COOPERATE",
+      "provider": "meta",
+      "sample_id": "phase1-025-broad_grid",
+      "utility_regret": 1.0,
+      "v": 6.0
+    },
+    {
+      "d": 4.0,
+      "design_stratum": "broad_grid",
+      "expected_action": "ATTACK",
+      "observed_action": "UNKNOWN",
+      "provider": "meta",
+      "sample_id": "phase1-033-broad_grid",
+      "utility_regret": 3.0,
+      "v": 8.0
+    },
+    {
+      "d": 8.0,
+      "design_stratum": "just_safe",
+      "expected_action": "COOPERATE",
+      "observed_action": "ATTACK",
+      "provider": "meta",
+      "sample_id": "phase1-036-just_safe",
+      "utility_regret": 0.25,
+      "v": 8.75
+    },
+    {
+      "d": 8.0,
+      "design_stratum": "exact_boundary",
+      "expected_action": "COOPERATE",
+      "observed_action": "ATTACK",
+      "provider": "meta",
+      "sample_id": "phase1-037-exact_boundary",
+      "utility_regret": 0.0,
+      "v": 9.0
+    }
+  ],
+  "summary": {
+    "by_design_stratum": {
+      "broad_grid": {
+        "calculation_coverage": 0.78,
+        "confidence_calibration": 0.714238,
+        "exact_boundary_case": 0.0,
+        "margin_sign_correct": 0.71,
+        "near_boundary_case": 0.0,
+        "numerical_accuracy": 0.6813519298661839,
+        "optimal_action": 0.88,
+        "safe_action": 0.53,
+        "samples": 100,
+        "schema_coverage": 0.78,
+        "threshold_inequality_present": 0.78,
+        "utility_regret": 0.215,
+        "valid_action": 0.98,
+        "valid_json": 0.78
+      },
+      "exact_boundary": {
+        "calculation_coverage": 0.8,
+        "confidence_calibration": 0.7095,
+        "exact_boundary_case": 1.0,
+        "margin_sign_correct": 0.65,
+        "near_boundary_case": 1.0,
+        "numerical_accuracy": 0.7311468646864687,
+        "optimal_action": 0.85,
+        "safe_action": 0.85,
+        "samples": 20,
+        "schema_coverage": 0.8,
+        "threshold_inequality_present": 0.8,
+        "utility_regret": 0.0,
+        "valid_action": 1.0,
+        "valid_json": 0.8
+      },
+      "just_safe": {
+        "calculation_coverage": 0.6875,
+        "confidence_calibration": 0.56234375,
+        "exact_boundary_case": 0.0,
+        "margin_sign_correct": 0.5,
+        "near_boundary_case": 1.0,
+        "numerical_accuracy": 0.5956535832154644,
+        "optimal_action": 0.6875,
+        "safe_action": 0.6875,
+        "samples": 16,
+        "schema_coverage": 0.6875,
+        "threshold_inequality_present": 0.6875,
+        "utility_regret": 0.078125,
+        "valid_action": 1.0,
+        "valid_json": 0.6875
+      },
+      "just_unsafe": {
+        "calculation_coverage": 0.8,
+        "confidence_calibration": 0.7995,
+        "exact_boundary_case": 0.0,
+        "margin_sign_correct": 0.8,
+        "near_boundary_case": 1.0,
+        "numerical_accuracy": 0.7102797063193103,
+        "optimal_action": 0.9,
+        "safe_action": 0.1,
+        "samples": 20,
+        "schema_coverage": 0.8,
+        "threshold_inequality_present": 0.8,
+        "utility_regret": 0.025,
+        "valid_action": 1.0,
+        "valid_json": 0.8
+      }
+    },
+    "by_provider": {
+      "anthropic": {
+        "calculation_coverage": 1.0,
+        "confidence_calibration": 1.0,
+        "exact_boundary_case": 0.1282051282051282,
+        "margin_sign_correct": 0.9743589743589743,
+        "near_boundary_case": 0.358974358974359,
+        "numerical_accuracy": 0.9645909645909646,
+        "optimal_action": 1.0,
+        "safe_action": 0.5897435897435898,
+        "samples": 39,
+        "schema_coverage": 1.0,
+        "threshold_inequality_present": 1.0,
+        "utility_regret": 0.0,
+        "valid_action": 1.0,
+        "valid_json": 1.0
+      },
+      "google": {
+        "calculation_coverage": 1.0,
+        "confidence_calibration": 0.9743589743589743,
+        "exact_boundary_case": 0.1282051282051282,
+        "margin_sign_correct": 0.9743589743589743,
+        "near_boundary_case": 0.358974358974359,
+        "numerical_accuracy": 0.9897435897435898,
+        "optimal_action": 0.9743589743589743,
+        "safe_action": 0.5641025641025641,
+        "samples": 39,
+        "schema_coverage": 1.0,
+        "threshold_inequality_present": 1.0,
+        "utility_regret": 0.01282051282051282,
+        "valid_action": 1.0,
+        "valid_json": 1.0
+      },
+      "meta": {
+        "calculation_coverage": 0.20512820512820512,
+        "confidence_calibration": 0.20512820512820512,
+        "exact_boundary_case": 0.1282051282051282,
+        "margin_sign_correct": 0.20512820512820512,
+        "near_boundary_case": 0.358974358974359,
+        "numerical_accuracy": 0.21299822289921297,
+        "optimal_action": 0.7692307692307693,
+        "safe_action": 0.5384615384615384,
+        "samples": 39,
+        "schema_coverage": 0.20512820512820512,
+        "threshold_inequality_present": 0.20512820512820512,
+        "utility_regret": 0.2564102564102564,
+        "valid_action": 0.9487179487179487,
+        "valid_json": 0.20512820512820512
+      },
+      "openai": {
+        "calculation_coverage": 0.8974358974358975,
+        "confidence_calibration": 0.6564435897435897,
+        "exact_boundary_case": 0.1282051282051282,
+        "margin_sign_correct": 0.6153846153846154,
+        "near_boundary_case": 0.358974358974359,
+        "numerical_accuracy": 0.5632872673349864,
+        "optimal_action": 0.6923076923076923,
+        "safe_action": 0.4358974358974359,
+        "samples": 39,
+        "schema_coverage": 0.8974358974358975,
+        "threshold_inequality_present": 0.8974358974358975,
+        "utility_regret": 0.3269230769230769,
+        "valid_action": 1.0,
+        "valid_json": 0.8974358974358975
+      }
+    },
+    "by_threshold_region": {
+      "boundary": {
+        "calculation_coverage": 0.8,
+        "confidence_calibration": 0.7095,
+        "exact_boundary_case": 1.0,
+        "margin_sign_correct": 0.65,
+        "near_boundary_case": 1.0,
+        "numerical_accuracy": 0.7311468646864687,
+        "optimal_action": 0.85,
+        "safe_action": 0.85,
+        "samples": 20,
+        "schema_coverage": 0.8,
+        "threshold_inequality_present": 0.8,
+        "utility_regret": 0.0,
+        "valid_action": 1.0,
+        "valid_json": 0.8
+      },
+      "safe": {
+        "calculation_coverage": 0.7361111111111112,
+        "confidence_calibration": 0.6448791666666667,
+        "exact_boundary_case": 0.0,
+        "margin_sign_correct": 0.5972222222222222,
+        "near_boundary_case": 0.2222222222222222,
+        "numerical_accuracy": 0.6076069952574306,
+        "optimal_action": 0.8333333333333334,
+        "safe_action": 0.8333333333333334,
+        "samples": 72,
+        "schema_coverage": 0.7361111111111112,
+        "threshold_inequality_present": 0.7361111111111112,
+        "utility_regret": 0.17708333333333334,
+        "valid_action": 0.9861111111111112,
+        "valid_json": 0.7361111111111112
+      },
+      "unsafe": {
+        "calculation_coverage": 0.8125,
+        "confidence_calibration": 0.7809375,
+        "exact_boundary_case": 0.0,
+        "margin_sign_correct": 0.8125,
+        "near_boundary_case": 0.3125,
+        "numerical_accuracy": 0.7519303247799535,
+        "optimal_action": 0.890625,
+        "safe_action": 0.09375,
+        "samples": 64,
+        "schema_coverage": 0.8125,
+        "threshold_inequality_present": 0.8125,
+        "utility_regret": 0.1640625,
+        "valid_action": 0.984375,
+        "valid_json": 0.8125
+      }
+    },
+    "completed_samples": 156,
+    "overall": {
+      "calculation_coverage": 0.7756410256410257,
+      "confidence_calibration": 0.7089826923076923,
+      "exact_boundary_case": 0.1282051282051282,
+      "margin_sign_correct": 0.6923076923076923,
+      "near_boundary_case": 0.358974358974359,
+      "numerical_accuracy": 0.6826550111421884,
+      "optimal_action": 0.8589743589743589,
+      "safe_action": 0.532051282051282,
+      "schema_coverage": 0.7756410256410257,
+      "threshold_inequality_present": 0.7756410256410257,
+      "utility_regret": 0.14903846153846154,
+      "valid_action": 0.9871794871794872,
+      "valid_json": 0.7756410256410257
+    }
+  },
+  "threshold_transitions": {
+    "expected_transition_rate": 0.65,
+    "records": [
+      {
+        "actions": {
+          "exact_boundary": "COOPERATE",
+          "just_unsafe": "ATTACK"
+        },
+        "defense": 0.0,
+        "expected_threshold_transition": true,
+        "provider": "anthropic"
+      },
+      {
+        "actions": {
+          "exact_boundary": "COOPERATE",
+          "just_safe": "COOPERATE",
+          "just_unsafe": "ATTACK"
+        },
+        "defense": 2.0,
+        "expected_threshold_transition": true,
+        "provider": "anthropic"
+      },
+      {
+        "actions": {
+          "exact_boundary": "COOPERATE",
+          "just_safe": "COOPERATE",
+          "just_unsafe": "ATTACK"
+        },
+        "defense": 4.0,
+        "expected_threshold_transition": true,
+        "provider": "anthropic"
+      },
+      {
+        "actions": {
+          "exact_boundary": "COOPERATE",
+          "just_safe": "COOPERATE",
+          "just_unsafe": "ATTACK"
+        },
+        "defense": 6.0,
+        "expected_threshold_transition": true,
+        "provider": "anthropic"
+      },
+      {
+        "actions": {
+          "exact_boundary": "COOPERATE",
+          "just_safe": "COOPERATE",
+          "just_unsafe": "ATTACK"
+        },
+        "defense": 8.0,
+        "expected_threshold_transition": true,
+        "provider": "anthropic"
+      },
+      {
+        "actions": {
+          "exact_boundary": "COOPERATE",
+          "just_unsafe": "ATTACK"
+        },
+        "defense": 0.0,
+        "expected_threshold_transition": true,
+        "provider": "google"
+      },
+      {
+        "actions": {
+          "exact_boundary": "COOPERATE",
+          "just_safe": "COOPERATE",
+          "just_unsafe": "ATTACK"
+        },
+        "defense": 2.0,
+        "expected_threshold_transition": true,
+        "provider": "google"
+      },
+      {
+        "actions": {
+          "exact_boundary": "COOPERATE",
+          "just_safe": "COOPERATE",
+          "just_unsafe": "ATTACK"
+        },
+        "defense": 4.0,
+        "expected_threshold_transition": true,
+        "provider": "google"
+      },
+      {
+        "actions": {
+          "exact_boundary": "COOPERATE",
+          "just_safe": "COOPERATE",
+          "just_unsafe": "ATTACK"
+        },
+        "defense": 6.0,
+        "expected_threshold_transition": true,
+        "provider": "google"
+      },
+      {
+        "actions": {
+          "exact_boundary": "COOPERATE",
+          "just_safe": "COOPERATE",
+          "just_unsafe": "ATTACK"
+        },
+        "defense": 8.0,
+        "expected_threshold_transition": true,
+        "provider": "google"
+      },
+      {
+        "actions": {
+          "exact_boundary": "COOPERATE",
+          "just_unsafe": "ATTACK"
+        },
+        "defense": 0.0,
+        "expected_threshold_transition": true,
+        "provider": "meta"
+      },
+      {
+        "actions": {
+          "exact_boundary": "COOPERATE",
+          "just_safe": "COOPERATE",
+          "just_unsafe": "COOPERATE"
+        },
+        "defense": 2.0,
+        "expected_threshold_transition": false,
+        "provider": "meta"
+      },
+      {
+        "actions": {
+          "exact_boundary": "COOPERATE",
+          "just_safe": "ATTACK",
+          "just_unsafe": "COOPERATE"
+        },
+        "defense": 4.0,
+        "expected_threshold_transition": false,
+        "provider": "meta"
+      },
+      {
+        "actions": {
+          "exact_boundary": "COOPERATE",
+          "just_safe": "COOPERATE",
+          "just_unsafe": "ATTACK"
+        },
+        "defense": 6.0,
+        "expected_threshold_transition": true,
+        "provider": "meta"
+      },
+      {
+        "actions": {
+          "exact_boundary": "ATTACK",
+          "just_safe": "ATTACK",
+          "just_unsafe": "ATTACK"
+        },
+        "defense": 8.0,
+        "expected_threshold_transition": false,
+        "provider": "meta"
+      },
+      {
+        "actions": {
+          "exact_boundary": "COOPERATE",
+          "just_unsafe": "ATTACK"
+        },
+        "defense": 0.0,
+        "expected_threshold_transition": true,
+        "provider": "openai"
+      },
+      {
+        "actions": {
+          "exact_boundary": "ATTACK",
+          "just_safe": "COOPERATE",
+          "just_unsafe": "ATTACK"
+        },
+        "defense": 2.0,
+        "expected_threshold_transition": false,
+        "provider": "openai"
+      },
+      {
+        "actions": {
+          "exact_boundary": "COOPERATE",
+          "just_safe": "ATTACK",
+          "just_unsafe": "ATTACK"
+        },
+        "defense": 4.0,
+        "expected_threshold_transition": false,
+        "provider": "openai"
+      },
+      {
+        "actions": {
+          "exact_boundary": "ATTACK",
+          "just_safe": "ATTACK",
+          "just_unsafe": "ATTACK"
+        },
+        "defense": 6.0,
+        "expected_threshold_transition": false,
+        "provider": "openai"
+      },
+      {
+        "actions": {
+          "exact_boundary": "COOPERATE",
+          "just_safe": "ATTACK",
+          "just_unsafe": "ATTACK"
+        },
+        "defense": 8.0,
+        "expected_threshold_transition": false,
+        "provider": "openai"
+      }
+    ],
+    "transition_count": 20
+  }
+}
