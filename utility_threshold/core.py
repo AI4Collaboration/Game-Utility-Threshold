@@ -99,30 +99,85 @@ def deterring_defense(
 
 
 @dataclass(frozen=True)
-class StackelbergSolution:
-    defense: float | None
+class StackelbergCandidate:
+    """One analytically relevant leader choice in the Stackelberg game."""
+
+    defense: float
     follower_action: Action
     human_utility: float
     deterred: bool
     safety_margin: float
 
 
+@dataclass(frozen=True)
+class StackelbergSolution(StackelbergCandidate):
+    """Globally optimal leader choice and its finite candidate certificate."""
+
+    candidates: tuple[StackelbergCandidate, ...]
+    optimality_basis: str
+
+
 def solve_stackelberg(v: float, prm: GameParams, max_defense: float = 10.0) -> StackelbergSolution:
-    """Compare the least-cost deterring policy to accepting attack at d=0."""
+    """Solve the continuous leader problem for the built-in payoff functions.
+
+    The follower's threshold partitions the interval into attack and cooperate
+    regions.  Within an unsaturated attack region, the human payoff is a
+    concave quadratic whose only interior stationary point is
+    ``0.15 * L / (2 * defense_cost_scale)``.  In every other region the payoff
+    is monotone in defense.  Consequently the endpoints, detection-saturation
+    kink, attack-region stationary point, and least deterring defense form a
+    finite certificate containing a global maximizer.
+    """
+    if max_defense < 0:
+        raise ValueError("max_defense must be non-negative")
+
     deter_defense = deterring_defense(v, prm, max_defense)
-    candidates: list[StackelbergSolution] = []
-    attack_state = GameState(v=v, d=0.0)
-    candidates.append(StackelbergSolution(
-        defense=0.0, follower_action="ATTACK", human_utility=human_utility("ATTACK", attack_state, prm),
-        deterred=False, safety_margin=safety_margin(attack_state, prm),
-    ))
+    candidate_defenses = {0.0, float(max_defense)}
+
+    detection_saturation = 1.0 / 0.15
+    if detection_saturation <= max_defense:
+        candidate_defenses.add(detection_saturation)
+
+    if prm.defense_cost_scale > 0:
+        attack_stationary_point = 0.15 * prm.L / (2.0 * prm.defense_cost_scale)
+        if 0.0 <= attack_stationary_point <= max_defense:
+            candidate_defenses.add(attack_stationary_point)
+
     if deter_defense is not None:
-        safe_state = GameState(v=v, d=deter_defense)
-        candidates.append(StackelbergSolution(
-            defense=deter_defense, follower_action="COOPERATE", human_utility=human_utility("COOPERATE", safe_state, prm),
-            deterred=True, safety_margin=safety_margin(safe_state, prm),
+        candidate_defenses.add(deter_defense)
+
+    evaluated_candidates: list[StackelbergCandidate] = []
+    for defense in sorted(candidate_defenses):
+        state = GameState(v=v, d=defense)
+        action = threshold_action(state, prm)
+        evaluated_candidates.append(StackelbergCandidate(
+            defense=defense,
+            follower_action=action,
+            human_utility=human_utility(action, state, prm),
+            deterred=action == "COOPERATE",
+            safety_margin=safety_margin(state, prm),
         ))
-    return max(candidates, key=lambda candidate: candidate.human_utility)
+    candidates = tuple(evaluated_candidates)
+    best = max(
+        candidates,
+        key=lambda candidate: (
+            candidate.human_utility,
+            candidate.follower_action == "COOPERATE",
+            -candidate.defense,
+        ),
+    )
+    return StackelbergSolution(
+        defense=best.defense,
+        follower_action=best.follower_action,
+        human_utility=best.human_utility,
+        deterred=best.deterred,
+        safety_margin=best.safety_margin,
+        candidates=candidates,
+        optimality_basis=(
+            "interval endpoints, follower threshold, detection-saturation kink, "
+            "and attack-region stationary point"
+        ),
+    )
 
 
 @dataclass(frozen=True)

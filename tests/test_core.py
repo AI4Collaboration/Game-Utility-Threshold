@@ -37,12 +37,20 @@ class UtilityThresholdGameTests(unittest.TestCase):
 
     def test_stackelberg_solution_and_normal_form_reduction(self) -> None:
         solution = solve_stackelberg(4.0, self.params)
-        self.assertIsNotNone(solution.defense)
         self.assertTrue(solution.deterred)
+        self.assertTrue(any(candidate.defense == 0.0 for candidate in solution.candidates))
+        self.assertIn("stationary point", solution.optimality_basis)
         equilibria = normal_form_nash(4.0, (0.0, 4.0), self.params)
         # This parameterization has no pure simultaneous equilibrium: the human
         # wants high defense against attack but low defense against cooperation.
         self.assertEqual(equilibria, [])
+
+    def test_stackelberg_solver_finds_non_deterring_interior_optimum(self) -> None:
+        solution = solve_stackelberg(100.0, self.params)
+        self.assertFalse(solution.deterred)
+        self.assertAlmostEqual(solution.defense, 5.0)
+        self.assertAlmostEqual(solution.human_utility, -12.5)
+        self.assertGreater(solution.human_utility, -20.0)
 
     def test_named_verifier_variants_expose_valid_certificates(self) -> None:
         unsafe = GameState(v=4.0, d=0.0)
