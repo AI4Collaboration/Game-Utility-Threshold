@@ -188,6 +188,18 @@ class NashEquilibrium:
     ai_utility: float
 
 
+@dataclass(frozen=True)
+class MixedNashEquilibrium:
+    """Unique fully mixed equilibrium of a two-defense normal-form reduction."""
+
+    low_defense: float
+    high_defense: float
+    high_defense_probability: float
+    attack_probability: float
+    human_expected_utility: float
+    ai_expected_utility: float
+
+
 def normal_form_nash(v: float, defenses: tuple[float, float], prm: GameParams) -> list[NashEquilibrium]:
     """Compute pure Nash equilibria of a two-defense normal-form reduction."""
     if defenses[0] == defenses[1]:
@@ -206,3 +218,70 @@ def normal_form_nash(v: float, defenses: tuple[float, float], prm: GameParams) -
             if ai_best_response and human_best_response:
                 equilibria.append(NashEquilibrium(defense, action, human_value, ai_value))
     return equilibria
+
+
+def normal_form_mixed_nash(
+    v: float,
+    defenses: tuple[float, float],
+    prm: GameParams,
+    tolerance: float = 1e-12,
+) -> MixedNashEquilibrium | None:
+    """Return the fully mixed equilibrium, when both probabilities are interior.
+
+    The human mixes between the lower and higher defense levels.  The AI mixes
+    between cooperation and attack.  Each probability is obtained by making
+    the other player indifferent, using the complete induced payoff matrix.
+    Pure and boundary equilibria remain the responsibility of
+    :func:`normal_form_nash`.
+    """
+    if defenses[0] == defenses[1]:
+        raise ValueError("normal-form reduction needs two distinct defense levels")
+    if tolerance <= 0:
+        raise ValueError("tolerance must be positive")
+
+    low_defense, high_defense = sorted(defenses)
+    low_state = GameState(v=v, d=low_defense)
+    high_state = GameState(v=v, d=high_defense)
+
+    human_low_cooperate = human_utility("COOPERATE", low_state, prm)
+    human_low_attack = human_utility("ATTACK", low_state, prm)
+    human_high_cooperate = human_utility("COOPERATE", high_state, prm)
+    human_high_attack = human_utility("ATTACK", high_state, prm)
+    human_denominator = (
+        human_low_attack
+        - human_low_cooperate
+        - human_high_attack
+        + human_high_cooperate
+    )
+
+    ai_low_attack = attack_utility(low_state, prm)
+    ai_high_attack = attack_utility(high_state, prm)
+    ai_denominator = ai_high_attack - ai_low_attack
+    if abs(human_denominator) <= tolerance or abs(ai_denominator) <= tolerance:
+        return None
+
+    attack_probability = (
+        human_high_cooperate - human_low_cooperate
+    ) / human_denominator
+    high_defense_probability = (
+        cooperate_utility(prm) - ai_low_attack
+    ) / ai_denominator
+    if not (
+        tolerance < attack_probability < 1.0 - tolerance
+        and tolerance < high_defense_probability < 1.0 - tolerance
+    ):
+        return None
+
+    human_expected_utility = (
+        (1.0 - attack_probability) * human_low_cooperate
+        + attack_probability * human_low_attack
+    )
+    ai_expected_utility = cooperate_utility(prm)
+    return MixedNashEquilibrium(
+        low_defense=low_defense,
+        high_defense=high_defense,
+        high_defense_probability=high_defense_probability,
+        attack_probability=attack_probability,
+        human_expected_utility=human_expected_utility,
+        ai_expected_utility=ai_expected_utility,
+    )

@@ -4,6 +4,7 @@ from utility_threshold.core import (
     GameParams,
     GameState,
     deterring_defense,
+    normal_form_mixed_nash,
     normal_form_nash,
     safety_margin,
     solve_stackelberg,
@@ -44,6 +45,19 @@ class UtilityThresholdGameTests(unittest.TestCase):
         # This parameterization has no pure simultaneous equilibrium: the human
         # wants high defense against attack but low defense against cooperation.
         self.assertEqual(equilibria, [])
+
+        mixed = normal_form_mixed_nash(4.0, (0.0, 4.0), self.params)
+        self.assertIsNotNone(mixed)
+        assert mixed is not None
+        self.assertAlmostEqual(mixed.high_defense_probability, 0.8)
+        self.assertAlmostEqual(mixed.attack_probability, 0.4)
+        self.assertAlmostEqual(mixed.human_expected_utility, -8.0)
+        self.assertAlmostEqual(mixed.ai_expected_utility, 0.0)
+
+    def test_fully_mixed_equilibrium_is_absent_outside_interior_support(self) -> None:
+        self.assertIsNone(normal_form_mixed_nash(100.0, (0.0, 4.0), self.params))
+        with self.assertRaisesRegex(ValueError, "distinct defense"):
+            normal_form_mixed_nash(4.0, (2.0, 2.0), self.params)
 
     def test_stackelberg_solver_finds_non_deterring_interior_optimum(self) -> None:
         solution = solve_stackelberg(100.0, self.params)
