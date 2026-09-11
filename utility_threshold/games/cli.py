@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+from pathlib import Path
 from typing import Sequence
 
 from .base import format_payoff_matrix
@@ -31,6 +32,7 @@ from .simulation import default_strategies, play_match, round_robin, threshold_s
 from .thresholds import InterventionPolicy
 from .treatments import treatment_design, treatment_subsidy
 from .uncertain_scenarios import uncertain_scenario_from_id
+from .validation import audit_research_catalog
 
 
 def _report_record(report: ScenarioThresholdReport) -> dict[str, object]:
@@ -58,6 +60,15 @@ def _policy_from_args(args: argparse.Namespace) -> InterventionPolicy:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Run complete utility-threshold game experiments")
     subparsers = parser.add_subparsers(dest="command", required=True)
+
+    validate = subparsers.add_parser(
+        "validate-catalog",
+        help="audit every game-family inequality and built-in scenario setting",
+    )
+    validate.add_argument(
+        "--output",
+        help="write the deterministic JSON report to this path instead of stdout",
+    )
 
     analyze = subparsers.add_parser("analyze", help="show matrix, equilibria, welfare, and threshold regime")
     _add_game_arguments(analyze)
@@ -204,6 +215,8 @@ def _mechanism_stack(args: argparse.Namespace, game):
 
 
 def run_command(args: argparse.Namespace) -> dict[str, object]:
+    if args.command == "validate-catalog":
+        return audit_research_catalog().record()
     scenario = scenario_from_id(args.scenario)
     if args.command == "uncertain":
         uncertain_game = uncertain_scenario_from_id(
@@ -312,8 +325,15 @@ def main(argv: Sequence[str] | None = None) -> int:
         result = run_command(args)
     except ValueError as exc:
         parser.error(str(exc))
-    print(json.dumps(result, indent=2, sort_keys=True))
-    return 0
+    rendered = json.dumps(result, indent=2, sort_keys=True) + "\n"
+    output = getattr(args, "output", None)
+    if output:
+        output_path = Path(output)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text(rendered, encoding="utf-8")
+    else:
+        print(rendered, end="")
+    return 0 if result.get("valid", True) else 1
 
 
 if __name__ == "__main__":
