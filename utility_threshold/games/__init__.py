@@ -135,6 +135,13 @@ from .uncertain_scenarios import (
     incident_response_protocol_uncertainty,
     uncertain_scenario_from_id,
 )
+from .validation import (
+    CatalogValidationReport,
+    ValidationCheck,
+    audit_research_catalog,
+    validate_game_family,
+    validate_uncertain_game,
+)
 
 __all__ = [
     "AUTONOMOUS_ESCALATION",
@@ -148,6 +155,7 @@ __all__ = [
     "BindingCommitment",
     "BetaReputation",
     "CARACriterion",
+    "CatalogValidationReport",
     "CROSS_LAB_INCIDENT_RESPONSE",
     "FRONTIER_DEPLOYMENT_RACE",
     "FixedInstitutionalStrategy",
@@ -221,6 +229,7 @@ __all__ = [
     "UncertainPayoffGame",
     "UNCERTAIN_SCENARIOS",
     "UtilityThresholdReport",
+    "ValidationCheck",
     "WeightedOutcome",
     "chicken",
     "action_lottery",
@@ -228,6 +237,7 @@ __all__ = [
     "analyze_ambiguity",
     "analyze_decision",
     "analyze_institutional_decision",
+    "audit_research_catalog",
     "autonomous_escalation_uncertainty",
     "as_application",
     "chicken_threshold_report",
@@ -259,5 +269,7 @@ __all__ = [
     "treatment_design",
     "treatment_subsidy",
     "uncertain_scenario_from_id",
+    "validate_game_family",
+    "validate_uncertain_game",
     "zero_transfers",
 ]
