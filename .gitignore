@@ -8,3 +8,4 @@ logs/*.log.gz
 logs/**/*.eval
 logs/**/*.log
 logs/**/*.log.gz
+lean/.lake/

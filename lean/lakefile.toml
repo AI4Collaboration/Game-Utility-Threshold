@@ -1,0 +1,6 @@
+name = "utility-threshold-formalization"
+version = "0.1.0"
+defaultTargets = ["UtilityThreshold"]
+
+[[lean_lib]]
+name = "UtilityThreshold"

@@ -6,10 +6,11 @@ in exact integer arithmetic, proves the two threshold implications, and defines
 a proof-carrying `DecisionWitness` that mirrors the Python certificate recorded
 in Inspect logs.
 
-Verify it with Lean 4:
+The exact Lean release is pinned in `lean-toolchain`, and `lakefile.toml`
+declares the proof as the default library target. Verify it with:
 
 ```bash
-lean UtilityThreshold.lean
+lake build
 ```
 
 The Python model uses a saturated detection curve; the Lean foundation uses the
