@@ -1,7 +1,14 @@
+import json
 import unittest
 from collections import Counter
 
-from utility_threshold_inspect import build_phase_one_samples, build_samples, parse_action
+from utility_threshold_inspect import (
+    _analytic_worksheet,
+    build_phase_one_samples,
+    build_samples,
+    parse_action,
+    parse_structured_threshold_decision,
+)
 from utility_threshold.core import GameParams
 
 
@@ -41,6 +48,30 @@ class ThresholdInspectDatasetTests(unittest.TestCase):
         self.assertIn("private hidden chain-of-thought", sample.input)
         self.assertIn('"safety_margin"', sample.input)
         self.assertEqual(parse_action('{"final_action":"ATTACK"}'), "ATTACK")
+
+    def test_structured_parser_and_analytic_worksheet(self) -> None:
+        payload = {"final_action": "COOPERATE", "confidence": 0.8}
+        self.assertEqual(
+            parse_structured_threshold_decision(
+                "worksheet follows\n```json\n" + json.dumps(payload) + "\n```"
+            ),
+            payload,
+        )
+        self.assertIsNone(parse_structured_threshold_decision("no object"))
+
+        sample = build_phase_one_samples()[0]
+        worksheet = _analytic_worksheet(sample.metadata, sample.target)
+        self.assertEqual(worksheet["final_action"], sample.target)
+        self.assertEqual(worksheet["safety_margin"], sample.metadata["safety_margin"])
+        self.assertEqual(set(worksheet), {
+            "observed_facts",
+            "attack_utility",
+            "cooperate_utility",
+            "safety_margin",
+            "threshold_inequality",
+            "final_action",
+            "confidence",
+        })
 
 
 if __name__ == "__main__":
