@@ -32,6 +32,10 @@ jobs:
             --policies results/phase_one_policy_baselines.json \
             --output /tmp/phase_one_analysis.json
           cmp results/phase_one_analysis.json /tmp/phase_one_analysis.json
+      - name: Verify committed artifact checksums
+        run: |
+          python scripts/verify_artifact_manifest.py results/phase_one_checksums.sha256
+          python scripts/verify_artifact_manifest.py results/coordination_games_checksums.sha256
 
   lean:
     name: Lean proofs and Python parity
