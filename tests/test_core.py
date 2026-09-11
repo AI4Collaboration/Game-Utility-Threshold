@@ -5,6 +5,7 @@ from utility_threshold.core import (
     GameParams,
     GameState,
     deterring_defense,
+    human_utility,
     normal_form_mixed_nash,
     normal_form_nash,
     safety_margin,
@@ -80,6 +81,36 @@ class UtilityThresholdGameTests(unittest.TestCase):
         self.assertAlmostEqual(solution.defense, 5.0)
         self.assertAlmostEqual(solution.human_utility, -12.5)
         self.assertGreater(solution.human_utility, -20.0)
+
+    def test_stackelberg_certificate_dominates_dense_parameter_sweeps(self) -> None:
+        for v in (1.0, 4.0, 8.0, 20.0, 100.0):
+            for loss in (1.0, 20.0, 100.0):
+                for cost_scale in (0.1, 0.3, 2.0):
+                    for max_defense in (2.0, 10.0):
+                        with self.subTest(
+                            v=v,
+                            loss=loss,
+                            cost_scale=cost_scale,
+                            max_defense=max_defense,
+                        ):
+                            params = GameParams(L=loss, defense_cost_scale=cost_scale)
+                            solution = solve_stackelberg(v, params, max_defense=max_defense)
+                            grid_best = max(
+                                human_utility(
+                                    threshold_action(state, params),
+                                    state,
+                                    params,
+                                )
+                                for index in range(10_001)
+                                for state in [GameState(
+                                    v=v,
+                                    d=max_defense * index / 10_000,
+                                )]
+                            )
+                            self.assertGreaterEqual(
+                                solution.human_utility + 1e-6,
+                                grid_best,
+                            )
 
     def test_named_verifier_variants_expose_valid_certificates(self) -> None:
         unsafe = GameState(v=4.0, d=0.0)
