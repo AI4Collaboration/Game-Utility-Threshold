@@ -1,4 +1,5 @@
 import unittest
+from math import inf, nan
 
 from utility_threshold.core import (
     GameParams,
@@ -21,6 +22,20 @@ class UtilityThresholdGameTests(unittest.TestCase):
     def test_threshold_switches_at_the_safety_boundary(self) -> None:
         self.assertEqual(threshold_action(GameState(v=4.0, d=0.0), self.params), "ATTACK")
         self.assertEqual(threshold_action(GameState(v=4.0, d=4.0), self.params), "COOPERATE")
+
+    def test_invalid_parameters_and_states_fail_closed(self) -> None:
+        for kwargs in (
+            {"R": 0.0},
+            {"p": -1.0},
+            {"L": -1.0},
+            {"defense_cost_scale": -0.1},
+            {"g": nan},
+        ):
+            with self.subTest(kwargs=kwargs), self.assertRaises(ValueError):
+                GameParams(**kwargs)
+        for state in ((-1.0, 0.0), (1.0, -1.0), (inf, 0.0)):
+            with self.subTest(state=state), self.assertRaises(ValueError):
+                GameState(v=state[0], d=state[1])
 
     def test_minimum_deterring_defense_has_non_negative_margin(self) -> None:
         defense = deterring_defense(4.0, self.params)

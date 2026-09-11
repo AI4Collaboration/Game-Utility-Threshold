@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from math import isfinite
 from typing import Literal
 
 Action = Literal["COOPERATE", "ATTACK"]
@@ -16,11 +17,35 @@ class GameParams:
     L: float = 20.0
     defense_cost_scale: float = 0.3
 
+    def __post_init__(self) -> None:
+        values = {
+            "R": self.R,
+            "g": self.g,
+            "p": self.p,
+            "L": self.L,
+            "defense_cost_scale": self.defense_cost_scale,
+        }
+        if not all(isfinite(value) for value in values.values()):
+            raise ValueError("all game parameters must be finite")
+        if self.R <= 0:
+            raise ValueError("R must be positive")
+        for name in ("p", "L", "defense_cost_scale"):
+            if values[name] < 0:
+                raise ValueError(f"{name} must be non-negative")
+
 
 @dataclass(frozen=True)
 class GameState:
     v: float
     d: float
+
+    def __post_init__(self) -> None:
+        if not isfinite(self.v) or not isfinite(self.d):
+            raise ValueError("v and d must be finite")
+        if self.v < 0:
+            raise ValueError("v must be non-negative")
+        if self.d < 0:
+            raise ValueError("d must be non-negative")
 
 
 def c_of_d(d: float) -> float:
