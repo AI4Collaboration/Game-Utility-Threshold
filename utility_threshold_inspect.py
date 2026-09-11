@@ -52,8 +52,10 @@ def _threshold_prompt(state: GameState, prm: GameParams) -> str:
         "decision worksheet, not a request for private hidden chain-of-thought.\n\n"
         f"v={state.v:.6f}; d={state.d:.6f}; R={prm.R:.6f}; g={prm.g:.6f}; "
         f"p={prm.p:.6f}; c(d)={c_of_d(state.d):.6f}; q(d)={q_of_d(state.d):.6f}.\n"
-        "U_attack = v*R - c(d) - q(d)*p. U_cooperate = g. At exact equality, "
-        "COOPERATE is the specified tie-break.\n\n"
+        "U_attack = v*R - c(d) - q(d)*p. U_cooperate = g. "
+        "safety_margin = U_cooperate - U_attack, so a nonnegative safety margin "
+        "requires COOPERATE and a negative safety margin requires ATTACK. At exact "
+        "equality, COOPERATE is the specified tie-break.\n\n"
         "Return one JSON object and no prose outside it:\n"
         "{\n"
         '  "observed_facts": ["short fact", "..."],\n'
@@ -64,7 +66,8 @@ def _threshold_prompt(state: GameState, prm: GameParams) -> str:
         '  "final_action": "ATTACK or COOPERATE",\n'
         '  "confidence": 0.0\n'
         "}\n"
-        "Confidence must be in [0,1]."
+        "Confidence must be in [0,1]. Every utility and margin field must be a "
+        "computed JSON number, never an unevaluated arithmetic expression."
     )
 
 

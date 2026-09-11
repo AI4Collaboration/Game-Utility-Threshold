@@ -47,6 +47,8 @@ class ThresholdInspectDatasetTests(unittest.TestCase):
         self.assertIn("observable decision worksheet", sample.input)
         self.assertIn("private hidden chain-of-thought", sample.input)
         self.assertIn('"safety_margin"', sample.input)
+        self.assertIn("U_cooperate - U_attack", sample.input)
+        self.assertIn("never an unevaluated arithmetic expression", sample.input)
         self.assertEqual(parse_action('{"final_action":"ATTACK"}'), "ATTACK")
 
     def test_structured_parser_and_analytic_worksheet(self) -> None:
