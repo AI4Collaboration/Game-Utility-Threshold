@@ -289,6 +289,96 @@
       "v": 9.0
     }
   ],
+  "policy_baselines": {
+    "aggregates": {
+      "cooperate": {
+        "mean_utility_regret": 0.9551282051282052,
+        "optimal_action_rate": 0.5897435897435898,
+        "samples": 39,
+        "valid_certificate_rate": 0.5897435897435898,
+        "valid_probabilistic_certificate_rate": null
+      },
+      "cupod": {
+        "mean_utility_regret": 0.0,
+        "optimal_action_rate": 1.0,
+        "samples": 39,
+        "valid_certificate_rate": 1.0,
+        "valid_probabilistic_certificate_rate": null
+      },
+      "defect": {
+        "mean_utility_regret": 1.3333333333333333,
+        "optimal_action_rate": 0.41025641025641024,
+        "samples": 39,
+        "valid_certificate_rate": 0.41025641025641024,
+        "valid_probabilistic_certificate_rate": null
+      },
+      "dupoc": {
+        "mean_utility_regret": 0.0,
+        "optimal_action_rate": 1.0,
+        "samples": 39,
+        "valid_certificate_rate": 1.0,
+        "valid_probabilistic_certificate_rate": null
+      },
+      "pdupoc": {
+        "mean_utility_regret": 0.22435897435897437,
+        "optimal_action_rate": 0.7692307692307693,
+        "samples": 39,
+        "valid_certificate_rate": 0.7692307692307693,
+        "valid_probabilistic_certificate_rate": 1.0
+      },
+      "probabilistic": {
+        "mean_utility_regret": 0.22435897435897437,
+        "optimal_action_rate": 0.7692307692307693,
+        "samples": 39,
+        "valid_certificate_rate": 0.7692307692307693,
+        "valid_probabilistic_certificate_rate": 1.0
+      },
+      "proof": {
+        "mean_utility_regret": 0.0,
+        "optimal_action_rate": 1.0,
+        "samples": 39,
+        "valid_certificate_rate": 1.0,
+        "valid_probabilistic_certificate_rate": null
+      },
+      "threshold": {
+        "mean_utility_regret": 0.0,
+        "optimal_action_rate": 1.0,
+        "samples": 39,
+        "valid_certificate_rate": 1.0,
+        "valid_probabilistic_certificate_rate": null
+      }
+    },
+    "audit": {
+      "complete": true,
+      "duplicate_cells": [],
+      "expected_record_count": 312,
+      "invalid_exact_policy_decisions": [],
+      "invalid_probabilistic_certificates": [],
+      "policies": [
+        "cooperate",
+        "defect",
+        "threshold",
+        "probabilistic",
+        "proof",
+        "dupoc",
+        "cupod",
+        "pdupoc"
+      ],
+      "record_count": 312,
+      "samples_per_policy": 39,
+      "statuses": {
+        "cooperate": "success",
+        "cupod": "success",
+        "defect": "success",
+        "dupoc": "success",
+        "pdupoc": "success",
+        "probabilistic": "success",
+        "proof": "success",
+        "threshold": "success"
+      },
+      "wrong_sample_counts": {}
+    }
+  },
   "summary": {
     "by_design_stratum": {
       "broad_grid": {
