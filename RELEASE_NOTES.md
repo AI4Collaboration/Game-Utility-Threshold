@@ -1,5 +1,77 @@
 # Release notes
 
+## 0.5.0 — 2026-09-10
+
+This release turns the Months 1–3 sequential oversight prototype into a
+research-grade Phase 1 package with complete supported equilibrium analysis,
+formal parity checks, granular observability, and committed empirical results.
+
+### Mathematical foundation
+
+- Replaced the two-candidate Stackelberg heuristic with a global analytic
+  solver over interval endpoints, the follower threshold, the detection kink,
+  and the attack-region stationary point.
+- Added an explicit finite candidate certificate and stress-tested it against
+  10,001-point numerical grids across 90 parameter regimes.
+- Added the fully mixed equilibrium for the two-defense normal-form reduction;
+  the default `(d_low=0,d_high=4,v=4)` game mixes at 80% high defense and 40%
+  attack.
+- Added fail-closed finiteness, sign, and domain validation to Phase 1 game
+  parameters and states.
+
+### Formal verification
+
+- Pinned Lean 4.33.1 with a reproducible Lake project.
+- Formalized the Python model's saturated detection curve, scaled human and AI
+  payoffs, both threshold branches, deterministic verified agents, and finite
+  stochastic draw witnesses.
+- Added an executable Lean parity oracle and Python integration test covering
+  detection, utilities, safety margins, and actions on the 25-point original
+  grid.
+
+### AISI Inspect observability
+
+- Replaced the 25-case grid with 39 unique cases: 25 broad cases, five exact
+  thresholds, four just-safe cases, and five just-unsafe cases.
+- Added strict observable JSON worksheets, nested validation/calculation/
+  decision/parsing/scoring spans, store mutations, transcript events, ground-
+  truth certificates, and multidimensional calculation and action metrics.
+- Added auditable Bernoulli certificates to probabilistic and PDUPOC decisions.
+- Preserved malformed worksheets as behavioral data rather than silently
+  repairing them; provider-private hidden chain-of-thought is not claimed.
+
+### Executed experiments
+
+- Committed 312 complete Inspect policy samples across eight fixed,
+  stochastic, threshold, and proof-carrying policies.
+- Committed 156 complete OpenRouter model samples across pinned OpenAI,
+  Anthropic, Google, and Meta models. The factorial audit found no missing or
+  duplicate cells and no failed provider runs.
+- Overall model action validity was 98.72%, utility-optimal choice was 85.90%,
+  and strict worksheet validity was 77.56%. Only 65% of local threshold
+  triplets showed the complete expected safe-to-unsafe behavioral transition.
+- Added machine-readable audits, slice summaries, transition records, error
+  cases, flat CSV tables, and SHA-256 manifests.
+
+### Reproducibility and publication
+
+- Added a one-command validation entrypoint covering 128 tests, analysis
+  reproduction, artifact integrity, the Lean build, and Python–Lean parity.
+- Added a ready GitHub Actions workflow template. Activating it under
+  `.github/workflows/` requires a GitHub credential with workflow scope.
+- Added a full Phase 1 research report and updated the blog deliverable into a
+  publication-ready manuscript with the executed findings and limitations.
+
+### Limits
+
+- Model results use one temperature-zero call per cell and are descriptive,
+  not estimates of sampling variance or stable provider rankings.
+- Payoffs and state parameters are synthetic rather than incident-calibrated.
+- The Lean layer proves payoff and threshold-policy parity, not the floating-
+  point implementation of the continuous optimizer.
+- External blog publication still requires a venue selected by the project
+  owner.
+
 ## 0.4.0 — 2026-09-10
 
 This release adds two complete coordination-failure games, integrates them
