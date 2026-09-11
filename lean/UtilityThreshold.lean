@@ -85,4 +85,51 @@ structure DecisionWitness (state : GameState) (params : GameParams) where
 def certifyThresholdDecision (state : GameState) (params : GameParams) : DecisionWitness state params :=
   { action := thresholdAction state params, correct := rfl }
 
+def cooperateBot (_state : GameState) (_params : GameParams) : Action := .cooperate
+
+def defectBot (_state : GameState) (_params : GameParams) : Action := .attack
+
+def thresholdBot (state : GameState) (params : GameParams) : Action :=
+  thresholdAction state params
+
+/-- An agent whose every output is paired with a proof of threshold optimality. -/
+structure VerifiedAgent where
+  name : String
+  decide : (state : GameState) → (params : GameParams) → DecisionWitness state params
+
+def dupocAgent : VerifiedAgent where
+  name := "DUPOC"
+  decide := certifyThresholdDecision
+
+def cupodAgent : VerifiedAgent where
+  name := "CUPOD"
+  decide := certifyThresholdDecision
+
+/-- Exact finite Bernoulli witness used to audit a probabilistic policy draw. -/
+structure ProbabilisticDecisionWitness where
+  attackWeight : Nat
+  totalWeight : Nat
+  draw : Nat
+  positiveTotal : 0 < totalWeight
+  weightBound : attackWeight ≤ totalWeight
+  drawBound : draw < totalWeight
+  action : Action
+  correct : action = if draw < attackWeight then .attack else .cooperate
+
+def certifyProbabilisticDecision
+    (attackWeight totalWeight draw : Nat)
+    (positiveTotal : 0 < totalWeight)
+    (weightBound : attackWeight ≤ totalWeight)
+    (drawBound : draw < totalWeight) : ProbabilisticDecisionWitness :=
+  {
+    attackWeight
+    totalWeight
+    draw
+    positiveTotal
+    weightBound
+    drawBound
+    action := if draw < attackWeight then .attack else .cooperate
+    correct := rfl
+  }
+
 end UtilityThreshold
