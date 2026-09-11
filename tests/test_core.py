@@ -75,7 +75,17 @@ class UtilityThresholdGameTests(unittest.TestCase):
         self.assertTrue(dupoc.certificate and dupoc.certificate.valid)
         self.assertEqual(cupod.choose(unsafe, self.params), "ATTACK")
         self.assertTrue(cupod.certificate and cupod.certificate.valid)
-        self.assertGreater(PDUPOCVerifier().attack_probability(unsafe, self.params), 0.5)
+        pdupoc = PDUPOCVerifier()
+        self.assertGreater(pdupoc.attack_probability(unsafe, self.params), 0.5)
+        action = pdupoc.choose(unsafe, self.params)
+        self.assertIsNotNone(pdupoc.certificate)
+        assert pdupoc.certificate is not None
+        self.assertTrue(pdupoc.certificate.valid)
+        self.assertEqual(pdupoc.certificate.action, action)
+        self.assertEqual(
+            action == "ATTACK",
+            pdupoc.certificate.draw < pdupoc.certificate.attack_probability,
+        )
 
 
 if __name__ == "__main__":

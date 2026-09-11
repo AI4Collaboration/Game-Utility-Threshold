@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from math import exp
 from typing import Protocol
 
@@ -28,12 +28,29 @@ class ThresholdBot:
         return threshold_action(state, prm)
 
 
+@dataclass(frozen=True)
+class ProbabilisticDecisionCertificate:
+    """Auditable witness connecting a Bernoulli draw to its chosen action."""
+
+    attack_probability: float
+    draw: float
+    action: Action
+    probability_valid: bool
+    draw_valid: bool
+    action_matches_draw: bool
+
+    @property
+    def valid(self) -> bool:
+        return self.probability_valid and self.draw_valid and self.action_matches_draw
+
+
 @dataclass
 class ProbabilisticThresholdBot:
     """A deterministic pseudo-random policy with a smooth threshold response."""
 
     temperature: float = 0.5
     seed: int = 0
+    certificate: ProbabilisticDecisionCertificate | None = field(default=None, init=False, repr=False)
 
     def attack_probability(self, state: GameState, prm: GameParams) -> float:
         if self.temperature <= 0:
@@ -41,10 +58,25 @@ class ProbabilisticThresholdBot:
         scaled_margin = max(-60.0, min(60.0, safety_margin(state, prm) / self.temperature))
         return 1.0 / (1.0 + exp(scaled_margin))
 
-    def choose(self, state: GameState, prm: GameParams) -> Action:
+    def decision_draw(self, state: GameState) -> float:
         # Stable reproducibility is important when comparing Inspect traces.
-        draw = ((int(state.v * 1_000) * 31 + int(state.d * 1_000) * 17 + self.seed) % 10_000) / 10_000
-        return "ATTACK" if draw < self.attack_probability(state, prm) else "COOPERATE"
+        return (
+            (int(state.v * 1_000) * 31 + int(state.d * 1_000) * 17 + self.seed) % 10_000
+        ) / 10_000
+
+    def choose(self, state: GameState, prm: GameParams) -> Action:
+        probability = self.attack_probability(state, prm)
+        draw = self.decision_draw(state)
+        action: Action = "ATTACK" if draw < probability else "COOPERATE"
+        self.certificate = ProbabilisticDecisionCertificate(
+            attack_probability=probability,
+            draw=draw,
+            action=action,
+            probability_valid=0.0 <= probability <= 1.0,
+            draw_valid=0.0 <= draw < 1.0,
+            action_matches_draw=(action == "ATTACK") == (draw < probability),
+        )
+        return action
 
 
 class ProofCarryingThresholdBot:
