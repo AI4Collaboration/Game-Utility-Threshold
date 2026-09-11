@@ -106,9 +106,19 @@ def summarize(payload: Mapping[str, Any]) -> dict[str, Any]:
     records = payload["records"]
     by_treatment: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
     by_scenario: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
+    by_objective: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
+    by_objective_treatment: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
+    by_ordered_pair: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
     for record in records:
         by_treatment[record["treatment"]].append(record)
         by_scenario[record["scenario_id"]].append(record)
+        objective = _objective(record)
+        by_objective[objective].append(record)
+        objective_treatment = f"{objective}::{record['treatment']}"
+        by_objective_treatment[objective_treatment].append(record)
+        by_ordered_pair[
+            f"{record['row_provider']}->{record['column_provider']}"
+        ].append(record)
 
     model_choices: dict[str, list[bool]] = defaultdict(list)
     for record in records:
@@ -127,6 +137,18 @@ def summarize(payload: Mapping[str, Any]) -> dict[str, Any]:
             key: {"games": len(group), **_means(group)}
             for key, group in sorted(by_scenario.items())
         },
+        "by_objective": {
+            key: {"games": len(group), **_means(group)}
+            for key, group in sorted(by_objective.items())
+        },
+        "by_objective_treatment": {
+            key: {"games": len(group), **_means(group)}
+            for key, group in sorted(by_objective_treatment.items())
+        },
+        "by_ordered_pair": {
+            key: {"games": len(group), **_means(group)}
+            for key, group in sorted(by_ordered_pair.items())
+        },
         "by_model_across_roles": {
             model: {
                 "decisions": len(choices),
@@ -143,7 +165,14 @@ def compare(
     left = summarize(baseline)
     right = summarize(comparison)
     output: dict[str, Any] = {}
-    for grouping in ("overall", "by_treatment", "by_scenario"):
+    for grouping in (
+        "overall",
+        "by_treatment",
+        "by_scenario",
+        "by_objective",
+        "by_objective_treatment",
+        "by_ordered_pair",
+    ):
         if grouping == "overall":
             output[grouping] = {
                 metric: right[grouping][metric] - left[grouping][metric]
@@ -163,6 +192,28 @@ def compare(
     return output
 
 
+def filter_summary(
+    payload: Mapping[str, Any],
+    *,
+    objectives: Iterable[str] = (),
+    scenarios: Iterable[str] = (),
+) -> dict[str, Any]:
+    """Return a summary restricted to named experimental conditions."""
+    objective_filter = set(objectives)
+    scenario_filter = set(scenarios)
+    records = [
+        record
+        for record in payload["records"]
+        if (not objective_filter or _objective(record) in objective_filter)
+        and (not scenario_filter or record["scenario_id"] in scenario_filter)
+    ]
+    if not records:
+        raise ValueError("condition filters selected no gameplay records")
+    result = dict(payload)
+    result["records"] = records
+    return result
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Audit one gameplay summary and optionally compare it with another"
@@ -170,12 +221,28 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("baseline", help="baseline JSON summary")
     parser.add_argument("comparison", nargs="?", help="comparison JSON summary")
     parser.add_argument("--output", help="optional path for the JSON analysis")
+    parser.add_argument(
+        "--objective",
+        action="append",
+        default=[],
+        help="restrict both inputs to this objective (repeatable)",
+    )
+    parser.add_argument(
+        "--scenario",
+        action="append",
+        default=[],
+        help="restrict both inputs to this scenario (repeatable)",
+    )
     return parser
 
 
 def main() -> int:
     args = build_parser().parse_args()
-    baseline = load_summary(args.baseline)
+    baseline = filter_summary(
+        load_summary(args.baseline),
+        objectives=args.objective,
+        scenarios=args.scenario,
+    )
     baseline_audit = audit_summary(baseline)
     result: dict[str, Any] = {
         "baseline": {
@@ -185,7 +252,11 @@ def main() -> int:
         }
     }
     if args.comparison:
-        comparison = load_summary(args.comparison)
+        comparison = filter_summary(
+            load_summary(args.comparison),
+            objectives=args.objective,
+            scenarios=args.scenario,
+        )
         comparison_audit = audit_summary(comparison)
         result["comparison"] = {
             "path": args.comparison,

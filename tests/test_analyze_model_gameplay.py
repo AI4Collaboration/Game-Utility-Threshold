@@ -1,6 +1,6 @@
 import unittest
 
-from analyze_model_gameplay import audit_summary, compare, summarize
+from analyze_model_gameplay import audit_summary, compare, filter_summary, summarize
 
 
 def record(
@@ -61,9 +61,36 @@ class ModelGameplayAnalysisTests(unittest.TestCase):
         baseline = {"records": [record("a", "a", cooperation=1.0)]}
         comparison = {"records": [record("a", "a", cooperation=0.5)]}
         self.assertEqual(summarize(baseline)["overall"]["expected_welfare"], 6.0)
+        self.assertEqual(
+            summarize(baseline)["by_objective"]["open_ended"]["games"], 1
+        )
+        self.assertEqual(
+            summarize(baseline)["by_ordered_pair"]["a->a"]["games"], 1
+        )
         delta = compare(baseline, comparison)
         self.assertEqual(delta["overall"]["cooperative_action_rate"], -0.5)
         self.assertEqual(delta["by_treatment"]["baseline"]["expected_welfare"], -3.0)
+
+    def test_filter_summary_selects_matching_conditions(self) -> None:
+        naturalistic = record("a", "a")
+        utility = record("a", "a", treatment="communication")
+        utility["objective"] = "individual_expected_utility"
+        payload = {"records": [naturalistic, utility], "failed_pairs": []}
+
+        filtered = filter_summary(
+            payload,
+            objectives=["individual_expected_utility"],
+            scenarios=["test_game"],
+        )
+
+        self.assertEqual(filtered["records"], [utility])
+        self.assertEqual(len(payload["records"]), 2)
+
+    def test_filter_summary_rejects_empty_selection(self) -> None:
+        with self.assertRaisesRegex(ValueError, "selected no gameplay records"):
+            filter_summary(
+                {"records": [record("a", "a")]}, objectives=["missing"]
+            )
 
 
 if __name__ == "__main__":
