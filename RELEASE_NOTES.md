@@ -63,6 +63,7 @@ formal parity checks, granular observability, and committed empirical results.
   `.github/workflows/` requires a GitHub credential with workflow scope.
 - Added a full Phase 1 research report and updated the blog deliverable into a
   publication-ready manuscript with the executed findings and limitations.
+- Added machine-readable citation metadata for the software and datasets.
 
 ### Limits
 

@@ -352,3 +352,9 @@ This release fully implements four of the six canonical 2x2 games used in
 GT-HarmBench. Pure Coordination and No Conflict remain future families. Payoff
 values and latent-state probabilities are configurable experimental parameters,
 not empirical estimates of real-world harms or frequencies.
+
+## Citation
+
+Use [CITATION.cff](CITATION.cff) to cite release `0.5.0`, the accompanying
+datasets, and the exact repository version used in an analysis. A DOI has not
+yet been assigned.

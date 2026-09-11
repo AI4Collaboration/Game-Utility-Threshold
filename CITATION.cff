@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this software or its datasets, please cite this repository and version."
+title: "Utility-Threshold Games for AI Safety"
+type: software
+version: 0.5.0
+date-released: 2026-09-10
+license: MIT
+repository-code: "https://github.com/AI4Collaboration/Game-Utility-Threshold"
+url: "https://github.com/AI4Collaboration/Game-Utility-Threshold"
+abstract: >-
+  A formally cross-checked and empirically evaluated framework for studying
+  utility thresholds, strategic AI-safety games, institutional mechanisms,
+  and model behavior with granular AISI Inspect observability.
+authors:
+  - name: "AI4Collaboration"
+keywords:
+  - AI safety
+  - game theory
+  - utility thresholds
+  - AISI Inspect
+  - formal verification
+  - multi-agent evaluation
