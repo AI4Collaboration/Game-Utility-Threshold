@@ -57,6 +57,8 @@ formal parity checks, granular observability, and committed empirical results.
 
 - Added a one-command validation entrypoint covering 128 tests, analysis
   reproduction, artifact integrity, the Lean build, and Python–Lean parity.
+- Added a cross-platform `uv.lock` resolving all Python dependencies for frozen
+  environment reproduction.
 - Added a ready GitHub Actions workflow template. Activating it under
   `.github/workflows/` requires a GitHub credential with workflow scope.
 - Added a full Phase 1 research report and updated the blog deliverable into a

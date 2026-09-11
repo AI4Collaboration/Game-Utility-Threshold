@@ -153,6 +153,15 @@ for the complete semantics and equations.
 
 Requires Python 3.11 or newer.
 
+For a fully pinned environment:
+
+```bash
+uv sync --frozen
+uv run scripts/validate_research_package.sh
+```
+
+Or install directly with pip:
+
 ```bash
 python3 -m pip install -e .
 scripts/validate_research_package.sh

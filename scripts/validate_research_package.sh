@@ -6,6 +6,9 @@ analysis_copy="$(mktemp)"
 trap 'rm -f "$analysis_copy"' EXIT
 
 cd "$project_root"
+if command -v uv >/dev/null 2>&1; then
+  uv lock --check
+fi
 python3 -m unittest discover -s tests
 python3 analyze_phase_one_results.py \
   results/phase_one_model_eval.json \
