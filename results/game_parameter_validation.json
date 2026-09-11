@@ -1,0 +1,3943 @@
+{
+  "categories": [
+    "catalog_integrity",
+    "numeric_sanity",
+    "payoff_equality",
+    "payoff_inequality",
+    "probability",
+    "scenario_semantics",
+    "strategic_structure",
+    "threshold_sanity",
+    "uncertainty_ordering"
+  ],
+  "check_count": 262,
+  "checks": [
+    {
+      "category": "catalog_integrity",
+      "check_id": "one_scenario_per_supported_family",
+      "explanation": "The Phase 1 catalog should exercise every implemented strategic family.",
+      "expression": "registered families = four supported canonical families",
+      "margin": null,
+      "observed": {
+        "families": [
+          "battle_of_the_sexes",
+          "chicken",
+          "prisoners_dilemma",
+          "stag_hunt"
+        ]
+      },
+      "passed": true,
+      "subject": "catalog"
+    },
+    {
+      "category": "numeric_sanity",
+      "check_id": "finite_payoffs",
+      "explanation": "NaN and infinite utilities make thresholds and comparisons invalid.",
+      "expression": "all eight payoff entries are finite",
+      "margin": null,
+      "observed": {
+        "finite_entries": 8,
+        "total_entries": 8
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:canonical"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "symmetric_matrix",
+      "explanation": "These three canonical families use role-symmetric payoffs.",
+      "expression": "matrix is symmetric under exchange of players",
+      "margin": null,
+      "observed": {
+        "is_symmetric": true
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:canonical"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_T_gt_R",
+      "explanation": "Chicken requires temptation > mutual restraint > yielding loss > crash.",
+      "expression": "row.T > row.R",
+      "margin": 2.0,
+      "observed": {
+        "row.R": 3.0,
+        "row.T": 5.0
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:canonical"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_R_gt_S",
+      "explanation": "Chicken requires temptation > mutual restraint > yielding loss > crash.",
+      "expression": "row.R > row.S",
+      "margin": 2.0,
+      "observed": {
+        "row.R": 3.0,
+        "row.S": 1.0
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:canonical"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_S_gt_P",
+      "explanation": "Chicken requires temptation > mutual restraint > yielding loss > crash.",
+      "expression": "row.S > row.P",
+      "margin": 21.0,
+      "observed": {
+        "row.P": -20.0,
+        "row.S": 1.0
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:canonical"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_T_gt_R",
+      "explanation": "Chicken requires temptation > mutual restraint > yielding loss > crash.",
+      "expression": "column.T > column.R",
+      "margin": 2.0,
+      "observed": {
+        "column.R": 3.0,
+        "column.T": 5.0
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:canonical"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_R_gt_S",
+      "explanation": "Chicken requires temptation > mutual restraint > yielding loss > crash.",
+      "expression": "column.R > column.S",
+      "margin": 2.0,
+      "observed": {
+        "column.R": 3.0,
+        "column.S": 1.0
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:canonical"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_S_gt_P",
+      "explanation": "Chicken requires temptation > mutual restraint > yielding loss > crash.",
+      "expression": "column.S > column.P",
+      "margin": 21.0,
+      "observed": {
+        "column.P": -20.0,
+        "column.S": 1.0
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:canonical"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "anti_coordination_nash",
+      "explanation": "Chicken should reward unilateral escalation but punish mutual escalation.",
+      "expression": "pure Nash equilibria are exactly the off-diagonals",
+      "margin": null,
+      "observed": {
+        "actual": [
+          [
+            "DEESCALATE",
+            "ESCALATE"
+          ],
+          [
+            "ESCALATE",
+            "DEESCALATE"
+          ]
+        ],
+        "expected": [
+          [
+            "DEESCALATE",
+            "ESCALATE"
+          ],
+          [
+            "ESCALATE",
+            "DEESCALATE"
+          ]
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:canonical"
+    },
+    {
+      "category": "probability",
+      "check_id": "state_probabilities_sum_to_one",
+      "explanation": "Latent payoff states must define a normalized distribution.",
+      "expression": "sum(state_probability) == one",
+      "margin": 1e-09,
+      "observed": {
+        "one": 1.0,
+        "sum(state_probability)": 1.0
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain"
+    },
+    {
+      "category": "probability",
+      "check_id": "multiple_latent_states",
+      "explanation": "A research uncertainty model should contain genuine payoff uncertainty.",
+      "expression": "number of latent states >= 2",
+      "margin": null,
+      "observed": {
+        "state_count": 3
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain"
+    },
+    {
+      "category": "probability",
+      "check_id": "positive_state_probability",
+      "explanation": "Every declared latent state must have positive probability mass.",
+      "expression": "state_probability > zero",
+      "margin": 0.55,
+      "observed": {
+        "state_probability": 0.55,
+        "zero": 0.0
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:state:contained_crisis"
+    },
+    {
+      "category": "numeric_sanity",
+      "check_id": "finite_payoffs",
+      "explanation": "NaN and infinite utilities make thresholds and comparisons invalid.",
+      "expression": "all eight payoff entries are finite",
+      "margin": null,
+      "observed": {
+        "finite_entries": 8,
+        "total_entries": 8
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:state:contained_crisis"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "symmetric_matrix",
+      "explanation": "These three canonical families use role-symmetric payoffs.",
+      "expression": "matrix is symmetric under exchange of players",
+      "margin": null,
+      "observed": {
+        "is_symmetric": true
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:state:contained_crisis"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_T_gt_R",
+      "explanation": "Chicken requires temptation > mutual restraint > yielding loss > crash.",
+      "expression": "row.T > row.R",
+      "margin": 1.7999999999999998,
+      "observed": {
+        "row.R": 3.2,
+        "row.T": 5.0
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:state:contained_crisis"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_R_gt_S",
+      "explanation": "Chicken requires temptation > mutual restraint > yielding loss > crash.",
+      "expression": "row.R > row.S",
+      "margin": 2.0,
+      "observed": {
+        "row.R": 3.2,
+        "row.S": 1.2
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:state:contained_crisis"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_S_gt_P",
+      "explanation": "Chicken requires temptation > mutual restraint > yielding loss > crash.",
+      "expression": "row.S > row.P",
+      "margin": 6.2,
+      "observed": {
+        "row.P": -5.0,
+        "row.S": 1.2
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:state:contained_crisis"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_T_gt_R",
+      "explanation": "Chicken requires temptation > mutual restraint > yielding loss > crash.",
+      "expression": "column.T > column.R",
+      "margin": 1.7999999999999998,
+      "observed": {
+        "column.R": 3.2,
+        "column.T": 5.0
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:state:contained_crisis"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_R_gt_S",
+      "explanation": "Chicken requires temptation > mutual restraint > yielding loss > crash.",
+      "expression": "column.R > column.S",
+      "margin": 2.0,
+      "observed": {
+        "column.R": 3.2,
+        "column.S": 1.2
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:state:contained_crisis"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_S_gt_P",
+      "explanation": "Chicken requires temptation > mutual restraint > yielding loss > crash.",
+      "expression": "column.S > column.P",
+      "margin": 6.2,
+      "observed": {
+        "column.P": -5.0,
+        "column.S": 1.2
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:state:contained_crisis"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "anti_coordination_nash",
+      "explanation": "Chicken should reward unilateral escalation but punish mutual escalation.",
+      "expression": "pure Nash equilibria are exactly the off-diagonals",
+      "margin": null,
+      "observed": {
+        "actual": [
+          [
+            "DEESCALATE",
+            "ESCALATE"
+          ],
+          [
+            "ESCALATE",
+            "DEESCALATE"
+          ]
+        ],
+        "expected": [
+          [
+            "DEESCALATE",
+            "ESCALATE"
+          ],
+          [
+            "ESCALATE",
+            "DEESCALATE"
+          ]
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:state:contained_crisis"
+    },
+    {
+      "category": "probability",
+      "check_id": "positive_state_probability",
+      "explanation": "Every declared latent state must have positive probability mass.",
+      "expression": "state_probability > zero",
+      "margin": 0.3,
+      "observed": {
+        "state_probability": 0.3,
+        "zero": 0.0
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:state:severe_crisis"
+    },
+    {
+      "category": "numeric_sanity",
+      "check_id": "finite_payoffs",
+      "explanation": "NaN and infinite utilities make thresholds and comparisons invalid.",
+      "expression": "all eight payoff entries are finite",
+      "margin": null,
+      "observed": {
+        "finite_entries": 8,
+        "total_entries": 8
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:state:severe_crisis"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "symmetric_matrix",
+      "explanation": "These three canonical families use role-symmetric payoffs.",
+      "expression": "matrix is symmetric under exchange of players",
+      "margin": null,
+      "observed": {
+        "is_symmetric": true
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:state:severe_crisis"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_T_gt_R",
+      "explanation": "Chicken requires temptation > mutual restraint > yielding loss > crash.",
+      "expression": "row.T > row.R",
+      "margin": 4.0,
+      "observed": {
+        "row.R": 3.0,
+        "row.T": 7.0
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:state:severe_crisis"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_R_gt_S",
+      "explanation": "Chicken requires temptation > mutual restraint > yielding loss > crash.",
+      "expression": "row.R > row.S",
+      "margin": 3.0,
+      "observed": {
+        "row.R": 3.0,
+        "row.S": 0.0
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:state:severe_crisis"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_S_gt_P",
+      "explanation": "Chicken requires temptation > mutual restraint > yielding loss > crash.",
+      "expression": "row.S > row.P",
+      "margin": 30.0,
+      "observed": {
+        "row.P": -30.0,
+        "row.S": 0.0
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:state:severe_crisis"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_T_gt_R",
+      "explanation": "Chicken requires temptation > mutual restraint > yielding loss > crash.",
+      "expression": "column.T > column.R",
+      "margin": 4.0,
+      "observed": {
+        "column.R": 3.0,
+        "column.T": 7.0
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:state:severe_crisis"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_R_gt_S",
+      "explanation": "Chicken requires temptation > mutual restraint > yielding loss > crash.",
+      "expression": "column.R > column.S",
+      "margin": 3.0,
+      "observed": {
+        "column.R": 3.0,
+        "column.S": 0.0
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:state:severe_crisis"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_S_gt_P",
+      "explanation": "Chicken requires temptation > mutual restraint > yielding loss > crash.",
+      "expression": "column.S > column.P",
+      "margin": 30.0,
+      "observed": {
+        "column.P": -30.0,
+        "column.S": 0.0
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:state:severe_crisis"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "anti_coordination_nash",
+      "explanation": "Chicken should reward unilateral escalation but punish mutual escalation.",
+      "expression": "pure Nash equilibria are exactly the off-diagonals",
+      "margin": null,
+      "observed": {
+        "actual": [
+          [
+            "DEESCALATE",
+            "ESCALATE"
+          ],
+          [
+            "ESCALATE",
+            "DEESCALATE"
+          ]
+        ],
+        "expected": [
+          [
+            "DEESCALATE",
+            "ESCALATE"
+          ],
+          [
+            "ESCALATE",
+            "DEESCALATE"
+          ]
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:state:severe_crisis"
+    },
+    {
+      "category": "probability",
+      "check_id": "positive_state_probability",
+      "explanation": "Every declared latent state must have positive probability mass.",
+      "expression": "state_probability > zero",
+      "margin": 0.15,
+      "observed": {
+        "state_probability": 0.15,
+        "zero": 0.0
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:state:runaway_escalation"
+    },
+    {
+      "category": "numeric_sanity",
+      "check_id": "finite_payoffs",
+      "explanation": "NaN and infinite utilities make thresholds and comparisons invalid.",
+      "expression": "all eight payoff entries are finite",
+      "margin": null,
+      "observed": {
+        "finite_entries": 8,
+        "total_entries": 8
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:state:runaway_escalation"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "symmetric_matrix",
+      "explanation": "These three canonical families use role-symmetric payoffs.",
+      "expression": "matrix is symmetric under exchange of players",
+      "margin": null,
+      "observed": {
+        "is_symmetric": true
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:state:runaway_escalation"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_T_gt_R",
+      "explanation": "Chicken requires temptation > mutual restraint > yielding loss > crash.",
+      "expression": "row.T > row.R",
+      "margin": 8.0,
+      "observed": {
+        "row.R": 2.0,
+        "row.T": 10.0
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:state:runaway_escalation"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_R_gt_S",
+      "explanation": "Chicken requires temptation > mutual restraint > yielding loss > crash.",
+      "expression": "row.R > row.S",
+      "margin": 4.0,
+      "observed": {
+        "row.R": 2.0,
+        "row.S": -2.0
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:state:runaway_escalation"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_S_gt_P",
+      "explanation": "Chicken requires temptation > mutual restraint > yielding loss > crash.",
+      "expression": "row.S > row.P",
+      "margin": 98.0,
+      "observed": {
+        "row.P": -100.0,
+        "row.S": -2.0
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:state:runaway_escalation"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_T_gt_R",
+      "explanation": "Chicken requires temptation > mutual restraint > yielding loss > crash.",
+      "expression": "column.T > column.R",
+      "margin": 8.0,
+      "observed": {
+        "column.R": 2.0,
+        "column.T": 10.0
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:state:runaway_escalation"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_R_gt_S",
+      "explanation": "Chicken requires temptation > mutual restraint > yielding loss > crash.",
+      "expression": "column.R > column.S",
+      "margin": 4.0,
+      "observed": {
+        "column.R": 2.0,
+        "column.S": -2.0
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:state:runaway_escalation"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_S_gt_P",
+      "explanation": "Chicken requires temptation > mutual restraint > yielding loss > crash.",
+      "expression": "column.S > column.P",
+      "margin": 98.0,
+      "observed": {
+        "column.P": -100.0,
+        "column.S": -2.0
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:state:runaway_escalation"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "anti_coordination_nash",
+      "explanation": "Chicken should reward unilateral escalation but punish mutual escalation.",
+      "expression": "pure Nash equilibria are exactly the off-diagonals",
+      "margin": null,
+      "observed": {
+        "actual": [
+          [
+            "DEESCALATE",
+            "ESCALATE"
+          ],
+          [
+            "ESCALATE",
+            "DEESCALATE"
+          ]
+        ],
+        "expected": [
+          [
+            "DEESCALATE",
+            "ESCALATE"
+          ],
+          [
+            "ESCALATE",
+            "DEESCALATE"
+          ]
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:state:runaway_escalation"
+    },
+    {
+      "category": "numeric_sanity",
+      "check_id": "finite_payoffs",
+      "explanation": "NaN and infinite utilities make thresholds and comparisons invalid.",
+      "expression": "all eight payoff entries are finite",
+      "margin": null,
+      "observed": {
+        "finite_entries": 8,
+        "total_entries": 8
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:expected"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "symmetric_matrix",
+      "explanation": "These three canonical families use role-symmetric payoffs.",
+      "expression": "matrix is symmetric under exchange of players",
+      "margin": null,
+      "observed": {
+        "is_symmetric": true
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:expected"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_T_gt_R",
+      "explanation": "Chicken requires temptation > mutual restraint > yielding loss > crash.",
+      "expression": "row.T > row.R",
+      "margin": 3.3899999999999997,
+      "observed": {
+        "row.R": 2.96,
+        "row.T": 6.35
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:expected"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_R_gt_S",
+      "explanation": "Chicken requires temptation > mutual restraint > yielding loss > crash.",
+      "expression": "row.R > row.S",
+      "margin": 2.6,
+      "observed": {
+        "row.R": 2.96,
+        "row.S": 0.36000000000000004
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:expected"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_S_gt_P",
+      "explanation": "Chicken requires temptation > mutual restraint > yielding loss > crash.",
+      "expression": "row.S > row.P",
+      "margin": 27.11,
+      "observed": {
+        "row.P": -26.75,
+        "row.S": 0.36000000000000004
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:expected"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_T_gt_R",
+      "explanation": "Chicken requires temptation > mutual restraint > yielding loss > crash.",
+      "expression": "column.T > column.R",
+      "margin": 3.3899999999999997,
+      "observed": {
+        "column.R": 2.96,
+        "column.T": 6.35
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:expected"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_R_gt_S",
+      "explanation": "Chicken requires temptation > mutual restraint > yielding loss > crash.",
+      "expression": "column.R > column.S",
+      "margin": 2.6,
+      "observed": {
+        "column.R": 2.96,
+        "column.S": 0.36000000000000004
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:expected"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_S_gt_P",
+      "explanation": "Chicken requires temptation > mutual restraint > yielding loss > crash.",
+      "expression": "column.S > column.P",
+      "margin": 27.11,
+      "observed": {
+        "column.P": -26.75,
+        "column.S": 0.36000000000000004
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:expected"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "anti_coordination_nash",
+      "explanation": "Chicken should reward unilateral escalation but punish mutual escalation.",
+      "expression": "pure Nash equilibria are exactly the off-diagonals",
+      "margin": null,
+      "observed": {
+        "actual": [
+          [
+            "DEESCALATE",
+            "ESCALATE"
+          ],
+          [
+            "ESCALATE",
+            "DEESCALATE"
+          ]
+        ],
+        "expected": [
+          [
+            "DEESCALATE",
+            "ESCALATE"
+          ],
+          [
+            "ESCALATE",
+            "DEESCALATE"
+          ]
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation:uncertain:expected"
+    },
+    {
+      "category": "scenario_semantics",
+      "check_id": "canonical_catastrophe_semantics",
+      "explanation": "Catastrophe labels must follow the scenario narrative rather than action names alone.",
+      "expression": "catastrophic profiles match the scenario's declared failure mode",
+      "margin": null,
+      "observed": {
+        "actual": [
+          [
+            "ESCALATE",
+            "ESCALATE"
+          ]
+        ],
+        "expected": [
+          [
+            "ESCALATE",
+            "ESCALATE"
+          ]
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation"
+    },
+    {
+      "category": "uncertainty_ordering",
+      "check_id": "severity_probability_nonincreasing_0",
+      "explanation": "The catalog orders states from more common/less severe to rarer/more severe.",
+      "expression": "state_0.probability >= state_1.probability",
+      "margin": 0.25000000000000006,
+      "observed": {
+        "state_0.probability": 0.55,
+        "state_1.probability": 0.3
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation"
+    },
+    {
+      "category": "uncertainty_ordering",
+      "check_id": "severity_probability_nonincreasing_1",
+      "explanation": "The catalog orders states from more common/less severe to rarer/more severe.",
+      "expression": "state_1.probability >= state_2.probability",
+      "margin": 0.15,
+      "observed": {
+        "state_1.probability": 0.3,
+        "state_2.probability": 0.15
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation"
+    },
+    {
+      "category": "uncertainty_ordering",
+      "check_id": "severity_loss_strictly_worsens_0",
+      "explanation": "The designated failure outcome must become strictly worse with latent severity.",
+      "expression": "state_0.failure_payoff > state_1.failure_payoff",
+      "margin": 25.0,
+      "observed": {
+        "state_0.failure_payoff": -5.0,
+        "state_1.failure_payoff": -30.0
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation"
+    },
+    {
+      "category": "uncertainty_ordering",
+      "check_id": "severity_loss_strictly_worsens_1",
+      "explanation": "The designated failure outcome must become strictly worse with latent severity.",
+      "expression": "state_1.failure_payoff > state_2.failure_payoff",
+      "margin": 70.0,
+      "observed": {
+        "state_1.failure_payoff": -30.0,
+        "state_2.failure_payoff": -100.0
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation"
+    },
+    {
+      "category": "uncertainty_ordering",
+      "check_id": "catastrophe_marker_nondecreasing_0",
+      "explanation": "More severe states cannot remove the catalog's designated catastrophe label.",
+      "expression": "state_1.catastrophic >= state_0.catastrophic",
+      "margin": 1.0,
+      "observed": {
+        "state_0.catastrophic": 0.0,
+        "state_1.catastrophic": 1.0
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation"
+    },
+    {
+      "category": "uncertainty_ordering",
+      "check_id": "catastrophe_marker_nondecreasing_1",
+      "explanation": "More severe states cannot remove the catalog's designated catastrophe label.",
+      "expression": "state_2.catastrophic >= state_1.catastrophic",
+      "margin": 0.0,
+      "observed": {
+        "state_1.catastrophic": 1.0,
+        "state_2.catastrophic": 1.0
+      },
+      "passed": true,
+      "subject": "scenario:autonomous_escalation"
+    },
+    {
+      "category": "numeric_sanity",
+      "check_id": "finite_payoffs",
+      "explanation": "NaN and infinite utilities make thresholds and comparisons invalid.",
+      "expression": "all eight payoff entries are finite",
+      "margin": null,
+      "observed": {
+        "finite_entries": 8,
+        "total_entries": 8
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:canonical"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "symmetric_matrix",
+      "explanation": "These three canonical families use role-symmetric payoffs.",
+      "expression": "matrix is symmetric under exchange of players",
+      "margin": null,
+      "observed": {
+        "is_symmetric": true
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:canonical"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_R_gt_T",
+      "explanation": "Stag Hunt requires reward > safe-against-cooperation > mutual safety > failed cooperation.",
+      "expression": "row.R > row.T",
+      "margin": 1.0,
+      "observed": {
+        "row.R": 4.0,
+        "row.T": 3.0
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:canonical"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_T_gt_P",
+      "explanation": "Stag Hunt requires reward > safe-against-cooperation > mutual safety > failed cooperation.",
+      "expression": "row.T > row.P",
+      "margin": 1.0,
+      "observed": {
+        "row.P": 2.0,
+        "row.T": 3.0
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:canonical"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_P_gt_S",
+      "explanation": "Stag Hunt requires reward > safe-against-cooperation > mutual safety > failed cooperation.",
+      "expression": "row.P > row.S",
+      "margin": 2.0,
+      "observed": {
+        "row.P": 2.0,
+        "row.S": 0.0
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:canonical"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_R_gt_T",
+      "explanation": "Stag Hunt requires reward > safe-against-cooperation > mutual safety > failed cooperation.",
+      "expression": "column.R > column.T",
+      "margin": 1.0,
+      "observed": {
+        "column.R": 4.0,
+        "column.T": 3.0
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:canonical"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_T_gt_P",
+      "explanation": "Stag Hunt requires reward > safe-against-cooperation > mutual safety > failed cooperation.",
+      "expression": "column.T > column.P",
+      "margin": 1.0,
+      "observed": {
+        "column.P": 2.0,
+        "column.T": 3.0
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:canonical"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_P_gt_S",
+      "explanation": "Stag Hunt requires reward > safe-against-cooperation > mutual safety > failed cooperation.",
+      "expression": "column.P > column.S",
+      "margin": 2.0,
+      "observed": {
+        "column.P": 2.0,
+        "column.S": 0.0
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:canonical"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "coordination_nash",
+      "explanation": "The game must preserve both payoff-dominant and safe equilibria.",
+      "expression": "pure Nash equilibria are exactly the two diagonals",
+      "margin": null,
+      "observed": {
+        "actual": [
+          [
+            "JOINT_CONTAINMENT",
+            "JOINT_CONTAINMENT"
+          ],
+          [
+            "LOCAL_LOCKDOWN",
+            "LOCAL_LOCKDOWN"
+          ]
+        ],
+        "expected": [
+          [
+            "JOINT_CONTAINMENT",
+            "JOINT_CONTAINMENT"
+          ],
+          [
+            "LOCAL_LOCKDOWN",
+            "LOCAL_LOCKDOWN"
+          ]
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:canonical"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "cooperation_payoff_dominant",
+      "explanation": "Joint high-assurance cooperation must be payoff dominant.",
+      "expression": "(first, first) is the unique utilitarian optimum",
+      "margin": null,
+      "observed": {
+        "actual": [
+          [
+            "JOINT_CONTAINMENT",
+            "JOINT_CONTAINMENT"
+          ]
+        ],
+        "expected": [
+          [
+            "JOINT_CONTAINMENT",
+            "JOINT_CONTAINMENT"
+          ]
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:canonical"
+    },
+    {
+      "category": "probability",
+      "check_id": "state_probabilities_sum_to_one",
+      "explanation": "Latent payoff states must define a normalized distribution.",
+      "expression": "sum(state_probability) == one",
+      "margin": 1e-09,
+      "observed": {
+        "one": 1.0,
+        "sum(state_probability)": 1.0
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain"
+    },
+    {
+      "category": "probability",
+      "check_id": "multiple_latent_states",
+      "explanation": "A research uncertainty model should contain genuine payoff uncertainty.",
+      "expression": "number of latent states >= 2",
+      "margin": null,
+      "observed": {
+        "state_count": 3
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain"
+    },
+    {
+      "category": "probability",
+      "check_id": "positive_state_probability",
+      "explanation": "Every declared latent state must have positive probability mass.",
+      "expression": "state_probability > zero",
+      "margin": 0.45,
+      "observed": {
+        "state_probability": 0.45,
+        "zero": 0.0
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:state:false_alarm"
+    },
+    {
+      "category": "numeric_sanity",
+      "check_id": "finite_payoffs",
+      "explanation": "NaN and infinite utilities make thresholds and comparisons invalid.",
+      "expression": "all eight payoff entries are finite",
+      "margin": null,
+      "observed": {
+        "finite_entries": 8,
+        "total_entries": 8
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:state:false_alarm"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "symmetric_matrix",
+      "explanation": "These three canonical families use role-symmetric payoffs.",
+      "expression": "matrix is symmetric under exchange of players",
+      "margin": null,
+      "observed": {
+        "is_symmetric": true
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:state:false_alarm"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_R_gt_T",
+      "explanation": "Stag Hunt requires reward > safe-against-cooperation > mutual safety > failed cooperation.",
+      "expression": "row.R > row.T",
+      "margin": 1.0,
+      "observed": {
+        "row.R": 4.0,
+        "row.T": 3.0
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:state:false_alarm"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_T_gt_P",
+      "explanation": "Stag Hunt requires reward > safe-against-cooperation > mutual safety > failed cooperation.",
+      "expression": "row.T > row.P",
+      "margin": 1.0,
+      "observed": {
+        "row.P": 2.0,
+        "row.T": 3.0
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:state:false_alarm"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_P_gt_S",
+      "explanation": "Stag Hunt requires reward > safe-against-cooperation > mutual safety > failed cooperation.",
+      "expression": "row.P > row.S",
+      "margin": 1.5,
+      "observed": {
+        "row.P": 2.0,
+        "row.S": 0.5
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:state:false_alarm"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_R_gt_T",
+      "explanation": "Stag Hunt requires reward > safe-against-cooperation > mutual safety > failed cooperation.",
+      "expression": "column.R > column.T",
+      "margin": 1.0,
+      "observed": {
+        "column.R": 4.0,
+        "column.T": 3.0
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:state:false_alarm"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_T_gt_P",
+      "explanation": "Stag Hunt requires reward > safe-against-cooperation > mutual safety > failed cooperation.",
+      "expression": "column.T > column.P",
+      "margin": 1.0,
+      "observed": {
+        "column.P": 2.0,
+        "column.T": 3.0
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:state:false_alarm"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_P_gt_S",
+      "explanation": "Stag Hunt requires reward > safe-against-cooperation > mutual safety > failed cooperation.",
+      "expression": "column.P > column.S",
+      "margin": 1.5,
+      "observed": {
+        "column.P": 2.0,
+        "column.S": 0.5
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:state:false_alarm"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "coordination_nash",
+      "explanation": "The game must preserve both payoff-dominant and safe equilibria.",
+      "expression": "pure Nash equilibria are exactly the two diagonals",
+      "margin": null,
+      "observed": {
+        "actual": [
+          [
+            "JOINT_CONTAINMENT",
+            "JOINT_CONTAINMENT"
+          ],
+          [
+            "LOCAL_LOCKDOWN",
+            "LOCAL_LOCKDOWN"
+          ]
+        ],
+        "expected": [
+          [
+            "JOINT_CONTAINMENT",
+            "JOINT_CONTAINMENT"
+          ],
+          [
+            "LOCAL_LOCKDOWN",
+            "LOCAL_LOCKDOWN"
+          ]
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:state:false_alarm"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "cooperation_payoff_dominant",
+      "explanation": "Joint high-assurance cooperation must be payoff dominant.",
+      "expression": "(first, first) is the unique utilitarian optimum",
+      "margin": null,
+      "observed": {
+        "actual": [
+          [
+            "JOINT_CONTAINMENT",
+            "JOINT_CONTAINMENT"
+          ]
+        ],
+        "expected": [
+          [
+            "JOINT_CONTAINMENT",
+            "JOINT_CONTAINMENT"
+          ]
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:state:false_alarm"
+    },
+    {
+      "category": "probability",
+      "check_id": "positive_state_probability",
+      "explanation": "Every declared latent state must have positive probability mass.",
+      "expression": "state_probability > zero",
+      "margin": 0.35,
+      "observed": {
+        "state_probability": 0.35,
+        "zero": 0.0
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:state:active_cross_platform_exploit"
+    },
+    {
+      "category": "numeric_sanity",
+      "check_id": "finite_payoffs",
+      "explanation": "NaN and infinite utilities make thresholds and comparisons invalid.",
+      "expression": "all eight payoff entries are finite",
+      "margin": null,
+      "observed": {
+        "finite_entries": 8,
+        "total_entries": 8
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:state:active_cross_platform_exploit"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "symmetric_matrix",
+      "explanation": "These three canonical families use role-symmetric payoffs.",
+      "expression": "matrix is symmetric under exchange of players",
+      "margin": null,
+      "observed": {
+        "is_symmetric": true
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:state:active_cross_platform_exploit"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_R_gt_T",
+      "explanation": "Stag Hunt requires reward > safe-against-cooperation > mutual safety > failed cooperation.",
+      "expression": "row.R > row.T",
+      "margin": 3.0,
+      "observed": {
+        "row.R": 7.0,
+        "row.T": 4.0
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:state:active_cross_platform_exploit"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_T_gt_P",
+      "explanation": "Stag Hunt requires reward > safe-against-cooperation > mutual safety > failed cooperation.",
+      "expression": "row.T > row.P",
+      "margin": 3.0,
+      "observed": {
+        "row.P": 1.0,
+        "row.T": 4.0
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:state:active_cross_platform_exploit"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_P_gt_S",
+      "explanation": "Stag Hunt requires reward > safe-against-cooperation > mutual safety > failed cooperation.",
+      "expression": "row.P > row.S",
+      "margin": 9.0,
+      "observed": {
+        "row.P": 1.0,
+        "row.S": -8.0
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:state:active_cross_platform_exploit"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_R_gt_T",
+      "explanation": "Stag Hunt requires reward > safe-against-cooperation > mutual safety > failed cooperation.",
+      "expression": "column.R > column.T",
+      "margin": 3.0,
+      "observed": {
+        "column.R": 7.0,
+        "column.T": 4.0
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:state:active_cross_platform_exploit"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_T_gt_P",
+      "explanation": "Stag Hunt requires reward > safe-against-cooperation > mutual safety > failed cooperation.",
+      "expression": "column.T > column.P",
+      "margin": 3.0,
+      "observed": {
+        "column.P": 1.0,
+        "column.T": 4.0
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:state:active_cross_platform_exploit"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_P_gt_S",
+      "explanation": "Stag Hunt requires reward > safe-against-cooperation > mutual safety > failed cooperation.",
+      "expression": "column.P > column.S",
+      "margin": 9.0,
+      "observed": {
+        "column.P": 1.0,
+        "column.S": -8.0
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:state:active_cross_platform_exploit"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "coordination_nash",
+      "explanation": "The game must preserve both payoff-dominant and safe equilibria.",
+      "expression": "pure Nash equilibria are exactly the two diagonals",
+      "margin": null,
+      "observed": {
+        "actual": [
+          [
+            "JOINT_CONTAINMENT",
+            "JOINT_CONTAINMENT"
+          ],
+          [
+            "LOCAL_LOCKDOWN",
+            "LOCAL_LOCKDOWN"
+          ]
+        ],
+        "expected": [
+          [
+            "JOINT_CONTAINMENT",
+            "JOINT_CONTAINMENT"
+          ],
+          [
+            "LOCAL_LOCKDOWN",
+            "LOCAL_LOCKDOWN"
+          ]
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:state:active_cross_platform_exploit"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "cooperation_payoff_dominant",
+      "explanation": "Joint high-assurance cooperation must be payoff dominant.",
+      "expression": "(first, first) is the unique utilitarian optimum",
+      "margin": null,
+      "observed": {
+        "actual": [
+          [
+            "JOINT_CONTAINMENT",
+            "JOINT_CONTAINMENT"
+          ]
+        ],
+        "expected": [
+          [
+            "JOINT_CONTAINMENT",
+            "JOINT_CONTAINMENT"
+          ]
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:state:active_cross_platform_exploit"
+    },
+    {
+      "category": "probability",
+      "check_id": "positive_state_probability",
+      "explanation": "Every declared latent state must have positive probability mass.",
+      "expression": "state_probability > zero",
+      "margin": 0.2,
+      "observed": {
+        "state_probability": 0.2,
+        "zero": 0.0
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:state:cascading_ecosystem_compromise"
+    },
+    {
+      "category": "numeric_sanity",
+      "check_id": "finite_payoffs",
+      "explanation": "NaN and infinite utilities make thresholds and comparisons invalid.",
+      "expression": "all eight payoff entries are finite",
+      "margin": null,
+      "observed": {
+        "finite_entries": 8,
+        "total_entries": 8
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:state:cascading_ecosystem_compromise"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "symmetric_matrix",
+      "explanation": "These three canonical families use role-symmetric payoffs.",
+      "expression": "matrix is symmetric under exchange of players",
+      "margin": null,
+      "observed": {
+        "is_symmetric": true
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:state:cascading_ecosystem_compromise"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_R_gt_T",
+      "explanation": "Stag Hunt requires reward > safe-against-cooperation > mutual safety > failed cooperation.",
+      "expression": "row.R > row.T",
+      "margin": 7.0,
+      "observed": {
+        "row.R": 12.0,
+        "row.T": 5.0
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:state:cascading_ecosystem_compromise"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_T_gt_P",
+      "explanation": "Stag Hunt requires reward > safe-against-cooperation > mutual safety > failed cooperation.",
+      "expression": "row.T > row.P",
+      "margin": 9.0,
+      "observed": {
+        "row.P": -4.0,
+        "row.T": 5.0
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:state:cascading_ecosystem_compromise"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_P_gt_S",
+      "explanation": "Stag Hunt requires reward > safe-against-cooperation > mutual safety > failed cooperation.",
+      "expression": "row.P > row.S",
+      "margin": 36.0,
+      "observed": {
+        "row.P": -4.0,
+        "row.S": -40.0
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:state:cascading_ecosystem_compromise"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_R_gt_T",
+      "explanation": "Stag Hunt requires reward > safe-against-cooperation > mutual safety > failed cooperation.",
+      "expression": "column.R > column.T",
+      "margin": 7.0,
+      "observed": {
+        "column.R": 12.0,
+        "column.T": 5.0
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:state:cascading_ecosystem_compromise"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_T_gt_P",
+      "explanation": "Stag Hunt requires reward > safe-against-cooperation > mutual safety > failed cooperation.",
+      "expression": "column.T > column.P",
+      "margin": 9.0,
+      "observed": {
+        "column.P": -4.0,
+        "column.T": 5.0
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:state:cascading_ecosystem_compromise"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_P_gt_S",
+      "explanation": "Stag Hunt requires reward > safe-against-cooperation > mutual safety > failed cooperation.",
+      "expression": "column.P > column.S",
+      "margin": 36.0,
+      "observed": {
+        "column.P": -4.0,
+        "column.S": -40.0
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:state:cascading_ecosystem_compromise"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "coordination_nash",
+      "explanation": "The game must preserve both payoff-dominant and safe equilibria.",
+      "expression": "pure Nash equilibria are exactly the two diagonals",
+      "margin": null,
+      "observed": {
+        "actual": [
+          [
+            "JOINT_CONTAINMENT",
+            "JOINT_CONTAINMENT"
+          ],
+          [
+            "LOCAL_LOCKDOWN",
+            "LOCAL_LOCKDOWN"
+          ]
+        ],
+        "expected": [
+          [
+            "JOINT_CONTAINMENT",
+            "JOINT_CONTAINMENT"
+          ],
+          [
+            "LOCAL_LOCKDOWN",
+            "LOCAL_LOCKDOWN"
+          ]
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:state:cascading_ecosystem_compromise"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "cooperation_payoff_dominant",
+      "explanation": "Joint high-assurance cooperation must be payoff dominant.",
+      "expression": "(first, first) is the unique utilitarian optimum",
+      "margin": null,
+      "observed": {
+        "actual": [
+          [
+            "JOINT_CONTAINMENT",
+            "JOINT_CONTAINMENT"
+          ]
+        ],
+        "expected": [
+          [
+            "JOINT_CONTAINMENT",
+            "JOINT_CONTAINMENT"
+          ]
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:state:cascading_ecosystem_compromise"
+    },
+    {
+      "category": "numeric_sanity",
+      "check_id": "finite_payoffs",
+      "explanation": "NaN and infinite utilities make thresholds and comparisons invalid.",
+      "expression": "all eight payoff entries are finite",
+      "margin": null,
+      "observed": {
+        "finite_entries": 8,
+        "total_entries": 8
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:expected"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "symmetric_matrix",
+      "explanation": "These three canonical families use role-symmetric payoffs.",
+      "expression": "matrix is symmetric under exchange of players",
+      "margin": null,
+      "observed": {
+        "is_symmetric": true
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:expected"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_R_gt_T",
+      "explanation": "Stag Hunt requires reward > safe-against-cooperation > mutual safety > failed cooperation.",
+      "expression": "row.R > row.T",
+      "margin": 2.9000000000000004,
+      "observed": {
+        "row.R": 6.65,
+        "row.T": 3.75
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:expected"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_T_gt_P",
+      "explanation": "Stag Hunt requires reward > safe-against-cooperation > mutual safety > failed cooperation.",
+      "expression": "row.T > row.P",
+      "margin": 3.3,
+      "observed": {
+        "row.P": 0.44999999999999996,
+        "row.T": 3.75
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:expected"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_P_gt_S",
+      "explanation": "Stag Hunt requires reward > safe-against-cooperation > mutual safety > failed cooperation.",
+      "expression": "row.P > row.S",
+      "margin": 11.024999999999999,
+      "observed": {
+        "row.P": 0.44999999999999996,
+        "row.S": -10.575
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:expected"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_R_gt_T",
+      "explanation": "Stag Hunt requires reward > safe-against-cooperation > mutual safety > failed cooperation.",
+      "expression": "column.R > column.T",
+      "margin": 2.9000000000000004,
+      "observed": {
+        "column.R": 6.65,
+        "column.T": 3.75
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:expected"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_T_gt_P",
+      "explanation": "Stag Hunt requires reward > safe-against-cooperation > mutual safety > failed cooperation.",
+      "expression": "column.T > column.P",
+      "margin": 3.3,
+      "observed": {
+        "column.P": 0.44999999999999996,
+        "column.T": 3.75
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:expected"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_P_gt_S",
+      "explanation": "Stag Hunt requires reward > safe-against-cooperation > mutual safety > failed cooperation.",
+      "expression": "column.P > column.S",
+      "margin": 11.024999999999999,
+      "observed": {
+        "column.P": 0.44999999999999996,
+        "column.S": -10.575
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:expected"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "coordination_nash",
+      "explanation": "The game must preserve both payoff-dominant and safe equilibria.",
+      "expression": "pure Nash equilibria are exactly the two diagonals",
+      "margin": null,
+      "observed": {
+        "actual": [
+          [
+            "JOINT_CONTAINMENT",
+            "JOINT_CONTAINMENT"
+          ],
+          [
+            "LOCAL_LOCKDOWN",
+            "LOCAL_LOCKDOWN"
+          ]
+        ],
+        "expected": [
+          [
+            "JOINT_CONTAINMENT",
+            "JOINT_CONTAINMENT"
+          ],
+          [
+            "LOCAL_LOCKDOWN",
+            "LOCAL_LOCKDOWN"
+          ]
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:expected"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "cooperation_payoff_dominant",
+      "explanation": "Joint high-assurance cooperation must be payoff dominant.",
+      "expression": "(first, first) is the unique utilitarian optimum",
+      "margin": null,
+      "observed": {
+        "actual": [
+          [
+            "JOINT_CONTAINMENT",
+            "JOINT_CONTAINMENT"
+          ]
+        ],
+        "expected": [
+          [
+            "JOINT_CONTAINMENT",
+            "JOINT_CONTAINMENT"
+          ]
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response:uncertain:expected"
+    },
+    {
+      "category": "scenario_semantics",
+      "check_id": "canonical_catastrophe_semantics",
+      "explanation": "Catastrophe labels must follow the scenario narrative rather than action names alone.",
+      "expression": "catastrophic profiles match the scenario's declared failure mode",
+      "margin": null,
+      "observed": {
+        "actual": [
+          [
+            "JOINT_CONTAINMENT",
+            "LOCAL_LOCKDOWN"
+          ],
+          [
+            "LOCAL_LOCKDOWN",
+            "JOINT_CONTAINMENT"
+          ]
+        ],
+        "expected": [
+          [
+            "JOINT_CONTAINMENT",
+            "LOCAL_LOCKDOWN"
+          ],
+          [
+            "LOCAL_LOCKDOWN",
+            "JOINT_CONTAINMENT"
+          ]
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response"
+    },
+    {
+      "category": "scenario_semantics",
+      "check_id": "safe_equilibrium_risk_dominant",
+      "explanation": "The scenario describes local lockdown as the risk-dominant fallback.",
+      "expression": "P-S > R-T",
+      "margin": 1.0,
+      "observed": {
+        "P-S": 2.0,
+        "R-T": 1.0
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response"
+    },
+    {
+      "category": "uncertainty_ordering",
+      "check_id": "severity_probability_nonincreasing_0",
+      "explanation": "The catalog orders states from more common/less severe to rarer/more severe.",
+      "expression": "state_0.probability >= state_1.probability",
+      "margin": 0.10000000000000003,
+      "observed": {
+        "state_0.probability": 0.45,
+        "state_1.probability": 0.35
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response"
+    },
+    {
+      "category": "uncertainty_ordering",
+      "check_id": "severity_probability_nonincreasing_1",
+      "explanation": "The catalog orders states from more common/less severe to rarer/more severe.",
+      "expression": "state_1.probability >= state_2.probability",
+      "margin": 0.14999999999999997,
+      "observed": {
+        "state_1.probability": 0.35,
+        "state_2.probability": 0.2
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response"
+    },
+    {
+      "category": "uncertainty_ordering",
+      "check_id": "severity_loss_strictly_worsens_0",
+      "explanation": "The designated failure outcome must become strictly worse with latent severity.",
+      "expression": "state_0.failure_payoff > state_1.failure_payoff",
+      "margin": 8.5,
+      "observed": {
+        "state_0.failure_payoff": 0.5,
+        "state_1.failure_payoff": -8.0
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response"
+    },
+    {
+      "category": "uncertainty_ordering",
+      "check_id": "severity_loss_strictly_worsens_1",
+      "explanation": "The designated failure outcome must become strictly worse with latent severity.",
+      "expression": "state_1.failure_payoff > state_2.failure_payoff",
+      "margin": 32.0,
+      "observed": {
+        "state_1.failure_payoff": -8.0,
+        "state_2.failure_payoff": -40.0
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response"
+    },
+    {
+      "category": "uncertainty_ordering",
+      "check_id": "catastrophe_marker_nondecreasing_0",
+      "explanation": "More severe states cannot remove the catalog's designated catastrophe label.",
+      "expression": "state_1.catastrophic >= state_0.catastrophic",
+      "margin": 1.0,
+      "observed": {
+        "state_0.catastrophic": 0.0,
+        "state_1.catastrophic": 1.0
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response"
+    },
+    {
+      "category": "uncertainty_ordering",
+      "check_id": "catastrophe_marker_nondecreasing_1",
+      "explanation": "More severe states cannot remove the catalog's designated catastrophe label.",
+      "expression": "state_2.catastrophic >= state_1.catastrophic",
+      "margin": 0.0,
+      "observed": {
+        "state_1.catastrophic": 1.0,
+        "state_2.catastrophic": 1.0
+      },
+      "passed": true,
+      "subject": "scenario:cross_lab_incident_response"
+    },
+    {
+      "category": "numeric_sanity",
+      "check_id": "finite_payoffs",
+      "explanation": "NaN and infinite utilities make thresholds and comparisons invalid.",
+      "expression": "all eight payoff entries are finite",
+      "margin": null,
+      "observed": {
+        "finite_entries": 8,
+        "total_entries": 8
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:canonical"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "symmetric_matrix",
+      "explanation": "These three canonical families use role-symmetric payoffs.",
+      "expression": "matrix is symmetric under exchange of players",
+      "margin": null,
+      "observed": {
+        "is_symmetric": true
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:canonical"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_T_gt_R",
+      "explanation": "Prisoner's Dilemma requires temptation > reward > punishment > sucker.",
+      "expression": "row.T > row.R",
+      "margin": 2.0,
+      "observed": {
+        "row.R": 3.0,
+        "row.T": 5.0
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:canonical"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_R_gt_P",
+      "explanation": "Prisoner's Dilemma requires temptation > reward > punishment > sucker.",
+      "expression": "row.R > row.P",
+      "margin": 2.0,
+      "observed": {
+        "row.P": 1.0,
+        "row.R": 3.0
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:canonical"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_P_gt_S",
+      "explanation": "Prisoner's Dilemma requires temptation > reward > punishment > sucker.",
+      "expression": "row.P > row.S",
+      "margin": 1.0,
+      "observed": {
+        "row.P": 1.0,
+        "row.S": 0.0
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:canonical"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_repeated_game_efficiency",
+      "explanation": "Sustained mutual cooperation must beat alternating exploitation.",
+      "expression": "2*row.R > row.T+row.S",
+      "margin": 1.0,
+      "observed": {
+        "2*row.R": 6.0,
+        "row.T+row.S": 5.0
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:canonical"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_T_gt_R",
+      "explanation": "Prisoner's Dilemma requires temptation > reward > punishment > sucker.",
+      "expression": "column.T > column.R",
+      "margin": 2.0,
+      "observed": {
+        "column.R": 3.0,
+        "column.T": 5.0
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:canonical"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_R_gt_P",
+      "explanation": "Prisoner's Dilemma requires temptation > reward > punishment > sucker.",
+      "expression": "column.R > column.P",
+      "margin": 2.0,
+      "observed": {
+        "column.P": 1.0,
+        "column.R": 3.0
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:canonical"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_P_gt_S",
+      "explanation": "Prisoner's Dilemma requires temptation > reward > punishment > sucker.",
+      "expression": "column.P > column.S",
+      "margin": 1.0,
+      "observed": {
+        "column.P": 1.0,
+        "column.S": 0.0
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:canonical"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_repeated_game_efficiency",
+      "explanation": "Sustained mutual cooperation must beat alternating exploitation.",
+      "expression": "2*column.R > column.T+column.S",
+      "margin": 1.0,
+      "observed": {
+        "2*column.R": 6.0,
+        "column.T+column.S": 5.0
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:canonical"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "unique_defection_nash",
+      "explanation": "Strict defection incentives should produce one inefficient equilibrium.",
+      "expression": "pure Nash equilibria = {(second, second)}",
+      "margin": null,
+      "observed": {
+        "actual": [
+          [
+            "RACE_TO_DEPLOY",
+            "RACE_TO_DEPLOY"
+          ]
+        ],
+        "expected": [
+          [
+            "RACE_TO_DEPLOY",
+            "RACE_TO_DEPLOY"
+          ]
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:canonical"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "strict_defection_dominance",
+      "explanation": "The competitive action must dominate against either opponent action.",
+      "expression": "second action is strictly dominant for both players",
+      "margin": null,
+      "observed": {
+        "column": [
+          "RACE_TO_DEPLOY"
+        ],
+        "expected": [
+          "RACE_TO_DEPLOY"
+        ],
+        "row": [
+          "RACE_TO_DEPLOY"
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:canonical"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "mutual_cooperation_welfare_optimum",
+      "explanation": "The dilemma requires individually dominated cooperation to be jointly best.",
+      "expression": "(first, first) is the unique utilitarian optimum",
+      "margin": null,
+      "observed": {
+        "actual": [
+          [
+            "PAUSE_FOR_AUDIT",
+            "PAUSE_FOR_AUDIT"
+          ]
+        ],
+        "expected": [
+          [
+            "PAUSE_FOR_AUDIT",
+            "PAUSE_FOR_AUDIT"
+          ]
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:canonical"
+    },
+    {
+      "category": "probability",
+      "check_id": "state_probabilities_sum_to_one",
+      "explanation": "Latent payoff states must define a normalized distribution.",
+      "expression": "sum(state_probability) == one",
+      "margin": 1e-09,
+      "observed": {
+        "one": 1.0,
+        "sum(state_probability)": 1.0
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain"
+    },
+    {
+      "category": "probability",
+      "check_id": "multiple_latent_states",
+      "explanation": "A research uncertainty model should contain genuine payoff uncertainty.",
+      "expression": "number of latent states >= 2",
+      "margin": null,
+      "observed": {
+        "state_count": 3
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain"
+    },
+    {
+      "category": "probability",
+      "check_id": "positive_state_probability",
+      "explanation": "Every declared latent state must have positive probability mass.",
+      "expression": "state_probability > zero",
+      "margin": 0.55,
+      "observed": {
+        "state_probability": 0.55,
+        "zero": 0.0
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:contained_competition"
+    },
+    {
+      "category": "numeric_sanity",
+      "check_id": "finite_payoffs",
+      "explanation": "NaN and infinite utilities make thresholds and comparisons invalid.",
+      "expression": "all eight payoff entries are finite",
+      "margin": null,
+      "observed": {
+        "finite_entries": 8,
+        "total_entries": 8
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:contained_competition"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "symmetric_matrix",
+      "explanation": "These three canonical families use role-symmetric payoffs.",
+      "expression": "matrix is symmetric under exchange of players",
+      "margin": null,
+      "observed": {
+        "is_symmetric": true
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:contained_competition"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_T_gt_R",
+      "explanation": "Prisoner's Dilemma requires temptation > reward > punishment > sucker.",
+      "expression": "row.T > row.R",
+      "margin": 1.2999999999999998,
+      "observed": {
+        "row.R": 3.2,
+        "row.T": 4.5
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:contained_competition"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_R_gt_P",
+      "explanation": "Prisoner's Dilemma requires temptation > reward > punishment > sucker.",
+      "expression": "row.R > row.P",
+      "margin": 2.0,
+      "observed": {
+        "row.P": 1.2,
+        "row.R": 3.2
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:contained_competition"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_P_gt_S",
+      "explanation": "Prisoner's Dilemma requires temptation > reward > punishment > sucker.",
+      "expression": "row.P > row.S",
+      "margin": 1.0,
+      "observed": {
+        "row.P": 1.2,
+        "row.S": 0.2
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:contained_competition"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_repeated_game_efficiency",
+      "explanation": "Sustained mutual cooperation must beat alternating exploitation.",
+      "expression": "2*row.R > row.T+row.S",
+      "margin": 1.7000000000000002,
+      "observed": {
+        "2*row.R": 6.4,
+        "row.T+row.S": 4.7
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:contained_competition"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_T_gt_R",
+      "explanation": "Prisoner's Dilemma requires temptation > reward > punishment > sucker.",
+      "expression": "column.T > column.R",
+      "margin": 1.2999999999999998,
+      "observed": {
+        "column.R": 3.2,
+        "column.T": 4.5
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:contained_competition"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_R_gt_P",
+      "explanation": "Prisoner's Dilemma requires temptation > reward > punishment > sucker.",
+      "expression": "column.R > column.P",
+      "margin": 2.0,
+      "observed": {
+        "column.P": 1.2,
+        "column.R": 3.2
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:contained_competition"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_P_gt_S",
+      "explanation": "Prisoner's Dilemma requires temptation > reward > punishment > sucker.",
+      "expression": "column.P > column.S",
+      "margin": 1.0,
+      "observed": {
+        "column.P": 1.2,
+        "column.S": 0.2
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:contained_competition"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_repeated_game_efficiency",
+      "explanation": "Sustained mutual cooperation must beat alternating exploitation.",
+      "expression": "2*column.R > column.T+column.S",
+      "margin": 1.7000000000000002,
+      "observed": {
+        "2*column.R": 6.4,
+        "column.T+column.S": 4.7
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:contained_competition"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "unique_defection_nash",
+      "explanation": "Strict defection incentives should produce one inefficient equilibrium.",
+      "expression": "pure Nash equilibria = {(second, second)}",
+      "margin": null,
+      "observed": {
+        "actual": [
+          [
+            "RACE_TO_DEPLOY",
+            "RACE_TO_DEPLOY"
+          ]
+        ],
+        "expected": [
+          [
+            "RACE_TO_DEPLOY",
+            "RACE_TO_DEPLOY"
+          ]
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:contained_competition"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "strict_defection_dominance",
+      "explanation": "The competitive action must dominate against either opponent action.",
+      "expression": "second action is strictly dominant for both players",
+      "margin": null,
+      "observed": {
+        "column": [
+          "RACE_TO_DEPLOY"
+        ],
+        "expected": [
+          "RACE_TO_DEPLOY"
+        ],
+        "row": [
+          "RACE_TO_DEPLOY"
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:contained_competition"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "mutual_cooperation_welfare_optimum",
+      "explanation": "The dilemma requires individually dominated cooperation to be jointly best.",
+      "expression": "(first, first) is the unique utilitarian optimum",
+      "margin": null,
+      "observed": {
+        "actual": [
+          [
+            "PAUSE_FOR_AUDIT",
+            "PAUSE_FOR_AUDIT"
+          ]
+        ],
+        "expected": [
+          [
+            "PAUSE_FOR_AUDIT",
+            "PAUSE_FOR_AUDIT"
+          ]
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:contained_competition"
+    },
+    {
+      "category": "probability",
+      "check_id": "positive_state_probability",
+      "explanation": "Every declared latent state must have positive probability mass.",
+      "expression": "state_probability > zero",
+      "margin": 0.3,
+      "observed": {
+        "state_probability": 0.3,
+        "zero": 0.0
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:major_safety_failure"
+    },
+    {
+      "category": "numeric_sanity",
+      "check_id": "finite_payoffs",
+      "explanation": "NaN and infinite utilities make thresholds and comparisons invalid.",
+      "expression": "all eight payoff entries are finite",
+      "margin": null,
+      "observed": {
+        "finite_entries": 8,
+        "total_entries": 8
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:major_safety_failure"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "symmetric_matrix",
+      "explanation": "These three canonical families use role-symmetric payoffs.",
+      "expression": "matrix is symmetric under exchange of players",
+      "margin": null,
+      "observed": {
+        "is_symmetric": true
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:major_safety_failure"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_T_gt_R",
+      "explanation": "Prisoner's Dilemma requires temptation > reward > punishment > sucker.",
+      "expression": "row.T > row.R",
+      "margin": 3.0,
+      "observed": {
+        "row.R": 3.0,
+        "row.T": 6.0
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:major_safety_failure"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_R_gt_P",
+      "explanation": "Prisoner's Dilemma requires temptation > reward > punishment > sucker.",
+      "expression": "row.R > row.P",
+      "margin": 5.0,
+      "observed": {
+        "row.P": -2.0,
+        "row.R": 3.0
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:major_safety_failure"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_P_gt_S",
+      "explanation": "Prisoner's Dilemma requires temptation > reward > punishment > sucker.",
+      "expression": "row.P > row.S",
+      "margin": 1.0,
+      "observed": {
+        "row.P": -2.0,
+        "row.S": -3.0
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:major_safety_failure"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_repeated_game_efficiency",
+      "explanation": "Sustained mutual cooperation must beat alternating exploitation.",
+      "expression": "2*row.R > row.T+row.S",
+      "margin": 3.0,
+      "observed": {
+        "2*row.R": 6.0,
+        "row.T+row.S": 3.0
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:major_safety_failure"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_T_gt_R",
+      "explanation": "Prisoner's Dilemma requires temptation > reward > punishment > sucker.",
+      "expression": "column.T > column.R",
+      "margin": 3.0,
+      "observed": {
+        "column.R": 3.0,
+        "column.T": 6.0
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:major_safety_failure"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_R_gt_P",
+      "explanation": "Prisoner's Dilemma requires temptation > reward > punishment > sucker.",
+      "expression": "column.R > column.P",
+      "margin": 5.0,
+      "observed": {
+        "column.P": -2.0,
+        "column.R": 3.0
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:major_safety_failure"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_P_gt_S",
+      "explanation": "Prisoner's Dilemma requires temptation > reward > punishment > sucker.",
+      "expression": "column.P > column.S",
+      "margin": 1.0,
+      "observed": {
+        "column.P": -2.0,
+        "column.S": -3.0
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:major_safety_failure"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_repeated_game_efficiency",
+      "explanation": "Sustained mutual cooperation must beat alternating exploitation.",
+      "expression": "2*column.R > column.T+column.S",
+      "margin": 3.0,
+      "observed": {
+        "2*column.R": 6.0,
+        "column.T+column.S": 3.0
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:major_safety_failure"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "unique_defection_nash",
+      "explanation": "Strict defection incentives should produce one inefficient equilibrium.",
+      "expression": "pure Nash equilibria = {(second, second)}",
+      "margin": null,
+      "observed": {
+        "actual": [
+          [
+            "RACE_TO_DEPLOY",
+            "RACE_TO_DEPLOY"
+          ]
+        ],
+        "expected": [
+          [
+            "RACE_TO_DEPLOY",
+            "RACE_TO_DEPLOY"
+          ]
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:major_safety_failure"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "strict_defection_dominance",
+      "explanation": "The competitive action must dominate against either opponent action.",
+      "expression": "second action is strictly dominant for both players",
+      "margin": null,
+      "observed": {
+        "column": [
+          "RACE_TO_DEPLOY"
+        ],
+        "expected": [
+          "RACE_TO_DEPLOY"
+        ],
+        "row": [
+          "RACE_TO_DEPLOY"
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:major_safety_failure"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "mutual_cooperation_welfare_optimum",
+      "explanation": "The dilemma requires individually dominated cooperation to be jointly best.",
+      "expression": "(first, first) is the unique utilitarian optimum",
+      "margin": null,
+      "observed": {
+        "actual": [
+          [
+            "PAUSE_FOR_AUDIT",
+            "PAUSE_FOR_AUDIT"
+          ]
+        ],
+        "expected": [
+          [
+            "PAUSE_FOR_AUDIT",
+            "PAUSE_FOR_AUDIT"
+          ]
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:major_safety_failure"
+    },
+    {
+      "category": "probability",
+      "check_id": "positive_state_probability",
+      "explanation": "Every declared latent state must have positive probability mass.",
+      "expression": "state_probability > zero",
+      "margin": 0.15,
+      "observed": {
+        "state_probability": 0.15,
+        "zero": 0.0
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:systemic_failure"
+    },
+    {
+      "category": "numeric_sanity",
+      "check_id": "finite_payoffs",
+      "explanation": "NaN and infinite utilities make thresholds and comparisons invalid.",
+      "expression": "all eight payoff entries are finite",
+      "margin": null,
+      "observed": {
+        "finite_entries": 8,
+        "total_entries": 8
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:systemic_failure"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "symmetric_matrix",
+      "explanation": "These three canonical families use role-symmetric payoffs.",
+      "expression": "matrix is symmetric under exchange of players",
+      "margin": null,
+      "observed": {
+        "is_symmetric": true
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:systemic_failure"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_T_gt_R",
+      "explanation": "Prisoner's Dilemma requires temptation > reward > punishment > sucker.",
+      "expression": "row.T > row.R",
+      "margin": 6.0,
+      "observed": {
+        "row.R": 2.0,
+        "row.T": 8.0
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:systemic_failure"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_R_gt_P",
+      "explanation": "Prisoner's Dilemma requires temptation > reward > punishment > sucker.",
+      "expression": "row.R > row.P",
+      "margin": 22.0,
+      "observed": {
+        "row.P": -20.0,
+        "row.R": 2.0
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:systemic_failure"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_P_gt_S",
+      "explanation": "Prisoner's Dilemma requires temptation > reward > punishment > sucker.",
+      "expression": "row.P > row.S",
+      "margin": 5.0,
+      "observed": {
+        "row.P": -20.0,
+        "row.S": -25.0
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:systemic_failure"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_repeated_game_efficiency",
+      "explanation": "Sustained mutual cooperation must beat alternating exploitation.",
+      "expression": "2*row.R > row.T+row.S",
+      "margin": 21.0,
+      "observed": {
+        "2*row.R": 4.0,
+        "row.T+row.S": -17.0
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:systemic_failure"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_T_gt_R",
+      "explanation": "Prisoner's Dilemma requires temptation > reward > punishment > sucker.",
+      "expression": "column.T > column.R",
+      "margin": 6.0,
+      "observed": {
+        "column.R": 2.0,
+        "column.T": 8.0
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:systemic_failure"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_R_gt_P",
+      "explanation": "Prisoner's Dilemma requires temptation > reward > punishment > sucker.",
+      "expression": "column.R > column.P",
+      "margin": 22.0,
+      "observed": {
+        "column.P": -20.0,
+        "column.R": 2.0
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:systemic_failure"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_P_gt_S",
+      "explanation": "Prisoner's Dilemma requires temptation > reward > punishment > sucker.",
+      "expression": "column.P > column.S",
+      "margin": 5.0,
+      "observed": {
+        "column.P": -20.0,
+        "column.S": -25.0
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:systemic_failure"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_repeated_game_efficiency",
+      "explanation": "Sustained mutual cooperation must beat alternating exploitation.",
+      "expression": "2*column.R > column.T+column.S",
+      "margin": 21.0,
+      "observed": {
+        "2*column.R": 4.0,
+        "column.T+column.S": -17.0
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:systemic_failure"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "unique_defection_nash",
+      "explanation": "Strict defection incentives should produce one inefficient equilibrium.",
+      "expression": "pure Nash equilibria = {(second, second)}",
+      "margin": null,
+      "observed": {
+        "actual": [
+          [
+            "RACE_TO_DEPLOY",
+            "RACE_TO_DEPLOY"
+          ]
+        ],
+        "expected": [
+          [
+            "RACE_TO_DEPLOY",
+            "RACE_TO_DEPLOY"
+          ]
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:systemic_failure"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "strict_defection_dominance",
+      "explanation": "The competitive action must dominate against either opponent action.",
+      "expression": "second action is strictly dominant for both players",
+      "margin": null,
+      "observed": {
+        "column": [
+          "RACE_TO_DEPLOY"
+        ],
+        "expected": [
+          "RACE_TO_DEPLOY"
+        ],
+        "row": [
+          "RACE_TO_DEPLOY"
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:systemic_failure"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "mutual_cooperation_welfare_optimum",
+      "explanation": "The dilemma requires individually dominated cooperation to be jointly best.",
+      "expression": "(first, first) is the unique utilitarian optimum",
+      "margin": null,
+      "observed": {
+        "actual": [
+          [
+            "PAUSE_FOR_AUDIT",
+            "PAUSE_FOR_AUDIT"
+          ]
+        ],
+        "expected": [
+          [
+            "PAUSE_FOR_AUDIT",
+            "PAUSE_FOR_AUDIT"
+          ]
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:state:systemic_failure"
+    },
+    {
+      "category": "numeric_sanity",
+      "check_id": "finite_payoffs",
+      "explanation": "NaN and infinite utilities make thresholds and comparisons invalid.",
+      "expression": "all eight payoff entries are finite",
+      "margin": null,
+      "observed": {
+        "finite_entries": 8,
+        "total_entries": 8
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:expected"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "symmetric_matrix",
+      "explanation": "These three canonical families use role-symmetric payoffs.",
+      "expression": "matrix is symmetric under exchange of players",
+      "margin": null,
+      "observed": {
+        "is_symmetric": true
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:expected"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_T_gt_R",
+      "explanation": "Prisoner's Dilemma requires temptation > reward > punishment > sucker.",
+      "expression": "row.T > row.R",
+      "margin": 2.5149999999999997,
+      "observed": {
+        "row.R": 2.96,
+        "row.T": 5.475
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:expected"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_R_gt_P",
+      "explanation": "Prisoner's Dilemma requires temptation > reward > punishment > sucker.",
+      "expression": "row.R > row.P",
+      "margin": 5.9,
+      "observed": {
+        "row.P": -2.94,
+        "row.R": 2.96
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:expected"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_P_gt_S",
+      "explanation": "Prisoner's Dilemma requires temptation > reward > punishment > sucker.",
+      "expression": "row.P > row.S",
+      "margin": 1.6,
+      "observed": {
+        "row.P": -2.94,
+        "row.S": -4.54
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:expected"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_repeated_game_efficiency",
+      "explanation": "Sustained mutual cooperation must beat alternating exploitation.",
+      "expression": "2*row.R > row.T+row.S",
+      "margin": 4.985,
+      "observed": {
+        "2*row.R": 5.92,
+        "row.T+row.S": 0.9349999999999996
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:expected"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_T_gt_R",
+      "explanation": "Prisoner's Dilemma requires temptation > reward > punishment > sucker.",
+      "expression": "column.T > column.R",
+      "margin": 2.5149999999999997,
+      "observed": {
+        "column.R": 2.96,
+        "column.T": 5.475
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:expected"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_R_gt_P",
+      "explanation": "Prisoner's Dilemma requires temptation > reward > punishment > sucker.",
+      "expression": "column.R > column.P",
+      "margin": 5.9,
+      "observed": {
+        "column.P": -2.94,
+        "column.R": 2.96
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:expected"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_P_gt_S",
+      "explanation": "Prisoner's Dilemma requires temptation > reward > punishment > sucker.",
+      "expression": "column.P > column.S",
+      "margin": 1.6,
+      "observed": {
+        "column.P": -2.94,
+        "column.S": -4.54
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:expected"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_repeated_game_efficiency",
+      "explanation": "Sustained mutual cooperation must beat alternating exploitation.",
+      "expression": "2*column.R > column.T+column.S",
+      "margin": 4.985,
+      "observed": {
+        "2*column.R": 5.92,
+        "column.T+column.S": 0.9349999999999996
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:expected"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "unique_defection_nash",
+      "explanation": "Strict defection incentives should produce one inefficient equilibrium.",
+      "expression": "pure Nash equilibria = {(second, second)}",
+      "margin": null,
+      "observed": {
+        "actual": [
+          [
+            "RACE_TO_DEPLOY",
+            "RACE_TO_DEPLOY"
+          ]
+        ],
+        "expected": [
+          [
+            "RACE_TO_DEPLOY",
+            "RACE_TO_DEPLOY"
+          ]
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:expected"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "strict_defection_dominance",
+      "explanation": "The competitive action must dominate against either opponent action.",
+      "expression": "second action is strictly dominant for both players",
+      "margin": null,
+      "observed": {
+        "column": [
+          "RACE_TO_DEPLOY"
+        ],
+        "expected": [
+          "RACE_TO_DEPLOY"
+        ],
+        "row": [
+          "RACE_TO_DEPLOY"
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:expected"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "mutual_cooperation_welfare_optimum",
+      "explanation": "The dilemma requires individually dominated cooperation to be jointly best.",
+      "expression": "(first, first) is the unique utilitarian optimum",
+      "margin": null,
+      "observed": {
+        "actual": [
+          [
+            "PAUSE_FOR_AUDIT",
+            "PAUSE_FOR_AUDIT"
+          ]
+        ],
+        "expected": [
+          [
+            "PAUSE_FOR_AUDIT",
+            "PAUSE_FOR_AUDIT"
+          ]
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race:uncertain:expected"
+    },
+    {
+      "category": "scenario_semantics",
+      "check_id": "canonical_catastrophe_semantics",
+      "explanation": "Catastrophe labels must follow the scenario narrative rather than action names alone.",
+      "expression": "catastrophic profiles match the scenario's declared failure mode",
+      "margin": null,
+      "observed": {
+        "actual": [],
+        "expected": []
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race"
+    },
+    {
+      "category": "uncertainty_ordering",
+      "check_id": "severity_probability_nonincreasing_0",
+      "explanation": "The catalog orders states from more common/less severe to rarer/more severe.",
+      "expression": "state_0.probability >= state_1.probability",
+      "margin": 0.25000000000000006,
+      "observed": {
+        "state_0.probability": 0.55,
+        "state_1.probability": 0.3
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race"
+    },
+    {
+      "category": "uncertainty_ordering",
+      "check_id": "severity_probability_nonincreasing_1",
+      "explanation": "The catalog orders states from more common/less severe to rarer/more severe.",
+      "expression": "state_1.probability >= state_2.probability",
+      "margin": 0.15,
+      "observed": {
+        "state_1.probability": 0.3,
+        "state_2.probability": 0.15
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race"
+    },
+    {
+      "category": "uncertainty_ordering",
+      "check_id": "severity_loss_strictly_worsens_0",
+      "explanation": "The designated failure outcome must become strictly worse with latent severity.",
+      "expression": "state_0.failure_payoff > state_1.failure_payoff",
+      "margin": 3.2,
+      "observed": {
+        "state_0.failure_payoff": 1.2,
+        "state_1.failure_payoff": -2.0
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race"
+    },
+    {
+      "category": "uncertainty_ordering",
+      "check_id": "severity_loss_strictly_worsens_1",
+      "explanation": "The designated failure outcome must become strictly worse with latent severity.",
+      "expression": "state_1.failure_payoff > state_2.failure_payoff",
+      "margin": 18.0,
+      "observed": {
+        "state_1.failure_payoff": -2.0,
+        "state_2.failure_payoff": -20.0
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race"
+    },
+    {
+      "category": "uncertainty_ordering",
+      "check_id": "catastrophe_marker_nondecreasing_0",
+      "explanation": "More severe states cannot remove the catalog's designated catastrophe label.",
+      "expression": "state_1.catastrophic >= state_0.catastrophic",
+      "margin": 0.0,
+      "observed": {
+        "state_0.catastrophic": 0.0,
+        "state_1.catastrophic": 0.0
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race"
+    },
+    {
+      "category": "uncertainty_ordering",
+      "check_id": "catastrophe_marker_nondecreasing_1",
+      "explanation": "More severe states cannot remove the catalog's designated catastrophe label.",
+      "expression": "state_2.catastrophic >= state_1.catastrophic",
+      "margin": 1.0,
+      "observed": {
+        "state_1.catastrophic": 0.0,
+        "state_2.catastrophic": 1.0
+      },
+      "passed": true,
+      "subject": "scenario:frontier_deployment_race"
+    },
+    {
+      "category": "numeric_sanity",
+      "check_id": "finite_payoffs",
+      "explanation": "NaN and infinite utilities make thresholds and comparisons invalid.",
+      "expression": "all eight payoff entries are finite",
+      "margin": null,
+      "observed": {
+        "finite_entries": 8,
+        "total_entries": 8
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:canonical"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_preferred_gt_concession",
+      "explanation": "Each player must strictly prefer a different coordinated outcome.",
+      "expression": "row.preferred > row.concession",
+      "margin": 1.0,
+      "observed": {
+        "row.concession": 3.0,
+        "row.preferred": 4.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:canonical"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_concession_gt_mismatch_1",
+      "explanation": "Either coordinated outcome must beat protocol mismatch.",
+      "expression": "row.concession > row.mismatch_1",
+      "margin": 11.0,
+      "observed": {
+        "row.concession": 3.0,
+        "row.mismatch_1": -8.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:canonical"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_concession_gt_mismatch_2",
+      "explanation": "Either coordinated outcome must beat protocol mismatch.",
+      "expression": "row.concession > row.mismatch_2",
+      "margin": 11.0,
+      "observed": {
+        "row.concession": 3.0,
+        "row.mismatch_2": -8.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:canonical"
+    },
+    {
+      "category": "payoff_equality",
+      "check_id": "row_symmetric_mismatch_cost",
+      "explanation": "The canonical parameterization assigns the same cost to either mismatch direction.",
+      "expression": "row.mismatch_1 == row.mismatch_2",
+      "margin": 1e-09,
+      "observed": {
+        "row.mismatch_1": -8.0,
+        "row.mismatch_2": -8.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:canonical"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_preferred_gt_concession",
+      "explanation": "Each player must strictly prefer a different coordinated outcome.",
+      "expression": "column.preferred > column.concession",
+      "margin": 1.0,
+      "observed": {
+        "column.concession": 3.0,
+        "column.preferred": 4.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:canonical"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_concession_gt_mismatch_1",
+      "explanation": "Either coordinated outcome must beat protocol mismatch.",
+      "expression": "column.concession > column.mismatch_1",
+      "margin": 11.0,
+      "observed": {
+        "column.concession": 3.0,
+        "column.mismatch_1": -8.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:canonical"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_concession_gt_mismatch_2",
+      "explanation": "Either coordinated outcome must beat protocol mismatch.",
+      "expression": "column.concession > column.mismatch_2",
+      "margin": 11.0,
+      "observed": {
+        "column.concession": 3.0,
+        "column.mismatch_2": -8.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:canonical"
+    },
+    {
+      "category": "payoff_equality",
+      "check_id": "column_symmetric_mismatch_cost",
+      "explanation": "The canonical parameterization assigns the same cost to either mismatch direction.",
+      "expression": "column.mismatch_1 == column.mismatch_2",
+      "margin": 1e-09,
+      "observed": {
+        "column.mismatch_1": -8.0,
+        "column.mismatch_2": -8.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:canonical"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "opposed_coordination_nash",
+      "explanation": "The game must contain two efficient equilibria with opposed focal preferences.",
+      "expression": "pure Nash equilibria are exactly the two diagonals",
+      "margin": null,
+      "observed": {
+        "actual": [
+          [
+            "PUBLIC_DISCLOSURE",
+            "PUBLIC_DISCLOSURE"
+          ],
+          [
+            "REGULATOR_QUARANTINE",
+            "REGULATOR_QUARANTINE"
+          ]
+        ],
+        "expected": [
+          [
+            "PUBLIC_DISCLOSURE",
+            "PUBLIC_DISCLOSURE"
+          ],
+          [
+            "REGULATOR_QUARANTINE",
+            "REGULATOR_QUARANTINE"
+          ]
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:canonical"
+    },
+    {
+      "category": "probability",
+      "check_id": "state_probabilities_sum_to_one",
+      "explanation": "Latent payoff states must define a normalized distribution.",
+      "expression": "sum(state_probability) == one",
+      "margin": 1e-09,
+      "observed": {
+        "one": 1.0,
+        "sum(state_probability)": 1.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain"
+    },
+    {
+      "category": "probability",
+      "check_id": "multiple_latent_states",
+      "explanation": "A research uncertainty model should contain genuine payoff uncertainty.",
+      "expression": "number of latent states >= 2",
+      "margin": null,
+      "observed": {
+        "state_count": 3
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain"
+    },
+    {
+      "category": "probability",
+      "check_id": "positive_state_probability",
+      "explanation": "Every declared latent state must have positive probability mass.",
+      "expression": "state_probability > zero",
+      "margin": 0.5,
+      "observed": {
+        "state_probability": 0.5,
+        "zero": 0.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:state:routine_vulnerability"
+    },
+    {
+      "category": "numeric_sanity",
+      "check_id": "finite_payoffs",
+      "explanation": "NaN and infinite utilities make thresholds and comparisons invalid.",
+      "expression": "all eight payoff entries are finite",
+      "margin": null,
+      "observed": {
+        "finite_entries": 8,
+        "total_entries": 8
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:state:routine_vulnerability"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_preferred_gt_concession",
+      "explanation": "Each player must strictly prefer a different coordinated outcome.",
+      "expression": "row.preferred > row.concession",
+      "margin": 1.0,
+      "observed": {
+        "row.concession": 3.0,
+        "row.preferred": 4.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:state:routine_vulnerability"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_concession_gt_mismatch_1",
+      "explanation": "Either coordinated outcome must beat protocol mismatch.",
+      "expression": "row.concession > row.mismatch_1",
+      "margin": 4.0,
+      "observed": {
+        "row.concession": 3.0,
+        "row.mismatch_1": -1.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:state:routine_vulnerability"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_concession_gt_mismatch_2",
+      "explanation": "Either coordinated outcome must beat protocol mismatch.",
+      "expression": "row.concession > row.mismatch_2",
+      "margin": 4.0,
+      "observed": {
+        "row.concession": 3.0,
+        "row.mismatch_2": -1.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:state:routine_vulnerability"
+    },
+    {
+      "category": "payoff_equality",
+      "check_id": "row_symmetric_mismatch_cost",
+      "explanation": "The canonical parameterization assigns the same cost to either mismatch direction.",
+      "expression": "row.mismatch_1 == row.mismatch_2",
+      "margin": 1e-09,
+      "observed": {
+        "row.mismatch_1": -1.0,
+        "row.mismatch_2": -1.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:state:routine_vulnerability"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_preferred_gt_concession",
+      "explanation": "Each player must strictly prefer a different coordinated outcome.",
+      "expression": "column.preferred > column.concession",
+      "margin": 1.0,
+      "observed": {
+        "column.concession": 3.0,
+        "column.preferred": 4.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:state:routine_vulnerability"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_concession_gt_mismatch_1",
+      "explanation": "Either coordinated outcome must beat protocol mismatch.",
+      "expression": "column.concession > column.mismatch_1",
+      "margin": 4.0,
+      "observed": {
+        "column.concession": 3.0,
+        "column.mismatch_1": -1.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:state:routine_vulnerability"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_concession_gt_mismatch_2",
+      "explanation": "Either coordinated outcome must beat protocol mismatch.",
+      "expression": "column.concession > column.mismatch_2",
+      "margin": 4.0,
+      "observed": {
+        "column.concession": 3.0,
+        "column.mismatch_2": -1.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:state:routine_vulnerability"
+    },
+    {
+      "category": "payoff_equality",
+      "check_id": "column_symmetric_mismatch_cost",
+      "explanation": "The canonical parameterization assigns the same cost to either mismatch direction.",
+      "expression": "column.mismatch_1 == column.mismatch_2",
+      "margin": 1e-09,
+      "observed": {
+        "column.mismatch_1": -1.0,
+        "column.mismatch_2": -1.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:state:routine_vulnerability"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "opposed_coordination_nash",
+      "explanation": "The game must contain two efficient equilibria with opposed focal preferences.",
+      "expression": "pure Nash equilibria are exactly the two diagonals",
+      "margin": null,
+      "observed": {
+        "actual": [
+          [
+            "PUBLIC_DISCLOSURE",
+            "PUBLIC_DISCLOSURE"
+          ],
+          [
+            "REGULATOR_QUARANTINE",
+            "REGULATOR_QUARANTINE"
+          ]
+        ],
+        "expected": [
+          [
+            "PUBLIC_DISCLOSURE",
+            "PUBLIC_DISCLOSURE"
+          ],
+          [
+            "REGULATOR_QUARANTINE",
+            "REGULATOR_QUARANTINE"
+          ]
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:state:routine_vulnerability"
+    },
+    {
+      "category": "probability",
+      "check_id": "positive_state_probability",
+      "explanation": "Every declared latent state must have positive probability mass.",
+      "expression": "state_probability > zero",
+      "margin": 0.35,
+      "observed": {
+        "state_probability": 0.35,
+        "zero": 0.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:state:active_exploitation"
+    },
+    {
+      "category": "numeric_sanity",
+      "check_id": "finite_payoffs",
+      "explanation": "NaN and infinite utilities make thresholds and comparisons invalid.",
+      "expression": "all eight payoff entries are finite",
+      "margin": null,
+      "observed": {
+        "finite_entries": 8,
+        "total_entries": 8
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:state:active_exploitation"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_preferred_gt_concession",
+      "explanation": "Each player must strictly prefer a different coordinated outcome.",
+      "expression": "row.preferred > row.concession",
+      "margin": 3.0,
+      "observed": {
+        "row.concession": 4.0,
+        "row.preferred": 7.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:state:active_exploitation"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_concession_gt_mismatch_1",
+      "explanation": "Either coordinated outcome must beat protocol mismatch.",
+      "expression": "row.concession > row.mismatch_1",
+      "margin": 22.0,
+      "observed": {
+        "row.concession": 4.0,
+        "row.mismatch_1": -18.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:state:active_exploitation"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_concession_gt_mismatch_2",
+      "explanation": "Either coordinated outcome must beat protocol mismatch.",
+      "expression": "row.concession > row.mismatch_2",
+      "margin": 22.0,
+      "observed": {
+        "row.concession": 4.0,
+        "row.mismatch_2": -18.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:state:active_exploitation"
+    },
+    {
+      "category": "payoff_equality",
+      "check_id": "row_symmetric_mismatch_cost",
+      "explanation": "The canonical parameterization assigns the same cost to either mismatch direction.",
+      "expression": "row.mismatch_1 == row.mismatch_2",
+      "margin": 1e-09,
+      "observed": {
+        "row.mismatch_1": -18.0,
+        "row.mismatch_2": -18.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:state:active_exploitation"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_preferred_gt_concession",
+      "explanation": "Each player must strictly prefer a different coordinated outcome.",
+      "expression": "column.preferred > column.concession",
+      "margin": 3.0,
+      "observed": {
+        "column.concession": 4.0,
+        "column.preferred": 7.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:state:active_exploitation"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_concession_gt_mismatch_1",
+      "explanation": "Either coordinated outcome must beat protocol mismatch.",
+      "expression": "column.concession > column.mismatch_1",
+      "margin": 22.0,
+      "observed": {
+        "column.concession": 4.0,
+        "column.mismatch_1": -18.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:state:active_exploitation"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_concession_gt_mismatch_2",
+      "explanation": "Either coordinated outcome must beat protocol mismatch.",
+      "expression": "column.concession > column.mismatch_2",
+      "margin": 22.0,
+      "observed": {
+        "column.concession": 4.0,
+        "column.mismatch_2": -18.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:state:active_exploitation"
+    },
+    {
+      "category": "payoff_equality",
+      "check_id": "column_symmetric_mismatch_cost",
+      "explanation": "The canonical parameterization assigns the same cost to either mismatch direction.",
+      "expression": "column.mismatch_1 == column.mismatch_2",
+      "margin": 1e-09,
+      "observed": {
+        "column.mismatch_1": -18.0,
+        "column.mismatch_2": -18.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:state:active_exploitation"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "opposed_coordination_nash",
+      "explanation": "The game must contain two efficient equilibria with opposed focal preferences.",
+      "expression": "pure Nash equilibria are exactly the two diagonals",
+      "margin": null,
+      "observed": {
+        "actual": [
+          [
+            "PUBLIC_DISCLOSURE",
+            "PUBLIC_DISCLOSURE"
+          ],
+          [
+            "REGULATOR_QUARANTINE",
+            "REGULATOR_QUARANTINE"
+          ]
+        ],
+        "expected": [
+          [
+            "PUBLIC_DISCLOSURE",
+            "PUBLIC_DISCLOSURE"
+          ],
+          [
+            "REGULATOR_QUARANTINE",
+            "REGULATOR_QUARANTINE"
+          ]
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:state:active_exploitation"
+    },
+    {
+      "category": "probability",
+      "check_id": "positive_state_probability",
+      "explanation": "Every declared latent state must have positive probability mass.",
+      "expression": "state_probability > zero",
+      "margin": 0.15,
+      "observed": {
+        "state_probability": 0.15,
+        "zero": 0.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:state:cascading_supply_chain_exploit"
+    },
+    {
+      "category": "numeric_sanity",
+      "check_id": "finite_payoffs",
+      "explanation": "NaN and infinite utilities make thresholds and comparisons invalid.",
+      "expression": "all eight payoff entries are finite",
+      "margin": null,
+      "observed": {
+        "finite_entries": 8,
+        "total_entries": 8
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:state:cascading_supply_chain_exploit"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_preferred_gt_concession",
+      "explanation": "Each player must strictly prefer a different coordinated outcome.",
+      "expression": "row.preferred > row.concession",
+      "margin": 5.0,
+      "observed": {
+        "row.concession": 7.0,
+        "row.preferred": 12.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:state:cascading_supply_chain_exploit"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_concession_gt_mismatch_1",
+      "explanation": "Either coordinated outcome must beat protocol mismatch.",
+      "expression": "row.concession > row.mismatch_1",
+      "margin": 67.0,
+      "observed": {
+        "row.concession": 7.0,
+        "row.mismatch_1": -60.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:state:cascading_supply_chain_exploit"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_concession_gt_mismatch_2",
+      "explanation": "Either coordinated outcome must beat protocol mismatch.",
+      "expression": "row.concession > row.mismatch_2",
+      "margin": 67.0,
+      "observed": {
+        "row.concession": 7.0,
+        "row.mismatch_2": -60.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:state:cascading_supply_chain_exploit"
+    },
+    {
+      "category": "payoff_equality",
+      "check_id": "row_symmetric_mismatch_cost",
+      "explanation": "The canonical parameterization assigns the same cost to either mismatch direction.",
+      "expression": "row.mismatch_1 == row.mismatch_2",
+      "margin": 1e-09,
+      "observed": {
+        "row.mismatch_1": -60.0,
+        "row.mismatch_2": -60.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:state:cascading_supply_chain_exploit"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_preferred_gt_concession",
+      "explanation": "Each player must strictly prefer a different coordinated outcome.",
+      "expression": "column.preferred > column.concession",
+      "margin": 5.0,
+      "observed": {
+        "column.concession": 7.0,
+        "column.preferred": 12.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:state:cascading_supply_chain_exploit"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_concession_gt_mismatch_1",
+      "explanation": "Either coordinated outcome must beat protocol mismatch.",
+      "expression": "column.concession > column.mismatch_1",
+      "margin": 67.0,
+      "observed": {
+        "column.concession": 7.0,
+        "column.mismatch_1": -60.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:state:cascading_supply_chain_exploit"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_concession_gt_mismatch_2",
+      "explanation": "Either coordinated outcome must beat protocol mismatch.",
+      "expression": "column.concession > column.mismatch_2",
+      "margin": 67.0,
+      "observed": {
+        "column.concession": 7.0,
+        "column.mismatch_2": -60.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:state:cascading_supply_chain_exploit"
+    },
+    {
+      "category": "payoff_equality",
+      "check_id": "column_symmetric_mismatch_cost",
+      "explanation": "The canonical parameterization assigns the same cost to either mismatch direction.",
+      "expression": "column.mismatch_1 == column.mismatch_2",
+      "margin": 1e-09,
+      "observed": {
+        "column.mismatch_1": -60.0,
+        "column.mismatch_2": -60.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:state:cascading_supply_chain_exploit"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "opposed_coordination_nash",
+      "explanation": "The game must contain two efficient equilibria with opposed focal preferences.",
+      "expression": "pure Nash equilibria are exactly the two diagonals",
+      "margin": null,
+      "observed": {
+        "actual": [
+          [
+            "PUBLIC_DISCLOSURE",
+            "PUBLIC_DISCLOSURE"
+          ],
+          [
+            "REGULATOR_QUARANTINE",
+            "REGULATOR_QUARANTINE"
+          ]
+        ],
+        "expected": [
+          [
+            "PUBLIC_DISCLOSURE",
+            "PUBLIC_DISCLOSURE"
+          ],
+          [
+            "REGULATOR_QUARANTINE",
+            "REGULATOR_QUARANTINE"
+          ]
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:state:cascading_supply_chain_exploit"
+    },
+    {
+      "category": "numeric_sanity",
+      "check_id": "finite_payoffs",
+      "explanation": "NaN and infinite utilities make thresholds and comparisons invalid.",
+      "expression": "all eight payoff entries are finite",
+      "margin": null,
+      "observed": {
+        "finite_entries": 8,
+        "total_entries": 8
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:expected"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_preferred_gt_concession",
+      "explanation": "Each player must strictly prefer a different coordinated outcome.",
+      "expression": "row.preferred > row.concession",
+      "margin": 2.3,
+      "observed": {
+        "row.concession": 3.95,
+        "row.preferred": 6.25
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:expected"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_concession_gt_mismatch_1",
+      "explanation": "Either coordinated outcome must beat protocol mismatch.",
+      "expression": "row.concession > row.mismatch_1",
+      "margin": 19.75,
+      "observed": {
+        "row.concession": 3.95,
+        "row.mismatch_1": -15.8
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:expected"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "row_concession_gt_mismatch_2",
+      "explanation": "Either coordinated outcome must beat protocol mismatch.",
+      "expression": "row.concession > row.mismatch_2",
+      "margin": 19.75,
+      "observed": {
+        "row.concession": 3.95,
+        "row.mismatch_2": -15.8
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:expected"
+    },
+    {
+      "category": "payoff_equality",
+      "check_id": "row_symmetric_mismatch_cost",
+      "explanation": "The canonical parameterization assigns the same cost to either mismatch direction.",
+      "expression": "row.mismatch_1 == row.mismatch_2",
+      "margin": 1e-09,
+      "observed": {
+        "row.mismatch_1": -15.8,
+        "row.mismatch_2": -15.8
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:expected"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_preferred_gt_concession",
+      "explanation": "Each player must strictly prefer a different coordinated outcome.",
+      "expression": "column.preferred > column.concession",
+      "margin": 2.3,
+      "observed": {
+        "column.concession": 3.95,
+        "column.preferred": 6.25
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:expected"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_concession_gt_mismatch_1",
+      "explanation": "Either coordinated outcome must beat protocol mismatch.",
+      "expression": "column.concession > column.mismatch_1",
+      "margin": 19.75,
+      "observed": {
+        "column.concession": 3.95,
+        "column.mismatch_1": -15.8
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:expected"
+    },
+    {
+      "category": "payoff_inequality",
+      "check_id": "column_concession_gt_mismatch_2",
+      "explanation": "Either coordinated outcome must beat protocol mismatch.",
+      "expression": "column.concession > column.mismatch_2",
+      "margin": 19.75,
+      "observed": {
+        "column.concession": 3.95,
+        "column.mismatch_2": -15.8
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:expected"
+    },
+    {
+      "category": "payoff_equality",
+      "check_id": "column_symmetric_mismatch_cost",
+      "explanation": "The canonical parameterization assigns the same cost to either mismatch direction.",
+      "expression": "column.mismatch_1 == column.mismatch_2",
+      "margin": 1e-09,
+      "observed": {
+        "column.mismatch_1": -15.8,
+        "column.mismatch_2": -15.8
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:expected"
+    },
+    {
+      "category": "strategic_structure",
+      "check_id": "opposed_coordination_nash",
+      "explanation": "The game must contain two efficient equilibria with opposed focal preferences.",
+      "expression": "pure Nash equilibria are exactly the two diagonals",
+      "margin": null,
+      "observed": {
+        "actual": [
+          [
+            "PUBLIC_DISCLOSURE",
+            "PUBLIC_DISCLOSURE"
+          ],
+          [
+            "REGULATOR_QUARANTINE",
+            "REGULATOR_QUARANTINE"
+          ]
+        ],
+        "expected": [
+          [
+            "PUBLIC_DISCLOSURE",
+            "PUBLIC_DISCLOSURE"
+          ],
+          [
+            "REGULATOR_QUARANTINE",
+            "REGULATOR_QUARANTINE"
+          ]
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol:uncertain:expected"
+    },
+    {
+      "category": "scenario_semantics",
+      "check_id": "canonical_catastrophe_semantics",
+      "explanation": "Catastrophe labels must follow the scenario narrative rather than action names alone.",
+      "expression": "catastrophic profiles match the scenario's declared failure mode",
+      "margin": null,
+      "observed": {
+        "actual": [
+          [
+            "PUBLIC_DISCLOSURE",
+            "REGULATOR_QUARANTINE"
+          ],
+          [
+            "REGULATOR_QUARANTINE",
+            "PUBLIC_DISCLOSURE"
+          ]
+        ],
+        "expected": [
+          [
+            "PUBLIC_DISCLOSURE",
+            "REGULATOR_QUARANTINE"
+          ],
+          [
+            "REGULATOR_QUARANTINE",
+            "PUBLIC_DISCLOSURE"
+          ]
+        ]
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol"
+    },
+    {
+      "category": "threshold_sanity",
+      "check_id": "preferred_belief_threshold_positive",
+      "explanation": "A non-degenerate mixed equilibrium requires an interior threshold.",
+      "expression": "preferred_action_belief_threshold > zero",
+      "margin": 0.4782608695652174,
+      "observed": {
+        "preferred_action_belief_threshold": 0.4782608695652174,
+        "zero": 0.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol"
+    },
+    {
+      "category": "threshold_sanity",
+      "check_id": "preferred_belief_threshold_below_half",
+      "explanation": "The preferred outcome's larger payoff should lower the belief needed to insist on it.",
+      "expression": "one_half > preferred_action_belief_threshold",
+      "margin": 0.021739130434782594,
+      "observed": {
+        "one_half": 0.5,
+        "preferred_action_belief_threshold": 0.4782608695652174
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol"
+    },
+    {
+      "category": "uncertainty_ordering",
+      "check_id": "severity_probability_nonincreasing_0",
+      "explanation": "The catalog orders states from more common/less severe to rarer/more severe.",
+      "expression": "state_0.probability >= state_1.probability",
+      "margin": 0.15000000000000002,
+      "observed": {
+        "state_0.probability": 0.5,
+        "state_1.probability": 0.35
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol"
+    },
+    {
+      "category": "uncertainty_ordering",
+      "check_id": "severity_probability_nonincreasing_1",
+      "explanation": "The catalog orders states from more common/less severe to rarer/more severe.",
+      "expression": "state_1.probability >= state_2.probability",
+      "margin": 0.19999999999999998,
+      "observed": {
+        "state_1.probability": 0.35,
+        "state_2.probability": 0.15
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol"
+    },
+    {
+      "category": "uncertainty_ordering",
+      "check_id": "severity_loss_strictly_worsens_0",
+      "explanation": "The designated failure outcome must become strictly worse with latent severity.",
+      "expression": "state_0.failure_payoff > state_1.failure_payoff",
+      "margin": 17.0,
+      "observed": {
+        "state_0.failure_payoff": -1.0,
+        "state_1.failure_payoff": -18.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol"
+    },
+    {
+      "category": "uncertainty_ordering",
+      "check_id": "severity_loss_strictly_worsens_1",
+      "explanation": "The designated failure outcome must become strictly worse with latent severity.",
+      "expression": "state_1.failure_payoff > state_2.failure_payoff",
+      "margin": 42.0,
+      "observed": {
+        "state_1.failure_payoff": -18.0,
+        "state_2.failure_payoff": -60.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol"
+    },
+    {
+      "category": "uncertainty_ordering",
+      "check_id": "catastrophe_marker_nondecreasing_0",
+      "explanation": "More severe states cannot remove the catalog's designated catastrophe label.",
+      "expression": "state_1.catastrophic >= state_0.catastrophic",
+      "margin": 1.0,
+      "observed": {
+        "state_0.catastrophic": 0.0,
+        "state_1.catastrophic": 1.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol"
+    },
+    {
+      "category": "uncertainty_ordering",
+      "check_id": "catastrophe_marker_nondecreasing_1",
+      "explanation": "More severe states cannot remove the catalog's designated catastrophe label.",
+      "expression": "state_2.catastrophic >= state_1.catastrophic",
+      "margin": 0.0,
+      "observed": {
+        "state_1.catastrophic": 1.0,
+        "state_2.catastrophic": 1.0
+      },
+      "passed": true,
+      "subject": "scenario:incident_response_protocol"
+    }
+  ],
+  "failure_count": 0,
+  "schema_version": 1,
+  "subject_count": 29,
+  "subjects": [
+    "catalog",
+    "scenario:autonomous_escalation",
+    "scenario:autonomous_escalation:canonical",
+    "scenario:autonomous_escalation:uncertain",
+    "scenario:autonomous_escalation:uncertain:expected",
+    "scenario:autonomous_escalation:uncertain:state:contained_crisis",
+    "scenario:autonomous_escalation:uncertain:state:runaway_escalation",
+    "scenario:autonomous_escalation:uncertain:state:severe_crisis",
+    "scenario:cross_lab_incident_response",
+    "scenario:cross_lab_incident_response:canonical",
+    "scenario:cross_lab_incident_response:uncertain",
+    "scenario:cross_lab_incident_response:uncertain:expected",
+    "scenario:cross_lab_incident_response:uncertain:state:active_cross_platform_exploit",
+    "scenario:cross_lab_incident_response:uncertain:state:cascading_ecosystem_compromise",
+    "scenario:cross_lab_incident_response:uncertain:state:false_alarm",
+    "scenario:frontier_deployment_race",
+    "scenario:frontier_deployment_race:canonical",
+    "scenario:frontier_deployment_race:uncertain",
+    "scenario:frontier_deployment_race:uncertain:expected",
+    "scenario:frontier_deployment_race:uncertain:state:contained_competition",
+    "scenario:frontier_deployment_race:uncertain:state:major_safety_failure",
+    "scenario:frontier_deployment_race:uncertain:state:systemic_failure",
+    "scenario:incident_response_protocol",
+    "scenario:incident_response_protocol:canonical",
+    "scenario:incident_response_protocol:uncertain",
+    "scenario:incident_response_protocol:uncertain:expected",
+    "scenario:incident_response_protocol:uncertain:state:active_exploitation",
+    "scenario:incident_response_protocol:uncertain:state:cascading_supply_chain_exploit",
+    "scenario:incident_response_protocol:uncertain:state:routine_vulnerability"
+  ],
+  "valid": true
+}
