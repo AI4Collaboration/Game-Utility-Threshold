@@ -22,6 +22,12 @@ MODELS = {
     "google": "Gemini 3 Flash Preview",
     "meta": "Llama 3.3 70B",
 }
+MODEL_IDS = {
+    "anthropic": "anthropic/claude-sonnet-4.5",
+    "openai": "openai/gpt-5-mini",
+    "google": "google/gemini-3-flash-preview",
+    "meta": "meta-llama/llama-3.3-70b-instruct",
+}
 GAMES = {
     "frontier_deployment_race": "Prisoner's Dilemma\nDeployment race",
     "autonomous_escalation": "Chicken\nEscalation",
@@ -86,6 +92,10 @@ def validate_gameplay(payload: dict[str, Any]) -> dict[str, Any]:
     audit = audit_summary(payload)
     if not audit["complete"]:
         raise ValueError("Gameplay factorial is incomplete, invalid, or duplicated")
+    if len(payload["records"]) != 768:
+        raise ValueError("This figure design requires 768 joint games in one replication")
+    if {p: m.removeprefix("openrouter/") for p, m in payload["configuration"]["models"].items()} != MODEL_IDS:
+        raise ValueError("Configured model identities do not match the figure labels")
     dimensions = audit["dimensions"]
     expected = {"row_providers": MODELS, "column_providers": MODELS,
                 "scenarios": GAMES, "treatments": TREATMENTS, "objectives": OBJECTIVES}
@@ -179,6 +189,11 @@ def validate_phase_one(payload: dict[str, Any]) -> None:
     expected = {(p, s) for p in MODELS for s in samples}
     if len(samples) != 39 or cells != expected or len(cells) != len(payload["records"]) or payload["failed_providers"]:
         raise ValueError("Expected the complete 4-model by 39-case threshold evaluation")
+    if {p: m.removeprefix("openrouter/") for p, m in payload["configuration"]["models"].items()} != MODEL_IDS:
+        raise ValueError("Threshold model identities do not match the figure labels")
+    for record in payload["records"]:
+        if record["model"].removeprefix("openrouter/") != MODEL_IDS[record["provider"]]:
+            raise ValueError("Unexpected model identity in threshold records")
     for provider in MODELS:
         for stratum, size in zip(STRATA, (25, 4, 5, 5)):
             if sum(r["provider"] == provider and r["design_stratum"] == stratum for r in payload["records"]) != size:

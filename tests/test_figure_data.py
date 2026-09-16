@@ -63,6 +63,12 @@ class FigureDataTests(unittest.TestCase):
         self.assertAlmostEqual(thresholds["cross_lab_incident_response"]["expected"]["dominance"], 11.025)
         self.assertNotIn("dominance", thresholds["incident_response_protocol"]["expected"])
 
+    def test_model_labels_cannot_silently_describe_different_models(self):
+        bad = copy.deepcopy(self.gameplay)
+        bad["configuration"]["models"]["openai"] = "openrouter/openai/another-model"
+        with self.assertRaisesRegex(ValueError, "identities"):
+            build_figure_data(bad, self.phase)
+
 
 if __name__ == "__main__":
     unittest.main()

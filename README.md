@@ -29,6 +29,20 @@ formal specification, methods, results, error analysis, limitations, artifact
 map, and reproduction commands. The publication-ready milestone manuscript is
 [utility-threshold-games-blog.md](utility-threshold-games-blog.md).
 
+## Research figures
+
+The latest replication has a [figure gallery](results/figures/replication_02/index.html)
+with annotated model/game and treatment/game matrices, objective-comparison
+bars, ordered cross-play heatmaps, threshold accuracy, worksheet quality,
+and analytical threshold curves. Download the
+[PNG and editable SVG bundle](results/figures/replication_02/research-figures.zip).
+The [figure methods](results/figures/replication_02/README.md) specify the
+metrics, denominators, weighting, and interpretation of each result.
+
+Rebuild from the saved live data with `python3 scripts/render_research_figures.py`
+(requires Matplotlib and NumPy; optional dependencies are listed under `figures`
+in `pyproject.toml`). This makes no new model calls.
+
 ## Implemented games
 
 ### Frontier AI Deployment Race (Prisoner's Dilemma)
