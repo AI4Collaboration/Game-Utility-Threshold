@@ -32,9 +32,12 @@ map, and reproduction commands. The publication-ready milestone manuscript is
 ## Research figures
 
 The latest replication has a [figure gallery](results/figures/replication_02/index.html)
-with annotated model/game and treatment/game matrices, objective-comparison
-bars, ordered cross-play heatmaps, threshold accuracy, worksheet quality,
-and analytical threshold curves. Download the
+with 28 figures covering cooperation and competition, equilibrium and regret,
+utility, safety, objective comparisons, cross-play and threshold diagnostics.
+The self-contained [metric explorer](results/figures/replication_02/metric_explorer.html)
+exposes all 34 gameplay and 15 sequential-oversight metrics with condition filters,
+exact denominators and CSV export. Observed switching behavior is distinguished
+from mathematically derived utility thresholds. Download the
 [PNG and editable SVG bundle](results/figures/replication_02/research-figures.zip).
 The [figure methods](results/figures/replication_02/README.md) specify the
 metrics, denominators, weighting, and interpretation of each result.

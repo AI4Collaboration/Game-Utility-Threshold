@@ -27,6 +27,8 @@ from matplotlib.patches import Patch, Rectangle
 import numpy as np
 
 from utility_threshold.figure_data import GAMES, MODELS, OBJECTIVES, build_figure_data
+from utility_threshold.research_metrics import build_metric_atlas
+from render_metric_atlas import render_metric_atlas
 
 COLORS = LinearSegmentedColormap.from_list("research_scores", [
     "#c51b30", "#f2784b", "#fff3ae", "#a6d96a", "#0d8754",
@@ -298,7 +300,9 @@ li{margin:8px 0}</style><main><div class="eyebrow">AISI · GAME UTILITY THRESHOL
 <h1>Cooperation, equilibrium and utility thresholds</h1>
 <p>Saved live experiments from 11 September 2026: 768 joint games with four models, four games, six treatments
 and two objectives; plus 156 decisions in the separate sequential-oversight threshold evaluation.</p>
-<nav><a href="research-figures.zip" download>Download all figures</a><a href="figure_data.json">Exact values and counts</a>
+<p><strong>Expanded atlas:</strong> 28 figures, 34 gameplay metrics and 15 threshold-evaluation metrics,
+including cooperation, competition, deviation regret, safety, utility and observed threshold behavior.</p>
+<nav><a href="metric_explorer.html">Explore every metric and condition</a><a href="research-figures.zip" download>Download all figures</a><a href="metric_atlas.json">Complete metric data</a>
 <a href="README.md">Methods and reproduction</a><a href="manifest.json">Provenance and checksums</a></nav>
 <ul><li>Higher equilibrium scores mean more stable action pairs under expected payoffs; they are not a safety ranking.</li>
 <li>Model tables attribute joint outcomes to both participating roles. Those appearances are not independent observations.</li>
@@ -318,12 +322,16 @@ Install `matplotlib>=3.8` and `numpy>=1.26`, then from the repository root run:
 
 ```bash
 python3 scripts/render_research_figures.py
-python3 -m pytest -q tests/test_figure_data.py
+python3 -m pytest -q tests/test_figure_data.py tests/test_research_metrics.py tests/test_metric_explorer.py
 ```
 
 All paths in the default command are resolved relative to the repository.
 PNG exports are 220 dpi; SVG exports keep editable text. Use `--dpi 300` for
-larger PNGs. `figure_data.json` includes every exact matrix value and denominator.
+larger PNGs. `figure_data.json` includes the original figure matrices;
+`metric_atlas.json` adds the full metric atlas, numeric observations, exact
+denominators, and threshold derivations. `metric_explorer.html` is self-contained
+and works offline with no network requests. It filters every score by objective,
+treatment and game, and supports model, treatment and ordered cross-play tables.
 The manifest hashes the input data, analysis/plotting code, and every artifact.
 
 ## Denominators and interpretation
@@ -371,16 +379,67 @@ The manifest hashes the input data, analysis/plotting code, and every artifact.
   its specified cooperation tie-break. Utility-maximizing ATTACK can be correct.
 - Worksheet quality scores concern observable outputs, not private model thoughts.
 - Analytical thresholds are computed from the checked-in payoff definitions.
-  They are not empirical model switching thresholds and use risk-neutral
-  expected utility. Equality means indifference; strict dominance requires >.
+  Figures 11, 13, 24 and 26 use risk-neutral expected utility. Figure 25 uses
+  six explicitly specified decision criteria and three opponent beliefs.
+  Equality means indifference; strict dominance requires >.
 
-All heatmap colors are fixed to [0, 1], so panels do not rescale to exaggerate
-differences. In annotated tables, bold marks all ties for the maximum (minimum
-for catastrophe) per column, excluding the summary row. Cross-play panels
-instead bold the self-play diagonal. Rows and models retain a fixed order.
+Rate heatmaps use fixed [0, 1] scales. Raw utility and regret panels have
+separate, labeled utility scales; cross-game averages are not normalized
+rankings. Original single-metric tables bold all column maxima (minima for
+catastrophe), excluding the summary row. Expanded multi-panel tables show
+all values without highlighting winners. Cross-play panels bold the self-play
+diagonal. Rows and models retain a fixed order.
 Marginal means are count-weighted. Values are rounded to two decimals
 (three for catastrophe probabilities to retain small nonzero risks);
 the exact unrounded values and counts remain in JSON.
+
+## Expanded metric coverage
+
+All 24 saved gameplay score fields are exposed, plus 10 derived diagnostics:
+own-role deviation regret, best-response rate, zero-risk Nash outcomes,
+own expected and realized utility, minimum-player expected welfare,
+shifted Nash welfare product, declared confidence, first-action opponent belief,
+and opponent-prediction Brier loss. The first-action and cooperation fields
+are aliases, not two independent measures. All 13 saved phase-one scores
+are exposed, with attack and invalid-action frequencies added separately.
+
+Mediator compliance and message–action consistency are applicable to 128
+joint games each, not all 768. The atlas uses the original nullable outcome
+fields to avoid the saved scorer's zero filling outside the relevant treatment.
+Each matrix exports available and eligible counts, with N/A rather than zero
+for absent data. Joint consistency/compliance scores are attributed jointly,
+not treated as individual causal effects. For individual action, regret, utility,
+confidence and belief metrics the model table instead uses the participant's
+own role. Missing declared confidence is excluded from its descriptive mean;
+the original confidence-calibration score retains its scorer's missing-value penalty.
+
+The gameplay-wide CSV contains model and treatment tables for all 34 metrics.
+The explorer can export any filtered matrix, including phase-one metrics.
+Raw prompts, credentials, and private reasoning are not embedded in the explorer.
+
+## Threshold evidence versus derivation
+
+- Figure 22 tests the observed adjacent safe / boundary / unsafe decisions:
+  11 of 20 model–defense tests pass (55%). This is behavior, not a payoff formula.
+- Figure 23 describes feasible deterministic step thresholds from every sampled
+  value at each defense. COOPERATE implies theta >= v; ATTACK implies theta < v.
+  Contradictory actions are explicitly nonmonotonic; censored intervals and
+  invalid outputs are flagged. These are not fitted traits or confidence intervals.
+- Figure 24 catalogs canonical, three latent-state and expected-payoff boundaries
+  for all four games. Full payoffs and pure/mixed equilibria are saved in JSON.
+- Figure 25 numerically derives 54 risk-dependent thresholds using expected value,
+  mean–variance, CARA, lower-tail CVaR, maximin and prospect value at opponent
+  first-action probabilities 0.25, 0.50 and 0.75. Parameter values, search bounds
+  and tolerance are saved in JSON. The intervention is extra cost on the second
+  action, which differs from assurance bonuses under nonlinear risk criteria.
+- Figure 26 distinguishes the tested contract's target-profile Nash boundary
+  from the stronger target-action dominance boundary, accounting for detection,
+  false positives and enforcement. Penalty 6 crosses the target Nash boundary
+  in all four games, but the dominance boundary only in Prisoner's Dilemma.
+
+The four-game factorial varies mechanisms and objectives, not a dense utility
+parameter sweep. It does not identify LLM switching curves for those four games.
+Producing those curves requires additional live parameter-sweep experiments.
 
 ## Files
 
@@ -408,6 +467,7 @@ def main():
     if any(not payload["generated_at"].startswith("2026-09-11") for payload in (gameplay, phase_one)):
         parser.error("This labeled replication-02 figure set requires the 11 September 2026 source datasets")
     data = build_figure_data(gameplay, phase_one)
+    atlas = build_metric_atlas(gameplay, phase_one)
     out = args.output; out.mkdir(parents=True, exist_ok=True)
     provenance = {
         "dataset": "replication_02", "run_date": "2026-09-11", "gameplay_joint_games": 768,
@@ -415,7 +475,11 @@ def main():
         "numpy": np.__version__,
         "sources": [fingerprint(p.resolve()) for p in (args.gameplay, args.phase_one, Path(__file__),
                     ROOT / "utility_threshold/figure_data.py", ROOT / "utility_threshold/games/scenarios.py",
-                    ROOT / "utility_threshold/games/uncertain_scenarios.py")],
+                    ROOT / "utility_threshold/games/uncertain_scenarios.py",
+                    ROOT / "utility_threshold/research_metrics.py", ROOT / "scripts/render_metric_atlas.py",
+                    ROOT / "scripts/metric_explorer.html", ROOT / "utility_threshold/games/decision.py",
+                    ROOT / "utility_threshold/games/treatments.py", ROOT / "utility_threshold/games/base.py",
+                    ROOT / "model_gameplay_inspect.py", ROOT / "analyze_phase_one_results.py")],
     }
     catalog = []
     tables = [
@@ -443,12 +507,14 @@ def main():
     fig, note, rows = threshold_table(data["11_analytic_thresholds"])
     data["13_threshold_matrix"] = rows
     save(fig, out, "13_threshold_matrix", "Utility thresholds: canonical examples and live-game payoffs", note, catalog, args.dpi)
+    render_metric_atlas(atlas, out, catalog, args.dpi, save)
     catalog.sort(key=lambda e: e["id"])
     (out / "figure_data.json").write_text(json.dumps(data, indent=2, allow_nan=False) + "\n", encoding="utf-8")
     write_gallery(out, catalog, provenance)
     provenance["figures"] = catalog
     files = [out / e[fmt] for e in catalog for fmt in ("png", "svg")]
-    files += [out / n for n in ("index.html", "README.md", "figure_data.json")]
+    files += [out / n for n in ("index.html", "README.md", "figure_data.json", "metric_atlas.json",
+                               "metric_explorer.html", "all_metric_matrices.csv")]
     provenance["artifacts"] = {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in files}
     (out / "manifest.json").write_text(json.dumps(provenance, indent=2) + "\n", encoding="utf-8")
     with zipfile.ZipFile(out / "research-figures.zip", "w", zipfile.ZIP_DEFLATED) as archive:

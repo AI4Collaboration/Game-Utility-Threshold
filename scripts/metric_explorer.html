@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AISI · Complete metric explorer</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f7f9;color:#192732;font:16px/1.55 system-ui,sans-serif}
+main{max-width:1400px;margin:auto;padding:40px 28px}h1{font-size:38px;line-height:1.15;letter-spacing:-1px;margin:12px 0}
+h2{font-size:23px;margin:0 0 8px}.eyebrow{font-size:12px;letter-spacing:1.5px;color:#176146}p{max-width:1100px}
+a{color:#176146}nav{display:flex;gap:22px;flex-wrap:wrap;margin:22px 0}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin:30px 0}
+label{font-size:13px;font-weight:600}select{display:block;width:100%;padding:10px;margin-top:6px;border:1px solid #b9c6ce;border-radius:5px;background:white;color:#192732;font:15px system-ui}
+section{background:white;border:1px solid #dae2e7;padding:24px;border-radius:8px}.scroll{overflow-x:auto;margin-top:20px}
+table{border-collapse:collapse;width:100%;min-width:700px;font:20px/1.3 Georgia,serif;border-top:2px solid #192732;border-bottom:2px solid #192732}
+th,td{padding:17px 12px;text-align:center}thead{border-bottom:1px solid #192732}th:first-child{text-align:left;min-width:210px;font-size:19px}
+thead th{font-size:17px}tbody tr:last-child{border-top:1px solid #192732}td:last-child,th:last-child{border-left:1px solid #192732}
+td small{display:block;font:11px/1.4 system-ui;margin-top:5px}button{padding:10px 16px;background:#fff;color:#176146;border:1px solid #9faeb7;border-radius:5px;font:14px system-ui;cursor:pointer}
+.legend,.notes{font-size:13px;color:#495b68}.legend{margin:18px 0 0}.notes{margin-top:24px}.notes li{margin:7px 0}
+#status{font-size:13px;color:#495b68}select:disabled{opacity:.5}.empty{color:#63717b}
+@media(max-width:700px){main{padding:24px 16px}h1{font-size:30px}.controls{grid-template-columns:1fr}section{padding:16px}}
+</style>
+</head>
+<body><main>
+<div class="eyebrow">AISI · GAME UTILITY THRESHOLD · REPLICATION 02</div>
+<h1>Cooperation, equilibrium, utility — every measured score</h1>
+<p>768 live joint games and 156 sequential-oversight decisions from 11 September 2026.
+Explore all 24 recorded gameplay scores plus 10 derived diagnostics, and all 13 recorded threshold scores plus attack and invalid-action rates.</p>
+<nav><a href="index.html">28 publication figures</a><a href="metric_atlas.json">Complete exact data</a><a href="all_metric_matrices.csv" download>All gameplay matrices · CSV</a><a href="README.md">Definitions and methods</a></nav>
+<div class="controls">
+<label>Experiment<select id="dataset"><option value="gameplay">Four-game self-play and cross-play</option><option value="phase">Sequential oversight · threshold evaluation</option></select></label>
+<label>Metric<select id="metric"></select></label>
+<label>Matrix rows<select id="group"><option value="model">Model · own-role or attributed joint score</option><option value="treatment">Treatment · joint games</option><option value="crossplay">Row model × column model · joint games</option></select></label>
+<label>Objective<select id="objective"><option value="all">Both objectives</option><option value="open_ended">Open-ended</option><option value="individual_expected_utility">Explicit individual utility</option></select></label>
+<label>Treatment<select id="treatment"><option value="all">All six treatments</option></select></label>
+<label>Game<select id="game"><option value="all">All four games</option></select></label>
+</div>
+<section aria-labelledby="metric-title">
+<h2 id="metric-title"></h2><p id="description"></p>
+<div id="status" aria-live="polite"></div>
+<div class="scroll"><table id="matrix"></table></div>
+<p class="legend" id="legend"></p>
+<button id="download" type="button">Download this selection · CSV</button>
+</section>
+<div class="notes"><ul>
+<li>Each cell shows its mean and available / eligible observations. N/A is missing or inapplicable, never zero. Averages pool observations, not cell means.</li>
+<li>Model views use each participant's own action, regret, utility, confidence and belief where available. Joint outcomes are attributed to both participants; self-play contributes two dependent role appearances. Treatment and cross-play views average the two roles for individual metrics.</li>
+<li>“Cooperation” and “competition” name first and second actions. Lockdown and quarantine are legitimate alternatives; Nash equilibrium is not automatically safe. Utility scales vary across games, and external subsidies enter payoffs.</li>
+<li>Binding commitments restrict available actions; their equilibrium results are partly mechanical. One observation per factorial cell does not support within-cell uncertainty estimates.</li>
+<li>Threshold derivations, risk-dependent boundaries and observed switching diagnostics are in figures 22–26. Observed brackets are descriptive constraints, not confidence intervals. Four-game empirical switching curves require additional parameter-sweep experiments.</li>
+</ul></div>
+</main>
+<script id="atlas-data" type="application/json">__ATLAS_DATA__</script>
+<script>
+'use strict';
+const atlas = JSON.parse(document.getElementById('atlas-data').textContent);
+const el = id => document.getElementById(id);
+const controls = ['dataset','metric','group','objective','treatment','game'];
+const strata = {broad_grid:'Broad grid',just_safe:'Just safe',exact_boundary:'Exact boundary',just_unsafe:'Just unsafe'};
+const own = (object, key) => Object.prototype.hasOwnProperty.call(object, key);
+const flattenLabel = label => label.replace(/\n/g, ' — ');
+for (const [key,label] of Object.entries(atlas.labels.treatments)) el('treatment').add(new Option(flattenLabel(label),key));
+for (const [key,label] of Object.entries(atlas.labels.games)) el('game').add(new Option(flattenLabel(label),key));
+
+function computeTable(settings) {
+  const phase = settings.dataset === 'phase';
+  const by = phase ? 'model' : settings.group;
+  const rowLabels = by === 'treatment' ? atlas.labels.treatments : atlas.labels.models;
+  const colLabels = phase ? strata : by === 'crossplay' ? atlas.labels.models :
+    Object.fromEntries(Object.entries(atlas.labels.games).filter(([key]) => settings.game === 'all' || key === settings.game));
+  const rows = Object.keys(rowLabels), columns = Object.keys(colLabels);
+  const cells = new Map();
+  const add = (row,column,value) => {
+    const key = row+'|'+column;
+    if (!cells.has(key)) cells.set(key, []);
+    cells.get(key).push(value);
+  };
+  const records = phase ? atlas.phase_records : atlas.records;
+  let matched = 0;
+  for (const r of records) {
+    if (!phase && [['objective','objective'],['treatment','treatment'],['game','scenario']].some(([s,k]) => settings[s] !== 'all' && settings[s] !== r[k])) continue;
+    matched++;
+    if (phase) add(r.provider,r.stratum,r.metrics[settings.metric]);
+    else if (by === 'model') for (const role of r.roles) add(role.provider,r.scenario,
+      own(role.overrides,settings.metric) ? role.overrides[settings.metric] : r.metrics[settings.metric]);
+    else add(by === 'crossplay' ? r.row : r.treatment,by === 'crossplay' ? r.column : r.scenario,r.metrics[settings.metric]);
+  }
+  const summarize = values => {
+    const valid = values.filter(v => typeof v === 'number' && Number.isFinite(v));
+    return {mean:valid.length ? valid.reduce((a,b) => a+b,0)/valid.length : null,n:valid.length,eligible:values.length};
+  };
+  const groups = rows.map(row => columns.map(column => cells.get(row+'|'+column) || []));
+  const totals = columns.map((_,j) => groups.flatMap(row => row[j]));
+  const values = [...groups,totals].map(row => [...row,row.flat()].map(summarize));
+  return {rows:[...rows.map(r => flattenLabel(rowLabels[r])),'Average'],columns:[...columns.map(c => flattenLabel(colLabels[c])),'Weighted mean'],values,matched};
+}
+
+function fillMetrics() {
+  const phase = el('dataset').value === 'phase';
+  const specs = phase ? atlas.phase_metric_specs : atlas.metric_specs;
+  el('metric').replaceChildren();
+  const groups = new Map();
+  for (const [key,spec] of Object.entries(specs)) {
+    if (!groups.has(spec.category)) {const group=document.createElement('optgroup');group.label=spec.category;groups.set(spec.category,group);el('metric').append(group);}
+    groups.get(spec.category).append(new Option(spec.label,key));
+  }
+  for (const id of ['group','objective','treatment','game']) el(id).disabled=phase;
+}
+
+function color(value,min,max,spec) {
+  if (value === null) return ['#e8ecf0','#4d5964'];
+  let t=(value-min)/(max-min || 1); t=Math.max(0,Math.min(1,t));
+  if (spec.direction === 'low') t=1-t;
+  const stops=spec.unit==='rate' ? [[197,27,48],[255,243,174],[13,135,84]] : [[53,42,135],[46,153,153],[220,230,88]];
+  const idx=t < .5 ? 0:1, weight=t < .5 ? t*2:(t-.5)*2;
+  const rgb=stops[idx].map((v,i) => Math.round(v*(1-weight)+stops[idx+1][i]*weight));
+  const luminance=.2126*rgb[0]+.7152*rgb[1]+.0722*rgb[2];
+  return [`rgb(${rgb.join(',')})`,luminance < 115 ? '#ffffff':'#12251c'];
+}
+let current;
+function render() {
+  const settings=Object.fromEntries(controls.map(id => [id,el(id).value]));
+  const spec=(settings.dataset==='phase' ? atlas.phase_metric_specs : atlas.metric_specs)[settings.metric];
+  const table=computeTable(settings); current={settings,table,spec};
+  el('metric-title').textContent=spec.label;el('description').textContent=spec.description || 'Recorded evaluation score; see the source scorer and methods for its definition.';
+  const all=table.values.flat().map(c => c.mean).filter(v => v !== null);
+  const min=spec.unit==='rate' ? 0:Math.min(0,...all), max=spec.unit==='rate' ? 1:Math.max(0,...all);
+  el('status').textContent=`${table.matched} matched ${settings.dataset==='phase' ? 'threshold cases':'joint games'} · ${table.values.at(-1).at(-1).n} available / ${table.values.at(-1).at(-1).eligible} eligible ${settings.dataset==='gameplay' && settings.group==='model' ? 'role appearances':'observations'}`;
+  const root=el('matrix');root.replaceChildren();
+  const caption=document.createElement('caption');caption.textContent=spec.label;caption.hidden=true;root.append(caption);
+  const head=document.createElement('thead'),hr=document.createElement('tr');
+  for (const label of [settings.group==='treatment' && settings.dataset==='gameplay' ? 'Treatment':'Model',...table.columns]) {const th=document.createElement('th');th.scope='col';th.textContent=label;hr.append(th);}
+  head.append(hr);root.append(head);const body=document.createElement('tbody');
+  table.rows.forEach((label,i) => {
+    const row=document.createElement('tr'),th=document.createElement('th');th.scope='row';th.textContent=label;row.append(th);
+    table.values[i].forEach(cell => {
+      const td=document.createElement('td'),colors=color(cell.mean,min,max,spec);td.style.backgroundColor=colors[0];td.style.color=colors[1];
+      td.append(cell.mean===null ? 'N/A':cell.mean.toFixed(settings.metric.includes('catastroph') ? 3:2));
+      const small=document.createElement('small');small.textContent=`n = ${cell.n} / ${cell.eligible}`;td.append(small);
+      td.title=cell.mean===null ? 'No applicable observations':`Exact mean: ${cell.mean}; available ${cell.n}; eligible ${cell.eligible}`;
+      row.append(td);
+    });body.append(row);
+  });root.append(body);
+  const direction=spec.direction==='low' ? 'Lower is better for this metric.':spec.direction==='high' ? 'Higher score; not necessarily safer behavior.':'Frequency only; no universal better direction.';
+  el('legend').textContent=spec.unit==='rate' ? `Fixed color range 0–1. ${direction} Gray = N/A.` : `Raw ${spec.unit==='utility_squared' ? 'utility²':'utility'} units. Color range ${min.toFixed(2)} to ${max.toFixed(2)} for this selection only; cross-game scales are not normalized. ${direction}`;
+}
+
+el('dataset').addEventListener('change',() => {fillMetrics();render();});
+for (const id of controls.filter(id => id!=='dataset')) el(id).addEventListener('change',render);
+el('download').addEventListener('click',() => {
+  const {table,settings,spec}=current;
+  const rows=[['dataset','metric','grouping','objective','treatment','game','unit','row','column','mean','available_n','eligible_n']];
+  table.rows.forEach((row,i) => table.columns.forEach((column,j) => {const c=table.values[i][j];rows.push([settings.dataset,settings.metric,settings.dataset==='phase'?'model':settings.group,...(settings.dataset==='phase'?['','','']:[settings.objective,settings.treatment,settings.game]),spec.unit,row,column,c.mean??'',c.n,c.eligible]);}));
+  const csv=rows.map(row => row.map(v => '"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\r\n');
+  const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));const link=document.createElement('a');link.href=url;link.download=`${settings.dataset}-${settings.metric}.csv`;link.click();setTimeout(() => URL.revokeObjectURL(url),1000);
+});
+window.metricExplorer={computeTable,atlas};
+fillMetrics();render();
+</script>
+</body></html>
