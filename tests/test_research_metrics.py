@@ -18,6 +18,12 @@ class ResearchMetricTests(unittest.TestCase):
         self.assertTrue(set(self.gameplay["records"][0]["scores"]) <= set(self.atlas["metric_specs"]))
         self.assertTrue(set(self.phase["records"][0]["scores"]) <= set(self.atlas["phase_metric_specs"]))
 
+    def test_complete_atlas_is_strict_json_serializable(self):
+        decoded = json.loads(json.dumps(self.atlas, allow_nan=False))
+        self.assertEqual(len(decoded["threshold_catalog"]), 20)
+        mixed = decoded["threshold_catalog"][5]["mixed_equilibrium"]
+        self.assertAlmostEqual(sum(mixed["row"].values()), 1)
+
     def test_nonapplicable_mechanisms_are_missing_not_failures(self):
         table = self.atlas["matrices"]["treatment:communication_honesty"]
         self.assertIsNone(table["values"][0][0])

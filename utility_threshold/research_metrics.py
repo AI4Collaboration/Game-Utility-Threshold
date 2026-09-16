@@ -213,12 +213,14 @@ def threshold_catalog():
         variants += [("Expected", uncertain.expected_game(), None)]
         for name, game, probability in variants:
             a, b = game.actions
+            mixed = game.mixed_equilibrium()
             aa, ab, ba, bb = [game.payoff(p).row for p in ((a, a), (a, b), (b, a), (b, b))]
             entry = {"scenario": key, "variant": name, "state_probability": probability,
                      "payoffs": [game.payoff(p).record() if hasattr(game.payoff(p), "record") else
                                  {"row": game.payoff(p).row, "column": game.payoff(p).column}
                                  for p in ((a, a), (a, b), (b, a), (b, b))],
-                     "pure_nash": game.pure_nash_equilibria(), "mixed_equilibrium": game.mixed_equilibrium()}
+                     "pure_nash": game.pure_nash_equilibria(),
+                     "mixed_equilibrium": {role: dict(probabilities) for role, probabilities in mixed.items()} if mixed else None}
             if scenario.family == "battle_of_the_sexes":
                 entry.update(belief=(bb - ab) / (aa + bb - 2 * ab), compensation=aa - bb,
                              dominance=None, risk_dominance=None, against_first=None, against_second=None)
