@@ -1,0 +1,159 @@
+{
+  "dataset": "replication_02",
+  "run_date": "2026-09-11",
+  "gameplay_joint_games": 768,
+  "phase_one_decisions": 156,
+  "dpi": 220,
+  "matplotlib": "3.10.7",
+  "numpy": "2.3.4",
+  "sources": [
+    {
+      "path": "results/model_gameplay_replication_02.json",
+      "sha256": "0fa98630e8f9ccc9856460939fd36720ff00034a7f4fb7e0a3e2b30ceb75dfc9"
+    },
+    {
+      "path": "results/phase_one_model_eval_replication_02.json",
+      "sha256": "bedd36d0c274d8e9d550dc18ee574da7c8405ffa55dac4bf6ccf2d66a10d8687"
+    },
+    {
+      "path": "scripts/render_research_figures.py",
+      "sha256": "fd39123023eeede923651d5543d98a3685f44188d52f35ed1dcdc9bf47f68898"
+    },
+    {
+      "path": "utility_threshold/figure_data.py",
+      "sha256": "2a597e1183d6213ed17e199bdbfe3342b37ac166263d5f74015986dbaee8b0eb"
+    },
+    {
+      "path": "utility_threshold/games/scenarios.py",
+      "sha256": "62bb07b5c001bf8c46f835979b720a377333598c3c1618803fcf8fe43e450027"
+    },
+    {
+      "path": "utility_threshold/games/uncertain_scenarios.py",
+      "sha256": "8d5e05994d6c94331d7c020a215c8ad3124b38ae640c4d4414b701fc2022cb2f"
+    }
+  ],
+  "figures": [
+    {
+      "id": "01_model_welfare",
+      "title": "Welfare-optimal joint outcomes by model and game",
+      "caption": "Each model has 96 role appearances per game, pooled over opponents, roles, six treatments and both objectives. Joint outcomes are attributed to both participants; self-play contributes two dependent role appearances. Transfers and subsidies enter the scored utilities.",
+      "png": "01_model_welfare.png",
+      "svg": "01_model_welfare.svg"
+    },
+    {
+      "id": "02_model_equilibrium",
+      "title": "Nash-equilibrium outcomes by model and game",
+      "caption": "Each model has 96 role appearances per game, pooled over opponents, roles, six treatments and both objectives. Joint outcomes are attributed to both participants; self-play contributes two dependent role appearances. Equilibrium frequency is not a safety or welfare ranking.",
+      "png": "02_model_equilibrium.png",
+      "svg": "02_model_equilibrium.svg"
+    },
+    {
+      "id": "03_model_actions",
+      "title": "First-action choices by model and game",
+      "caption": "96 individual role decisions per model/game; 384 per model. Each role's own action is counted, including both roles in self-play. Protocol selection has two valid coordinated options; first-action frequency is not a universal cooperation score.",
+      "png": "03_model_actions.png",
+      "svg": "03_model_actions.svg"
+    },
+    {
+      "id": "04_mechanism_success",
+      "title": "Structural outcomes by mechanism and game",
+      "caption": "Each cell contains 32 joint games: 16 ordered model pairs \u00d7 2 objectives. Binding commitment restricts the available actions, making its equilibrium result mechanical. Mutual de-escalation is safe but is not the Chicken structural target.",
+      "png": "04_mechanism_success.png",
+      "svg": "04_mechanism_success.svg"
+    },
+    {
+      "id": "05_mechanism_equilibrium",
+      "title": "Nash-equilibrium outcomes by mechanism and game",
+      "caption": "Each cell contains 32 joint games: 16 ordered model pairs \u00d7 2 objectives. Binding commitment restricts the available actions, making its equilibrium result mechanical.",
+      "png": "05_mechanism_equilibrium.png",
+      "svg": "05_mechanism_equilibrium.svg"
+    },
+    {
+      "id": "06_mechanism_catastrophe",
+      "title": "Expected catastrophe probability by mechanism and game",
+      "caption": "Each cell contains 32 joint games: 16 ordered model pairs \u00d7 2 objectives. Binding commitment restricts the available actions, making its equilibrium result mechanical. These are expected probabilities, not realized sampled catastrophe frequencies.",
+      "png": "06_mechanism_catastrophe.png",
+      "svg": "06_mechanism_catastrophe.svg"
+    },
+    {
+      "id": "07_objective_by_model",
+      "title": "How objective instructions change equilibrium and welfare",
+      "caption": "192 role appearances per model per condition; joint metrics pooled over opponents, roles, games and treatments. Descriptive rates; one observation per factorial cell. No confidence intervals or significance claims.",
+      "png": "07_objective_by_model.png",
+      "svg": "07_objective_by_model.svg"
+    },
+    {
+      "id": "08_objective_by_game",
+      "title": "Objective effects differ across the four games",
+      "caption": "96 joint games per game per condition, pooled over all model pairs and treatments. Descriptive rates; one observation per factorial cell. No confidence intervals or significance claims.",
+      "png": "08_objective_by_game.png",
+      "svg": "08_objective_by_game.svg"
+    },
+    {
+      "id": "09_crossplay",
+      "title": "Self-play and cross-play: joint outcomes",
+      "caption": "Outlined diagonal cells are self-play; off-diagonal cells are cross-play. Ordered roles are preserved. Descriptive rates; one observation per factorial cell. No confidence intervals or significance claims.",
+      "png": "09_crossplay.png",
+      "svg": "09_crossplay.svg"
+    },
+    {
+      "id": "10_threshold_accuracy",
+      "title": "Threshold decision accuracy by model and test stratum",
+      "caption": "39 cases per model. Weighted means reflect 25 / 4 / 5 / 5 cases across the four strata. Invalid actions stay in the denominator. Correctness follows utility maximization, which can prescribe ATTACK.",
+      "png": "10_threshold_accuracy.png",
+      "svg": "10_threshold_accuracy.svg"
+    },
+    {
+      "id": "11_analytic_thresholds",
+      "title": "Analytical thresholds in the live-game payoff models",
+      "caption": "Positive utility margin favors the safe action; equality is indifference. Stag Hunt needs assurance above 11.025 for strict dominance. Belief thresholds use risk-neutral expected utility; other risk criteria can differ.",
+      "png": "11_analytic_thresholds.png",
+      "svg": "11_analytic_thresholds.svg"
+    },
+    {
+      "id": "12_observable_worksheets",
+      "title": "Observable threshold reasoning: worksheet quality",
+      "caption": "39 cases per model. A correct action does not establish a correct calculation. An inequality being present does not establish its correctness. Invalid worksheets remain in denominators; private model reasoning is not observed.",
+      "png": "12_observable_worksheets.png",
+      "svg": "12_observable_worksheets.svg"
+    },
+    {
+      "id": "13_threshold_matrix",
+      "title": "Utility thresholds: canonical examples and live-game payoffs",
+      "caption": "Utility quantities and belief percentages have different units, so this table has no score color scale. Canonical examples and live uncertain games use different payoffs. These are mathematical boundaries, not estimated switching points for the four LLMs. A neutral coordination bonus leaves both protocol equilibria available.",
+      "png": "13_threshold_matrix.png",
+      "svg": "13_threshold_matrix.svg"
+    }
+  ],
+  "artifacts": {
+    "01_model_welfare.png": "1ba7d475b1206d0d9e682754bf33483568fbcda485174fa132e242c6b7fcd10c",
+    "01_model_welfare.svg": "491636d1f8186967ab6fae7eee0d3316a5a06cb3233634b8e7077851ae16432f",
+    "02_model_equilibrium.png": "c6b6237ae2cc94a9feeaa39393263ffc9a01817da61477a998a28d1bc12c614b",
+    "02_model_equilibrium.svg": "2b773582af381ec0c202ab2f35542bfc3b5c0ed690ce001aca775bf769851757",
+    "03_model_actions.png": "29f94721716047b385f08df7ae88dfe976e4bcc5b0528d23deda8bea9d651ecd",
+    "03_model_actions.svg": "6f53d6627f00cf172a873966c7b25ba2eea2191ba453aca586d73f81c7201ecb",
+    "04_mechanism_success.png": "3b209b2cc203c66de6d8ed9bc5d48f17c794a83acd9f88fd7cf12114d1df4d8e",
+    "04_mechanism_success.svg": "302b2acfe7fcef69f8e042a3c6880b8aca32c52553f034fb628747552e5ae415",
+    "05_mechanism_equilibrium.png": "b4cb3336fad14a5c2763539bad1c39118cbbc512c5c0b13ccee0107d88f20c8a",
+    "05_mechanism_equilibrium.svg": "2ff4ea580ed0f3892255af8c0407470cd9f5f31878bc7474ee19f134a0f84263",
+    "06_mechanism_catastrophe.png": "0d130c6a8bff8ef1fc41c39553b74624c91c98d9914a1e79ce22e3ae47e1aa79",
+    "06_mechanism_catastrophe.svg": "28c7d7307741f0b0a8d1ff4dfd847550f9b49bb7f8c9e41a3586d564167a44a8",
+    "07_objective_by_model.png": "9bcefb26f18acb786f46532f553f84781e7d1c731f0670de22124e9e3d2a9d23",
+    "07_objective_by_model.svg": "1ef965b1c3a1db16a7623ff700c6556c22791356d49e50467e0c4e4f85df85c5",
+    "08_objective_by_game.png": "9dee87dea62fcca06ec46f742a95d66684647def6d63935ab32bf20fb4ba6515",
+    "08_objective_by_game.svg": "a992454687b5ef7a264142b96cc11b786638e0ff5230013220ca299f6a5c1ca3",
+    "09_crossplay.png": "17acc11c4c52446e773ca88598bf94fd9bd59fc29e651b4fae62e663ec65b168",
+    "09_crossplay.svg": "a730bc528c5b7aa3c2b1b10177edd909efc3226353e4b75dce81268b0e9da578",
+    "10_threshold_accuracy.png": "fde42dace2e5eb8644302421d392323dca79c40a89ea5a044bd65f6dbb563398",
+    "10_threshold_accuracy.svg": "4deab827560d99532370158abdc1a455f2b007c1f024c1d8fc185bfd582dc1c2",
+    "11_analytic_thresholds.png": "59cae8e5527cfbf0243a5769054fd543ecaaca51ea0ca5af50a1e3ba9ccbd1c9",
+    "11_analytic_thresholds.svg": "834e6434b1812d6670b37de49f607bef55ae5c80f35c16ce52ca955b20d82e83",
+    "12_observable_worksheets.png": "6359671fff688c7a3dc1b01f11f8cabb9180a4b9972493a7a76a8a09bc710ce1",
+    "12_observable_worksheets.svg": "9da225220f55ac0c9841ec566acf38b8514653c5310edd17ee3e868d455ed632",
+    "13_threshold_matrix.png": "6425ba743f4eaea440eb19ee5afe44668609af23051113b81ab6a1f31dd32921",
+    "13_threshold_matrix.svg": "d73289712f859668e4b8560c6277b652b6fd6e741d0706d2959e38b4d509ffc9",
+    "index.html": "df4472049d58e0d88b06d5a9efb073e10af57c0c35d5391a2029da736d10ec32",
+    "README.md": "1b659669fe57df5c468fa61e93b43083cd043e721bd273709ef45dbc538aae2b",
+    "figure_data.json": "b05bb9337753c32e89e31a1d31002b5bb97e91822a494d562dbeeb485491a7a9"
+  }
+}
