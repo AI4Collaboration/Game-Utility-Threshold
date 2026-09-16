@@ -69,13 +69,17 @@ def panel(fig, ax, table, spec, *, title=None):
 
 
 def metric_panels(atlas, keys, title, *, by="model"):
-    unit = "96 role appearances per model/game" if by == "model" else "32 joint games per treatment/game"
+    unit = "Up to 96 role appearances per model/game" if by == "model" else "Up to 32 joint games per treatment/game"
     fig, axes = shell(title, f"{unit} | all six treatments and both objectives | recorded and derived metrics")
     for ax, key in zip(axes.flat, keys):
         panel(fig, ax, atlas["matrices"][f"{by}:{key}"], atlas["metric_specs"][key])
     note = "Cells show means; exact denominators are in the metric explorer and JSON. Joint outcomes attributed to both models are dependent. "
     note += "Cooperation/competition are the first/second action labels: lockdown and quarantine are legitimate alternatives. "
     note += "N/A means not applicable or missing, not zero. Utility scales vary across games."
+    if "communication_honesty" in keys:
+        note = ("Message consistency and mediator compliance each use 16 role appearances per model/game, from their respective treatment only. "
+                "Confidence and belief scores pool all 96. Consistency/compliance and the saved confidence score are joint averages attributed "
+                "to both participants; opponent Brier loss uses the participant's own prediction. Exact counts and definitions are in the explorer.")
     foot(fig, note)
     return fig, note
 

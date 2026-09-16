@@ -104,6 +104,7 @@ function fillMetrics() {
     groups.get(spec.category).append(new Option(spec.label,key));
   }
   for (const id of ['group','objective','treatment','game']) el(id).disabled=phase;
+  if (phase) el('group').value='model';
 }
 
 function color(value,min,max,spec) {
