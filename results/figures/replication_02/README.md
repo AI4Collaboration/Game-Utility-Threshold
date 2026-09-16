@@ -9,12 +9,16 @@ Install `matplotlib>=3.8` and `numpy>=1.26`, then from the repository root run:
 
 ```bash
 python3 scripts/render_research_figures.py
-python3 -m pytest -q tests/test_figure_data.py
+python3 -m pytest -q tests/test_figure_data.py tests/test_research_metrics.py tests/test_metric_explorer.py
 ```
 
 All paths in the default command are resolved relative to the repository.
 PNG exports are 220 dpi; SVG exports keep editable text. Use `--dpi 300` for
-larger PNGs. `figure_data.json` includes every exact matrix value and denominator.
+larger PNGs. `figure_data.json` includes the original figure matrices;
+`metric_atlas.json` adds the full metric atlas, numeric observations, exact
+denominators, and threshold derivations. `metric_explorer.html` is self-contained
+and works offline with no network requests. It filters every score by objective,
+treatment and game, and supports model, treatment and ordered cross-play tables.
 The manifest hashes the input data, analysis/plotting code, and every artifact.
 
 ## Denominators and interpretation
@@ -62,16 +66,67 @@ The manifest hashes the input data, analysis/plotting code, and every artifact.
   its specified cooperation tie-break. Utility-maximizing ATTACK can be correct.
 - Worksheet quality scores concern observable outputs, not private model thoughts.
 - Analytical thresholds are computed from the checked-in payoff definitions.
-  They are not empirical model switching thresholds and use risk-neutral
-  expected utility. Equality means indifference; strict dominance requires >.
+  Figures 11, 13, 24 and 26 use risk-neutral expected utility. Figure 25 uses
+  six explicitly specified decision criteria and three opponent beliefs.
+  Equality means indifference; strict dominance requires >.
 
-All heatmap colors are fixed to [0, 1], so panels do not rescale to exaggerate
-differences. In annotated tables, bold marks all ties for the maximum (minimum
-for catastrophe) per column, excluding the summary row. Cross-play panels
-instead bold the self-play diagonal. Rows and models retain a fixed order.
+Rate heatmaps use fixed [0, 1] scales. Raw utility and regret panels have
+separate, labeled utility scales; cross-game averages are not normalized
+rankings. Original single-metric tables bold all column maxima (minima for
+catastrophe), excluding the summary row. Expanded multi-panel tables show
+all values without highlighting winners. Cross-play panels bold the self-play
+diagonal. Rows and models retain a fixed order.
 Marginal means are count-weighted. Values are rounded to two decimals
 (three for catastrophe probabilities to retain small nonzero risks);
 the exact unrounded values and counts remain in JSON.
+
+## Expanded metric coverage
+
+All 24 saved gameplay score fields are exposed, plus 10 derived diagnostics:
+own-role deviation regret, best-response rate, zero-risk Nash outcomes,
+own expected and realized utility, minimum-player expected welfare,
+shifted Nash welfare product, declared confidence, first-action opponent belief,
+and opponent-prediction Brier loss. The first-action and cooperation fields
+are aliases, not two independent measures. All 13 saved phase-one scores
+are exposed, with attack and invalid-action frequencies added separately.
+
+Mediator compliance and message–action consistency are applicable to 128
+joint games each, not all 768. The atlas uses the original nullable outcome
+fields to avoid the saved scorer's zero filling outside the relevant treatment.
+Each matrix exports available and eligible counts, with N/A rather than zero
+for absent data. Joint consistency/compliance scores are attributed jointly,
+not treated as individual causal effects. For individual action, regret, utility,
+confidence and belief metrics the model table instead uses the participant's
+own role. Missing declared confidence is excluded from its descriptive mean;
+the original confidence-calibration score retains its scorer's missing-value penalty.
+
+The gameplay-wide CSV contains model and treatment tables for all 34 metrics.
+The explorer can export any filtered matrix, including phase-one metrics.
+Raw prompts, credentials, and private reasoning are not embedded in the explorer.
+
+## Threshold evidence versus derivation
+
+- Figure 22 tests the observed adjacent safe / boundary / unsafe decisions:
+  11 of 20 model–defense tests pass (55%). This is behavior, not a payoff formula.
+- Figure 23 describes feasible deterministic step thresholds from every sampled
+  value at each defense. COOPERATE implies theta >= v; ATTACK implies theta < v.
+  Contradictory actions are explicitly nonmonotonic; censored intervals and
+  invalid outputs are flagged. These are not fitted traits or confidence intervals.
+- Figure 24 catalogs canonical, three latent-state and expected-payoff boundaries
+  for all four games. Full payoffs and pure/mixed equilibria are saved in JSON.
+- Figure 25 numerically derives 54 risk-dependent thresholds using expected value,
+  mean–variance, CARA, lower-tail CVaR, maximin and prospect value at opponent
+  first-action probabilities 0.25, 0.50 and 0.75. Parameter values, search bounds
+  and tolerance are saved in JSON. The intervention is extra cost on the second
+  action, which differs from assurance bonuses under nonlinear risk criteria.
+- Figure 26 distinguishes the tested contract's target-profile Nash boundary
+  from the stronger target-action dominance boundary, accounting for detection,
+  false positives and enforcement. Penalty 6 crosses the target Nash boundary
+  in all four games, but the dominance boundary only in Prisoner's Dilemma.
+
+The four-game factorial varies mechanisms and objectives, not a dense utility
+parameter sweep. It does not identify LLM switching curves for those four games.
+Producing those curves requires additional live parameter-sweep experiments.
 
 ## Files
 
@@ -88,12 +143,35 @@ the exact unrounded values and counts remain in JSON.
 - `11_analytic_thresholds.png` / `.svg`: Analytical thresholds in the live-game payoff models
 - `12_observable_worksheets.png` / `.svg`: Observable threshold reasoning: worksheet quality
 - `13_threshold_matrix.png` / `.svg`: Utility thresholds: canonical examples and live-game payoffs
+- `14_model_cooperation.png` / `.svg`: Cooperation and competition: individual and mutual choices
+- `15_mechanism_cooperation.png` / `.svg`: How mechanisms change cooperation and competition
+- `16_model_equilibrium_regret.png` / `.svg`: Equilibrium behavior and profitable deviations by model
+- `17_mechanism_equilibrium_regret.png` / `.svg`: Equilibrium behavior and profitable deviations by mechanism
+- `18_model_utilities.png` / `.svg`: Model payoffs, realized outcomes and welfare shortfalls
+- `19_mechanism_welfare.png` / `.svg`: Expected welfare, realized welfare, equity and efficiency
+- `20_safety_coordination.png` / `.svg`: Catastrophe risk and coordination outcomes
+- `21_behavioral_diagnostics.png` / `.svg`: Mechanism responses, confidence and opponent prediction
+- `22_local_threshold_transitions.png` / `.svg`: Do models switch at the theoretical utility threshold?
+- `23_observed_threshold_brackets.png` / `.svg`: Observed action brackets around the utility threshold
+- `24_latent_state_thresholds.png` / `.svg`: Derived thresholds across all latent payoff states
+- `25_risk_adjusted_thresholds.png` / `.svg`: Derived utility thresholds depend on risk and opponent beliefs
+- `26_contract_thresholds.png` / `.svg`: Does the tested contract penalty cross the derived threshold?
+- `27_phase_action_regret.png` / `.svg`: Threshold behavior: cooperation, attack, invalid actions and regret
+- `28_phase_calculation_scores.png` / `.svg`: Threshold calculations, margin signs and confidence
 
 ## Source files
 
 - `results/model_gameplay_replication_02.json` (SHA-256 `0fa98630e8f9ccc9856460939fd36720ff00034a7f4fb7e0a3e2b30ceb75dfc9`)
 - `results/phase_one_model_eval_replication_02.json` (SHA-256 `bedd36d0c274d8e9d550dc18ee574da7c8405ffa55dac4bf6ccf2d66a10d8687`)
-- `scripts/render_research_figures.py` (SHA-256 `fd39123023eeede923651d5543d98a3685f44188d52f35ed1dcdc9bf47f68898`)
+- `scripts/render_research_figures.py` (SHA-256 `303fa2b5a3ff9dd8ff59d994b740e89a133ec6720070a2d557a6417746a2dda8`)
 - `utility_threshold/figure_data.py` (SHA-256 `2a597e1183d6213ed17e199bdbfe3342b37ac166263d5f74015986dbaee8b0eb`)
 - `utility_threshold/games/scenarios.py` (SHA-256 `62bb07b5c001bf8c46f835979b720a377333598c3c1618803fcf8fe43e450027`)
 - `utility_threshold/games/uncertain_scenarios.py` (SHA-256 `8d5e05994d6c94331d7c020a215c8ad3124b38ae640c4d4414b701fc2022cb2f`)
+- `utility_threshold/research_metrics.py` (SHA-256 `afbed0a65b0d320899d2772b116fd328291361a2d649dd97517c154476515db8`)
+- `scripts/render_metric_atlas.py` (SHA-256 `8fbb26bedbe59992d53fe53dedc0ef12ce09a76e67b56d18032959d8b302b145`)
+- `scripts/metric_explorer.html` (SHA-256 `9cabae4a0fb181d12e6cc902dc21b3807ed9a65470857f090c134e0f953cf1c7`)
+- `utility_threshold/games/decision.py` (SHA-256 `b145ba9336750e014b46ae629b95d0eca88abf27b8406f9aca9b4b09c75e22f1`)
+- `utility_threshold/games/treatments.py` (SHA-256 `2e82a0933f2f716d06123146d23fd47509b205c6c8dd737fcd6b024764e3e48e`)
+- `utility_threshold/games/base.py` (SHA-256 `e3de9081755921e853d0008cb9cf2e33c22253cd6b826ab85bf28d1a17aba2a2`)
+- `model_gameplay_inspect.py` (SHA-256 `df3e3dc04eece56943583a6870a71e55a09fac7a757ce468e7ce73d87dc3e998`)
+- `analyze_phase_one_results.py` (SHA-256 `781c4d95728ad124eb8bef62d1d4291571537f4c099be59a6e1c7b50c67d9a44`)

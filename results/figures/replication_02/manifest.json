@@ -17,7 +17,7 @@
     },
     {
       "path": "scripts/render_research_figures.py",
-      "sha256": "fd39123023eeede923651d5543d98a3685f44188d52f35ed1dcdc9bf47f68898"
+      "sha256": "303fa2b5a3ff9dd8ff59d994b740e89a133ec6720070a2d557a6417746a2dda8"
     },
     {
       "path": "utility_threshold/figure_data.py",
@@ -30,6 +30,38 @@
     {
       "path": "utility_threshold/games/uncertain_scenarios.py",
       "sha256": "8d5e05994d6c94331d7c020a215c8ad3124b38ae640c4d4414b701fc2022cb2f"
+    },
+    {
+      "path": "utility_threshold/research_metrics.py",
+      "sha256": "afbed0a65b0d320899d2772b116fd328291361a2d649dd97517c154476515db8"
+    },
+    {
+      "path": "scripts/render_metric_atlas.py",
+      "sha256": "8fbb26bedbe59992d53fe53dedc0ef12ce09a76e67b56d18032959d8b302b145"
+    },
+    {
+      "path": "scripts/metric_explorer.html",
+      "sha256": "9cabae4a0fb181d12e6cc902dc21b3807ed9a65470857f090c134e0f953cf1c7"
+    },
+    {
+      "path": "utility_threshold/games/decision.py",
+      "sha256": "b145ba9336750e014b46ae629b95d0eca88abf27b8406f9aca9b4b09c75e22f1"
+    },
+    {
+      "path": "utility_threshold/games/treatments.py",
+      "sha256": "2e82a0933f2f716d06123146d23fd47509b205c6c8dd737fcd6b024764e3e48e"
+    },
+    {
+      "path": "utility_threshold/games/base.py",
+      "sha256": "e3de9081755921e853d0008cb9cf2e33c22253cd6b826ab85bf28d1a17aba2a2"
+    },
+    {
+      "path": "model_gameplay_inspect.py",
+      "sha256": "df3e3dc04eece56943583a6870a71e55a09fac7a757ce468e7ce73d87dc3e998"
+    },
+    {
+      "path": "analyze_phase_one_results.py",
+      "sha256": "781c4d95728ad124eb8bef62d1d4291571537f4c099be59a6e1c7b50c67d9a44"
     }
   ],
   "figures": [
@@ -123,6 +155,111 @@
       "caption": "Utility quantities and belief percentages have different units, so this table has no score color scale. Canonical examples and live uncertain games use different payoffs. These are mathematical boundaries, not estimated switching points for the four LLMs. A neutral coordination bonus leaves both protocol equilibria available.",
       "png": "13_threshold_matrix.png",
       "svg": "13_threshold_matrix.svg"
+    },
+    {
+      "id": "14_model_cooperation",
+      "title": "Cooperation and competition: individual and mutual choices",
+      "caption": "Cells show means; exact denominators are in the metric explorer and JSON. Joint outcomes attributed to both models are dependent. Cooperation/competition are the first/second action labels: lockdown and quarantine are legitimate alternatives. N/A means not applicable or missing, not zero. Utility scales vary across games.",
+      "png": "14_model_cooperation.png",
+      "svg": "14_model_cooperation.svg"
+    },
+    {
+      "id": "15_mechanism_cooperation",
+      "title": "How mechanisms change cooperation and competition",
+      "caption": "Cells show means; exact denominators are in the metric explorer and JSON. Joint outcomes attributed to both models are dependent. Cooperation/competition are the first/second action labels: lockdown and quarantine are legitimate alternatives. N/A means not applicable or missing, not zero. Utility scales vary across games.",
+      "png": "15_mechanism_cooperation.png",
+      "svg": "15_mechanism_cooperation.svg"
+    },
+    {
+      "id": "16_model_equilibrium_regret",
+      "title": "Equilibrium behavior and profitable deviations by model",
+      "caption": "Cells show means; exact denominators are in the metric explorer and JSON. Joint outcomes attributed to both models are dependent. Cooperation/competition are the first/second action labels: lockdown and quarantine are legitimate alternatives. N/A means not applicable or missing, not zero. Utility scales vary across games.",
+      "png": "16_model_equilibrium_regret.png",
+      "svg": "16_model_equilibrium_regret.svg"
+    },
+    {
+      "id": "17_mechanism_equilibrium_regret",
+      "title": "Equilibrium behavior and profitable deviations by mechanism",
+      "caption": "Cells show means; exact denominators are in the metric explorer and JSON. Joint outcomes attributed to both models are dependent. Cooperation/competition are the first/second action labels: lockdown and quarantine are legitimate alternatives. N/A means not applicable or missing, not zero. Utility scales vary across games.",
+      "png": "17_mechanism_equilibrium_regret.png",
+      "svg": "17_mechanism_equilibrium_regret.svg"
+    },
+    {
+      "id": "18_model_utilities",
+      "title": "Model payoffs, realized outcomes and welfare shortfalls",
+      "caption": "Cells show means; exact denominators are in the metric explorer and JSON. Joint outcomes attributed to both models are dependent. Cooperation/competition are the first/second action labels: lockdown and quarantine are legitimate alternatives. N/A means not applicable or missing, not zero. Utility scales vary across games.",
+      "png": "18_model_utilities.png",
+      "svg": "18_model_utilities.svg"
+    },
+    {
+      "id": "19_mechanism_welfare",
+      "title": "Expected welfare, realized welfare, equity and efficiency",
+      "caption": "Cells show means; exact denominators are in the metric explorer and JSON. Joint outcomes attributed to both models are dependent. Cooperation/competition are the first/second action labels: lockdown and quarantine are legitimate alternatives. N/A means not applicable or missing, not zero. Utility scales vary across games.",
+      "png": "19_mechanism_welfare.png",
+      "svg": "19_mechanism_welfare.svg"
+    },
+    {
+      "id": "20_safety_coordination",
+      "title": "Catastrophe risk and coordination outcomes",
+      "caption": "Cells show means; exact denominators are in the metric explorer and JSON. Joint outcomes attributed to both models are dependent. Cooperation/competition are the first/second action labels: lockdown and quarantine are legitimate alternatives. N/A means not applicable or missing, not zero. Utility scales vary across games.",
+      "png": "20_safety_coordination.png",
+      "svg": "20_safety_coordination.svg"
+    },
+    {
+      "id": "21_behavioral_diagnostics",
+      "title": "Mechanism responses, confidence and opponent prediction",
+      "caption": "Message consistency and mediator compliance each use 16 role appearances per model/game, from their respective treatment only. The saved confidence score uses all 96; belief loss excludes invalid/missing predictions. Consistency/compliance and confidence are joint averages attributed to both participants; opponent Brier loss uses the participant's own prediction. Exact counts and definitions are in the explorer.",
+      "png": "21_behavioral_diagnostics.png",
+      "svg": "21_behavioral_diagnostics.svg"
+    },
+    {
+      "id": "22_local_threshold_transitions",
+      "title": "Do models switch at the theoretical utility threshold?",
+      "caption": "Each cell lists actions just below / exactly at / just above v*. Expected pattern: C / C / A. At defense 0 the negative-resource just-safe case is omitted. 11 of 20 local tests pass (55%). A passing adjacent triplet can coexist with errors at more distant sampled values.",
+      "png": "22_local_threshold_transitions.png",
+      "svg": "22_local_threshold_transitions.svg"
+    },
+    {
+      "id": "23_observed_threshold_brackets",
+      "title": "Observed action brackets around the utility threshold",
+      "caption": "Under a deterministic step-policy assumption, observed COOPERATE requires \u03b8 \u2265 v and ATTACK requires \u03b8 < v. Intervals use all valid sampled actions at that defense, not just the adjacent triplet. Contradictions are shown explicitly. Yellow indicates censoring or invalid outputs. These descriptive brackets are not statistical confidence intervals or fitted model traits.",
+      "png": "23_observed_threshold_brackets.png",
+      "svg": "23_observed_threshold_brackets.svg"
+    },
+    {
+      "id": "24_latent_state_thresholds",
+      "title": "Derived thresholds across all latent payoff states",
+      "caption": "State order follows the checked-in latent-state catalog; names, probabilities, payoff matrices, and pure/mixed equilibria are in metric_atlas.json. Negative boundaries mean the target action already beats the alternative in that comparison. Strict dominance requires > the boundary. Protocol belief percentages and utility payoff gaps use different units; neutral bonuses do not select a unique protocol.",
+      "png": "24_latent_state_thresholds.png",
+      "svg": "24_latent_state_thresholds.svg"
+    },
+    {
+      "id": "25_risk_adjusted_thresholds",
+      "title": "Derived utility thresholds depend on risk and opponent beliefs",
+      "caption": "q is the assumed probability of the opponent taking the first action. A deterministic added cost is applied to race / escalate / local lockdown, respectively; the Stag Hunt intervention here differs from an assurance payment for nonlinear risk criteria. Zero means already weakly optimal. N/A means no threshold found within [0, 100]. Default criterion parameters and numerical tolerances are saved with all 54 derivations.",
+      "png": "25_risk_adjusted_thresholds.png",
+      "svg": "25_risk_adjusted_thresholds.svg"
+    },
+    {
+      "id": "26_contract_thresholds",
+      "title": "Does the tested contract penalty cross the derived threshold?",
+      "caption": "Making the agreed profile a Nash equilibrium is weaker than making each agreed action dominant against every opponent action. The Chicken agreement is asymmetric (de-escalate, escalate); the protocol agreement selects public disclosure. A zero Nash boundary means the agreement is already an equilibrium before penalties. Strict dominance requires exceeding the boundary.",
+      "png": "26_contract_thresholds.png",
+      "svg": "26_contract_thresholds.svg"
+    },
+    {
+      "id": "27_phase_action_regret",
+      "title": "Threshold behavior: cooperation, attack, invalid actions and regret",
+      "caption": "All cases, including the invalid action and malformed worksheets, remain in denominators. Correct decisions follow utility maximization and the cooperation tie-break; ATTACK can be correct. Numeric accuracy is the saved continuous score. Marginal means use actual case counts.",
+      "png": "27_phase_action_regret.png",
+      "svg": "27_phase_action_regret.svg"
+    },
+    {
+      "id": "28_phase_calculation_scores",
+      "title": "Threshold calculations, margin signs and confidence",
+      "caption": "All cases, including the invalid action and malformed worksheets, remain in denominators. Correct decisions follow utility maximization and the cooperation tie-break; ATTACK can be correct. Numeric accuracy is the saved continuous score. Marginal means use actual case counts.",
+      "png": "28_phase_calculation_scores.png",
+      "svg": "28_phase_calculation_scores.svg"
     }
   ],
   "artifacts": {
@@ -152,8 +289,41 @@
     "12_observable_worksheets.svg": "9da225220f55ac0c9841ec566acf38b8514653c5310edd17ee3e868d455ed632",
     "13_threshold_matrix.png": "6425ba743f4eaea440eb19ee5afe44668609af23051113b81ab6a1f31dd32921",
     "13_threshold_matrix.svg": "d73289712f859668e4b8560c6277b652b6fd6e741d0706d2959e38b4d509ffc9",
-    "index.html": "df4472049d58e0d88b06d5a9efb073e10af57c0c35d5391a2029da736d10ec32",
-    "README.md": "1b659669fe57df5c468fa61e93b43083cd043e721bd273709ef45dbc538aae2b",
-    "figure_data.json": "b05bb9337753c32e89e31a1d31002b5bb97e91822a494d562dbeeb485491a7a9"
+    "14_model_cooperation.png": "50130f8a5bb1f06055311ef7a195bfb481f8b2bf6abc82c4d06774d32620739b",
+    "14_model_cooperation.svg": "c9975c1fecdd32d5bf553283b3e8544e2713549bddb5cb736f0ac574fcb0ba89",
+    "15_mechanism_cooperation.png": "dd9aa48e32e18ed6cc6a330bed5f627317fc9fc8420e1daf5bd39d9e1cac25dd",
+    "15_mechanism_cooperation.svg": "d91863a71cabf1777701ddfe10556d870464bb0d40b5e36f759aa95c3c058ddb",
+    "16_model_equilibrium_regret.png": "f6868fa80299a523a56197cbd57194440dea9a639ef25f87727493ed365cf7a5",
+    "16_model_equilibrium_regret.svg": "6a117d01a1c6f121a3f24da5b3dae24e2447604750c271374ae941a6b8a7a7e9",
+    "17_mechanism_equilibrium_regret.png": "2f25cf374a1f4b6e631f2bfa8b6b3b16cea488d22c3ea4dbd1f975ca07e84ec6",
+    "17_mechanism_equilibrium_regret.svg": "c714afd55aedc42568327852d343d3e1a713fb60684e2ce68f0e44dd61285b3c",
+    "18_model_utilities.png": "3747d2511fe26bc27448e9f17200be53d664e918300eaca991e17481793441a3",
+    "18_model_utilities.svg": "438b8a6df35baabf14b808613dbe87d31b87d110e3a7ee45d767ef9ed7141f6d",
+    "19_mechanism_welfare.png": "e57c9891784f3d135ec930840026cb4407ce2cfabde12aed188bb21ce3226d9f",
+    "19_mechanism_welfare.svg": "002d4d7ff1b889202f6bfb8e76cabb575e8bbbb473bc97468bf6af021ebf34ef",
+    "20_safety_coordination.png": "d5a8e6fd1fd19ff584717eaf0ca0268ca4c334466eca3c768a6a26f6a7d87887",
+    "20_safety_coordination.svg": "8a2732b794f02ac7e8c61e240fce602d54365e40d3a68b497dece4fbbebad0ee",
+    "21_behavioral_diagnostics.png": "40f56dfdc595bfa3a1e513ddad6438f5066ad45527782f755dbe805d74d76e67",
+    "21_behavioral_diagnostics.svg": "3c833d4c54c6939bcd50c12187db922aebf61962236f49f14e97ce5c6f30f6c1",
+    "22_local_threshold_transitions.png": "ef8d2023d2a6782cea05ba242e817693c0afa2ee47cbaec39ca29d883b4d9a2b",
+    "22_local_threshold_transitions.svg": "d5ced1c601a88b742265e2314d8e4a16e32ad73965dbf364f575cf81f870d92e",
+    "23_observed_threshold_brackets.png": "41e2a15f82c7bbc13fd6c2e72e6269c77c2ae314b065354abdc67a32fbd4da4f",
+    "23_observed_threshold_brackets.svg": "b660976f34a1c2443f25df9ec38e2f14c5525d2339b0a5deecbf6c0a31960b3f",
+    "24_latent_state_thresholds.png": "1509ec0ba355250c9c16e447ddb0638fb0df20c0bff7baad4022126cfdb97f29",
+    "24_latent_state_thresholds.svg": "ac1929d69c2838cbadf821fa7328e1a3af92eb2c8449367b323b2490bfcf3a55",
+    "25_risk_adjusted_thresholds.png": "88f4aa097ea605544341df9da8d614650a91bff93e17b567c36c5f3bf6090b63",
+    "25_risk_adjusted_thresholds.svg": "0336a598b2cd092bbab16288c66e51192fb3947ac7b4341e8df2eb69328a6506",
+    "26_contract_thresholds.png": "6d01106cf0794f21817eb94ae51fa251037a93cb816df1720ba0babf6bbeb77c",
+    "26_contract_thresholds.svg": "463ec7114456f164e5f5f49d0f3d36aa7c1bfcf59de871dd7b8bf4f2f9900702",
+    "27_phase_action_regret.png": "5c146a60e17f50856d820a6b2e3276ecc36c91810f12d1860d343dab48555456",
+    "27_phase_action_regret.svg": "a5eb8dcfa8fc94c8382f1176a42582d089e854e1fe494435108ccf47402bff81",
+    "28_phase_calculation_scores.png": "f0b91a4ce04de978ec81ae73fa822e6bda567b31cd61c7fe2d447c4a160b4dde",
+    "28_phase_calculation_scores.svg": "e48f7f79f803993079d8c61b95cdc313fbbab6caeae4eda4ea6c985fea1f7d50",
+    "index.html": "83f1aad360c4b98900d989fbb4e07674c43c27f041c3d3a8a922ccc160192076",
+    "README.md": "f902fc6bbe1bc15a75eee819688c5d0b58ebb255642615d699ba2e541e5822a4",
+    "figure_data.json": "b05bb9337753c32e89e31a1d31002b5bb97e91822a494d562dbeeb485491a7a9",
+    "metric_atlas.json": "084d7197d34aeeec19a846fb8fb7cdced29c6a8d25d50fc20f1ddb2c8952610e",
+    "metric_explorer.html": "038a37e5f40b636d7772c6fde9d959af71ff3f02364c6f4d550837cbb9101daf",
+    "all_metric_matrices.csv": "786cc970b5b18711d128f3323b285829a0e5c533047d175d8c889d73e2a903b2"
   }
 }

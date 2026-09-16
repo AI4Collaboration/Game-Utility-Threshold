@@ -78,7 +78,7 @@ def metric_panels(atlas, keys, title, *, by="model"):
     note += "N/A means not applicable or missing, not zero. Utility scales vary across games."
     if "communication_honesty" in keys:
         note = ("Message consistency and mediator compliance each use 16 role appearances per model/game, from their respective treatment only. "
-                "Confidence and belief scores pool all 96. Consistency/compliance and the saved confidence score are joint averages attributed "
+                "The saved confidence score uses all 96; belief loss excludes invalid/missing predictions. Consistency/compliance and confidence are joint averages attributed "
                 "to both participants; opponent Brier loss uses the participant's own prediction. Exact counts and definitions are in the explorer.")
     foot(fig, note)
     return fig, note

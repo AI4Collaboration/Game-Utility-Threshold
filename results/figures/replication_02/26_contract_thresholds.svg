@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="1152pt" height="532.8pt" viewBox="0 0 1152 532.8" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:description>Making the agreed profile a Nash equilibrium is weaker than making each agreed action dominant against every opponent action. The Chicken agreement is asymmetric (de-escalate, escalate); the protocol agreement selects public disclosure. A zero Nash boundary means the agreement is already an equilibrium before penalties. Strict dominance requires exceeding the boundary.</dc:description>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.7, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 532.8 
+L 1152 532.8 
+L 1152 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 92.16 394.272 
+L 1105.92 394.272 
+L 1105.92 127.872 
+L 92.16 127.872 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1">
+      <defs>
+       <path id="medc683c08a" d="M 0 0 
+L 0 3.5 
+" style="stroke: #18232b; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#medc683c08a" x="223.387826" y="394.272" style="fill: #18232b; stroke: #18232b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_1">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; fill: #18232b" transform="translate(196.640639 409.630281)">Prisoner's</text>
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; fill: #18232b" transform="translate(198.627514 421.947875)">Dilemma</text>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_2">
+      <g>
+       <use xlink:href="#medc683c08a" x="473.822609" y="394.272" style="fill: #18232b; stroke: #18232b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_2">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #18232b" x="473.822609" y="409.630281" transform="rotate(-0 473.822609 409.630281)">Chicken</text>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_3">
+      <g>
+       <use xlink:href="#medc683c08a" x="724.257391" y="394.272" style="fill: #18232b; stroke: #18232b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_3">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #18232b" x="724.257391" y="409.630281" transform="rotate(-0 724.257391 409.630281)">Stag Hunt</text>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_4">
+      <g>
+       <use xlink:href="#medc683c08a" x="974.692174" y="394.272" style="fill: #18232b; stroke: #18232b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_4">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; fill: #18232b" transform="translate(952.530611 409.630281)">Protocol</text>
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; fill: #18232b" transform="translate(949.971393 421.947875)">selection</text>
+     </g>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_5">
+      <path d="M 92.16 394.272 
+L 1105.92 394.272 
+" clip-path="url(#pbebf50d138)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.2; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_6">
+      <defs>
+       <path id="m461a69dbea" d="M 0 0 
+L -3.5 0 
+" style="stroke: #18232b; stroke-width: 0.8"/>
+      </defs>
+      <g>
+       <use xlink:href="#m461a69dbea" x="92.16" y="394.272" style="fill: #18232b; stroke: #18232b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_5">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #18232b" x="85.16" y="398.451141" transform="rotate(-0 85.16 398.451141)">0</text>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_7">
+      <path d="M 92.16 342.036706 
+L 1105.92 342.036706 
+" clip-path="url(#pbebf50d138)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.2; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_8">
+      <g>
+       <use xlink:href="#m461a69dbea" x="92.16" y="342.036706" style="fill: #18232b; stroke: #18232b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_6">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #18232b" x="85.16" y="346.215847" transform="rotate(-0 85.16 346.215847)">10</text>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_9">
+      <path d="M 92.16 289.801412 
+L 1105.92 289.801412 
+" clip-path="url(#pbebf50d138)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.2; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_10">
+      <g>
+       <use xlink:href="#m461a69dbea" x="92.16" y="289.801412" style="fill: #18232b; stroke: #18232b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_7">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #18232b" x="85.16" y="293.980552" transform="rotate(-0 85.16 293.980552)">20</text>
+     </g>
+    </g>
+    <g id="ytick_4">
+     <g id="line2d_11">
+      <path d="M 92.16 237.566118 
+L 1105.92 237.566118 
+" clip-path="url(#pbebf50d138)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.2; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_12">
+      <g>
+       <use xlink:href="#m461a69dbea" x="92.16" y="237.566118" style="fill: #18232b; stroke: #18232b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_8">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #18232b" x="85.16" y="241.745258" transform="rotate(-0 85.16 241.745258)">30</text>
+     </g>
+    </g>
+    <g id="ytick_5">
+     <g id="line2d_13">
+      <path d="M 92.16 185.330824 
+L 1105.92 185.330824 
+" clip-path="url(#pbebf50d138)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.2; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_14">
+      <g>
+       <use xlink:href="#m461a69dbea" x="92.16" y="185.330824" style="fill: #18232b; stroke: #18232b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_9">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #18232b" x="85.16" y="189.509964" transform="rotate(-0 85.16 189.509964)">40</text>
+     </g>
+    </g>
+    <g id="ytick_6">
+     <g id="line2d_15">
+      <path d="M 92.16 133.095529 
+L 1105.92 133.095529 
+" clip-path="url(#pbebf50d138)" style="fill: none; stroke: #b0b0b0; stroke-opacity: 0.2; stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g id="line2d_16">
+      <g>
+       <use xlink:href="#m461a69dbea" x="92.16" y="133.095529" style="fill: #18232b; stroke: #18232b; stroke-width: 0.8"/>
+      </g>
+     </g>
+     <g id="text_10">
+      <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #18232b" x="85.16" y="137.27467" transform="rotate(-0 85.16 137.27467)">50</text>
+     </g>
+    </g>
+    <g id="text_11">
+     <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #18232b" x="64.874844" y="261.072" transform="rotate(-90 64.874844 261.072)">Nominal penalty (utility units)</text>
+    </g>
+   </g>
+   <g id="patch_3">
+    <path d="M 138.24 394.272 
+L 218.37913 394.272 
+L 218.37913 373.419339 
+L 138.24 373.419339 
+z
+" clip-path="url(#pbebf50d138)" style="fill: #92b7ee"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 388.674783 394.272 
+L 468.813913 394.272 
+L 468.813913 394.272 
+L 388.674783 394.272 
+z
+" clip-path="url(#pbebf50d138)" style="fill: #92b7ee"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 639.109565 394.272 
+L 719.248696 394.272 
+L 719.248696 394.272 
+L 639.109565 394.272 
+z
+" clip-path="url(#pbebf50d138)" style="fill: #92b7ee"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 889.544348 394.272 
+L 969.683478 394.272 
+L 969.683478 394.272 
+L 889.544348 394.272 
+z
+" clip-path="url(#pbebf50d138)" style="fill: #92b7ee"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 228.396522 394.272 
+L 308.535652 394.272 
+L 308.535652 373.419339 
+L 228.396522 373.419339 
+z
+" clip-path="url(#pbebf50d138)" style="fill: #ffc281"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 478.831304 394.272 
+L 558.970435 394.272 
+L 558.970435 169.494409 
+L 478.831304 169.494409 
+z
+" clip-path="url(#pbebf50d138)" style="fill: #ffc281"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 729.266087 394.272 
+L 809.405217 394.272 
+L 809.405217 302.860235 
+L 729.266087 302.860235 
+z
+" clip-path="url(#pbebf50d138)" style="fill: #ffc281"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 979.70087 394.272 
+L 1059.84 394.272 
+L 1059.84 211.448471 
+L 979.70087 211.448471 
+z
+" clip-path="url(#pbebf50d138)" style="fill: #ffc281"/>
+   </g>
+   <g id="line2d_17">
+    <path d="M 92.16 362.930824 
+L 1105.92 362.930824 
+" clip-path="url(#pbebf50d138)" style="fill: none; stroke-dasharray: 7.4,3.2; stroke-dashoffset: 0; stroke: #a42635; stroke-width: 2"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 92.16 394.272 
+L 92.16 127.872 
+" style="fill: none; stroke: #cbd1da; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 1105.92 394.272 
+L 1105.92 127.872 
+" style="fill: none; stroke: #cbd1da; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 92.16 394.272 
+L 1105.92 394.272 
+" style="fill: none; stroke: #cbd1da; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_14">
+    <path d="M 92.16 127.872 
+L 1105.92 127.872 
+" style="fill: none; stroke: #cbd1da; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_12">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #18232b" x="178.309565" y="369.762868" transform="rotate(-0 178.309565 369.762868)">3.99</text>
+   </g>
+   <g id="text_13">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #18232b" x="428.744348" y="390.615529" transform="rotate(-0 428.744348 390.615529)">0.00</text>
+   </g>
+   <g id="text_14">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #18232b" x="679.17913" y="390.615529" transform="rotate(-0 679.17913 390.615529)">0.00</text>
+   </g>
+   <g id="text_15">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #18232b" x="929.613913" y="390.615529" transform="rotate(-0 929.613913 390.615529)">0.00</text>
+   </g>
+   <g id="text_16">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #18232b" x="268.466087" y="369.762868" transform="rotate(-0 268.466087 369.762868)">3.99</text>
+   </g>
+   <g id="text_17">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #18232b" x="518.90087" y="165.837938" transform="rotate(-0 518.90087 165.837938)">43.03</text>
+   </g>
+   <g id="text_18">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #18232b" x="769.335652" y="299.203765" transform="rotate(-0 769.335652 299.203765)">17.50</text>
+   </g>
+   <g id="text_19">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #18232b" x="1019.770435" y="207.792" transform="rotate(-0 1019.770435 207.792)">35.00</text>
+   </g>
+   <g id="legend_1">
+    <g id="line2d_18">
+     <path d="M 101.16 140.970438 
+L 111.16 140.970438 
+L 121.16 140.970438 
+" style="fill: none; stroke-dasharray: 7.4,3.2; stroke-dashoffset: 0; stroke: #a42635; stroke-width: 2"/>
+    </g>
+    <g id="text_20">
+     <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #18232b" x="129.16" y="144.470438" transform="rotate(-0 129.16 144.470438)">Penalty used in live experiment: 6</text>
+    </g>
+    <g id="patch_15">
+     <path d="M 101.16 159.148563 
+L 121.16 159.148563 
+L 121.16 152.148563 
+L 101.16 152.148563 
+z
+" style="fill: #92b7ee"/>
+    </g>
+    <g id="text_21">
+     <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #18232b" x="129.16" y="159.148563" transform="rotate(-0 129.16 159.148563)">Target-profile Nash boundary</text>
+    </g>
+    <g id="patch_16">
+     <path d="M 101.16 173.826687 
+L 121.16 173.826687 
+L 121.16 166.826687 
+L 101.16 166.826687 
+z
+" style="fill: #ffc281"/>
+    </g>
+    <g id="text_22">
+     <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #18232b" x="129.16" y="173.826687" transform="rotate(-0 129.16 173.826687)">Target-action dominance boundary</text>
+    </g>
+   </g>
+  </g>
+  <g id="text_23">
+   <text style="font-weight: 700; font-size: 20px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #18232b" x="46.08" y="41.836875" transform="rotate(-0 46.08 41.836875)">Does the tested contract penalty cross the derived threshold?</text>
+  </g>
+  <g id="text_24">
+   <text style="font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #586174" x="46.08" y="63.936" transform="rotate(-0 46.08 63.936)">Detection 0.75 · false-positive rate 0.05 · enforcement 0.90 | effective advantage = 0.63 × penalty</text>
+  </g>
+  <g id="text_25">
+   <text style="font-size: 9.5px; font-family: 'DejaVu Sans'; fill: #4b5563" transform="translate(46.08 496.228453)">Making the agreed profile a Nash equilibrium is weaker than making each agreed action dominant against every opponent action. The Chicken agreement is asymmetric</text>
+   <text style="font-size: 9.5px; font-family: 'DejaVu Sans'; fill: #4b5563" transform="translate(46.08 506.866375)">(de-escalate, escalate); the protocol agreement selects public disclosure. A zero Nash boundary means the agreement is already an equilibrium before penalties.</text>
+   <text style="font-size: 9.5px; font-family: 'DejaVu Sans'; fill: #4b5563" transform="translate(46.08 517.504297)">Strict dominance requires exceeding the boundary.</text>
+  </g>
+  <g id="text_26">
+   <text style="font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #637083" x="1105.92" y="12.092428" transform="rotate(-0 1105.92 12.092428)">AISI RESEARCH  /  REPLICATION 02  /  11 SEP 2026</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pbebf50d138">
+   <rect x="92.16" y="127.872" width="1013.76" height="266.4"/>
+  </clipPath>
+ </defs>
+</svg>
