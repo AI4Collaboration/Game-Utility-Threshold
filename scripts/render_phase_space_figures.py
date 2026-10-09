@@ -7,6 +7,7 @@ Observed plots show only logged cells, with missing or invalid-only cells gray.
 from __future__ import annotations
 
 import argparse
+import html
 import json
 import math
 import os
@@ -225,7 +226,9 @@ def _facet_title(key: tuple[Any, ...]) -> str:
 
 
 def _render_heatmaps(analysis: Mapping[str, Any], directory: Path, outputs: list[str]) -> None:
-    cells = analysis["cells"]
+    cells = [row for row in analysis["cells"] if row["mode"] != "fixed_belief"]
+    if not cells:
+        return
     points = list(analysis.get("points", [])) + cells
     ss = sorted({float(point["s"]) for point in points})
     ts = sorted({float(point["t"]) for point in points})
@@ -414,6 +417,19 @@ def render(analysis: Mapping[str, Any], output_dir: str | Path, *, theory_only: 
                           "Observed heatmaps use exact logged payoff cells with no interpolation.",
                           "Gray means unrun or no usable value; invalid responses are retained in counts."]}
     (directory / "figure_data.json").write_text(json.dumps(artifact, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+    panels = "\n".join(
+        f'<section><h2>{html.escape(name.removesuffix(".png").replace("_", " "))}</h2>'
+        f'<a href="{html.escape(name)}"><img loading="lazy" src="{html.escape(name)}" '
+        f'alt="{html.escape(name)}"></a><p><a href="{html.escape(name.replace(".png", ".svg"))}">Editable SVG</a></p></section>'
+        for name in outputs if name.endswith(".png"))
+    (directory / "index.html").write_text(
+        '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
+        '<title>Symmetric game phase-space figures</title><style>body{font:16px system-ui;margin:2rem auto;max-width:1200px;padding:0 1rem;color:#18304b;background:#fff}'
+        'img{width:100%;height:auto}section{margin:3rem 0}a{color:#1468a0}</style><h1>Symmetric game phase-space figures</h1>'
+        '<p>Analytical panels are payoff calculations. Observed panels use saved live-model decisions only. '
+        'Gray cells have no usable observation; small-sample intervals do not establish certainty.</p>'
+        '<p><a href="figure_data.json">Exact data and audit</a> · <a href="observed_figure_data.csv">Observed cell CSV</a></p>'
+        + panels + '</html>\n', encoding="utf-8")
     return artifact
 
 

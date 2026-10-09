@@ -11,6 +11,18 @@ latent-state payoff lotteries, Bayesian beliefs, six risk criteria, executable
 institutional mechanisms, repeated play, true multi-provider model gameplay,
 and granular AISI Inspect traces.
 
+## Symmetric-game phase-space sweeps
+
+The [phase-space study](docs/phase-space-experiments.md) implements the SIAM
+two-dimensional parameterization: normalize R=1 and P=0, then vary S and T.
+It includes a 70-point grid with 25 strict Prisoner's Dilemma points, repeated
+live self-play, ordered cross-play anchors, controlled-opponent threshold
+slices, native Inspect traces, and persistent OpenRouter budget accounting.
+Mathematical phase maps and observed model heatmaps are explicitly separated.
+The protocol documents model IDs, counterbalancing, failure handling, and
+the limits of small-sample inference. Saved run status—not the presence of
+this runner—determines which experiments have completed.
+
 ## Research-grade Phase 1
 
 The original Months 1–3 sequential oversight milestone is now a standalone

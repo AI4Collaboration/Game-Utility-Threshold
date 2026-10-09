@@ -48,6 +48,8 @@ User authorization: US$100. Execution ceiling: US$90 shared by pilots and all st
 
 Completed episodes are checkpointed immediately. `--resume` rejects mismatched configurations and skips completed sample IDs. Invalid attempted episodes are retained, not silently rerolled. A process failure before an episode checkpoint may require another attempt; its old reservation remains charged to the budget. This is conservative, not a guarantee of exactly-once network execution.
 
+The first production batch exposed an HTTP-client lifecycle issue between separate Inspect `eval()` calls. The runner now recreates clients for each batch and records execution-source hashes at each start/resume. Previously attempted transport failures remain in the same dataset and are counted separately from malformed model outputs. Scheduling slots skipped after the circuit breaker trips are marked `not_attempted` in native logs and are not observations.
+
 ## Analysis and figures
 
 Observed plots use only saved model decisions. Missing cells are gray, not interpolated. Mathematical panels are marked ANALYTICAL; model panels are marked OBSERVED. Cooperation denotes action C, not a universal optimality score across the entire phase space. Report equilibrium, regret, welfare, and validity alongside it.
