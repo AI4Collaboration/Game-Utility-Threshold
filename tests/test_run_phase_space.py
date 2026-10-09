@@ -107,6 +107,19 @@ def test_pair_budget_is_atomic(tmp_path):
         ledger.close()
 
 
+def test_batch_does_not_reuse_loop_bound_clients(tmp_path):
+    ledger = BudgetLedger(tmp_path / "ledger.json", 1)
+    runtime = Runtime({"records": ["preserved"]}, tmp_path / "run.json", ledger, 256)
+    try:
+        runtime.models["old"] = object()
+        runtime.begin_batch()
+        assert not runtime.models
+        assert runtime.payload["records"] == ["preserved"]
+        assert runtime.ledger is ledger
+    finally:
+        ledger.close()
+
+
 def test_raw_receipt_not_inspect_estimate():
     assert billing_receipt({"usage": {"total_cost": .001}})["cost_usd"] is None
     assert billing_receipt({"usage": {"cost": .23}})["cost_usd"] == .23

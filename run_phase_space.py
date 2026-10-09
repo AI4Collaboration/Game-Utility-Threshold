@@ -305,6 +305,12 @@ class Runtime:
         self.halt: str | None = None
         self.failures: dict[str, int] = {}
 
+    def begin_batch(self) -> None:
+        # Each eval() owns an event loop / HTTP client lifecycle. Reusing these
+        # Model objects in the next eval can reuse sockets bound to a closed
+        # loop. Keep only experiment data and budget across eval invocations.
+        self.models.clear()
+
     def save(self) -> None:
         self.payload["budget"] = self.ledger.summary()
         self.payload["updated_at"] = now()
@@ -484,6 +490,11 @@ def main(argv: list[str] | None = None) -> int:
     if not key:
         parser.error("OPENROUTER_API_KEY is missing; never put it in a config or command line")
     payload["preflight"] = preflight(models, key)
+    payload.setdefault("execution_history", []).append({
+        "started_at": now(), "resumed": args.resume,
+        "runner_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        "max_samples": args.max_samples, "batch_size": args.batch_size,
+    })
     remaining = payload["preflight"].get("key_limit_remaining")
     ledger = BudgetLedger(args.ledger, args.budget_usd)
     if remaining is not None:
@@ -500,6 +511,7 @@ def main(argv: list[str] | None = None) -> int:
             if runtime.halt:
                 break
             batch = pending[start:start+args.batch_size]
+            runtime.begin_batch()
             print(f"Running {args.stage}: {len(payload['completed_samples'])}/{len(cases)} samples; "
                   f"accounted ${ledger.committed:.4f} / ${ledger.data['cap_usd']:.2f}", flush=True)
             logs = eval(make_task(batch, runtime), model="none", log_dir=args.log_dir,

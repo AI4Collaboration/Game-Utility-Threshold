@@ -240,6 +240,8 @@ def _summarize_group(records: Sequence[Mapping[str, Any]], samples: int, seed: i
     cooperation = _metric(records, "cooperation", samples, seed)
     result = {"n_decisions": n, "n_episodes": len({_episode(record) for record in records}),
               "n_valid": valid, "n_invalid": n - valid,
+              "n_transport_errors": sum(not _valid(record) and "usage" not in record for record in records),
+              "n_invalid_model_outputs": sum(not _valid(record) and "usage" in record for record in records),
               "n_valid_episodes": cooperation["episodes"],
               "n_cooperate": cooperative, "n_defect": valid - cooperative,
               "cooperation_rate_valid": cooperation["mean"],
