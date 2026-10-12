@@ -6,7 +6,7 @@ the current repository root contains a separate, subsequently updated phase-spac
 implementation. Run the commands below **from this folder** so Python uses this
 experiment's engine and runner.
 
-Start with [the seven curated publication figures and captions](figures/index.html)
+Start with [the four curated publication figures and captions](figures/index.html)
 or [copy-ready captions](figures/CAPTIONS.md). The two lead figures show:
 
 1. Cooperation frequency as normalized S and T change, for all four models.

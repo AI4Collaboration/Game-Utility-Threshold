@@ -7,7 +7,8 @@ Coverage complete; no duplicate/unexpected IDs, parse replay errors, or model id
 Reported and accounted costs reconcile and remain within the $50 budget.
 Raw attempts, ledger, and heatmap cell CSV are byte-identical to the saved originals.
 Coverage audit and theory summary match original JSON values.
-All seven curated PNGs are byte-identical to the fresh offline rebuild.
+The original seven curated PNGs were byte-identical to the fresh offline rebuild.
+Publication selection subsequently reduced to four figures; retained PNG/SVG files match their source figures.
 Lead cooperation and expected-regret figures visually inspected.
 Source/data/figures scanned for OpenRouter key patterns and exact locally stored credentials, including decompressed records: no matches.
 No environment files included. Every archived file is below GitHub's 100 MB limit.

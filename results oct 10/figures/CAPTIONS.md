@@ -1,6 +1,6 @@
 # Figures for a LessWrong post on payoff incentives
 
-Use figures 1 and 2 for the central empirical argument; figure 3 distinguishes belief consistency from equilibrium stability. Keep figure 4 close to the results because presentation effects are large. Figures 5 and 6 explain the utility theory; figure 7 is optional. “Susceptibility” is operationalized here as response to payoff incentives. These are descriptive data with few repeats per cell, not universal model rankings.
+Four figures: use figures 1 and 2 for the empirical results, figure 3 to explain the theoretical game regions, and figure 4 to show the presentation effect that motivated the clearer-payoff experiment. “Susceptibility” is operationalized here as response to payoff incentives. These are descriptive data with few repeats per cell, not universal model rankings.
 
 The full experiment contains 10,096 calls / 5,048 paired simulations (including pilots and controls), with 10,066 valid decisions and 5,021 fully valid joint outcomes. The own-payoff grid used in the lead figures has 2,704 calls and 1,350 fully valid games across two blocks. Total accounted API cost was $40.4406, including a $0.045349425 reserve for one unreturned request. No new calls were made for this figure set.
 
@@ -42,52 +42,22 @@ At each normalized S–T point, color measures mean expected payoff loss from th
 
 [PNG](02_expected_utility_deviation.png) · [Editable SVG](02_expected_utility_deviation.svg)
 
-## Main figure 3 / companion: belief-free comparison
-
-**Profitable unilateral deviations in realized joint outcomes**
-
-For each recorded own-payoff game, we hold the opponent’s action fixed and calculate each player’s gain from switching. The larger gain is divided by R−P, then averaged within each S–T cell. White means zero profitable unilateral deviation in the observed games; darker red indicates larger available gains. At most two valid games contribute per cell. This measure uses actual choices rather than stated beliefs. A positive realized regret can occur when players validly sample a mixed Nash equilibrium; it is not by itself a reasoning-error rate. Comparing this map with figure 2 separates internal utility consistency from stability of realized self-play outcomes.
-
-![Profitable unilateral deviations in realized joint outcomes](03_realized_equilibrium_regret.png)
-
-[PNG](03_realized_equilibrium_regret.png) · [Editable SVG](03_realized_equilibrium_regret.svg)
-
-## Essential control
-
-**Matrix presentation substantially changes apparent cooperation**
-
-The targeted exploratory control compares the same strict-PD payoff cells and first two label blocks under row/column wording and explicit “your payoff / opponent payoff” wording. Each bar contains 32 valid decisions per model and role. Qwen’s column-role C frequency changes from 31/32 to 1/32, while its row-role frequency changes from 0/32 to 2/32. The game utilities and individual-payoff objective are identical, but both payoff perspective and display order change. These observations demonstrate presentation sensitivity without isolating its cause. This control motivated the clearer-presentation grid used in figures 1–3.
-
-![Matrix presentation substantially changes apparent cooperation](04_presentation_control.png)
-
-[PNG](04_presentation_control.png) · [Editable SVG](04_presentation_control.svg)
-
-## Theory / intervention figure
-
-**A joint defection cost crosses two separate incentives**
-
-Analytic intervention around (T,R,P,S)=(5,3,1,0): deduct k from both defection payoffs, giving T=5−k and P=1−k. The C advantage is k−2 against C and k−1 against D. Thus k=2 makes C weakly dominant and k>2 makes it strictly dominant. Under normalization the path is s=(k−1)/(k+2), t=4/(k+2). Changing one raw payoff alone leaves one baseline defection incentive intact. This figure is an algebraic result, not a separately sampled model experiment; k is a utility cost, not API dollars.
-
-![A joint defection cost crosses two separate incentives](05_analytic_intervention_threshold.png)
-
-[PNG](05_analytic_intervention_threshold.png) · [Editable SVG](05_analytic_intervention_threshold.svg)
-
-## Opening explainer / appendix
+## Figure 3: theoretical context
 
 **The theoretical phase space of symmetric two-action games**
 
 Positive affine normalization maps payoffs to s=(S−P)/(R−P) and t=(T−P)/(R−P), for R>P. This leaves two degrees of freedom and preserves expected-utility incentives. The map shows twelve strict payoff orderings, regime boundaries, and group-payoff boundaries. The repository’s (5,3,1,0) baseline is at (s,t)=(−0.5,2). It is an analytic reconstruction following Falmagne’s SIAM article; no model calls are involved.
 
-![The theoretical phase space of symmetric two-action games](06_analytic_game_map.png)
+![The theoretical phase space of symmetric two-action games](03_analytic_game_map.png)
 
-[PNG](06_analytic_game_map.png) · [Editable SVG](06_analytic_game_map.svg)
+[PNG](03_analytic_game_map.png) · [Editable SVG](03_analytic_game_map.svg)
 
-## Optional appendix: one-payoff sweeps
+## Figure 4: presentation control
 
-**Observed one-payoff sweeps against a fixed-belief benchmark**
+**Matrix presentation substantially changes apparent cooperation**
 
-Each panel changes only T, R, P, or S around (5,3,1,0). Colored curves show observed C frequencies from up to four valid decisions per value under the original matrix presentation. Black dashed segments are the expected-utility best response assuming q=1/2: the indifference points are T=2, R=6, P=−2, S=3, with either action optimal at equality. Gray boundaries mark changes in strategic class. The fixed-q step is one conditional benchmark, not the complete equilibrium prediction. The original presentation is known to be sensitive to player role. No binary search or empirical threshold-location fit was performed.
+The targeted exploratory control compares the same strict-PD payoff cells and first two label blocks under row/column wording and explicit “your payoff / opponent payoff” wording. Each bar contains 32 valid decisions per model and role. Qwen’s column-role C frequency changes from 31/32 to 1/32, while its row-role frequency changes from 0/32 to 2/32. The game utilities and individual-payoff objective are identical, but both payoff perspective and display order change. These observations demonstrate presentation sensitivity without isolating its cause. This control motivated the clearer-presentation grid used in figures 1 and 2.
 
-![Observed one-payoff sweeps against a fixed-belief benchmark](07_raw_payoff_thresholds.png)
+![Matrix presentation substantially changes apparent cooperation](04_presentation_control.png)
 
-[PNG](07_raw_payoff_thresholds.png) · [Editable SVG](07_raw_payoff_thresholds.svg)
+[PNG](04_presentation_control.png) · [Editable SVG](04_presentation_control.svg)
