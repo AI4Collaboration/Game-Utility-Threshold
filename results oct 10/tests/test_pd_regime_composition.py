@@ -5,6 +5,12 @@ from scripts.render_pd_regime_composition import load_baselines,composition,regi
 
 
 class PDRegimeCompositionTests(unittest.TestCase):
+    def test_refined_grid_has_exact_seven_thresholds_and_equal_weighting(self):
+        grid=[(F(10+j,8),F(1),F(0),F(-8+i,8)) for i in range(7) for j in range(7)]
+        _,intervals,events=composition(grid)
+        self.assertEqual((len(grid),len(intervals),len(events)),(49,8,7))
+        self.assertEqual([intervals[3][k+'_count'] for k in REGIMES],[16,12,12,9])
+
     def test_grid_matches_tested_pd_cohort(self):
         grid,meta=load_baselines(Path(__file__).resolve().parents[1]/'data/summary.json.gz')
         self.assertEqual(len(grid),16)

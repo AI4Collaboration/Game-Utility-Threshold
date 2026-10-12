@@ -1,0 +1,17 @@
+{
+  "new_calls": 528,
+  "new_valid_decisions": 528,
+  "new_valid_games": 264,
+  "new_accounted_cost_usd": 1.8939674556000001,
+  "total_accounted_cost_usd": 42.33460696343977,
+  "remaining_cap_usd": 7.665393036560232,
+  "raw_sha256": "180396028702e209eceb6d1040703f9e9a5d7c4191a5614a46b7a52404b1c2ed",
+  "started_utc": "2026-10-12T16:30:18.515972+00:00",
+  "finished_utc": "2026-10-12T16:35:59.871198+00:00",
+  "response_models": {
+    "z-ai/glm-5.3": 132,
+    "openai/gpt-6-astra": 132,
+    "anthropic/claude-fable-5.1": 132,
+    "qwen/qwen3.8-2.4t-a95b": 132
+  }
+}

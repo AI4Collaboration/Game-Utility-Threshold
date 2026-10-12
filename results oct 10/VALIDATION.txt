@@ -1,6 +1,6 @@
 Validation updated 2026-10-12
 
-29 snapshot unit tests passed (unittest discover -s tests), including nine threshold-analysis tests.
+32 snapshot unit tests passed (unittest discover -s tests), including nine threshold-analysis tests.
 Full offline reproduce.py completed with zero additional paid calls.
 Replayed 10,096 attempts, 5,048 games, 10,066 valid actions, 5,021 valid joint outcomes.
 Coverage complete; no duplicate/unexpected IDs, parse replay errors, or model identity mismatches.
@@ -17,13 +17,15 @@ Both sweep directions are retained in the detailed displacement output and CSV.
 48 two-sided brackets, 16 conditional one-sided bounds, 13 multiple/reversed crossings, 27 unresolved.
 Tests cover utility ties, per-decision beliefs, crossing direction, missing values, censoring, and interval subtraction.
 The bars describe sampled crossing brackets, not statistical confidence intervals or fitted population thresholds.
-No binary search or new experiment calls were made.
+No binary search was performed. The original threshold visualizations used no new calls; the separate PD refinement below added model calls.
 
 Source/data/figures scanned for OpenRouter and GitHub token patterns, including decompressed records: no matches.
 No environment files included. Every archived file is below GitHub's 100 MB limit.
 
-The larger original repository suite was previously reported as 183 tests, with one Lean parity skip; the isolated snapshot validation above covers its 29 experiment tests.
+The larger original repository suite was previously reported as 183 tests, with one Lean parity skip; the isolated snapshot validation above covers its 32 experiment tests.
 
 Signed cooperation-deviation colors verified against per-cell observed and admissible theoretical frequencies; utility ties are not forced to either action.
 
-Standalone PD regime composition: 16 strict-PD matrices from 128 valid source games, 5 exact open intervals, 4 event locations, 4 simultaneous-crossing baselines. Three tests verify the grid, route classifications, exact ties, exhaustive partitions, and constancy within intervals. PNG visually inspected.
+Standalone PD regime composition: 49 strict-PD matrices from 392 valid source games, 8 exact open intervals, 7 event locations, 7 simultaneous-crossing baselines. Four tests verify the grid, route classifications, exact ties, exhaustive partitions, and constancy within intervals. PNG visually inspected.
+
+PD midpoint refinement: 528 new calls / 264 new games, all valid and model identities matched. Exactly 66 decisions per model per label block; no duplicates or pending reservations. New cost $1.89396746; carried total $42.33460696 remains below $50. Original 16 matrices reused; 33 added at spacing 0.125. Extra locations do not increase per-cell repetitions.

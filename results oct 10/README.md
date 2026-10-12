@@ -1,6 +1,6 @@
 # Payoff phase-space experiment and LessWrong figure pack
 
-This folder preserves the code and records used in the October 9, 2026 experiment,
+This folder preserves the code and records used in the October 9, 2026 experiment and its later PD refinement,
 under the requested folder name **results oct 10**. It is an isolated snapshot;
 the current repository root contains a separate, subsequently updated phase-space
 implementation. Run the commands below **from this folder** so Python uses this
@@ -28,15 +28,24 @@ search were performed.
 
 ## Offline reproduction — no key and no API calls
 
-The standalone PD best-response composition figure can also be generated with
-`python scripts/render_pd_regime_composition.py --output reproduced/pd-composition`.
-It classifies the 16 distinct strict-PD payoff matrices from the actual own-payoff
-experiment (128 valid source games across four models), keeping R=1 and P=0,
-under a hypothetical uniform defection penalty. PNG, SVG, PDF, exact interval
-counts, tie-event counts, baseline payoffs, and a caption are exported. This is
-an analytic intervention on tested starting matrices, not measured LLM penalty responses. The four-figure
-publication gallery is unchanged. The full reproduction command also creates
-this standalone figure in its output directory.
+The standalone PD refinement uses the same strict-PD domain as the original
+experiment, at spacing 0.125 instead of 0.25. It combines 16 archived matrices
+with 33 newly tested matrices, maintaining the same four models and two label
+blocks. `data_pd_refinement/` contains the additional experiment records and a
+ledger carrying forward all prior spending under the original $50 cap. The
+refinement added 528 valid decisions / 264 valid games for $1.89396746,
+bringing total accounted spending to $42.33460696. Combined PD coverage is
+49 matrices / 392 valid games (98 per model).
+
+`python scripts/render_pd_regime_composition.py --refinement-summary data_pd_refinement/summary.json.gz --output reproduced/pd-composition`
+
+This produces a theoretical regime-composition figure and an observed PD-only
+cooperation heatmap using the same 49 matrices. It retains R=1, P=0 and the
+original payoff range. The hypothetical penalty trajectories are analytic;
+new model calls test the added baseline locations, not penalty trajectories.
+There are still only two label blocks per matrix/model. The original four-figure
+publication gallery remains the original broader S–T study; the refinement is
+reported separately. The full offline reproduction includes both PD figures.
 
 Use Python 3.12 (the original run used Python 3.12.12):
 
@@ -51,6 +60,7 @@ python3 -m venv .venv
 Open `reproduced/post-figures/index.html` for the publication set and
 `reproduced/index.html` for the full analysis gallery and experiment report.
 The detailed theory report is `reproduced/theory_comparison.html`.
+The refined PD report is `reproduced/pd-composition/index.html`.
 `requirements.lock.txt` records the installed environment; `requirements.txt`
 lists direct dependencies for a compatible environment if exact pins are
 unavailable on your platform. Matplotlib figures are saved as PNG and editable SVG.
@@ -80,7 +90,7 @@ unavailable on your platform. Matplotlib figures are saved as PNG and editable S
 
 Four exact model IDs were used: `z-ai/glm-5.3`, `qwen/qwen3.8-2.4t-a95b`,
 `openai/gpt-6-astra`, and `anthropic/claude-fable-5.1`. This is not a claim of a
-universal model ranking. There were 10,096 calls / 5,048 paired games including
+universal model ranking. The original batch had 10,096 calls / 5,048 paired games including
 pilots and controls; 10,066 actions and 5,021 joint outcomes were valid.
 Provider-reported cost was $40.39529008; conservatively accounted cost was
 $40.44063951, including a $0.045349425 reserve for one unreturned request.

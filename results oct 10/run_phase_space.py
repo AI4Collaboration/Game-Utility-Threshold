@@ -56,6 +56,12 @@ def cases(stage, replicate):
             controls={(-.5,.5),(.5,1.5),(.5,.5),(0.,1.)}
             result=[c for c in result if c['payoffs']['strict_pd'] or
                     (c['payoffs']['s'],c['payoffs']['t']) in controls]
+    elif stage == "perspective_pd_refinement":
+        # Midpoints refine the original strict-PD domain without repeating the
+        # 16 archived anchors. Binary-exact spacing preserves exact thresholds.
+        result=[{'case_id':f'pd-refine-{i}-{j}',
+                 'payoffs':SymmetricPayoffs(T=1.25+j/8,R=1,P=0,S=-1+i/8).report()}
+                for i in range(7) for j in range(7) if i%2 or j%2]
     elif stage == "transects":
         from dataclasses import replace
         result=[]
@@ -343,7 +349,7 @@ async def _run_locked(args,output):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('stage',choices=('pilot','grid','transects','affine','perspective','perspective_grid','summarize'))
+    parser.add_argument('stage',choices=('pilot','grid','transects','affine','perspective','perspective_grid','perspective_pd_refinement','summarize'))
     parser.add_argument('--output',required=True)
     parser.add_argument('--catalog',default=str(Path(__file__).resolve().parent/'data/openrouter_catalog.json'))
     parser.add_argument('--budget',type=float,default=50)

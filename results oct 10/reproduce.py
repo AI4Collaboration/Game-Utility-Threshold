@@ -20,13 +20,24 @@ def main():
             (out/source.stem).write_bytes(gzip.decompress(source.read_bytes()))
         else:
             shutil.copy2(source,out/source.name)
+    pd_command=['scripts/render_pd_regime_composition.py']
+    refinement=ROOT/'data_pd_refinement'
+    if refinement.exists():
+        refined_out=out/'pd-refinement';refined_out.mkdir(exist_ok=True)
+        for source in refinement.iterdir():
+            if source.name.endswith('.gz'):
+                (refined_out/source.stem).write_bytes(gzip.decompress(source.read_bytes()))
+            else:shutil.copy2(source,refined_out/source.name)
+        subprocess.run([sys.executable,'run_phase_space.py','summarize','--output',str(refined_out)],cwd=ROOT,check=True)
+        pd_command+=['--refinement-summary',str(refined_out/'summary.json')]
     commands=[['run_phase_space.py','summarize'],['scripts/render_phase_space.py'],
               ['scripts/compare_phase_space_theory.py'],
               ['scripts/render_threshold_displacement.py','--analysis',str(out)],
-              ['scripts/render_pd_regime_composition.py'],
+              pd_command,
               ['scripts/report_phase_space.py']]
     for cmd in commands:
-        subprocess.run([sys.executable,*cmd,'--output',str(out)],cwd=ROOT,check=True)
+        destination=out/'pd-composition' if cmd[0]=='scripts/render_pd_regime_composition.py' else out
+        subprocess.run([sys.executable,*cmd,'--output',str(destination)],cwd=ROOT,check=True)
     subprocess.run([sys.executable,'scripts/render_lesswrong_figures.py','--analysis',str(out),
                     '--output',str(out/'post-figures')],cwd=ROOT,check=True)
     print(f'Offline reproduction complete: {out / "post-figures/index.html"}')
