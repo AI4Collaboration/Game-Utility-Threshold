@@ -125,6 +125,8 @@ def parse_decision(content, mapping):
 
 
 def make_jobs(stage, replicate, model_keys):
+    if not model_keys or len(set(model_keys)) != len(model_keys):
+        raise ValueError('Choose each model exactly once')
     points=cases(stage,replicate)
     # Fixed shuffle limits time/order confounding; each game has isolated role calls.
     random.Random(20261009+replicate).shuffle(points)
@@ -163,6 +165,29 @@ def read_records(path):
     if not path.exists():
         return []
     return [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
+
+
+def validate_resume_ledger(output, ledger, prior):
+    """Fail closed on missing or inconsistent accounting; never reset spent funds."""
+    if not (output/'ledger.json').exists() and (prior or any(output.glob('manifest_*.json'))):
+        raise ValueError('Existing run has no budget ledger; restore it before resuming')
+    ids = [r['job_id'] for r in prior]
+    if len(set(ids)) != len(ids):
+        raise ValueError('Duplicate attempt IDs must be reconciled before resuming')
+    reservations = ledger['reservations']
+    if set(ids) & set(reservations):
+        raise ValueError('Completed attempts still have reservations; reconcile the interrupted ledger')
+    if ledger['completed_attempts'] != len(prior):
+        raise ValueError('Attempt count differs from budget ledger; reconcile before resuming')
+    values = [ledger['accounted_usd'], ledger['reported_usd'], *reservations.values(),
+              *(r['accounted_cost_usd'] for r in prior),
+              *(r['reported_cost_usd'] for r in prior if r.get('reported_cost_usd') is not None)]
+    if any(type(v) not in (int, float) or not math.isfinite(v) or v < 0 for v in values):
+        raise ValueError('Invalid budget accounting values')
+    accounted = sum(r['accounted_cost_usd'] for r in prior) + sum(reservations.values())
+    reported = sum(r.get('reported_cost_usd') or 0 for r in prior)
+    if abs(accounted-ledger['accounted_usd']) > 1e-8 or abs(reported-ledger['reported_usd']) > 1e-8:
+        raise ValueError('Recorded costs differ from budget ledger; reconcile before resuming')
 
 
 def summarize(output):
@@ -228,6 +253,7 @@ async def _run_locked(args,output):
     if ledger['cap_usd'] != args.budget:
         raise ValueError('Resume must retain the same total budget')
     prior=read_records(output/'attempts.jsonl')
+    validate_resume_ledger(output, ledger, prior)
     completed={r['job_id'] for r in prior}
     # Unfinished reservations remain charged and cannot be resubmitted silently.
     pending=[j for j in jobs if j['job_id'] not in completed and j['job_id'] not in ledger['reservations']]

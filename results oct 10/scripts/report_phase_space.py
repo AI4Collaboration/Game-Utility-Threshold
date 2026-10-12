@@ -274,7 +274,11 @@ def report(out):
     text+='- [Raw requests and responses](attempts.jsonl)\n'
     text+='- [Coverage audit](coverage_audit.json) and [cost ledger](ledger.json)\n'
     text+='- [Analytic grid](analytic_grid.csv)\n'
-    text+='- [Full methods](METHODS.md) and [implementation patch](implementation.patch)\n\n'
+    if (out/'METHODS.md').exists():
+        text+='- [Full methods](METHODS.md)\n'
+    if (out/'implementation.patch').exists():
+        text+='- [Implementation patch](implementation.patch)\n'
+    text+='\n'
     text+='All figures have editable SVG counterparts. See METHODS.md for the exact protocol '
     text+='and reproduction commands. Positive affine normalization preserves the mathematical '
     text+='game, but model invariance must be tested. We do not fit an exact empirical threshold '

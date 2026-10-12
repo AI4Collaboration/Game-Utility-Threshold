@@ -1,16 +1,14 @@
 Validation performed 2026-10-12
 
-17 snapshot unit tests passed (unittest discover -s tests).
-Offline reproduce.py completed with zero additional paid calls.
-Replayed 10,096 attempts, 5,048 games, 10,066 valid actions, 5,021 valid joint outcomes.
-Coverage complete; no duplicate/unexpected IDs, parse replay errors, or model identity mismatches.
+25 experiment and regression tests passed (unittest discover -s tests).
+Independent audit passed: 10,096 records, 5,048 paired games, 10,066 valid actions, 5,021 valid joint outcomes, 676 deviation-map cells.
+Raw request payloads regenerate exactly from manifests and archived catalog.
+The separate numerical oracle reads the displayed matrix rather than using the scoring engine.
+Actual plot arrays checked: four publication figures, 1,352 empirical heatmap values, 16 control bars, 32,400 analytic nonboundary cells.
+Offline reproduce.py completed with outbound socket connections blocked and no API key; zero additional paid calls.
+Raw attempts, ledger and heatmap cell CSV remain byte-identical to archived data.
+The four curated PNGs match the offline rebuild byte for byte.
+Coverage complete; no duplicate or unexpected request IDs, model identity mismatches, or numerical audit failures.
 Reported and accounted costs reconcile and remain within the $50 budget.
-Raw attempts, ledger, and heatmap cell CSV are byte-identical to the saved originals.
-Coverage audit and theory summary match original JSON values.
-The original seven curated PNGs were byte-identical to the fresh offline rebuild.
-Publication selection subsequently reduced to four figures; retained PNG/SVG files match their source figures.
-Lead cooperation and expected-regret figures visually inspected.
-Source/data/figures scanned for OpenRouter key patterns and exact locally stored credentials, including decompressed records: no matches.
-No environment files included. Every archived file is below GitHub's 100 MB limit.
-
-The larger original repository suite was previously reported as 183 tests, with one Lean parity skip; the isolated snapshot validation above covers its 17 experiment tests.
+All archived source/data/figures scanned for API credentials, including decompressed records.
+See AUDIT.md for corrected resume/reproduction defects and limits of the audit.

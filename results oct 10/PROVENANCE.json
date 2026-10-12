@@ -9,5 +9,6 @@
   "games": 5048,
   "raw_log_sha256": "8c3f995078bd7b0ef14e476ebd653a42b5bbff6e49b44a4ed0086ecd37b13c79",
   "code_snapshot_note": "The utility_threshold package is copied from the experiment checkout to isolate it from subsequent changes to the upstream engine. Runner request behavior is preserved; default catalog path is made relative to this bundle.",
-  "credential_note": "API keys and environment files excluded. Request payloads and API responses retained for reproducibility; authorization headers were never serialized."
+  "credential_note": "API keys and environment files excluded. Request payloads and API responses retained for reproducibility; authorization headers were never serialized.",
+  "post_run_audit_note": "2026-10-12: independent numerical and plot-array audits added; resume accounting and offline reproduction safeguards corrected. Historical request generation, saved responses, and figure values are unchanged."
 }
