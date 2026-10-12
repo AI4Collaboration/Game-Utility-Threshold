@@ -1,7 +1,16 @@
 import unittest
-from scripts.render_threshold_displacement import cell_values, crossing_bracket, displacement, complete_game_records
+from scripts.render_threshold_displacement import cell_values, crossing_bracket, displacement, complete_game_records, cooperation_deviation
 
 class ThresholdDisplacementTests(unittest.TestCase):
+    def test_signed_cooperation_deviation_respects_indifference_ranges(self):
+        self.assertEqual(cooperation_deviation(.75,.25,.25),50)
+        self.assertEqual(cooperation_deviation(.25,.75,.75),-50)
+        self.assertEqual(cooperation_deviation(.5,.25,.75),0)
+        self.assertEqual(cooperation_deviation(1,.25,.75),25)
+        self.assertEqual(cooperation_deviation(0,.25,.75),-25)
+        self.assertEqual(cooperation_deviation(1,0,1),0)
+        self.assertIsNone(cooperation_deviation(None,None,None))
+
     def test_complete_game_cohort_excludes_valid_partner_of_invalid_decision(self):
         def record(role,valid=True,q=.5):
             return {'job_id':role,'model_key':'glm','role':role,

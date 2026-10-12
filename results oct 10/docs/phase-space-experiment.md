@@ -226,4 +226,16 @@ This is a comparison conditional on reported beliefs, which vary with payoffs,
 not a unique equilibrium prediction. No additional API calls or binary search
 were performed. CSV exports retain both crossing brackets and source cell IDs.
 
-The publication figure places observed (black) and theoretical (pink) T-crossing brackets on the original S–T cooperation heatmap. It uses exactly Figure 1’s complete-game cohort (337/338/338/337 games by GLM/Qwen/Astra/Fable), excluding the two individually valid decisions whose partners were invalid. All included decisions have usable beliefs. Brackets are slightly offset horizontally only for visibility. The renderer also saves the detailed displacement diagram for both sweep directions; the curated gallery retains four figures.
+The boundary-map output places observed (black) and theoretical (pink) T-crossing brackets on the original S–T cooperation heatmap. It uses exactly Figure 1’s complete-game cohort (337/338/338/337 games by GLM/Qwen/Astra/Fable), excluding the two individually valid decisions whose partners were invalid. All included decisions have usable beliefs. Brackets are slightly offset horizontally only for visibility. The renderer also saves the detailed displacement diagram for both sweep directions; the curated gallery retains four figures.
+
+## Signed cooperation-deviation publication heatmap
+
+The curated second figure is now `27_cooperation_deviation`. For observed C
+frequency p and theoretical admissible interval [a,b], color is
+100*(p - min(max(p,a),b)), in percentage points. Here a is the strict-C fraction
+and b includes indifferent decisions. The CSV also records the full signed
+range [100*(p-b),100*(p-a)]. Positive means excess C, negative means less C.
+Zero is only aggregate compatibility; individual errors can cancel. This map
+shows behavioral deviation around utility thresholds, not a measured shift
+in threshold location. The direct threshold plots remain reproducible and
+their slice data remain in the four-figure publication gallery.

@@ -26,6 +26,16 @@ AXIS=tuple(-1+i/4 for i in range(13))
 TOL=1e-9
 
 
+def cooperation_deviation(observed, theory_min, theory_max):
+    """Signed distance to admissible aggregate C-rate interval, in pp.
+
+    Zero denotes aggregate compatibility only: opposing individual deviations
+    can cancel. Ties do not require an arbitrary theoretical action.
+    """
+    if observed is None:return None
+    return 100*(observed-min(max(observed,theory_min),theory_max))
+
+
 def complete_game_records(records):
     """Match the cooperation heatmap's complete, valid joint-game cohort."""
     latest={r['job_id']:r for r in records}
@@ -71,6 +81,9 @@ def cell_values(records):
                               'observed_C_rate':observed/n if n else None,
                               'theory_C_rate_min':strict_c/n if n else None,
                               'theory_C_rate_max':(n-strict_d)/n if n else None,
+                              'cooperation_deviation_pp':cooperation_deviation(observed/n,strict_c/n,(n-strict_d)/n) if n else None,
+                              'cooperation_deviation_min_pp':100*(observed-(n-strict_d))/n if n else None,
+                              'cooperation_deviation_max_pp':100*(observed-strict_c)/n if n else None,
                               'observed_majority':obs_sign,'theory_majority':theory_sign,
                               'job_ids':[jid for jid,_,_ in rows]})
     return cells
@@ -234,6 +247,34 @@ def render_boundary_map(cells,rows,output):
     plt.close(fig)
 
 
+def render_cooperation_deviation(cells,output):
+    plt.rcParams.update({'font.family':'DejaVu Sans','font.size':11,'svg.fonttype':'none',
+                         'axes.spines.top':False,'axes.spines.right':False,'savefig.facecolor':'white'})
+    fig,axes=plt.subplots(2,2,figsize=(12,11))
+    fig.subplots_adjust(left=.08,right=.85,top=.85,bottom=.16,hspace=.29,wspace=.20)
+    cmap=plt.get_cmap('RdBu_r').copy();cmap.set_bad('#999999')
+    for (model,label),ax in zip(LABELS.items(),axes.flat):
+        chosen=[c for c in cells if c['model_key']==model]
+        grid=np.array([np.nan if c['cooperation_deviation_pp'] is None else c['cooperation_deviation_pp'] for c in chosen]).reshape(13,13)
+        im=ax.imshow(grid,origin='lower',extent=(-1.125,2.125,-1.125,2.125),
+                     cmap=cmap,vmin=-100,vmax=100,interpolation='nearest',aspect='auto')
+        ax.axhline(1,color='#666666',ls='--',lw=.8);ax.axvline(0,color='#666666',ls='--',lw=.8)
+        ax.set_title(f'{label}  ·  {sum(c["n"] for c in chosen)//2} valid games',loc='left',fontsize=12)
+        ax.set_xticks(AXIS[::2]);ax.set_yticks(AXIS[::2]);ax.set_xlabel('Normalized S');ax.set_ylabel('Normalized T')
+    cax=fig.add_axes([.88,.30,.025,.43]);bar=fig.colorbar(im,cax=cax,ticks=[-100,-75,-50,-25,0,25,50,75,100])
+    bar.ax.set_yticklabels(['−100','−75','−50','−25','0','+25','+50','+75','+100'])
+    bar.set_label('Cooperation deviation (percentage points)')
+    fig.suptitle('Where do models cooperate more or less than theory?',x=.08,y=.982,ha='left',fontsize=20)
+    fig.text(.08,.938,'Red: more cooperation   ·   Blue: less cooperation   ·   White: aggregate rate compatible with theory',fontsize=10.5)
+    fig.text(.08,.908,'Theory uses each decision’s reported opponent belief and expected-utility best response.',fontsize=11)
+    fig.text(.08,.04,'Color = signed distance from observed C frequency to the theoretical C-frequency range; ties permit either action.\n'
+                      'White does not imply every decision is a best response: opposing deviations can cancel. Gray: missing data.\n'
+                      'Same 1,350 valid games / 2,700 decisions · at most four decisions per cell · R = 1, P = 0 · dashed: S = 0, T = 1.\n'
+                      'This measures cooperation-rate deviation, not threshold displacement or statistical significance.',fontsize=9.5)
+    for suffix in ('png','svg'):fig.savefig(output/f'27_cooperation_deviation.{suffix}',dpi=190)
+    plt.close(fig)
+
+
 def main():
     p=argparse.ArgumentParser();p.add_argument('--analysis',type=Path,required=True);p.add_argument('--output',type=Path)
     args=p.parse_args();out=args.output or args.analysis;out.mkdir(parents=True,exist_ok=True)
@@ -245,6 +286,7 @@ def main():
     export_csv(out/'threshold_cells.csv',cells);export_csv(out/'threshold_displacements.csv',rows)
     render(rows,out)
     render_boundary_map(cells,rows,out)
+    render_cooperation_deviation(cells,out)
     summary={'benchmark':'Per-decision reported-belief best response; indifference permits either action',
              'valid_matched_decisions':sum(c['n'] for c in cells),'sweep_slices':len(rows),
              'valid_joint_games_by_model':{m:sum(c['n'] for c in cells if c['model_key']==m)//2 for m in LABELS},

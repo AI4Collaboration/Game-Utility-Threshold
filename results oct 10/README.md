@@ -10,13 +10,21 @@ Start with [the four curated publication figures and captions](figures/index.htm
 or [copy-ready captions](figures/CAPTIONS.md). The two lead figures show:
 
 1. Cooperation frequency as normalized S and T change, for all four models.
-2. Observed and theoretical switching brackets overlaid on the same S–T cooperation map, using each decision’s reported opponent belief.
+2. Signed cooperation-rate deviation from each decision’s reported-belief best-response predictions, in percentage points.
 
-“Susceptibility” here means response to payoff incentives. Figure 2 compares
-**sampled T-crossing brackets at each fixed S**, not utility regret. Its black and pink outlines show observed and theoretical ranges on the same heatmap and the same 1,350 valid paired games as Figure 1. CSVs retain both T and S sweeps. It retains
-indifference, one-sided bounds, and unresolved or multiple crossings. These
-intervals are grid-resolution ranges, not confidence intervals or fitted
-population thresholds. We ran grid searches and raw payoff sweeps, not binary search.
+“Susceptibility” here means response to payoff incentives. Figure 2 is a
+**behavioral deviation heatmap**, not a threshold-displacement estimate. Exact
+utility ties permit a range of theoretical cooperation frequencies. Color is
+signed distance to that range; white indicates aggregate compatibility, and
+opposing individual deviations can cancel. Both lead figures use the same
+1,350 valid paired games.
+
+The offline renderer also saves direct threshold comparisons as
+`25_observed_threshold_displacement` (both sweep directions) and
+`26_threshold_boundary_map` (T brackets on the S–T map). Their grid-resolution
+brackets and differences remain in the gallery CSVs. Use those comparisons
+when discussing threshold movement. No fitted population thresholds or binary
+search were performed.
 
 ## Offline reproduction — no key and no API calls
 

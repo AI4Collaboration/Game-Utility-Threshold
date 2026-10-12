@@ -11,7 +11,7 @@ Scientific basis: [Falmagne, The Phase Space of Symmetric 2×2 Games](https://ww
 ## Claims these figures support
 
 - Choices change across the payoff landscape under the specified individual-utility objective.
-- Sampled majority-choice crossings can differ from conditional best-response crossings under reported beliefs.
+- Aggregate cooperation can differ from conditional best-response predictions under reported beliefs.
 - Presentation materially affects observed behavior.
 - Theoretical indifference and dominance thresholds can be calculated exactly.
 
@@ -32,15 +32,15 @@ Each panel shows one model in isolated, simultaneous self-play. We normalize pay
 
 [PNG](01_cooperation_susceptibility.png) · [Editable SVG](01_cooperation_susceptibility.svg)
 
-## Main figure 2: observed versus theoretical switching boundaries
+## Main figure 2: signed cooperation deviation
 
-**Switching thresholds on the S–T cooperation map**
+**Cooperation above or below reported-belief best-response predictions**
 
-Each panel uses exactly the same complete valid games as Figure 1: GLM 337, Qwen 338, Astra 338, Fable 337 (1,350 games and 2,700 decisions). Color remains observed C-choice frequency on the 13×13 normalized S–T grid. At each held-fixed S, black outlined vertical bands bracket the observed C-majority to D-majority crossing as T increases; pink bands bracket the corresponding theoretical crossing. Paired outlines are slightly offset horizontally for visibility but represent the same S. Vertical separation measures displacement in normalized T units; overlapping bands leave a difference unresolved at this resolution. Theory classifies each decision using its own reported opponent cooperation probability q and Δ=q(1−T)+(1−q)S. Positive Δ favors C, negative Δ favors D, and zero permits either. The theoretical C frequency is therefore an admissible range at ties. Beliefs vary across cells: this is a conditional best-response comparison, not a unique Nash-equilibrium prediction. Brackets span consecutive decisive samples, including intervening ties; no continuous boundary or midpoint threshold is fitted. Arrows mark one-sided limits conditional on a single-switch continuation, × multiple/reversed crossings, and ○ no identifiable crossing. The bands are descriptive grid-resolution ranges, not confidence intervals. Both T and S sweep brackets and their displacement ranges are provided in the CSV. Across those 104 slices, 48 comparisons are two-sided, 16 one-sided, 13 multiple/reversed, and 27 unresolved; these are derived slice counts, not counts of independent experiments. No new API calls or binary search were used.
+The same 1,350 complete valid games as Figure 1 are shown: GLM 337, Qwen 338, Astra 338, Fable 337 (2,700 decisions). At each normalized S–T cell, theory uses each decision’s reported opponent cooperation belief q and the own-payoff margin Δ=q(1−T)+(1−q)S. Positive Δ favors C, negative Δ favors D, and indifference permits either action. Thus the theoretical aggregate C-rate lies between the fraction strictly preferring C and the fraction not strictly preferring D. Color is 100 times the observed C-rate minus the nearest point in this permitted range: red means excess cooperation, blue means less cooperation, white means aggregate compatibility. For example, +50 means 50 percentage points more cooperation than the upper theoretical bound. White does not establish individual best-response consistency because opposing deviations can cancel. The full signed difference range is exported in threshold_cells.csv. This is a descriptive cooperation-rate deviation map conditional on reported beliefs, not a unique equilibrium prediction, payoff regret, a threshold displacement estimate, or a significance test. It illustrates behavior around utility thresholds but cannot by itself establish how far a threshold moved. Each cell contains at most four decisions; the dashed S=0 and T=1 lines mark strategic regime boundaries. The separate threshold renderer and threshold_displacements.csv retain direct crossing-bracket comparisons for both sweep directions. No new API calls were made.
 
-![Switching thresholds on the S–T cooperation map](02_threshold_boundary_map.png)
+![Cooperation above or below reported-belief best-response predictions](02_cooperation_deviation.png)
 
-[PNG](02_threshold_boundary_map.png) · [Editable SVG](02_threshold_boundary_map.svg)
+[PNG](02_cooperation_deviation.png) · [Editable SVG](02_cooperation_deviation.svg)
 
 ## Figure 3: theoretical context
 
