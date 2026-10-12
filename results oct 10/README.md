@@ -16,8 +16,6 @@ or [copy-ready captions](figures/CAPTIONS.md). The two lead figures show:
 measures utility loss, **not a measured displacement of a behavioral threshold**.
 We ran grid searches and raw payoff sweeps, not binary search.
 
-[Independent code/result audit and corrections](AUDIT.md): all saved records and the four publication figures were checked with a separate numerical oracle.
-
 ## Offline reproduction — no key and no API calls
 
 Use Python 3.12 (the original run used Python 3.12.12):
@@ -49,8 +47,6 @@ unavailable on your platform. Matplotlib figures are saved as PNG and editable S
 - `scripts/report_phase_space.py`: coverage, model identity, parsing, and cost audit.
 - `scripts/render_lesswrong_figures.py`: curated figures and publication captions.
 - `reproduce.py`: offline reproduction orchestration.
-- `scripts/audit_experiment.py`: independent prompt, scoring, coverage, and cost audit.
-- `scripts/audit_plot_data.py`: checks the actual plot arrays against matrix-derived values.
 - `tests/`: budget/resume, parsing, analytic thresholds, invariance, and heatmap checks.
 - `data/`: compressed raw records and summaries; manifests, catalog snapshot,
   costs, and derived data. Compressed JSONL retains the original API responses.
@@ -101,8 +97,7 @@ No new paid experiments were made when preparing this publication folder.
 The original engine came from repository commit
 `b4a2e54b6aa34973d2849ff92e38502b4b0e6869`. This folder snapshots that engine plus
 the code developed for the experiment. The runner's default catalog path was
-made portable; resume-accounting safeguards were subsequently added during audit.
-Its request payload and sampling logic are unchanged. The
+made portable; its request payload and sampling logic are unchanged. The
 publication folder is added to the newer repository without replacing its
 root implementation. See the repository LICENSE for source licensing.
 

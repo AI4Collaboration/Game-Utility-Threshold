@@ -1,9 +1,0 @@
-{
-  "status": "passed",
-  "publication_figures_checked": 4,
-  "empirical_heatmap_values_checked": 1352,
-  "presentation_bar_values_checked": 16,
-  "analytic_nonboundary_cells_checked": 32400,
-  "coordinate_centers_and_shared_color_scales": "passed",
-  "additional_paid_calls": 0
-}
