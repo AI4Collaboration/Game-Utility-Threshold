@@ -23,6 +23,7 @@ def main():
     commands=[['run_phase_space.py','summarize'],['scripts/render_phase_space.py'],
               ['scripts/compare_phase_space_theory.py'],
               ['scripts/render_threshold_displacement.py','--analysis',str(out)],
+              ['scripts/render_pd_regime_composition.py'],
               ['scripts/report_phase_space.py']]
     for cmd in commands:
         subprocess.run([sys.executable,*cmd,'--output',str(out)],cwd=ROOT,check=True)

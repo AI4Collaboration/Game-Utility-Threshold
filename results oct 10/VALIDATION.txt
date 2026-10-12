@@ -1,6 +1,6 @@
 Validation updated 2026-10-12
 
-26 snapshot unit tests passed (unittest discover -s tests), including nine threshold-analysis tests.
+29 snapshot unit tests passed (unittest discover -s tests), including nine threshold-analysis tests.
 Full offline reproduce.py completed with zero additional paid calls.
 Replayed 10,096 attempts, 5,048 games, 10,066 valid actions, 5,021 valid joint outcomes.
 Coverage complete; no duplicate/unexpected IDs, parse replay errors, or model identity mismatches.
@@ -22,6 +22,8 @@ No binary search or new experiment calls were made.
 Source/data/figures scanned for OpenRouter and GitHub token patterns, including decompressed records: no matches.
 No environment files included. Every archived file is below GitHub's 100 MB limit.
 
-The larger original repository suite was previously reported as 183 tests, with one Lean parity skip; the isolated snapshot validation above covers its 26 experiment tests.
+The larger original repository suite was previously reported as 183 tests, with one Lean parity skip; the isolated snapshot validation above covers its 29 experiment tests.
 
 Signed cooperation-deviation colors verified against per-cell observed and admissible theoretical frequencies; utility ties are not forced to either action.
+
+Standalone PD regime composition: 16 strict-PD matrices from 128 valid source games, 5 exact open intervals, 4 event locations, 4 simultaneous-crossing baselines. Three tests verify the grid, route classifications, exact ties, exhaustive partitions, and constancy within intervals. PNG visually inspected.

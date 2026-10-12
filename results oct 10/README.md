@@ -28,6 +28,16 @@ search were performed.
 
 ## Offline reproduction — no key and no API calls
 
+The standalone PD best-response composition figure can also be generated with
+`python scripts/render_pd_regime_composition.py --output reproduced/pd-composition`.
+It classifies the 16 distinct strict-PD payoff matrices from the actual own-payoff
+experiment (128 valid source games across four models), keeping R=1 and P=0,
+under a hypothetical uniform defection penalty. PNG, SVG, PDF, exact interval
+counts, tie-event counts, baseline payoffs, and a caption are exported. This is
+an analytic intervention on tested starting matrices, not measured LLM penalty responses. The four-figure
+publication gallery is unchanged. The full reproduction command also creates
+this standalone figure in its output directory.
+
 Use Python 3.12 (the original run used Python 3.12.12):
 
 ```sh
