@@ -21,7 +21,9 @@ def main():
         else:
             shutil.copy2(source,out/source.name)
     commands=[['run_phase_space.py','summarize'],['scripts/render_phase_space.py'],
-              ['scripts/compare_phase_space_theory.py'],['scripts/report_phase_space.py']]
+              ['scripts/compare_phase_space_theory.py'],
+              ['scripts/render_threshold_displacement.py','--analysis',str(out)],
+              ['scripts/report_phase_space.py']]
     for cmd in commands:
         subprocess.run([sys.executable,*cmd,'--output',str(out)],cwd=ROOT,check=True)
     subprocess.run([sys.executable,'scripts/render_lesswrong_figures.py','--analysis',str(out),

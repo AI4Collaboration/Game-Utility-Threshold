@@ -199,3 +199,29 @@ mean expected payoff loss under that belief, and mean maximum unilateral
 realized regret per game. All gaps use R−P units. Indifference accepts either
 action, missing outcomes are excluded, and reduced denominators are marked.
 `deviation_heatmap_cells.csv` preserves cell counts and source request IDs.
+
+
+## Publication threshold-displacement figure
+
+`render_threshold_displacement.py` adds an offline analysis of the own-payoff grid.
+It compares observed C-majority crossings with majority crossings in the
+best-response choices implied by each decision's reported opponent belief.
+The same valid action/belief samples contribute to both curves. At exact
+indifference either action is admissible; no forced tie-breaking is used.
+
+For every fixed S, scan T upward; for every fixed T, scan S upward. A single
+expected-direction majority crossing is bracketed by adjacent decisive samples,
+allowing intervening ties. Subtract theoretical bracket [Lt,Ut] from observed
+bracket [Lo,Uo] to obtain displacement range [Lo-Ut,Uo-Lt]. No point estimate
+or interpolation is used. Multiple/reversed crossings are marked, and absence
+of a bracket can produce a conditional one-sided bound or an unresolved result.
+A one-sided bound assumes a single-switch continuation; a threshold need not
+exist beyond the measured range.
+
+Across 104 slices there are 47 two-sided comparisons, 16 one-sided bounds,
+14 multiple/reversed cases and 27 unresolved cases. The 2,702 usable decisions
+are reused between perpendicular slices; slices are not independent. The bars
+are descriptive grid-resolution ranges, not statistical confidence intervals.
+This is a comparison conditional on reported beliefs, which vary with payoffs,
+not a unique equilibrium prediction. No additional API calls or binary search
+were performed. CSV exports retain both crossing brackets and source cell IDs.

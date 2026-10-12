@@ -18,18 +18,28 @@ FIGURES = [('01_cooperation_susceptibility',
   'presentation was an exploratory follow-up. Here “susceptibility” means observed response to payoff '
   'incentives, not a safety or manipulation score. Most cells are not strict Prisoner’s Dilemma; strict PD '
   'occupies S<0, T>1.'),
- ('02_expected_utility_deviation',
-  '23_expected_regret_heatmap',
-  'Main figure 2: deviation in utility units',
-  'Expected utility lost relative to the stated-belief best response',
-  'At each normalized S–T point, color measures mean expected payoff loss from the chosen action relative to '
-  'the best response to that decision’s reported opponent-cooperation probability q. The cooperation '
-  'advantage is Δ(q)=q(R−T)+(1−q)(S−P); loss is max(0,−Δ) after choosing C or max(0,Δ) after choosing D, '
-  'divided by R−P. White indicates zero loss and deeper red larger loss, on a common scale across models. '
-  'The own-payoff grid provides at most four usable decisions per cell. Either action is accepted at '
-  'indifference; a dot marks a reduced count. This is a test of action–belief consistency. Reported beliefs '
-  'may be inaccurate or post-hoc rationalizations. It is not a displacement of an empirical switching '
-  'threshold in S–T units.'),
+ ('02_observed_threshold_displacement',
+  '25_observed_threshold_displacement',
+  'Main figure 2: observed minus theoretical switching thresholds',
+  'Threshold displacement under each model’s reported opponent beliefs',
+  'Each row is one model. Left: vary normalized T at fixed S, looking for a C-majority to D-majority switch. '
+  'Right: vary S at fixed T, looking for a D-majority to C-majority switch. The vertical axis is observed '
+  'threshold minus theoretical threshold, in normalized payoff units. At each payoff cell we use the same '
+  'valid decisions and reported beliefs for both curves. Observed C frequency comes from the actual actions. '
+  'The theoretical curve is the fraction of best-response C choices implied by each decision’s own reported '
+  'q, using Δ=q(1−T)+(1−q)S. Exact utility ties permit either action, so theory can give a range of C '
+  'frequencies. Beliefs can change from cell to cell; this is a conditional best-response comparison, not a '
+  'unique Nash-equilibrium prediction. For each curve, a single crossing is bracketed by the last decisive '
+  'majority on one side and the first decisive majority on the other. Intermediate observed 50% frequencies '
+  'and theoretically ambiguous majorities widen the bracket. If observed and theoretical brackets are '
+  '[Lo,Uo] and [Lt,Ut], the displacement bar is [Lo−Ut,Uo−Lt]. No midpoint is presented as an estimated '
+  'threshold. Gray ranges include zero; orange ranges exclude zero at this grid resolution. This is not a '
+  'statistical significance test. Arrows show one-sided displacement bounds conditional on a single-switch '
+  'continuation. A × above a panel marks multiple or reversed crossings; ○ marks an unresolved comparison. '
+  'There are 47 two-sided comparisons, 16 one-sided bounds, 14 multiple/reversed cases, and 27 unresolved '
+  'cases among 104 slices. Each cell has at most four matched decisions (2,702 in total); slices reuse cells '
+  'and are not independent. The 0.25 grid gives descriptive crossing brackets, not confidence intervals or '
+  'fitted population thresholds. No binary search or additional model calls were used.'),
  ('03_analytic_game_map',
   '01_analytic_phase_space',
   'Figure 3: theoretical context',
@@ -75,11 +85,11 @@ def build(analysis: Path, output: Path):
         'The article gives an analytic classification; the LLM experiment is our extension.\n',
         '## Claims these figures support\n\n'
         '- Choices change across the payoff landscape under the specified individual-utility objective.\n'
-        '- Some choices conflict with the models’ reported opponent beliefs; magnitude and frequency are separate quantities.\n'
+        '- Sampled majority-choice crossings can differ from conditional best-response crossings under reported beliefs.\n'
         '- Presentation materially affects observed behavior.\n'
         '- Theoretical indifference and dominance thresholds can be calculated exactly.\n\n'
         '## Claims these figures do not establish\n\n'
-        '- A precise empirical threshold shift, a universal ranking, or a general AI-safety score.\n'
+        '- Precise population switching thresholds, statistically significant threshold shifts, a universal ranking, or a general AI-safety score.\n'
         '- That higher C frequency always means better reasoning or higher joint welfare.\n'
         '- That disagreement with one mixed-equilibrium branch is irrational.\n'
         '- That reported beliefs are truthful or faithfully describe the reasoning process.\n']
@@ -92,6 +102,10 @@ def build(analysis: Path, output: Path):
         body.append(f'<section><h2>{html.escape(role)}</h2><h3>{html.escape(title)}</h3>'
                     f'<p>{html.escape(caption)}</p><p><a href="{name}.png">PNG</a> · <a href="{name}.svg">SVG</a></p>'
                     f'<img loading="lazy" src="{name}.png" alt="{html.escape(title)}"></section>')
+    for filename in ('threshold_displacements.csv', 'threshold_cells.csv', 'threshold_displacement_summary.json'):
+        shutil.copy2(analysis/filename, output/filename)
+    md.append('## Threshold data\n\n[All 104 sweep slices and crossing brackets](threshold_displacements.csv) · [Cell counts, theoretical ranges, and source IDs](threshold_cells.csv)\n')
+    body.append('<p><a href="threshold_displacements.csv">Threshold brackets and differences (CSV)</a> · <a href="threshold_cells.csv">Source cell values (CSV)</a></p>')
     (output/'CAPTIONS.md').write_text('\n'.join(md))
     css='body{max-width:1100px;margin:45px auto;padding:0 24px;font:16px system-ui;line-height:1.65;color:#182334}img{width:100%;height:auto}section{margin:60px 0}h2{border-top:1px solid #ccc;padding-top:25px}a{color:#2563a5}'
     (output/'index.html').write_text('<!doctype html><html><head><meta charset="utf-8"><title>LessWrong figure pack</title><style>'+css+'</style></head><body>'+''.join(body)+'</body></html>')

@@ -1,16 +1,23 @@
-Validation performed 2026-10-12
+Validation updated 2026-10-12
 
-17 snapshot unit tests passed (unittest discover -s tests).
-Offline reproduce.py completed with zero additional paid calls.
+24 snapshot unit tests passed (unittest discover -s tests), including seven threshold-displacement tests.
+Full offline reproduce.py completed with zero additional paid calls.
 Replayed 10,096 attempts, 5,048 games, 10,066 valid actions, 5,021 valid joint outcomes.
 Coverage complete; no duplicate/unexpected IDs, parse replay errors, or model identity mismatches.
 Reported and accounted costs reconcile and remain within the $50 budget.
-Raw attempts, ledger, and heatmap cell CSV are byte-identical to the saved originals.
-Coverage audit and theory summary match original JSON values.
-The original seven curated PNGs were byte-identical to the fresh offline rebuild.
-Publication selection subsequently reduced to four figures; retained PNG/SVG files match their source figures.
-Lead cooperation and expected-regret figures visually inspected.
-Source/data/figures scanned for OpenRouter key patterns and exact locally stored credentials, including decompressed records: no matches.
+Archived raw attempts and ledger are byte-identical to the saved originals and offline rebuild.
+
+Publication gallery contains exactly four figures, each as PNG and SVG.
+All four publication PNGs match the fresh offline rebuild byte for byte.
+Threshold CSVs and summary match the fresh offline rebuild byte for byte.
+Threshold plot visually inspected: four models and both sweep directions.
+2,702 matched action/belief decisions yield 104 descriptive slice comparisons:
+47 two-sided brackets, 16 conditional one-sided bounds, 14 multiple/reversed crossings, 27 unresolved.
+Tests cover utility ties, per-decision beliefs, crossing direction, missing values, censoring, and interval subtraction.
+The bars describe sampled crossing brackets, not statistical confidence intervals or fitted population thresholds.
+No binary search or new experiment calls were made.
+
+Source/data/figures scanned for OpenRouter and GitHub token patterns, including decompressed records: no matches.
 No environment files included. Every archived file is below GitHub's 100 MB limit.
 
-The larger original repository suite was previously reported as 183 tests, with one Lean parity skip; the isolated snapshot validation above covers its 17 experiment tests.
+The larger original repository suite was previously reported as 183 tests, with one Lean parity skip; the isolated snapshot validation above covers its 24 experiment tests.

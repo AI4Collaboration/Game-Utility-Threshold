@@ -1,0 +1,12 @@
+{
+  "benchmark": "Per-decision reported-belief best response; indifference permits either action",
+  "valid_matched_decisions": 2702,
+  "sweep_slices": 104,
+  "displacement_status_counts": {
+    "multiple_or_reversed": 14,
+    "bracketed": 47,
+    "unresolved": 27,
+    "one_sided": 16
+  },
+  "additional_paid_calls": 0
+}

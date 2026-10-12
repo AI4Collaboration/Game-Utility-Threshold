@@ -10,11 +10,13 @@ Start with [the four curated publication figures and captions](figures/index.htm
 or [copy-ready captions](figures/CAPTIONS.md). The two lead figures show:
 
 1. Cooperation frequency as normalized S and T change, for all four models.
-2. Expected utility lost relative to each decision's stated-belief best response.
+2. Observed minus theoretical majority-switching thresholds along S and T, using each decision’s reported opponent belief.
 
-“Susceptibility” here means response to payoff incentives. The second figure
-measures utility loss, **not a measured displacement of a behavioral threshold**.
-We ran grid searches and raw payoff sweeps, not binary search.
+“Susceptibility” here means response to payoff incentives. Figure 2 compares
+**sampled crossing brackets in payoff units**, not utility regret. It retains
+indifference, one-sided bounds, and unresolved or multiple crossings. These
+intervals are grid-resolution ranges, not confidence intervals or fitted
+population thresholds. We ran grid searches and raw payoff sweeps, not binary search.
 
 ## Offline reproduction — no key and no API calls
 
@@ -29,7 +31,7 @@ python3 -m venv .venv
 ```
 
 Open `reproduced/post-figures/index.html` for the publication set and
-`reproduced/index.html` for the full 24-figure gallery and experiment report.
+`reproduced/index.html` for the full analysis gallery and experiment report.
 The detailed theory report is `reproduced/theory_comparison.html`.
 `requirements.lock.txt` records the installed environment; `requirements.txt`
 lists direct dependencies for a compatible environment if exact pins are
@@ -45,6 +47,7 @@ unavailable on your platform. Matplotlib figures are saved as PNG and editable S
 - `scripts/compare_phase_space_theory.py`: decision/game audits, threshold
   comparisons, and S–T deviation maps.
 - `scripts/report_phase_space.py`: coverage, model identity, parsing, and cost audit.
+- `scripts/render_threshold_displacement.py`: reported-belief threshold brackets and displacement diagram.
 - `scripts/render_lesswrong_figures.py`: curated figures and publication captions.
 - `reproduce.py`: offline reproduction orchestration.
 - `tests/`: budget/resume, parsing, analytic thresholds, invariance, and heatmap checks.

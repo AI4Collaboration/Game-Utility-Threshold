@@ -11,13 +11,13 @@ Scientific basis: [Falmagne, The Phase Space of Symmetric 2×2 Games](https://ww
 ## Claims these figures support
 
 - Choices change across the payoff landscape under the specified individual-utility objective.
-- Some choices conflict with the models’ reported opponent beliefs; magnitude and frequency are separate quantities.
+- Sampled majority-choice crossings can differ from conditional best-response crossings under reported beliefs.
 - Presentation materially affects observed behavior.
 - Theoretical indifference and dominance thresholds can be calculated exactly.
 
 ## Claims these figures do not establish
 
-- A precise empirical threshold shift, a universal ranking, or a general AI-safety score.
+- Precise population switching thresholds, statistically significant threshold shifts, a universal ranking, or a general AI-safety score.
 - That higher C frequency always means better reasoning or higher joint welfare.
 - That disagreement with one mixed-equilibrium branch is irrational.
 - That reported beliefs are truthful or faithfully describe the reasoning process.
@@ -32,15 +32,15 @@ Each panel shows one model in isolated, simultaneous self-play. We normalize pay
 
 [PNG](01_cooperation_susceptibility.png) · [Editable SVG](01_cooperation_susceptibility.svg)
 
-## Main figure 2: deviation in utility units
+## Main figure 2: observed minus theoretical switching thresholds
 
-**Expected utility lost relative to the stated-belief best response**
+**Threshold displacement under each model’s reported opponent beliefs**
 
-At each normalized S–T point, color measures mean expected payoff loss from the chosen action relative to the best response to that decision’s reported opponent-cooperation probability q. The cooperation advantage is Δ(q)=q(R−T)+(1−q)(S−P); loss is max(0,−Δ) after choosing C or max(0,Δ) after choosing D, divided by R−P. White indicates zero loss and deeper red larger loss, on a common scale across models. The own-payoff grid provides at most four usable decisions per cell. Either action is accepted at indifference; a dot marks a reduced count. This is a test of action–belief consistency. Reported beliefs may be inaccurate or post-hoc rationalizations. It is not a displacement of an empirical switching threshold in S–T units.
+Each row is one model. Left: vary normalized T at fixed S, looking for a C-majority to D-majority switch. Right: vary S at fixed T, looking for a D-majority to C-majority switch. The vertical axis is observed threshold minus theoretical threshold, in normalized payoff units. At each payoff cell we use the same valid decisions and reported beliefs for both curves. Observed C frequency comes from the actual actions. The theoretical curve is the fraction of best-response C choices implied by each decision’s own reported q, using Δ=q(1−T)+(1−q)S. Exact utility ties permit either action, so theory can give a range of C frequencies. Beliefs can change from cell to cell; this is a conditional best-response comparison, not a unique Nash-equilibrium prediction. For each curve, a single crossing is bracketed by the last decisive majority on one side and the first decisive majority on the other. Intermediate observed 50% frequencies and theoretically ambiguous majorities widen the bracket. If observed and theoretical brackets are [Lo,Uo] and [Lt,Ut], the displacement bar is [Lo−Ut,Uo−Lt]. No midpoint is presented as an estimated threshold. Gray ranges include zero; orange ranges exclude zero at this grid resolution. This is not a statistical significance test. Arrows show one-sided displacement bounds conditional on a single-switch continuation. A × above a panel marks multiple or reversed crossings; ○ marks an unresolved comparison. There are 47 two-sided comparisons, 16 one-sided bounds, 14 multiple/reversed cases, and 27 unresolved cases among 104 slices. Each cell has at most four matched decisions (2,702 in total); slices reuse cells and are not independent. The 0.25 grid gives descriptive crossing brackets, not confidence intervals or fitted population thresholds. No binary search or additional model calls were used.
 
-![Expected utility lost relative to the stated-belief best response](02_expected_utility_deviation.png)
+![Threshold displacement under each model’s reported opponent beliefs](02_observed_threshold_displacement.png)
 
-[PNG](02_expected_utility_deviation.png) · [Editable SVG](02_expected_utility_deviation.svg)
+[PNG](02_observed_threshold_displacement.png) · [Editable SVG](02_observed_threshold_displacement.svg)
 
 ## Figure 3: theoretical context
 
@@ -61,3 +61,7 @@ The targeted exploratory control compares the same strict-PD payoff cells and fi
 ![Matrix presentation substantially changes apparent cooperation](04_presentation_control.png)
 
 [PNG](04_presentation_control.png) · [Editable SVG](04_presentation_control.svg)
+
+## Threshold data
+
+[All 104 sweep slices and crossing brackets](threshold_displacements.csv) · [Cell counts, theoretical ranges, and source IDs](threshold_cells.csv)
