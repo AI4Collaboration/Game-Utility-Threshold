@@ -18,11 +18,32 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
+from matplotlib.patches import Rectangle, Patch
 import numpy as np
 
 LABELS={'glm':'GLM-5.3','qwen':'Qwen3.8 2.4T A95B','astra':'GPT-6 Astra','fable':'Claude Fable 5.1'}
 AXIS=tuple(-1+i/4 for i in range(13))
 TOL=1e-9
+
+
+def complete_game_records(records):
+    """Match the cooperation heatmap's complete, valid joint-game cohort."""
+    latest={r['job_id']:r for r in records}
+    groups=defaultdict(dict)
+    for r in latest.values():
+        c=r['case']
+        if c['stage']=='perspective_grid':
+            groups[r['model_key'],c['replicate'],c['case_id']][r['role']]=r
+    selected=[]
+    for roles in groups.values():
+        if set(roles)!= {'row','column'}:continue
+        if not all(r['decision'].get('valid') and r['decision'].get('action') in ('C','D') for r in roles.values()):continue
+        for r in roles.values():
+            q=r['decision'].get('belief_opponent_C')
+            if type(q) not in (float,int) or not math.isfinite(q) or not 0<=q<=1:
+                raise ValueError('A valid paired game lacks a usable belief; cannot match heatmap cohort exactly')
+        selected.extend(roles.values())
+    return selected
 
 
 def cell_values(records):
@@ -108,7 +129,7 @@ def build_rows(cells):
 
 def export_csv(path,rows):
     with path.open('w',newline='') as f:
-        writer=csv.DictWriter(f,fieldnames=list(rows[0]));writer.writeheader()
+        writer=csv.DictWriter(f,fieldnames=list(rows[0]),lineterminator='\n');writer.writeheader()
         writer.writerows({k:json.dumps(v) if isinstance(v,(list,dict)) else v for k,v in r.items()} for r in rows)
 
 
@@ -159,17 +180,74 @@ def render(rows,output):
     plt.close(fig)
 
 
+def render_boundary_map(cells,rows,output):
+    """Place sampled T-switch brackets on the original S–T cooperation map.
+
+    Horizontal dodge separates overlapping bracket outlines only; it does not
+    change their actual held-fixed S. No interpolated boundary is drawn.
+    """
+    plt.rcParams.update({'font.family':'DejaVu Sans','font.size':11,'svg.fonttype':'none',
+                         'axes.spines.top':False,'axes.spines.right':False,'savefig.facecolor':'white'})
+    fig,axes=plt.subplots(2,2,figsize=(13,12))
+    fig.subplots_adjust(left=.08,right=.87,top=.85,bottom=.20,hspace=.31,wspace=.20)
+    colors={'observed':'#101820','theory':'#E040A0'}
+    for (model,label),ax in zip(LABELS.items(),axes.flat):
+        chosen=[c for c in cells if c['model_key']==model]
+        grid=np.array([c['observed_C_rate'] for c in chosen]).reshape(13,13)
+        im=ax.imshow(grid,origin='lower',extent=(-1.125,2.125,-1.125,2.125),
+                     cmap='viridis',vmin=0,vmax=1,interpolation='nearest',aspect='auto')
+        ax.axhline(1,color='white',alpha=.55,lw=.8);ax.axvline(0,color='white',alpha=.55,lw=.8)
+        slices=[r for r in rows if r['model_key']==model and r['varied_payoff']=='T']
+        for r in slices:
+            for source,offset in [('observed',-.037),('theory',.037)]:
+                x=r['fixed_value']+offset;color=colors[source];status=r[source+'_status']
+                lo=r[source+'_low'];hi=r[source+'_high']
+                if status=='bracketed':
+                    # A narrow outlined band displays the entire sampled bracket.
+                    ax.add_patch(Rectangle((x-.027,lo),.054,hi-lo,facecolor='white',
+                                           edgecolor=color,alpha=.95,lw=2,zorder=4))
+                elif status in ('lower_bound_only','upper_bound_only'):
+                    low=status=='lower_bound_only';bound=lo if low else hi
+                    ax.plot([x-.025,x+.025],[bound,bound],color=color,lw=2,zorder=5)
+                    ax.annotate('',xy=(x,bound+(.14 if low else -.14)),xytext=(x,bound),
+                                arrowprops={'arrowstyle':'->','color':color,'lw':1.7},zorder=5)
+                else:
+                    ax.text(x,1.013,'×' if status=='multiple_or_reversed' else '○',
+                            color=color,transform=ax.get_xaxis_transform(),ha='center',fontsize=10)
+        n=sum(c['n'] for c in chosen)//2
+        ax.set_title(f'{label}  ·  {n} valid games',loc='left',fontsize=13,pad=23)
+        ax.set_xlim(-1.125,2.125);ax.set_ylim(-1.2,2.2)
+        ax.set_xticks(AXIS[::2]);ax.set_yticks(AXIS[::2])
+        ax.set_xlabel('Normalized S');ax.set_ylabel('Normalized T')
+    cax=fig.add_axes([.9,.30,.022,.43]);fig.colorbar(im,cax=cax,label='Observed C-choice fraction')
+    fig.suptitle('Observed vs theoretical switching boundaries',x=.08,y=.985,ha='left',fontsize=22)
+    fig.text(.08,.943,'Same games and cooperation heatmap; compare T-switch brackets at each fixed S.',fontsize=12)
+    fig.text(.08,.914,'Theory: best responses to each decision’s reported opponent belief.  R = 1, P = 0.',fontsize=11)
+    fig.legend(handles=[Patch(facecolor='white',edgecolor=colors['observed'],lw=2,label='Observed switch bracket'),
+                        Patch(facecolor='white',edgecolor=colors['theory'],lw=2,label='Theoretical switch bracket')],
+               loc='lower center',bbox_to_anchor=(.48,.125),ncol=2,frameon=False,fontsize=12)
+    fig.text(.08,.038,'Vertical separation shows threshold displacement in normalized T units; overlapping brackets leave agreement unresolved.\n'
+                      'Outlines span sampled C-majority → D-majority crossings, not confidence intervals. Paired outlines are slightly offset for visibility.\n'
+                      'Arrows: conditional one-sided limits. Symbols above panels: × multiple/reversed crossings; ○ no identifiable crossing.\n'
+                      '13 × 13 grid · 2 label blocks · 1,350 valid games / 2,700 decisions · no interpolation or additional API calls.',fontsize=10)
+    for suffix in ('png','svg'):fig.savefig(output/f'26_threshold_boundary_map.{suffix}',dpi=190)
+    plt.close(fig)
+
+
 def main():
     p=argparse.ArgumentParser();p.add_argument('--analysis',type=Path,required=True);p.add_argument('--output',type=Path)
     args=p.parse_args();out=args.output or args.analysis;out.mkdir(parents=True,exist_ok=True)
     raw=args.analysis/'attempts.jsonl'
     data=raw.read_bytes() if raw.exists() else gzip.decompress((args.analysis/'attempts.jsonl.gz').read_bytes())
     records=[json.loads(x) for x in data.splitlines() if x.strip()]
+    records=complete_game_records(records)
     cells=cell_values(records);rows=build_rows(cells)
     export_csv(out/'threshold_cells.csv',cells);export_csv(out/'threshold_displacements.csv',rows)
     render(rows,out)
+    render_boundary_map(cells,rows,out)
     summary={'benchmark':'Per-decision reported-belief best response; indifference permits either action',
              'valid_matched_decisions':sum(c['n'] for c in cells),'sweep_slices':len(rows),
+             'valid_joint_games_by_model':{m:sum(c['n'] for c in cells if c['model_key']==m)//2 for m in LABELS},
              'displacement_status_counts':dict(Counter(r['displacement_status'] for r in rows)),
              'additional_paid_calls':0}
     (out/'threshold_displacement_summary.json').write_text(json.dumps(summary,indent=2)+'\n');print(json.dumps(summary))

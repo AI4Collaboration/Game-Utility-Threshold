@@ -1,10 +1,16 @@
 {
   "benchmark": "Per-decision reported-belief best response; indifference permits either action",
-  "valid_matched_decisions": 2702,
+  "valid_matched_decisions": 2700,
   "sweep_slices": 104,
+  "valid_joint_games_by_model": {
+    "glm": 337,
+    "qwen": 338,
+    "astra": 338,
+    "fable": 337
+  },
   "displacement_status_counts": {
-    "multiple_or_reversed": 14,
-    "bracketed": 47,
+    "multiple_or_reversed": 13,
+    "bracketed": 48,
     "unresolved": 27,
     "one_sided": 16
   },

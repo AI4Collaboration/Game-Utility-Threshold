@@ -1,7 +1,19 @@
 import unittest
-from scripts.render_threshold_displacement import cell_values, crossing_bracket, displacement
+from scripts.render_threshold_displacement import cell_values, crossing_bracket, displacement, complete_game_records
 
 class ThresholdDisplacementTests(unittest.TestCase):
+    def test_complete_game_cohort_excludes_valid_partner_of_invalid_decision(self):
+        def record(role,valid=True,q=.5):
+            return {'job_id':role,'model_key':'glm','role':role,
+                    'case':{'stage':'perspective_grid','replicate':0,'case_id':'x'},
+                    'decision':{'valid':valid,'action':'C' if valid else None,'belief_opponent_C':q}}
+        row=record('row');column=record('column')
+        self.assertEqual(len(complete_game_records([row,column])),2)
+        self.assertEqual(complete_game_records([row]),[])
+        self.assertEqual(complete_game_records([row,record('column',False)]),[])
+        self.assertEqual(complete_game_records([row,column,record('column',False)]),[])
+        with self.assertRaises(ValueError):complete_game_records([row,record('column',q=None)])
+
     def test_crossing_brackets_span_tied_samples_without_point_estimates(self):
         b=crossing_bracket([(0,-1),(.25,0),(.5,0),(.75,1)],True)
         self.assertEqual((b['status'],b['low'],b['high']),('bracketed',0,.75))

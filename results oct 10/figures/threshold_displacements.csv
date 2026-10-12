@@ -4,7 +4,7 @@ glm,T,S,-0.75,bracketed,0.25,0.5,bracketed,0.25,0.75,bracketed,-0.5,0.25,"[[[0.2
 glm,T,S,-0.5,multiple_or_reversed,,,bracketed,-0.25,0.0,multiple_or_reversed,,,"[[[-0.25, -1], [0.0, 1]], [[0.0, 1], [0.25, -1]], [[0.75, -1], [1.0, 1]]]","[[[-0.25, -1], [0.0, 1]]]",4
 glm,T,S,-0.25,multiple_or_reversed,,,bracketed,-0.25,1.0,multiple_or_reversed,,,"[[[-0.25, -1], [0.0, 1]], [[0.0, 1], [0.25, -1]], [[0.25, -1], [0.5, 1]]]","[[[-0.25, -1], [1.0, 1]]]",4
 glm,T,S,0.0,bracketed,1.0,1.25,bracketed,0.75,1.25,bracketed,-0.25,0.5,"[[[1.0, -1], [1.25, 1]]]","[[[0.75, -1], [1.25, 1]]]",4
-glm,T,S,0.25,multiple_or_reversed,,,bracketed,1.0,1.5,multiple_or_reversed,,,"[[[1.0, -1], [1.25, 1]], [[1.25, 1], [1.75, -1]], [[1.75, -1], [2.0, 1]]]","[[[1.0, -1], [1.5, 1]]]",3
+glm,T,S,0.25,bracketed,1.75,2.0,bracketed,1.0,1.5,bracketed,0.25,1.0,"[[[1.75, -1], [2.0, 1]]]","[[[1.0, -1], [1.5, 1]]]",2
 glm,T,S,0.5,bracketed,1.25,1.5,multiple_or_reversed,,,multiple_or_reversed,,,"[[[1.25, -1], [1.5, 1]]]","[[[1.0, -1], [1.25, 1]], [[1.25, 1], [2.0, -1]]]",4
 glm,T,S,0.75,multiple_or_reversed,,,bracketed,1.0,2.0,multiple_or_reversed,,,"[[[1.25, -1], [1.5, 1]], [[1.5, 1], [1.75, -1]], [[1.75, -1], [2.0, 1]]]","[[[1.0, -1], [2.0, 1]]]",4
 glm,T,S,1.0,lower_bound_only,2.0,inf,lower_bound_only,1.75,inf,unresolved,,,[],[],4
@@ -21,7 +21,7 @@ glm,S,T,0.25,upper_bound_only,-inf,-1.0,bracketed,-1.0,-0.75,one_sided,-inf,0.0,
 glm,S,T,0.5,multiple_or_reversed,,,upper_bound_only,-inf,-1.0,multiple_or_reversed,,,"[[[-1.0, 1], [-0.75, -1]], [[-0.25, -1], [0.0, 1]]]",[],4
 glm,S,T,0.75,upper_bound_only,-inf,-1.0,bracketed,-0.75,0.0,one_sided,-inf,-0.25,[],"[[[-0.75, -1], [0.0, 1]]]",4
 glm,S,T,1.0,bracketed,-0.25,0.0,bracketed,-0.25,0.25,bracketed,-0.5,0.25,"[[[-0.25, -1], [0.0, 1]]]","[[[-0.25, -1], [0.25, 1]]]",4
-glm,S,T,1.25,bracketed,0.25,0.5,bracketed,0.5,1.25,bracketed,-1.0,0.0,"[[[0.25, -1], [0.5, 1]]]","[[[0.5, -1], [1.25, 1]]]",3
+glm,S,T,1.25,bracketed,0.0,0.5,bracketed,0.5,1.25,bracketed,-1.25,0.0,"[[[0.0, -1], [0.5, 1]]]","[[[0.5, -1], [1.25, 1]]]",2
 glm,S,T,1.5,bracketed,0.75,1.25,bracketed,0.25,1.25,bracketed,-0.5,1.0,"[[[0.75, -1], [1.25, 1]]]","[[[0.25, -1], [1.25, 1]]]",4
 glm,S,T,1.75,multiple_or_reversed,,,multiple_or_reversed,,,multiple_or_reversed,,,"[[[0.0, -1], [0.25, 1]], [[0.25, 1], [0.5, -1]], [[0.5, -1], [0.75, 1]], [[0.75, 1], [1.5, -1]], [[1.5, -1], [2.0, 1]]]","[[[0.25, -1], [1.0, 1]], [[1.5, 1], [2.0, -1]]]",4
 glm,S,T,2.0,multiple_or_reversed,,,multiple_or_reversed,,,multiple_or_reversed,,,"[[[0.75, -1], [1.0, 1]], [[1.25, 1], [1.5, -1]], [[1.5, -1], [1.75, 1]]]","[[[0.25, -1], [0.5, 1]], [[0.5, 1], [0.75, -1]], [[1.25, -1], [1.75, 1]], [[1.75, 1], [2.0, -1]]]",4
@@ -81,7 +81,7 @@ fable,T,S,-1.0,multiple_or_reversed,,,multiple_or_reversed,,,multiple_or_reverse
 fable,T,S,-0.75,bracketed,0.25,0.5,bracketed,0.25,0.5,bracketed,-0.25,0.25,"[[[0.25, -1], [0.5, 1]]]","[[[0.25, -1], [0.5, 1]]]",4
 fable,T,S,-0.5,bracketed,0.25,0.5,bracketed,0.25,0.5,bracketed,-0.25,0.25,"[[[0.25, -1], [0.5, 1]]]","[[[0.25, -1], [0.5, 1]]]",4
 fable,T,S,-0.25,bracketed,0.75,1.25,bracketed,0.75,1.0,bracketed,-0.25,0.5,"[[[0.75, -1], [1.25, 1]]]","[[[0.75, -1], [1.0, 1]]]",4
-fable,T,S,0.0,bracketed,1.25,1.5,bracketed,0.75,1.25,bracketed,0.0,0.75,"[[[1.25, -1], [1.5, 1]]]","[[[0.75, -1], [1.25, 1]]]",3
+fable,T,S,0.0,bracketed,1.25,1.5,bracketed,0.75,1.25,bracketed,0.0,0.75,"[[[1.25, -1], [1.5, 1]]]","[[[0.75, -1], [1.25, 1]]]",2
 fable,T,S,0.25,bracketed,1.75,2.0,bracketed,1.0,1.25,bracketed,0.5,1.0,"[[[1.75, -1], [2.0, 1]]]","[[[1.0, -1], [1.25, 1]]]",4
 fable,T,S,0.5,bracketed,1.5,2.0,bracketed,1.25,1.75,bracketed,-0.25,0.75,"[[[1.5, -1], [2.0, 1]]]","[[[1.25, -1], [1.75, 1]]]",4
 fable,T,S,0.75,lower_bound_only,2.0,inf,bracketed,1.25,2.0,one_sided,0.0,inf,[],"[[[1.25, -1], [2.0, 1]]]",4
@@ -98,7 +98,7 @@ fable,S,T,0.0,upper_bound_only,-inf,-1.0,upper_bound_only,-inf,-1.0,unresolved,,
 fable,S,T,0.25,upper_bound_only,-inf,-1.0,upper_bound_only,-inf,-1.0,unresolved,,,[],[],4
 fable,S,T,0.5,bracketed,-0.5,-0.25,bracketed,-0.5,-0.25,bracketed,-0.25,0.25,"[[[-0.5, -1], [-0.25, 1]]]","[[[-0.5, -1], [-0.25, 1]]]",4
 fable,S,T,0.75,bracketed,-0.5,-0.25,bracketed,-0.5,-0.25,bracketed,-0.25,0.25,"[[[-0.5, -1], [-0.25, 1]]]","[[[-0.5, -1], [-0.25, 1]]]",4
-fable,S,T,1.0,bracketed,-0.5,0.0,bracketed,-0.25,0.25,bracketed,-0.75,0.25,"[[[-0.5, -1], [0.0, 1]]]","[[[-0.25, -1], [0.25, 1]]]",3
+fable,S,T,1.0,bracketed,-0.5,0.0,bracketed,-0.25,0.25,bracketed,-0.75,0.25,"[[[-0.5, -1], [0.0, 1]]]","[[[-0.25, -1], [0.25, 1]]]",2
 fable,S,T,1.25,bracketed,-0.25,0.0,bracketed,0.25,0.5,bracketed,-0.75,-0.25,"[[[-0.25, -1], [0.0, 1]]]","[[[0.25, -1], [0.5, 1]]]",4
 fable,S,T,1.5,bracketed,0.0,0.25,multiple_or_reversed,,,multiple_or_reversed,,,"[[[0.0, -1], [0.25, 1]]]","[[[0.25, -1], [1.0, 1]], [[1.5, 1], [1.75, -1]]]",4
 fable,S,T,1.75,bracketed,0.0,0.25,bracketed,0.5,1.25,bracketed,-1.25,-0.25,"[[[0.0, -1], [0.25, 1]]]","[[[0.5, -1], [1.25, 1]]]",4

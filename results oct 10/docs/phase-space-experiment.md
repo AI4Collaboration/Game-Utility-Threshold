@@ -218,10 +218,12 @@ of a bracket can produce a conditional one-sided bound or an unresolved result.
 A one-sided bound assumes a single-switch continuation; a threshold need not
 exist beyond the measured range.
 
-Across 104 slices there are 47 two-sided comparisons, 16 one-sided bounds,
-14 multiple/reversed cases and 27 unresolved cases. The 2,702 usable decisions
+Across 104 slices there are 48 two-sided comparisons, 16 one-sided bounds,
+13 multiple/reversed cases and 27 unresolved cases. The 2,700 usable decisions from 1,350 fully valid paired games
 are reused between perpendicular slices; slices are not independent. The bars
 are descriptive grid-resolution ranges, not statistical confidence intervals.
 This is a comparison conditional on reported beliefs, which vary with payoffs,
 not a unique equilibrium prediction. No additional API calls or binary search
 were performed. CSV exports retain both crossing brackets and source cell IDs.
+
+The publication figure places observed (black) and theoretical (pink) T-crossing brackets on the original S–T cooperation heatmap. It uses exactly Figure 1’s complete-game cohort (337/338/338/337 games by GLM/Qwen/Astra/Fable), excluding the two individually valid decisions whose partners were invalid. All included decisions have usable beliefs. Brackets are slightly offset horizontally only for visibility. The renderer also saves the detailed displacement diagram for both sweep directions; the curated gallery retains four figures.

@@ -10,10 +10,10 @@ Start with [the four curated publication figures and captions](figures/index.htm
 or [copy-ready captions](figures/CAPTIONS.md). The two lead figures show:
 
 1. Cooperation frequency as normalized S and T change, for all four models.
-2. Observed minus theoretical majority-switching thresholds along S and T, using each decision’s reported opponent belief.
+2. Observed and theoretical switching brackets overlaid on the same S–T cooperation map, using each decision’s reported opponent belief.
 
 “Susceptibility” here means response to payoff incentives. Figure 2 compares
-**sampled crossing brackets in payoff units**, not utility regret. It retains
+**sampled T-crossing brackets at each fixed S**, not utility regret. Its black and pink outlines show observed and theoretical ranges on the same heatmap and the same 1,350 valid paired games as Figure 1. CSVs retain both T and S sweeps. It retains
 indifference, one-sided bounds, and unresolved or multiple crossings. These
 intervals are grid-resolution ranges, not confidence intervals or fitted
 population thresholds. We ran grid searches and raw payoff sweeps, not binary search.
