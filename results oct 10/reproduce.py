@@ -40,6 +40,8 @@ def main():
         subprocess.run([sys.executable,*cmd,'--output',str(destination)],cwd=ROOT,check=True)
     subprocess.run([sys.executable,'scripts/render_lesswrong_figures.py','--analysis',str(out),
                     '--output',str(out/'post-figures')],cwd=ROOT,check=True)
+    subprocess.run([sys.executable,'scripts/report_threshold_table.py',
+                    '--output',str(out/'threshold-table')],cwd=ROOT,check=True)
     print(f'Offline reproduction complete: {out / "post-figures/index.html"}')
 
 if __name__=='__main__': main()

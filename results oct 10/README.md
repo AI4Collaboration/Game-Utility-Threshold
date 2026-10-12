@@ -61,6 +61,16 @@ Open `reproduced/post-figures/index.html` for the publication set and
 `reproduced/index.html` for the full analysis gallery and experiment report.
 The detailed theory report is `reproduced/theory_comparison.html`.
 The refined PD report is `reproduced/pd-composition/index.html`.
+The complete threshold table is [threshold-table/index.html](threshold-table/index.html),
+rebuilt as `reproduced/threshold-table/index.html`. Its 128 S/T slices combine the
+original own-payoff grid and PD refinement (202 matrices, 1,614 games, 3,228 decisions).
+It reports sample crossing brackets, signed grid differences, and conservative
+simultaneous 95% confidence sets. With only 1–2 games per cell, these confidence
+sets for observed thresholds and their differences are unbounded under a
+single-monotone-crossing assumption; theory retains exact dominance restrictions. Grid separation
+must not be interpreted as statistical significance. Markdown and JSON exports
+include all rows, cell-level evidence, and source hashes. No new model calls are
+used to create the table.
 `requirements.lock.txt` records the installed environment; `requirements.txt`
 lists direct dependencies for a compatible environment if exact pins are
 unavailable on your platform. Matplotlib figures are saved as PNG and editable SVG.
