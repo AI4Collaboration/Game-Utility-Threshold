@@ -1,0 +1,497 @@
+{
+  "data": [
+    {
+      "architecture": {
+        "input_modalities": [
+          "text",
+          "image",
+          "file"
+        ],
+        "instruct_type": null,
+        "modality": "text+image+file->text",
+        "output_modalities": [
+          "text"
+        ],
+        "tokenizer": "Claude"
+      },
+      "benchmarks": {
+        "artificial_analysis": {
+          "agentic_index": 57.9,
+          "coding_index": 81.6,
+          "intelligence_index": 53.4
+        },
+        "design_arena": [
+          {
+            "arena": "agents",
+            "category": "fullstack",
+            "elo": 1325,
+            "rank": 1,
+            "win_rate": 57.2
+          },
+          {
+            "arena": "agents",
+            "category": "godotgamedev",
+            "elo": 1327,
+            "rank": 1,
+            "win_rate": 60.7
+          },
+          {
+            "arena": "agents",
+            "category": "mobileapps",
+            "elo": 1265,
+            "rank": 3,
+            "win_rate": 56.3
+          },
+          {
+            "arena": "agents",
+            "category": "python-pptxslides",
+            "elo": 1328,
+            "rank": 1,
+            "win_rate": 62.6
+          },
+          {
+            "arena": "agents",
+            "category": "webapps",
+            "elo": 1310,
+            "rank": 1,
+            "win_rate": 56.1
+          },
+          {
+            "arena": "models",
+            "category": "3d",
+            "elo": 1398,
+            "rank": 3,
+            "win_rate": 67.7
+          },
+          {
+            "arena": "models",
+            "category": "asciiart",
+            "elo": 1331,
+            "rank": 3,
+            "win_rate": 65
+          },
+          {
+            "arena": "models",
+            "category": "codecategories",
+            "elo": 1341,
+            "rank": 4,
+            "win_rate": 59.3
+          },
+          {
+            "arena": "models",
+            "category": "dataviz",
+            "elo": 1348,
+            "rank": 5,
+            "win_rate": 61.8
+          },
+          {
+            "arena": "models",
+            "category": "gamedev",
+            "elo": 1389,
+            "rank": 3,
+            "win_rate": 65.6
+          },
+          {
+            "arena": "models",
+            "category": "svg",
+            "elo": 1302,
+            "rank": 6,
+            "win_rate": 56.4
+          },
+          {
+            "arena": "models",
+            "category": "uicomponent",
+            "elo": 1342,
+            "rank": 7,
+            "win_rate": 59.6
+          },
+          {
+            "arena": "models",
+            "category": "website",
+            "elo": 1318,
+            "rank": 4,
+            "win_rate": 56.3
+          }
+        ]
+      },
+      "canonical_slug": "anthropic/claude-fable-5.1-20260831",
+      "context_length": 1000000,
+      "created": 1788285838,
+      "default_parameters": {},
+      "description": "Claude Fable 5.1 improves on Claude Fable 5 across the board, with the biggest gains in agentic coding, long-running agentic workflows, and knowledge work: long code refactors, front-end and visual...",
+      "expiration_date": null,
+      "hugging_face_id": null,
+      "id": "anthropic/claude-fable-5.1",
+      "knowledge_cutoff": null,
+      "links": {
+        "details": "/api/v1/models/anthropic/claude-fable-5.1-20260831/endpoints"
+      },
+      "name": "Anthropic: Claude Fable 5.1",
+      "per_request_limits": null,
+      "pricing": {
+        "completion": "0.00005",
+        "input_cache_read": "0.00000025",
+        "input_cache_write": "0.0000125",
+        "input_cache_write_1h": "0.00002",
+        "prompt": "0.00001",
+        "web_search": "0.01"
+      },
+      "reasoning": {
+        "default_effort": "high",
+        "mandatory": true,
+        "supported_efforts": [
+          "max",
+          "xhigh",
+          "high",
+          "medium",
+          "low"
+        ]
+      },
+      "supported_parameters": [
+        "include_reasoning",
+        "max_completion_tokens",
+        "max_tokens",
+        "reasoning",
+        "reasoning_effort",
+        "response_format",
+        "stop",
+        "structured_outputs",
+        "tool_choice",
+        "tools",
+        "verbosity"
+      ],
+      "supported_voices": null,
+      "top_provider": {
+        "context_length": 1000000,
+        "is_moderated": true,
+        "max_completion_tokens": 128000
+      }
+    },
+    {
+      "architecture": {
+        "input_modalities": [
+          "file",
+          "image",
+          "text"
+        ],
+        "instruct_type": null,
+        "modality": "text+image+file->text",
+        "output_modalities": [
+          "text"
+        ],
+        "tokenizer": "GPT"
+      },
+      "benchmarks": {
+        "artificial_analysis": {
+          "agentic_index": 51,
+          "coding_index": 76.9,
+          "intelligence_index": 52.7
+        },
+        "design_arena": []
+      },
+      "canonical_slug": "openai/gpt-6-astra-20260903",
+      "context_length": 1050000,
+      "created": 1788552838,
+      "default_parameters": {},
+      "description": "GPT-6 Astra is OpenAI's flagship model for demanding end-to-end work. It is suited for advanced analysis, software engineering, deep research, scientific work, and document creation, with particular strengths in long-horizon...",
+      "expiration_date": null,
+      "hugging_face_id": null,
+      "id": "openai/gpt-6-astra",
+      "knowledge_cutoff": null,
+      "links": {
+        "details": "/api/v1/models/openai/gpt-6-astra-20260903/endpoints"
+      },
+      "name": "OpenAI: GPT-6 Astra",
+      "per_request_limits": null,
+      "pricing": {
+        "completion": "0.00005",
+        "input_cache_read": "0.000001",
+        "input_cache_write": "0.0000125",
+        "overrides": [
+          {
+            "completion": "0.000075",
+            "input_cache_read": "0.000002",
+            "input_cache_write": "0.000025",
+            "min_prompt_tokens": 272000,
+            "prompt": "0.00002"
+          }
+        ],
+        "prompt": "0.00001",
+        "web_search": "0.01"
+      },
+      "reasoning": {
+        "default_effort": "medium",
+        "default_enabled": true,
+        "mandatory": true,
+        "supported_efforts": [
+          "max",
+          "xhigh",
+          "high",
+          "medium",
+          "low"
+        ]
+      },
+      "supported_parameters": [
+        "include_reasoning",
+        "max_completion_tokens",
+        "max_tokens",
+        "reasoning",
+        "reasoning_effort",
+        "response_format",
+        "seed",
+        "structured_outputs",
+        "tool_choice",
+        "tools",
+        "verbosity"
+      ],
+      "supported_voices": null,
+      "top_provider": {
+        "context_length": 1050000,
+        "is_moderated": true,
+        "max_completion_tokens": 128000
+      }
+    },
+    {
+      "architecture": {
+        "input_modalities": [
+          "text"
+        ],
+        "instruct_type": null,
+        "modality": "text->text",
+        "output_modalities": [
+          "text"
+        ],
+        "tokenizer": "Qwen"
+      },
+      "benchmarks": {
+        "artificial_analysis": {
+          "agentic_index": 50.1,
+          "coding_index": 71.9,
+          "intelligence_index": 39.9
+        },
+        "design_arena": []
+      },
+      "canonical_slug": "qwen/qwen3.8-2.4t-a95b-20260812",
+      "context_length": 1048576,
+      "created": 1786551702,
+      "default_parameters": {
+        "temperature": 1,
+        "top_k": 20,
+        "top_p": 0.95
+      },
+      "description": "Qwen3.8 2.4T A95B is an open-weight sparse mixture-of-experts model from Qwen and the open-weight variant of [Qwen3.8 Max](/qwen/qwen3.8-max), with 95 billion active parameters out of 2.4 trillion total. It is...",
+      "expiration_date": null,
+      "hugging_face_id": "Qwen/Qwen3.8-2.4T-A95B",
+      "id": "qwen/qwen3.8-2.4t-a95b",
+      "knowledge_cutoff": null,
+      "links": {
+        "details": "/api/v1/models/qwen/qwen3.8-2.4t-a95b-20260812/endpoints"
+      },
+      "name": "Qwen: Qwen3.8 2.4T A95B",
+      "per_request_limits": null,
+      "pricing": {
+        "completion": "0.000006",
+        "input_cache_read": "0.00000025",
+        "prompt": "0.000002"
+      },
+      "reasoning": {
+        "default_effort": "xhigh",
+        "default_enabled": true,
+        "mandatory": true,
+        "supported_efforts": [
+          "xhigh",
+          "medium",
+          "low"
+        ]
+      },
+      "supported_parameters": [
+        "frequency_penalty",
+        "include_reasoning",
+        "logit_bias",
+        "logprobs",
+        "max_tokens",
+        "min_p",
+        "presence_penalty",
+        "reasoning",
+        "reasoning_effort",
+        "repetition_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_k",
+        "top_logprobs",
+        "top_p"
+      ],
+      "supported_voices": null,
+      "top_provider": {
+        "context_length": 1048576,
+        "is_moderated": false,
+        "max_completion_tokens": 131072
+      }
+    },
+    {
+      "architecture": {
+        "input_modalities": [
+          "text"
+        ],
+        "instruct_type": null,
+        "modality": "text->text",
+        "output_modalities": [
+          "text"
+        ],
+        "tokenizer": "Other"
+      },
+      "benchmarks": {
+        "artificial_analysis": {
+          "agentic_index": 53.1,
+          "coding_index": 74.8,
+          "intelligence_index": 44.8
+        },
+        "design_arena": [
+          {
+            "arena": "models",
+            "category": "3d",
+            "elo": 1346,
+            "rank": 5,
+            "win_rate": 60.6
+          },
+          {
+            "arena": "models",
+            "category": "asciiart",
+            "elo": 1211,
+            "rank": 22,
+            "win_rate": 46
+          },
+          {
+            "arena": "models",
+            "category": "codecategories",
+            "elo": 1313,
+            "rank": 9,
+            "win_rate": 54.9
+          },
+          {
+            "arena": "models",
+            "category": "dataviz",
+            "elo": 1269,
+            "rank": 23,
+            "win_rate": 52.8
+          },
+          {
+            "arena": "models",
+            "category": "gamedev",
+            "elo": 1323,
+            "rank": 11,
+            "win_rate": 52.9
+          },
+          {
+            "arena": "models",
+            "category": "svg",
+            "elo": 1295,
+            "rank": 8,
+            "win_rate": 56.9
+          },
+          {
+            "arena": "models",
+            "category": "uicomponent",
+            "elo": 1323,
+            "rank": 9,
+            "win_rate": 57.6
+          },
+          {
+            "arena": "models",
+            "category": "website",
+            "elo": 1305,
+            "rank": 12,
+            "win_rate": 54.9
+          },
+          {
+            "arena": "agents",
+            "category": "htmlslides",
+            "elo": 1189,
+            "rank": 9,
+            "win_rate": 39.1
+          },
+          {
+            "arena": "agents",
+            "category": "mobileapps",
+            "elo": 1191,
+            "rank": 17,
+            "win_rate": 52.2
+          },
+          {
+            "arena": "agents",
+            "category": "python-pptxslides",
+            "elo": 1255,
+            "rank": 8,
+            "win_rate": 51.2
+          }
+        ]
+      },
+      "canonical_slug": "z-ai/glm-5.3-20260816",
+      "context_length": 1048576,
+      "created": 1787086655,
+      "default_parameters": {
+        "temperature": 1,
+        "top_p": 0.95
+      },
+      "description": "GLM-5.3 is a large-scale reasoning model from Z.ai, built for complex software engineering and long-horizon agent tasks. It supports text input and output with a 1M-token context window, and improves...",
+      "expiration_date": null,
+      "hugging_face_id": "zai-org/GLM-5.3",
+      "id": "z-ai/glm-5.3",
+      "knowledge_cutoff": null,
+      "links": {
+        "details": "/api/v1/models/z-ai/glm-5.3-20260816/endpoints"
+      },
+      "name": "Z.ai: GLM 5.3",
+      "per_request_limits": null,
+      "pricing": {
+        "completion": "0.00001",
+        "input_cache_read": "0.00000024",
+        "prompt": "0.00000025"
+      },
+      "reasoning": {
+        "default_effort": "max",
+        "default_enabled": true,
+        "mandatory": true,
+        "supported_efforts": [
+          "max",
+          "high",
+          "low"
+        ]
+      },
+      "supported_parameters": [
+        "frequency_penalty",
+        "include_reasoning",
+        "logit_bias",
+        "logprobs",
+        "max_tokens",
+        "min_p",
+        "parallel_tool_calls",
+        "presence_penalty",
+        "reasoning",
+        "reasoning_effort",
+        "repetition_penalty",
+        "response_format",
+        "seed",
+        "stop",
+        "structured_outputs",
+        "temperature",
+        "tool_choice",
+        "tools",
+        "top_k",
+        "top_logprobs",
+        "top_p"
+      ],
+      "supported_voices": null,
+      "top_provider": {
+        "context_length": 1048576,
+        "is_moderated": false,
+        "max_completion_tokens": 943718
+      }
+    }
+  ]
+}

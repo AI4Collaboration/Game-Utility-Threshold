@@ -1,0 +1,13 @@
+{
+  "repository": "https://github.com/AI4Collaboration/Game-Utility-Threshold",
+  "experiment_base_commit": "b4a2e54b6aa34973d2849ff92e38502b4b0e6869",
+  "publication_base_commit": "a80a578",
+  "directory_name": "results oct 10 (requested label; see actual timestamps below)",
+  "first_recorded_request_utc": "2026-10-09T19:23:37.496137+00:00",
+  "last_recorded_completion_utc": "2026-10-09T20:01:20.569853+00:00",
+  "attempts": 10096,
+  "games": 5048,
+  "raw_log_sha256": "8c3f995078bd7b0ef14e476ebd653a42b5bbff6e49b44a4ed0086ecd37b13c79",
+  "code_snapshot_note": "The utility_threshold package is copied from the experiment checkout to isolate it from subsequent changes to the upstream engine. Runner request behavior is preserved; default catalog path is made relative to this bundle.",
+  "credential_note": "API keys and environment files excluded. Request payloads and API responses retained for reproducibility; authorization headers were never serialized."
+}

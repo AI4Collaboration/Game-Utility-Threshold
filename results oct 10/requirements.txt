@@ -1,0 +1,6 @@
+httpx
+python-dotenv
+matplotlib>=3.8
+numpy>=1.26
+markdown-it-py
+inspect-ai>=0.3.259

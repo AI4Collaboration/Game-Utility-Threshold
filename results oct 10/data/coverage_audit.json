@@ -1,0 +1,146 @@
+{
+  "manifests": [
+    {
+      "stage": "affine",
+      "replicate": 0,
+      "expected_decisions": 192,
+      "recorded_decisions": 192,
+      "valid_decisions": 191,
+      "missing_decisions": [],
+      "complete": true
+    },
+    {
+      "stage": "affine",
+      "replicate": 1,
+      "expected_decisions": 192,
+      "recorded_decisions": 192,
+      "valid_decisions": 192,
+      "missing_decisions": [],
+      "complete": true
+    },
+    {
+      "stage": "grid",
+      "replicate": 0,
+      "expected_decisions": 1352,
+      "recorded_decisions": 1352,
+      "valid_decisions": 1340,
+      "missing_decisions": [],
+      "complete": true
+    },
+    {
+      "stage": "grid",
+      "replicate": 1,
+      "expected_decisions": 1352,
+      "recorded_decisions": 1352,
+      "valid_decisions": 1349,
+      "missing_decisions": [],
+      "complete": true
+    },
+    {
+      "stage": "grid",
+      "replicate": 2,
+      "expected_decisions": 1352,
+      "recorded_decisions": 1352,
+      "valid_decisions": 1350,
+      "missing_decisions": [],
+      "complete": true
+    },
+    {
+      "stage": "grid",
+      "replicate": 3,
+      "expected_decisions": 1352,
+      "recorded_decisions": 1352,
+      "valid_decisions": 1350,
+      "missing_decisions": [],
+      "complete": true
+    },
+    {
+      "stage": "perspective",
+      "replicate": 0,
+      "expected_decisions": 160,
+      "recorded_decisions": 160,
+      "valid_decisions": 160,
+      "missing_decisions": [],
+      "complete": true
+    },
+    {
+      "stage": "perspective",
+      "replicate": 1,
+      "expected_decisions": 160,
+      "recorded_decisions": 160,
+      "valid_decisions": 159,
+      "missing_decisions": [],
+      "complete": true
+    },
+    {
+      "stage": "perspective_grid",
+      "replicate": 0,
+      "expected_decisions": 1352,
+      "recorded_decisions": 1352,
+      "valid_decisions": 1351,
+      "missing_decisions": [],
+      "complete": true
+    },
+    {
+      "stage": "perspective_grid",
+      "replicate": 1,
+      "expected_decisions": 1352,
+      "recorded_decisions": 1352,
+      "valid_decisions": 1351,
+      "missing_decisions": [],
+      "complete": true
+    },
+    {
+      "stage": "pilot",
+      "replicate": 0,
+      "expected_decisions": 32,
+      "recorded_decisions": 32,
+      "valid_decisions": 29,
+      "missing_decisions": [],
+      "complete": true
+    },
+    {
+      "stage": "pilot",
+      "replicate": 1,
+      "expected_decisions": 32,
+      "recorded_decisions": 32,
+      "valid_decisions": 31,
+      "missing_decisions": [],
+      "complete": true
+    },
+    {
+      "stage": "transects",
+      "replicate": 0,
+      "expected_decisions": 608,
+      "recorded_decisions": 608,
+      "valid_decisions": 607,
+      "missing_decisions": [],
+      "complete": true
+    },
+    {
+      "stage": "transects",
+      "replicate": 1,
+      "expected_decisions": 608,
+      "recorded_decisions": 608,
+      "valid_decisions": 606,
+      "missing_decisions": [],
+      "complete": true
+    }
+  ],
+  "duplicate_job_ids": 0,
+  "unexpected_job_ids": [],
+  "complete": true,
+  "invalid_decisions": 30,
+  "errors": {
+    "abandoned_timeout": 1
+  },
+  "parse_replay_errors": [],
+  "model_identity_mismatches": [],
+  "reported_cost_sum_usd": 40.39529008284,
+  "ledger_reported_cost_usd": 40.395290082838194,
+  "cost_reconciles": true,
+  "accounted_cost_sum_usd": 40.440639507840004,
+  "outstanding_reservations": {},
+  "accounted_cost_reconciles": true,
+  "within_budget": true
+}

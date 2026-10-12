@@ -1,0 +1,15 @@
+Validation performed 2026-10-12
+
+17 snapshot unit tests passed (unittest discover -s tests).
+Offline reproduce.py completed with zero additional paid calls.
+Replayed 10,096 attempts, 5,048 games, 10,066 valid actions, 5,021 valid joint outcomes.
+Coverage complete; no duplicate/unexpected IDs, parse replay errors, or model identity mismatches.
+Reported and accounted costs reconcile and remain within the $50 budget.
+Raw attempts, ledger, and heatmap cell CSV are byte-identical to the saved originals.
+Coverage audit and theory summary match original JSON values.
+All seven curated PNGs are byte-identical to the fresh offline rebuild.
+Lead cooperation and expected-regret figures visually inspected.
+Source/data/figures scanned for OpenRouter key patterns and exact locally stored credentials, including decompressed records: no matches.
+No environment files included. Every archived file is below GitHub's 100 MB limit.
+
+The larger original repository suite was previously reported as 183 tests, with one Lean parity skip; the isolated snapshot validation above covers its 17 experiment tests.

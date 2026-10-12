@@ -1,0 +1,3 @@
+# Preserve generated Matplotlib SVG formatting and original CSV line endings.
+figures/*.svg -whitespace
+data/*.csv whitespace=cr-at-eol

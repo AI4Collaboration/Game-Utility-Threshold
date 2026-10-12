@@ -1,0 +1,51 @@
+[
+  {
+    "file": "01_cooperation_susceptibility",
+    "source_figure": "14_own_payoff_cooperation",
+    "role": "Main figure 1: response to payoff incentives",
+    "title": "Cooperation frequency across normalized payoffs",
+    "caption": "Each panel shows one model in isolated, simultaneous self-play. We normalize payoffs to R=1 and P=0, varying S horizontally and T vertically on a 13\u00d713 grid with spacing 0.25. Color is the fraction of individual C choices, averaged within valid joint games: yellow means all observed choices were C and purple means all were D. C and D are analytical labels; prompts used neutral A/B labels, reversed across two blocks. Each cell contains at most two valid games (four decisions). Dashed/red regime boundaries at S=0 and T=1 separate dominance, coordination, and anti-coordination regions. The clearer own-payoff presentation was an exploratory follow-up. Here \u201csusceptibility\u201d means observed response to payoff incentives, not a safety or manipulation score. Most cells are not strict Prisoner\u2019s Dilemma; strict PD occupies S<0, T>1."
+  },
+  {
+    "file": "02_expected_utility_deviation",
+    "source_figure": "23_expected_regret_heatmap",
+    "role": "Main figure 2: deviation in utility units",
+    "title": "Expected utility lost relative to the stated-belief best response",
+    "caption": "At each normalized S\u2013T point, color measures mean expected payoff loss from the chosen action relative to the best response to that decision\u2019s reported opponent-cooperation probability q. The cooperation advantage is \u0394(q)=q(R\u2212T)+(1\u2212q)(S\u2212P); loss is max(0,\u2212\u0394) after choosing C or max(0,\u0394) after choosing D, divided by R\u2212P. White indicates zero loss and deeper red larger loss, on a common scale across models. The own-payoff grid provides at most four usable decisions per cell. Either action is accepted at indifference; a dot marks a reduced count. This is a test of action\u2013belief consistency. Reported beliefs may be inaccurate or post-hoc rationalizations. It is not a displacement of an empirical switching threshold in S\u2013T units."
+  },
+  {
+    "file": "03_realized_equilibrium_regret",
+    "source_figure": "24_realized_regret_heatmap",
+    "role": "Main figure 3 / companion: belief-free comparison",
+    "title": "Profitable unilateral deviations in realized joint outcomes",
+    "caption": "For each recorded own-payoff game, we hold the opponent\u2019s action fixed and calculate each player\u2019s gain from switching. The larger gain is divided by R\u2212P, then averaged within each S\u2013T cell. White means zero profitable unilateral deviation in the observed games; darker red indicates larger available gains. At most two valid games contribute per cell. This measure uses actual choices rather than stated beliefs. A positive realized regret can occur when players validly sample a mixed Nash equilibrium; it is not by itself a reasoning-error rate. Comparing this map with figure 2 separates internal utility consistency from stability of realized self-play outcomes."
+  },
+  {
+    "file": "04_presentation_control",
+    "source_figure": "13_payoff_perspective_control",
+    "role": "Essential control",
+    "title": "Matrix presentation substantially changes apparent cooperation",
+    "caption": "The targeted exploratory control compares the same strict-PD payoff cells and first two label blocks under row/column wording and explicit \u201cyour payoff / opponent payoff\u201d wording. Each bar contains 32 valid decisions per model and role. Qwen\u2019s column-role C frequency changes from 31/32 to 1/32, while its row-role frequency changes from 0/32 to 2/32. The game utilities and individual-payoff objective are identical, but both payoff perspective and display order change. These observations demonstrate presentation sensitivity without isolating its cause. This control motivated the clearer-presentation grid used in figures 1\u20133."
+  },
+  {
+    "file": "05_analytic_intervention_threshold",
+    "source_figure": "16_joint_incentive_intervention",
+    "role": "Theory / intervention figure",
+    "title": "A joint defection cost crosses two separate incentives",
+    "caption": "Analytic intervention around (T,R,P,S)=(5,3,1,0): deduct k from both defection payoffs, giving T=5\u2212k and P=1\u2212k. The C advantage is k\u22122 against C and k\u22121 against D. Thus k=2 makes C weakly dominant and k>2 makes it strictly dominant. Under normalization the path is s=(k\u22121)/(k+2), t=4/(k+2). Changing one raw payoff alone leaves one baseline defection incentive intact. This figure is an algebraic result, not a separately sampled model experiment; k is a utility cost, not API dollars."
+  },
+  {
+    "file": "06_analytic_game_map",
+    "source_figure": "01_analytic_phase_space",
+    "role": "Opening explainer / appendix",
+    "title": "The theoretical phase space of symmetric two-action games",
+    "caption": "Positive affine normalization maps payoffs to s=(S\u2212P)/(R\u2212P) and t=(T\u2212P)/(R\u2212P), for R>P. This leaves two degrees of freedom and preserves expected-utility incentives. The map shows twelve strict payoff orderings, regime boundaries, and group-payoff boundaries. The repository\u2019s (5,3,1,0) baseline is at (s,t)=(\u22120.5,2). It is an analytic reconstruction following Falmagne\u2019s SIAM article; no model calls are involved."
+  },
+  {
+    "file": "07_raw_payoff_thresholds",
+    "source_figure": "19_raw_payoff_theoretical_thresholds",
+    "role": "Optional appendix: one-payoff sweeps",
+    "title": "Observed one-payoff sweeps against a fixed-belief benchmark",
+    "caption": "Each panel changes only T, R, P, or S around (5,3,1,0). Colored curves show observed C frequencies from up to four valid decisions per value under the original matrix presentation. Black dashed segments are the expected-utility best response assuming q=1/2: the indifference points are T=2, R=6, P=\u22122, S=3, with either action optimal at equality. Gray boundaries mark changes in strategic class. The fixed-q step is one conditional benchmark, not the complete equilibrium prediction. The original presentation is known to be sensitive to player role. No binary search or empirical threshold-location fit was performed."
+  }
+]

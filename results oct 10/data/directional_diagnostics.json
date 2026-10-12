@@ -1,0 +1,1918 @@
+[
+  {
+    "model": "glm",
+    "axis": "T",
+    "expected_direction": -1,
+    "points": [
+      {
+        "value": -1.0,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": -0.5,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.0,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.5,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.0,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.5,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.0,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.5,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.0,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.5,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 4.0,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 4.5,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 5.0,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 5.5,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 6.0,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 6.5,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 7.0,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      }
+    ],
+    "adjacent_reversals": [
+      {
+        "left": -1.0,
+        "right": -0.5,
+        "delta_C_rate": 0.25
+      },
+      {
+        "left": 1.0,
+        "right": 1.5,
+        "delta_C_rate": 0.25
+      },
+      {
+        "left": 2.0,
+        "right": 2.5,
+        "delta_C_rate": 0.5
+      },
+      {
+        "left": 4.0,
+        "right": 4.5,
+        "delta_C_rate": 0.5
+      },
+      {
+        "left": 6.5,
+        "right": 7.0,
+        "delta_C_rate": 0.25
+      }
+    ]
+  },
+  {
+    "model": "qwen",
+    "axis": "T",
+    "expected_direction": -1,
+    "points": [
+      {
+        "value": -1.0,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": -0.5,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.0,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.5,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.0,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.5,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.0,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.5,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.0,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.5,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 4.0,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 4.5,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 5.0,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 5.5,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 6.0,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 6.5,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 7.0,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      }
+    ],
+    "adjacent_reversals": [
+      {
+        "left": 1.0,
+        "right": 1.5,
+        "delta_C_rate": 0.25
+      },
+      {
+        "left": 1.5,
+        "right": 2.0,
+        "delta_C_rate": 0.25
+      }
+    ]
+  },
+  {
+    "model": "astra",
+    "axis": "T",
+    "expected_direction": -1,
+    "points": [
+      {
+        "value": -1.0,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": -0.5,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.0,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.5,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.0,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.5,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.0,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.5,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.0,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.5,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 4.0,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 4.5,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 5.0,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 5.5,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 6.0,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 6.5,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 7.0,
+        "C_rate": 0,
+        "valid_decisions": 4
+      }
+    ],
+    "adjacent_reversals": []
+  },
+  {
+    "model": "fable",
+    "axis": "T",
+    "expected_direction": -1,
+    "points": [
+      {
+        "value": -1.0,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": -0.5,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.0,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.5,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.0,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.5,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.0,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.5,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.0,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.5,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 4.0,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 4.5,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 5.0,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 5.5,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 6.0,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 6.5,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 7.0,
+        "C_rate": 0,
+        "valid_decisions": 4
+      }
+    ],
+    "adjacent_reversals": [
+      {
+        "left": 4.0,
+        "right": 4.5,
+        "delta_C_rate": 0.25
+      },
+      {
+        "left": 5.0,
+        "right": 5.5,
+        "delta_C_rate": 0.25
+      },
+      {
+        "left": 6.0,
+        "right": 6.5,
+        "delta_C_rate": 0.25
+      }
+    ]
+  },
+  {
+    "model": "glm",
+    "axis": "R",
+    "expected_direction": 1,
+    "points": [
+      {
+        "value": 1.5,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.90625,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.3125,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.71875,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.0,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.125,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.53125,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.9375,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 4.34375,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 4.75,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 5.0,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 5.15625,
+        "C_rate": 0.6666666666666666,
+        "valid_decisions": 3
+      },
+      {
+        "value": 5.5625,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": 5.96875,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": 6.0,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": 6.375,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": 6.78125,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 7.1875,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 7.59375,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": 8.0,
+        "C_rate": 1,
+        "valid_decisions": 4
+      }
+    ],
+    "adjacent_reversals": [
+      {
+        "left": 1.90625,
+        "right": 2.3125,
+        "delta_C_rate": -0.5
+      },
+      {
+        "left": 2.71875,
+        "right": 3.0,
+        "delta_C_rate": -0.5
+      },
+      {
+        "left": 3.53125,
+        "right": 3.9375,
+        "delta_C_rate": -0.25
+      },
+      {
+        "left": 4.34375,
+        "right": 4.75,
+        "delta_C_rate": -0.25
+      },
+      {
+        "left": 7.1875,
+        "right": 7.59375,
+        "delta_C_rate": -0.25
+      }
+    ]
+  },
+  {
+    "model": "qwen",
+    "axis": "R",
+    "expected_direction": 1,
+    "points": [
+      {
+        "value": 1.5,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.90625,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.3125,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.71875,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.0,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.125,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.53125,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.9375,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 4.34375,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": 4.75,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 5.0,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": 5.15625,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 5.5625,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": 5.96875,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 6.0,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": 6.375,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 6.78125,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": 7.1875,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 7.59375,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 8.0,
+        "C_rate": 1,
+        "valid_decisions": 4
+      }
+    ],
+    "adjacent_reversals": [
+      {
+        "left": 3.0,
+        "right": 3.125,
+        "delta_C_rate": -0.25
+      },
+      {
+        "left": 4.34375,
+        "right": 4.75,
+        "delta_C_rate": -0.25
+      },
+      {
+        "left": 5.15625,
+        "right": 5.5625,
+        "delta_C_rate": -0.25
+      },
+      {
+        "left": 5.96875,
+        "right": 6.0,
+        "delta_C_rate": -0.25
+      },
+      {
+        "left": 6.375,
+        "right": 6.78125,
+        "delta_C_rate": -0.25
+      }
+    ]
+  },
+  {
+    "model": "astra",
+    "axis": "R",
+    "expected_direction": 1,
+    "points": [
+      {
+        "value": 1.5,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.90625,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.3125,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.71875,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.0,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.125,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.53125,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.9375,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 4.34375,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 4.75,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 5.0,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 5.15625,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 5.5625,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 5.96875,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 6.0,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 6.375,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 6.78125,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 7.1875,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 7.59375,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 8.0,
+        "C_rate": 1,
+        "valid_decisions": 4
+      }
+    ],
+    "adjacent_reversals": []
+  },
+  {
+    "model": "fable",
+    "axis": "R",
+    "expected_direction": 1,
+    "points": [
+      {
+        "value": 1.5,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.90625,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.3125,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.71875,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.0,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.125,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.53125,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.9375,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 4.34375,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 4.75,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 5.0,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": 5.15625,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": 5.5625,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 5.96875,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": 6.0,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 6.375,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 6.78125,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 7.1875,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 7.59375,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 8.0,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      }
+    ],
+    "adjacent_reversals": [
+      {
+        "left": 3.0,
+        "right": 3.125,
+        "delta_C_rate": -0.25
+      },
+      {
+        "left": 5.5625,
+        "right": 5.96875,
+        "delta_C_rate": -0.25
+      },
+      {
+        "left": 7.59375,
+        "right": 8.0,
+        "delta_C_rate": -0.25
+      }
+    ]
+  },
+  {
+    "model": "glm",
+    "axis": "P",
+    "expected_direction": -1,
+    "points": [
+      {
+        "value": -3.0,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": -2.65625,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": -2.3125,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": -2.0,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": -1.96875,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": -1.625,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": -1.28125,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": -0.9375,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": -0.59375,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": -0.25,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.0,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.09375,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.4375,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.78125,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.0,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.125,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.46875,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.8125,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.15625,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.5,
+        "C_rate": 0,
+        "valid_decisions": 4
+      }
+    ],
+    "adjacent_reversals": [
+      {
+        "left": -2.65625,
+        "right": -2.3125,
+        "delta_C_rate": 0.5
+      },
+      {
+        "left": -1.96875,
+        "right": -1.625,
+        "delta_C_rate": 0.25
+      },
+      {
+        "left": -0.9375,
+        "right": -0.59375,
+        "delta_C_rate": 0.5
+      },
+      {
+        "left": -0.25,
+        "right": 0.0,
+        "delta_C_rate": 0.25
+      },
+      {
+        "left": 0.4375,
+        "right": 0.78125,
+        "delta_C_rate": 0.25
+      },
+      {
+        "left": 1.0,
+        "right": 1.125,
+        "delta_C_rate": 0.25
+      }
+    ]
+  },
+  {
+    "model": "qwen",
+    "axis": "P",
+    "expected_direction": -1,
+    "points": [
+      {
+        "value": -3.0,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": -2.65625,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": -2.3125,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": -2.0,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": -1.96875,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": -1.625,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": -1.28125,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": -0.9375,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": -0.59375,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": -0.25,
+        "C_rate": 0.3333333333333333,
+        "valid_decisions": 3
+      },
+      {
+        "value": 0.0,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.09375,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.4375,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.78125,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.0,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.125,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.46875,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.8125,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.15625,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.5,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      }
+    ],
+    "adjacent_reversals": [
+      {
+        "left": -2.65625,
+        "right": -2.3125,
+        "delta_C_rate": 0.5
+      },
+      {
+        "left": -1.96875,
+        "right": -1.625,
+        "delta_C_rate": 0.25
+      },
+      {
+        "left": -0.25,
+        "right": 0.0,
+        "delta_C_rate": 0.16666666666666669
+      },
+      {
+        "left": 1.0,
+        "right": 1.125,
+        "delta_C_rate": 0.25
+      },
+      {
+        "left": 1.46875,
+        "right": 1.8125,
+        "delta_C_rate": 0.25
+      }
+    ]
+  },
+  {
+    "model": "astra",
+    "axis": "P",
+    "expected_direction": -1,
+    "points": [
+      {
+        "value": -3.0,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": -2.65625,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": -2.3125,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": -2.0,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": -1.96875,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": -1.625,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": -1.28125,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": -0.9375,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": -0.59375,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": -0.25,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.0,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.09375,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.4375,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.78125,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.0,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.125,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.46875,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.8125,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.15625,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.5,
+        "C_rate": 0,
+        "valid_decisions": 4
+      }
+    ],
+    "adjacent_reversals": []
+  },
+  {
+    "model": "fable",
+    "axis": "P",
+    "expected_direction": -1,
+    "points": [
+      {
+        "value": -3.0,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": -2.65625,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": -2.3125,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": -2.0,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": -1.96875,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": -1.625,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": -1.28125,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": -0.9375,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": -0.59375,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": -0.25,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.0,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.09375,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.4375,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.78125,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.0,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.125,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.46875,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.8125,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.15625,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.5,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      }
+    ],
+    "adjacent_reversals": [
+      {
+        "left": -1.96875,
+        "right": -1.625,
+        "delta_C_rate": 0.25
+      },
+      {
+        "left": -0.59375,
+        "right": -0.25,
+        "delta_C_rate": 0.25
+      },
+      {
+        "left": -0.25,
+        "right": 0.0,
+        "delta_C_rate": 0.5
+      },
+      {
+        "left": 0.4375,
+        "right": 0.78125,
+        "delta_C_rate": 0.25
+      },
+      {
+        "left": 1.0,
+        "right": 1.125,
+        "delta_C_rate": 0.25
+      }
+    ]
+  },
+  {
+    "model": "glm",
+    "axis": "S",
+    "expected_direction": 1,
+    "points": [
+      {
+        "value": -2.0,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": -1.625,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": -1.25,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": -0.875,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": -0.5,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": -0.125,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.0,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.25,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.625,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.0,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.375,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.75,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.125,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.5,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.875,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.0,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.25,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.625,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 4.0,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      }
+    ],
+    "adjacent_reversals": [
+      {
+        "left": 1.75,
+        "right": 2.125,
+        "delta_C_rate": -0.5
+      },
+      {
+        "left": 2.5,
+        "right": 2.875,
+        "delta_C_rate": -0.25
+      },
+      {
+        "left": 3.25,
+        "right": 3.625,
+        "delta_C_rate": -0.25
+      }
+    ]
+  },
+  {
+    "model": "qwen",
+    "axis": "S",
+    "expected_direction": 1,
+    "points": [
+      {
+        "value": -2.0,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": -1.625,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": -1.25,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": -0.875,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": -0.5,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": -0.125,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.0,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.25,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.625,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.0,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.375,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.75,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.125,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.5,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.875,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.0,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.25,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.625,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 4.0,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      }
+    ],
+    "adjacent_reversals": [
+      {
+        "left": -1.25,
+        "right": -0.875,
+        "delta_C_rate": -0.25
+      },
+      {
+        "left": 1.375,
+        "right": 1.75,
+        "delta_C_rate": -0.25
+      },
+      {
+        "left": 2.125,
+        "right": 2.5,
+        "delta_C_rate": -0.25
+      },
+      {
+        "left": 3.0,
+        "right": 3.25,
+        "delta_C_rate": -0.25
+      },
+      {
+        "left": 3.25,
+        "right": 3.625,
+        "delta_C_rate": -0.25
+      }
+    ]
+  },
+  {
+    "model": "astra",
+    "axis": "S",
+    "expected_direction": 1,
+    "points": [
+      {
+        "value": -2.0,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": -1.625,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": -1.25,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": -0.875,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": -0.5,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": -0.125,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.0,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.25,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.625,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.0,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.375,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.75,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.125,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.5,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.875,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.0,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.25,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.625,
+        "C_rate": 1,
+        "valid_decisions": 4
+      },
+      {
+        "value": 4.0,
+        "C_rate": 1,
+        "valid_decisions": 4
+      }
+    ],
+    "adjacent_reversals": [
+      {
+        "left": 2.125,
+        "right": 2.5,
+        "delta_C_rate": -0.25
+      }
+    ]
+  },
+  {
+    "model": "fable",
+    "axis": "S",
+    "expected_direction": 1,
+    "points": [
+      {
+        "value": -2.0,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": -1.625,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": -1.25,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": -0.875,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": -0.5,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": -0.125,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.0,
+        "C_rate": 0,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.25,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 0.625,
+        "C_rate": 0,
+        "valid_decisions": 3
+      },
+      {
+        "value": 1.0,
+        "C_rate": 0.25,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.375,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 1.75,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.125,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.5,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 2.875,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.0,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.25,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      },
+      {
+        "value": 3.625,
+        "C_rate": 0.5,
+        "valid_decisions": 4
+      },
+      {
+        "value": 4.0,
+        "C_rate": 0.75,
+        "valid_decisions": 4
+      }
+    ],
+    "adjacent_reversals": [
+      {
+        "left": -0.125,
+        "right": 0.0,
+        "delta_C_rate": -0.25
+      },
+      {
+        "left": 0.25,
+        "right": 0.625,
+        "delta_C_rate": -0.25
+      },
+      {
+        "left": 3.25,
+        "right": 3.625,
+        "delta_C_rate": -0.25
+      }
+    ]
+  }
+]
