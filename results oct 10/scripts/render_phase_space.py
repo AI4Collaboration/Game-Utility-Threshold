@@ -55,10 +55,9 @@ def cooperation_heatmap(games, out):
     """Annotate every measured cell without interpolating untested payoffs."""
     values = np.array(axis_values())
     cell_edges = np.r_[values - .125, values[-1] + .125]
-    # Red–yellow–green as in the reference, with lighter endpoints so neither
-    # extreme becomes burgundy or forest green. Keep the numeric scale at [0,1].
+    # Original red–cream–green palette, restored at the user's request.
     cmap = LinearSegmentedColormap.from_list('defect_to_cooperate',
-                       plt.get_cmap('RdYlGn')(np.linspace(.15, .85, 256)))
+                                            ['#B33132', '#F7F3E8', '#168047'])
     cmap.set_bad('#E5E7EB')
     def panel(ax, model, label, single=False):
         cells = defaultdict(list)
@@ -77,7 +76,7 @@ def cooperation_heatmap(games, out):
                     text, color = 'N/A', '#28323C'
                 else:
                     text = f'{v:.2f}'
-                    color = '#111111'
+                    color = 'white' if v <= .1 or v >= .9 else '#17231F'
                 ax.text(s, t, text, ha='center', va='center', color=color,
                         fontsize=14, zorder=5)
         ax.set_xticks(values, [f'{v:g}' for v in values], rotation=45, ha='right')
