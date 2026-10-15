@@ -105,7 +105,10 @@ def cooperation_heatmap(games, out):
         plt.close(fig)
 
     # Local typography leaves the styling of the other publication figures intact.
-    with plt.rc_context({'font.family':'STIXGeneral', 'mathtext.fontset':'stix',
+    with plt.rc_context({'font.family':'Times New Roman', 'mathtext.fontset':'custom',
+                         'mathtext.rm':'Times New Roman',
+                         'mathtext.it':'Times New Roman:italic',
+                         'mathtext.bf':'Times New Roman:bold',
                          'font.size':16, 'axes.linewidth':.8, 'pdf.fonttype':42}):
         fig, axes = plt.subplots(2, 2, figsize=(24, 23))
         fig.subplots_adjust(left=.065, right=.855, bottom=.065, top=.92,

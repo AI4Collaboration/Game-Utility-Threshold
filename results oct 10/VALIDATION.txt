@@ -39,3 +39,5 @@ Publication typography revision: combined PNG 7123 x 6707 pixels at 300 dpi, STI
 Palette revision: lighter red-yellow-green (RdYlGn restricted to 0.15-0.85 palette range; data scale unchanged at 0-1), black annotation text, cooperation proportions formatted to two decimals. Reconciled combined and individual labels against archived values and visually inspected combined PNG. No data or experiment changes.
 
 Restored original red-cream-green palette (#B33132, #F7F3E8, #168047) at user request; retained proportion labels and minimal academic layout. Source data unchanged.
+
+Font-only revision: switched heatmap text and mathematical labels to Times New Roman to match the supplied reference style. Verified Times New Roman in all five SVG exports; combined PNG visually inspected. Original red/green palette, data, proportions, and layout retained.
