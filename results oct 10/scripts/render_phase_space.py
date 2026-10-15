@@ -58,10 +58,7 @@ def cooperation_heatmap(games, out):
     cmap = LinearSegmentedColormap.from_list('defect_to_cooperate',
                                             ['#B33132', '#F7F3E8', '#168047'])
     cmap.set_bad('#E5E7EB')
-    fig, axes = plt.subplots(2, 2, figsize=(17, 16))
-    fig.subplots_adjust(left=.065, right=.87, bottom=.17, top=.88,
-                        wspace=.22, hspace=.29)
-    for ax, (model, label) in zip(axes.flat, LABELS.items()):
+    def panel(ax, model, label, single=False):
         cells = defaultdict(list)
         for g in games:
             if g['model_key'] == model:
@@ -70,9 +67,7 @@ def cooperation_heatmap(games, out):
         z = np.array([[np.mean(cells[s,t]) if cells[s,t] else np.nan
                        for s in values] for t in values])
         im = ax.pcolormesh(cell_edges, cell_edges, z, cmap=cmap, vmin=0, vmax=1,
-                          edgecolors='#FFFFFF60', linewidth=.45)
-        ax.axvline(0, color='#28323C', ls='--', lw=1, alpha=.75)
-        ax.axhline(1, color='#28323C', ls='--', lw=1, alpha=.75)
+                          edgecolors='#FFFFFF50', linewidth=.4, rasterized=True)
         for j, t in enumerate(values):
             for i, s in enumerate(values):
                 v = z[j,i]
@@ -82,39 +77,52 @@ def cooperation_heatmap(games, out):
                     text = f'{100*v:.0f}%'
                     color = 'white' if v <= .1 or v >= .9 else '#17231F'
                     bg = cmap(v)
-                if len(cells[s,t]) == 1:
-                    text += '*'
                 ax.text(s, t, text, ha='center', va='center', color=color,
-                        fontsize=8, zorder=5,
-                        bbox=dict(facecolor=bg, edgecolor='none', pad=.35))
+                        fontsize=14, zorder=5)
         ax.set_xticks(values, [f'{v:g}' for v in values], rotation=45, ha='right')
         ax.set_yticks(values, [f'{v:g}' for v in values])
-        ax.tick_params(labelsize=9)
+        ax.tick_params(labelsize=14 if single else 16, width=.8, length=4)
         ax.set(xlim=(cell_edges[0],cell_edges[-1]), ylim=(cell_edges[0],cell_edges[-1]),
-               xlabel='Normalized S: your payoff when you cooperate and the other defects',
-               ylabel='Normalized T: your payoff when you defect and the other cooperates',
+               xlabel=r'Normalized $S$: $(S-P)/(R-P)$',
+               ylabel=r'Normalized $T$: $(T-P)/(R-P)$',
                aspect='equal')
-        ax.xaxis.label.set_size(9.5)
-        ax.yaxis.label.set_size(9.5)
-        n = sum(len(v) for v in cells.values())
-        ax.set_title(f'{label}  ·  {n} valid games', loc='left', fontsize=14, pad=12)
-    cax = fig.add_axes([.905,.32,.016,.40])
-    cb = fig.colorbar(im, cax=cax, ticks=[0,.25,.5,.75,1])
-    cb.ax.set_yticklabels(['0%','25%','50%','75%','100%'])
-    cb.set_label('Observed cooperation', labelpad=12, fontsize=12)
-    cax.text(.5, 1.045, 'All cooperate', ha='center', transform=cax.transAxes,
-             color='#168047', fontsize=11, weight='bold')
-    cax.text(.5, -.065, 'All defect', ha='center', transform=cax.transAxes,
-             color='#B33132', fontsize=11, weight='bold')
-    fig.suptitle('How LLM Cooperation Changes Across Strategic Incentives',
-                 x=.065, y=.975, ha='left', fontsize=24)
-    fig.text(.065,.936,'Each square shows observed cooperation (%) at one tested S–T pair. Defection = 100% − cooperation.', fontsize=13)
-    fig.text(.065,.911,'R = 1 (both cooperate)  ·  P = 0 (both defect)  ·  Both axes show every tested value, at 0.25 intervals.', fontsize=12, color='#46515A')
-    fig.text(.065,.045,'13 × 13 measured payoff pairs per model · two label blocks · normally 2 games / 4 decisions per square.\n'
-             '* Only 1 valid game / 2 decisions in this square. Percentages are observed frequencies, not precise population probabilities.\n'
-             'Dashed lines: S = 0 and T = 1 regime boundaries. Strict Prisoner’s Dilemma is S < 0, T > 1. No interpolation or new model calls.',
-             fontsize=10.5, linespacing=1.65, color='#46515A')
-    save(fig, out, '14_own_payoff_cooperation')
+        ax.xaxis.label.set_size(20)
+        ax.yaxis.label.set_size(20)
+        ax.set_title(label, fontsize=25, pad=16)
+        return im
+
+    def legend(fig, im, rect, small=False):
+        cax = fig.add_axes(rect)
+        cb = fig.colorbar(im, cax=cax, ticks=[0,.25,.5,.75,1])
+        cb.ax.set_yticklabels(['0% (defect)', '25%', '50%', '75%', '100% (cooperate)'])
+        cb.ax.tick_params(labelsize=14 if small else 17)
+        cb.set_label('Cooperation (%)', labelpad=18, fontsize=18 if small else 21)
+        cb.outline.set_linewidth(.7)
+
+    def export(fig, name):
+        for extension in ('png','svg','pdf'):
+            fig.savefig(out/f'{name}.{extension}', dpi=300, bbox_inches='tight', pad_inches=.18)
+        plt.close(fig)
+
+    # Local typography leaves the styling of the other publication figures intact.
+    with plt.rc_context({'font.family':'STIXGeneral', 'mathtext.fontset':'stix',
+                         'font.size':16, 'axes.linewidth':.8, 'pdf.fonttype':42}):
+        fig, axes = plt.subplots(2, 2, figsize=(24, 23))
+        fig.subplots_adjust(left=.065, right=.855, bottom=.065, top=.92,
+                            wspace=.18, hspace=.22)
+        for ax, (model, label) in zip(axes.flat, LABELS.items()):
+            im = panel(ax, model, label)
+        legend(fig, im, [.89,.29,.016,.43])
+        title='How LLM Cooperation Changes Across Strategic Incentives'
+        fig.suptitle(title, x=.48, y=.985, fontsize=34)
+        export(fig, '14_own_payoff_cooperation')
+        for model, label in LABELS.items():
+            fig, ax = plt.subplots(figsize=(14, 12))
+            fig.subplots_adjust(left=.10, right=.76, bottom=.10, top=.87)
+            im = panel(ax, model, label, single=True)
+            legend(fig, im, [.81,.24,.024,.52], small=True)
+            fig.suptitle(title, x=.49, y=.975, fontsize=23)
+            export(fig, f'14_own_payoff_cooperation_{model}')
 
 
 def analytic_figures(out):
