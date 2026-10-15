@@ -24,11 +24,11 @@ Scientific basis: [Falmagne, The Phase Space of Symmetric 2×2 Games](https://ww
 
 ## Main figure 1: response to payoff incentives
 
-**Cooperation frequency across normalized payoffs**
+**How LLM Cooperation Changes Across Strategic Incentives**
 
-Each panel shows one model in isolated, simultaneous self-play. We normalize payoffs to R=1 and P=0, varying S horizontally and T vertically on a 13×13 grid with spacing 0.25. Color is the fraction of individual C choices, averaged within valid joint games: yellow means all observed choices were C and purple means all were D. C and D are analytical labels; prompts used neutral A/B labels, reversed across two blocks. Each cell contains at most two valid games (four decisions). Dashed/red regime boundaries at S=0 and T=1 separate dominance, coordination, and anti-coordination regions. The clearer own-payoff presentation was an exploratory follow-up. Here “susceptibility” means observed response to payoff incentives, not a safety or manipulation score. Most cells are not strict Prisoner’s Dilemma; strict PD occupies S<0, T>1.
+Each panel shows one model in isolated, simultaneous self-play. We normalize payoffs to R=1 and P=0, varying S horizontally and T vertically on a 13×13 grid with spacing 0.25. Color is the fraction of individual C choices, averaged within valid joint games: green means all observed choices were C and red means all were D. Each cell is labeled with its observed cooperation percentage; defection is the remainder. Both axes label every tested value, at 0.25 intervals; no interpolation or new trials were used. C and D are analytical labels; prompts used neutral A/B labels, reversed across two blocks. Each cell contains at most two valid games (four decisions); an asterisk marks the two cells with only one valid game. Dashed charcoal regime boundaries at S=0 and T=1 separate dominance, coordination, and anti-coordination regions. The clearer own-payoff presentation was an exploratory follow-up. Here “susceptibility” means observed response to payoff incentives, not a safety or manipulation score. Most cells are not strict Prisoner’s Dilemma; strict PD occupies S<0, T>1.
 
-![Cooperation frequency across normalized payoffs](01_cooperation_susceptibility.png)
+![How LLM Cooperation Changes Across Strategic Incentives](01_cooperation_susceptibility.png)
 
 [PNG](01_cooperation_susceptibility.png) · [Editable SVG](01_cooperation_susceptibility.svg)
 
