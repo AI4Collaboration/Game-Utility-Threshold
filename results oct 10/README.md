@@ -71,6 +71,19 @@ single-monotone-crossing assumption; theory retains exact dominance restrictions
 must not be interpreted as statistical significance. Markdown and JSON exports
 include all rows, cell-level evidence, and source hashes. No new model calls are
 used to create the table.
+
+The [updated threshold confidence table](threshold-confidence/index.html), rebuilt
+as `reproduced/threshold-confidence/index.html`, pools observations in nested
+windows along each sweep using bounded-mean Chernoff tests and test inversion.
+It retains reported-belief uncertainty and theoretical ties. Conditional on an
+ordered single crossing and independent games, it yields six finite individual
+confidence intervals for observed-minus-theoretical thresholds; all include zero.
+Nine difference intervals are one-sided and 113 are unbounded. After familywise
+correction across 128 comparisons, every difference interval is unbounded.
+These results do not establish either a shift or equivalence. The original
+cellwise table is retained as a separate, more conservative analysis. The new
+table includes the derivation, assumptions, all rows, and source hashes; no
+additional paid model calls were made.
 `requirements.lock.txt` records the installed environment; `requirements.txt`
 lists direct dependencies for a compatible environment if exact pins are
 unavailable on your platform. Matplotlib figures are saved as PNG and editable SVG.
