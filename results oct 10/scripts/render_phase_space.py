@@ -55,8 +55,10 @@ def cooperation_heatmap(games, out):
     """Annotate every measured cell without interpolating untested payoffs."""
     values = np.array(axis_values())
     cell_edges = np.r_[values - .125, values[-1] + .125]
+    # Red–yellow–green as in the reference, with lighter endpoints so neither
+    # extreme becomes burgundy or forest green. Keep the numeric scale at [0,1].
     cmap = LinearSegmentedColormap.from_list('defect_to_cooperate',
-                                            ['#B33132', '#F7F3E8', '#168047'])
+                       plt.get_cmap('RdYlGn')(np.linspace(.15, .85, 256)))
     cmap.set_bad('#E5E7EB')
     def panel(ax, model, label, single=False):
         cells = defaultdict(list)
@@ -72,11 +74,10 @@ def cooperation_heatmap(games, out):
             for i, s in enumerate(values):
                 v = z[j,i]
                 if np.isnan(v):
-                    text, color, bg = 'N/A', '#28323C', '#E5E7EB'
+                    text, color = 'N/A', '#28323C'
                 else:
-                    text = f'{100*v:.0f}%'
-                    color = 'white' if v <= .1 or v >= .9 else '#17231F'
-                    bg = cmap(v)
+                    text = f'{v:.2f}'
+                    color = '#111111'
                 ax.text(s, t, text, ha='center', va='center', color=color,
                         fontsize=14, zorder=5)
         ax.set_xticks(values, [f'{v:g}' for v in values], rotation=45, ha='right')
@@ -94,9 +95,9 @@ def cooperation_heatmap(games, out):
     def legend(fig, im, rect, small=False):
         cax = fig.add_axes(rect)
         cb = fig.colorbar(im, cax=cax, ticks=[0,.25,.5,.75,1])
-        cb.ax.set_yticklabels(['0% (defect)', '25%', '50%', '75%', '100% (cooperate)'])
+        cb.ax.set_yticklabels(['0.00 (defect)', '0.25', '0.50', '0.75', '1.00 (cooperate)'])
         cb.ax.tick_params(labelsize=14 if small else 17)
-        cb.set_label('Cooperation (%)', labelpad=18, fontsize=18 if small else 21)
+        cb.set_label('Cooperation proportion', labelpad=18, fontsize=18 if small else 21)
         cb.outline.set_linewidth(.7)
 
     def export(fig, name):
