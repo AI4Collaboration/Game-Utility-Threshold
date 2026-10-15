@@ -1,0 +1,42 @@
+{
+  "source_sha256": "223c09ad5a2d66ef25066305da5cac2885024b8ab14c55fee02ac37c336a2e4e",
+  "comparisons": 128,
+  "plotted_results": {
+    "individual": {
+      "observed_sets": {
+        "one_sided": 114,
+        "finite": 14
+      },
+      "theoretical_sets": {
+        "one_sided": 119,
+        "unbounded": 2,
+        "finite": 7
+      },
+      "difference_sets": {
+        "unbounded": 113,
+        "one_sided": 9,
+        "finite": 6
+      },
+      "zero_excluded": 0,
+      "zero_not_excluded": 128,
+      "empty_comparisons": 0
+    },
+    "familywise": {
+      "observed_sets": {
+        "unbounded": 55,
+        "one_sided": 73
+      },
+      "theoretical_sets": {
+        "one_sided": 120,
+        "unbounded": 8
+      },
+      "difference_sets": {
+        "unbounded": 128
+      },
+      "zero_excluded": 0,
+      "zero_not_excluded": 128,
+      "empty_comparisons": 0
+    }
+  },
+  "additional_paid_calls": 0
+}

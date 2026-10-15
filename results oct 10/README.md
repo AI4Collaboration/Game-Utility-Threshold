@@ -84,6 +84,15 @@ These results do not establish either a shift or equivalence. The original
 cellwise table is retained as a separate, more conservative analysis. The new
 table includes the derivation, assumptions, all rows, and source hashes; no
 additional paid model calls were made.
+
+The [threshold-difference interval figures](threshold-confidence-figure/index.html)
+show all 128 comparisons in four model columns and two sweep rows. Finite bounds
+have caps and infinite bounds have outward arrows; no midpoint estimates are
+invented. Individual and simultaneous 95% intervals are provided separately as
+PNG, PDF, and SVG. Offline reproduction saves them in
+`reproduced/threshold-confidence-figure/`. The four main publication figures are
+unchanged.
+
 `requirements.lock.txt` records the installed environment; `requirements.txt`
 lists direct dependencies for a compatible environment if exact pins are
 unavailable on your platform. Matplotlib figures are saved as PNG and editable SVG.

@@ -44,6 +44,9 @@ def main():
                     '--output',str(out/'threshold-table')],cwd=ROOT,check=True)
     subprocess.run([sys.executable,'scripts/report_threshold_confidence.py',
                     '--output',str(out/'threshold-confidence')],cwd=ROOT,check=True)
+    subprocess.run([sys.executable,'scripts/render_threshold_confidence.py',
+                    '--input',str(out/'threshold-confidence/threshold_confidence.json'),
+                    '--output',str(out/'threshold-confidence-figure')],cwd=ROOT,check=True)
     print(f'Offline reproduction complete: {out / "post-figures/index.html"}')
 
 if __name__=='__main__': main()
