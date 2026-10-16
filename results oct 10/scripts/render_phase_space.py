@@ -12,7 +12,9 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+import matplotlib.patheffects as path_effects
 from matplotlib.colors import ListedColormap, LinearSegmentedColormap
+from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
 import numpy as np
 
@@ -69,6 +71,13 @@ def cooperation_heatmap(games, out):
                        for s in values] for t in values])
         im = ax.pcolormesh(cell_edges, cell_edges, z, cmap=cmap, vmin=0, vmax=1,
                           edgecolors='#FFFFFF50', linewidth=.4, rasterized=True)
+        # Best-response regimes change at S=P and T=R, hence S=0 and T=1.
+        # The boundaries pass through sampled cell centers, not cell edges.
+        for line in (ax.axvline(0), ax.axhline(1)):
+            line.set(color='#202020', linewidth=2.2, linestyle=(0, (6, 4)), zorder=4)
+            line.set_path_effects([path_effects.Stroke(linewidth=4, foreground='white'),
+                                   path_effects.Normal()])
+            line.set_gid('nash-boundary')
         for j, t in enumerate(values):
             for i, s in enumerate(values):
                 v = z[j,i]
@@ -77,8 +86,11 @@ def cooperation_heatmap(games, out):
                 else:
                     text = f'{v:.2f}'
                     color = 'white' if v <= .1 or v >= .9 else '#17231F'
+                # Preserve labels where a boundary crosses a sampled payoff.
+                mask = (dict(facecolor=cmap(v) if not np.isnan(v) else '#E5E7EB',
+                             edgecolor='none', pad=.8) if s == 0 or t == 1 else None)
                 ax.text(s, t, text, ha='center', va='center', color=color,
-                        fontsize=14, zorder=5)
+                        fontsize=14, zorder=5, bbox=mask)
         ax.set_xticks(values, [f'{v:g}' for v in values], rotation=45, ha='right')
         ax.set_yticks(values, [f'{v:g}' for v in values])
         ax.tick_params(labelsize=14 if single else 16, width=.8, length=4)
@@ -98,6 +110,10 @@ def cooperation_heatmap(games, out):
         cb.ax.tick_params(labelsize=14 if small else 17)
         cb.set_label('Cooperation proportion', labelpad=18, fontsize=18 if small else 21)
         cb.outline.set_linewidth(.7)
+        handle = Line2D([], [], color='#202020', linewidth=2.2, linestyle=(0, (6, 4)))
+        fig.legend([handle], ['Nash boundaries\n$S=0$, $T=1$'],
+                   loc='upper left', bbox_to_anchor=(rect[0]-.005, rect[1]-.045),
+                   frameon=False, fontsize=14 if small else 17, handlelength=2.5)
 
     def export(fig, name):
         for extension in ('png','svg','pdf'):
