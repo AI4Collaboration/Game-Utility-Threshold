@@ -74,8 +74,8 @@ def cooperation_heatmap(games, out):
         # Best-response regimes change at S=P and T=R, hence S=0 and T=1.
         # The boundaries pass through sampled cell centers, not cell edges.
         for line in (ax.axvline(0), ax.axhline(1)):
-            line.set(color='#202020', linewidth=2.2, linestyle=(0, (6, 4)), zorder=4)
-            line.set_path_effects([path_effects.Stroke(linewidth=4, foreground='white'),
+            line.set(color='#FFE600', linewidth=4, linestyle='-', zorder=4)
+            line.set_path_effects([path_effects.Stroke(linewidth=5.2, foreground='#665900'),
                                    path_effects.Normal()])
             line.set_gid('nash-boundary')
         for j, t in enumerate(values):
@@ -110,7 +110,9 @@ def cooperation_heatmap(games, out):
         cb.ax.tick_params(labelsize=14 if small else 17)
         cb.set_label('Cooperation proportion', labelpad=18, fontsize=18 if small else 21)
         cb.outline.set_linewidth(.7)
-        handle = Line2D([], [], color='#202020', linewidth=2.2, linestyle=(0, (6, 4)))
+        handle = Line2D([], [], color='#FFE600', linewidth=4)
+        handle.set_path_effects([path_effects.Stroke(linewidth=5.2, foreground='#665900'),
+                                path_effects.Normal()])
         fig.legend([handle], ['Nash boundaries\n$S=0$, $T=1$'],
                    loc='upper left', bbox_to_anchor=(rect[0]-.005, rect[1]-.045),
                    frameon=False, fontsize=14 if small else 17, handlelength=2.5)
