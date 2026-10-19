@@ -123,10 +123,7 @@ def cooperation_heatmap(games, out):
         plt.close(fig)
 
     # Local typography leaves the styling of the other publication figures intact.
-    with plt.rc_context({'font.family':'Arial', 'mathtext.fontset':'custom',
-                         'mathtext.rm':'Arial',
-                         'mathtext.it':'Arial:italic',
-                         'mathtext.bf':'Arial:bold',
+    with plt.rc_context({'font.family':'DejaVu Sans', 'mathtext.fontset':'dejavusans',
                          'font.size':16, 'axes.linewidth':.8, 'pdf.fonttype':42}):
         fig, axes = plt.subplots(2, 2, figsize=(24, 23))
         fig.subplots_adjust(left=.065, right=.855, bottom=.065, top=.92,
