@@ -71,9 +71,10 @@ def cooperation_heatmap(games, out):
                        for s in values] for t in values])
         im = ax.pcolormesh(cell_edges, cell_edges, z, cmap=cmap, vmin=0, vmax=1,
                           edgecolors='#FFFFFF50', linewidth=.4, rasterized=True)
-        # Best-response regimes change at S=P and T=R, hence S=0 and T=1.
-        # The boundaries pass through sampled cell centers, not cell edges.
-        for line in (ax.axvline(0), ax.axhline(1)):
+        # Best-response regimes change analytically at S=0 and T=1. Display the
+        # guides half a grid step outward, on cell edges, so they do not obscure
+        # the sampled boundary cells. This outlines the strict-PD cells S<0,T>1.
+        for line in (ax.axvline(-.125), ax.axhline(1.125)):
             line.set(color='#FFE600', linewidth=4, linestyle='-', zorder=4)
             line.set_path_effects([path_effects.Stroke(linewidth=5.2, foreground='#665900'),
                                    path_effects.Normal()])
@@ -113,7 +114,7 @@ def cooperation_heatmap(games, out):
         handle = Line2D([], [], color='#FFE600', linewidth=4)
         handle.set_path_effects([path_effects.Stroke(linewidth=5.2, foreground='#665900'),
                                 path_effects.Normal()])
-        fig.legend([handle], ['Nash boundaries\n$S=0$, $T=1$'],
+        fig.legend([handle], ['Nash boundaries\n$S=0$, $T=1$\n(display offset)'],
                    loc='upper left', bbox_to_anchor=(rect[0]-.005, rect[1]-.045),
                    frameon=False, fontsize=14 if small else 17, handlelength=2.5)
 

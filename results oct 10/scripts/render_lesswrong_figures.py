@@ -18,8 +18,9 @@ FIGURES = [('01_cooperation_susceptibility',
   'C and D are analytical labels; prompts used neutral A/B labels, reversed across '
   'two blocks. Each cell contains at most two valid games (four decisions). GLM at (S,T)=(0.25,1.25) '
   'and Fable at (0.25,1) each have only one valid game. Regime boundaries at '
-  'S=0 and T=1 are drawn as bright yellow lines with thin dark outlines; they separate dominance, coordination, '
-  'and anti-coordination regions. Labels mask the lines locally to keep cell proportions readable. The clearer own-payoff '
+  'S=0 and T=1 are shown as bright yellow lines with thin dark outlines; they separate dominance, coordination, '
+  'and anti-coordination regions. For legibility, these guides are shifted outward by half a grid step to the nearest '
+  'cell edges, outlining the strict-PD cells S<0 and T>1 without bisecting sampled cells. The clearer own-payoff '
   'presentation was an exploratory follow-up. Here “susceptibility” means observed response to payoff '
   'incentives, not a safety or manipulation score. Most cells are not strict Prisoner’s Dilemma; strict PD '
   'occupies S<0, T>1.'),
