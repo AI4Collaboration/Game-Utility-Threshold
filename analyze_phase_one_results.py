@@ -139,7 +139,18 @@ def threshold_transition_analysis(payload: Mapping[str, Any]) -> dict[str, Any]:
             else 0.0
         ),
         "records": transition_records,
+        "definition": "Legacy pooled rate: full three-point checks plus zero-defense two-point checks",
+        "full_triplets": _transition_slice(transition_records, full=True),
+        "zero_defense_pairs": _transition_slice(transition_records, full=False),
     }
+
+
+def _transition_slice(records: list[dict[str, Any]], *, full: bool) -> dict[str, Any]:
+    selected = [record for record in records if (record["defense"] > 0) == full]
+    successes = sum(record["expected_threshold_transition"] for record in selected)
+    return {"count": len(selected), "successes": successes,
+            "rate": successes / len(selected) if selected else None,
+            "definition": "COOPERATE -> COOPERATE -> ATTACK" if full else "COOPERATE -> ATTACK"}
 
 
 def audit_policy_summary(payload: Mapping[str, Any]) -> dict[str, Any]:

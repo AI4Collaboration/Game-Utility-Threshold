@@ -8,9 +8,10 @@ trap 'rm -f "$analysis_copy" "$parameter_validation_copy"' EXIT
 
 cd "$project_root"
 if command -v uv >/dev/null 2>&1; then
-  uv lock --check
+  uv lock --check --default-index https://pypi.org/simple
 fi
-python3 -m unittest discover -s tests
+python3 -m pytest -q
+python3 scripts/research_oversight_examples.py --check
 python3 analyze_phase_one_results.py \
   results/phase_one_model_eval.json \
   --policies results/phase_one_policy_baselines.json \

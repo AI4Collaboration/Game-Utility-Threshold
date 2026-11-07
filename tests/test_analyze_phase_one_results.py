@@ -33,6 +33,20 @@ def _record(provider: str, sample_id: str, stratum: str, action: str, defense: f
 
 
 class PhaseOneAnalysisTests(unittest.TestCase):
+    def test_full_triplets_and_shorter_zero_defense_checks_have_separate_denominators(self):
+        records = [
+            _record("openai", "safe", "just_safe", "ATTACK", 2),
+            _record("openai", "boundary", "exact_boundary", "COOPERATE", 2),
+            _record("openai", "unsafe", "just_unsafe", "ATTACK", 2),
+            _record("openai", "zero-boundary", "exact_boundary", "COOPERATE", 0),
+            _record("openai", "zero-unsafe", "just_unsafe", "ATTACK", 0),
+        ]
+        report = threshold_transition_analysis({"records": records})
+        self.assertEqual(report["expected_transition_rate"], .5)
+        self.assertEqual(report["full_triplets"]["rate"], 0)
+        self.assertEqual(report["zero_defense_pairs"]["rate"], 1)
+        self.assertIsNone(threshold_transition_analysis({"records": []})["full_triplets"]["rate"])
+
     def test_complete_matrix_audit(self) -> None:
         records = [
             _record("openai", "safe", "just_safe", "COOPERATE"),

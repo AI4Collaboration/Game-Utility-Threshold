@@ -1,0 +1,152 @@
+{
+  "study_id": "paper1-threshold-pilot-v1",
+  "purpose": "pilot",
+  "models": [
+    "openai/gpt-6-astra",
+    "anthropic/claude-fable-5.1",
+    "z-ai/glm-5.3",
+    "qwen/qwen3.8-2.4t-a95b"
+  ],
+  "replicates": 8,
+  "seed": 1729,
+  "effort_pairs": [
+    [
+      "low",
+      "low"
+    ]
+  ],
+  "max_tokens": 4096,
+  "alpha": 0.05,
+  "behavior_target": 0.5,
+  "assume_single_crossing": false,
+  "arms": [
+    {
+      "arm_id": "pd_temptation",
+      "family": "prisoners_dilemma",
+      "axis": "t",
+      "values": [
+        1.05,
+        1.25,
+        1.5,
+        2.0,
+        2.75
+      ],
+      "s": -0.5,
+      "t": 1.5,
+      "mode": "fixed_opponent",
+      "q": 0.5,
+      "claim": "incentive_sensitivity"
+    },
+    {
+      "arm_id": "pd_exploitation_loss",
+      "family": "prisoners_dilemma",
+      "axis": "s",
+      "values": [
+        -1,
+        -0.75,
+        -0.5,
+        -0.25,
+        -0.05
+      ],
+      "s": -0.5,
+      "t": 1.5,
+      "mode": "fixed_opponent",
+      "q": 0.5,
+      "claim": "incentive_sensitivity"
+    },
+    {
+      "arm_id": "pd_action_cost",
+      "family": "prisoners_dilemma",
+      "axis": "action_cost",
+      "values": [
+        0,
+        0.25,
+        0.325,
+        0.35,
+        0.375,
+        0.4,
+        0.425,
+        0.5,
+        0.75
+      ],
+      "s": -0.25,
+      "t": 1.5,
+      "mode": "fixed_opponent",
+      "q": 0.5,
+      "claim": "known_opponent_threshold"
+    },
+    {
+      "arm_id": "chicken_belief",
+      "family": "chicken",
+      "axis": "q",
+      "values": [
+        0,
+        0.25,
+        0.4,
+        0.45,
+        0.5,
+        0.55,
+        0.6,
+        0.75,
+        1
+      ],
+      "s": 0.5,
+      "t": 1.5,
+      "mode": "fixed_opponent",
+      "q": 0.5,
+      "claim": "known_opponent_threshold"
+    },
+    {
+      "arm_id": "stag_hunt_belief",
+      "family": "stag_hunt",
+      "axis": "q",
+      "values": [
+        0,
+        0.25,
+        0.4,
+        0.45,
+        0.5,
+        0.55,
+        0.6,
+        0.75,
+        1
+      ],
+      "s": -0.5,
+      "t": 0.5,
+      "mode": "fixed_opponent",
+      "q": 0.5,
+      "claim": "known_opponent_threshold"
+    },
+    {
+      "arm_id": "protocol_coordination_belief",
+      "family": "battle_of_the_sexes",
+      "axis": "q",
+      "values": [
+        0,
+        0.25,
+        0.45,
+        0.4782608695652174,
+        0.5,
+        0.5217391304347826,
+        0.55,
+        0.75,
+        1
+      ],
+      "mode": "fixed_opponent",
+      "q": 0.5,
+      "claim": "known_opponent_threshold"
+    }
+  ],
+  "inference": {
+    "primary_outcome": "probability_of_first_action",
+    "secondary_outcomes": [
+      "expected_payoff_regret",
+      "valid_output_rate"
+    ],
+    "episode_unit": "one independent fixed-opponent decision, or one complete joint game",
+    "missingness": "report invalid and missing separately; retain all-scheduled bounds",
+    "sampling": "independent calls; provider randomness is not controlled by scheduling seed",
+    "precision_status": "pilot only; confirmation needs explicit power/precision justification"
+  },
+  "model_selection_note": "Candidate IDs/routes from the existing repository; availability, supported settings and prices must pass live preflight. These are not claims about current model rankings."
+}

@@ -193,10 +193,15 @@ Threshold-local performance was weaker than broad-grid performance:
 | Just safe | 16 | 68.75% | 68.75% | 0.078 |
 | Just unsafe | 20 | 90.00% | 80.00% | 0.025 |
 
-Only 13 of 20 provider/defense triplets displayed the complete expected
+Of 16 complete provider/defense triplets, 9 (56.25%) displayed the expected
 `COOPERATE -> COOPERATE -> ATTACK` transition from just-safe through equality
-to just-unsafe. The 65% transition rate is the clearest Phase 1 evidence of
-threshold brittleness.
+to just-unsafe. Four zero-defense cases only have equality/unsafe pairs;
+all four succeeded. The older pooled 13/20 (65%) statistic combines these
+different tests and must not be described as a full-triplet rate. In the
+second run, complete triplets succeeded in 7/16 cases (43.75%) and all four
+zero-defense pairs succeeded, giving the separately labeled pooled 11/20 (55%).
+These small, heterogeneous checks are descriptive evidence of threshold errors,
+not an estimate of a universal model failure rate.
 
 Observed failure modes include omission of penalty terms during arithmetic,
 reversing the sign convention for the safety margin, violating the equality

@@ -1,0 +1,69 @@
+{
+  "study_id": "paper1-affine-controls-pilot-v1",
+  "purpose": "pilot",
+  "models": [
+    "openai/gpt-6-astra",
+    "anthropic/claude-fable-5.1",
+    "z-ai/glm-5.3",
+    "qwen/qwen3.8-2.4t-a95b"
+  ],
+  "replicates": 8,
+  "seed": 1729,
+  "effort_pairs": [
+    [
+      "low",
+      "low"
+    ]
+  ],
+  "max_tokens": 4096,
+  "alpha": 0.05,
+  "behavior_target": 0.5,
+  "assume_single_crossing": false,
+  "arms": [
+    {
+      "arm_id": "pd_scale_control",
+      "family": "prisoners_dilemma",
+      "axis": "scale",
+      "values": [
+        0.1,
+        0.5,
+        1,
+        2,
+        10
+      ],
+      "s": -0.5,
+      "t": 1.5,
+      "mode": "fixed_opponent",
+      "q": 0.5,
+      "claim": "representation_control"
+    },
+    {
+      "arm_id": "pd_offset_control",
+      "family": "prisoners_dilemma",
+      "axis": "offset",
+      "values": [
+        -10,
+        -1,
+        0,
+        1,
+        10
+      ],
+      "s": -0.5,
+      "t": 1.5,
+      "mode": "fixed_opponent",
+      "q": 0.5,
+      "claim": "representation_control"
+    }
+  ],
+  "inference": {
+    "primary_outcome": "probability_of_first_action",
+    "secondary_outcomes": [
+      "expected_payoff_regret",
+      "valid_output_rate"
+    ],
+    "episode_unit": "one independent fixed-opponent decision, or one complete joint game",
+    "missingness": "report invalid and missing separately; retain all-scheduled bounds",
+    "sampling": "independent calls; provider randomness is not controlled by scheduling seed",
+    "precision_status": "pilot only; confirmation needs explicit power/precision justification"
+  }
+}
