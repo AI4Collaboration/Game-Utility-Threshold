@@ -6,8 +6,10 @@ Catastrophic failures in AI systems often look discontinuous: behavior appears s
 
 This post builds a foundational oversight game, derives threshold conditions,
 and tests whether four current model families actually follow those conditions.
-Across 156 model decisions, only 65% of the local safe–boundary–unsafe triplets
-displayed the theoretically correct behavioral transition. The result is a
+Across 156 model decisions, 9 of 16 complete local safe–boundary–unsafe triplets
+(56.25%) displayed the theoretically correct behavioral transition. Four shorter
+boundary–unsafe checks at zero defense also passed; combining them gives the
+previously reported 13/20 (65%) rate, which must not be called a triplet rate. The result is a
 concrete warning: writing down a utility threshold does not ensure a language
 model will calculate or apply it reliably.
 
@@ -149,9 +151,10 @@ The simplest textbook-style attack condition appears when:
 
 Then:
 
-`A` optimal iff `v > p - c`
+`A` optimal iff `v > p + c`
 
-which matches the requested threshold form.
+Both the attack cost and the penalty reduce the incentive to attack. The
+earlier proposal's minus sign on the cost was inconsistent with these payoffs.
 
 More generally:
 

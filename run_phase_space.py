@@ -134,25 +134,44 @@ def prompt_for(case: dict, role: str) -> str:
 
 
 def parse_decision(text: str, mapping: dict[str, str]) -> dict:
+    def unique_object(pairs):
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError(f"Duplicate JSON key: {key}")
+            result[key] = value
+        return result
+
+    def reject_constant(value):
+        raise ValueError(f"Non-finite JSON constant is not allowed: {value}")
+
+    def finite_float(value):
+        number = float(value)
+        if not math.isfinite(number):
+            raise ValueError(f"JSON number exceeds finite storage range: {value}")
+        return number
+
     raw = text.strip()
     if raw.startswith("```") and raw.endswith("```"):
         raw = re.sub(r"^```(?:json)?\s*", "", raw)[:-3].strip()
     try:
         exact = True
         try:
-            obj = json.loads(raw)
-        except ValueError:
+            obj = json.loads(raw, object_pairs_hook=unique_object,
+                             parse_constant=reject_constant, parse_float=finite_float)
+        except json.JSONDecodeError:
             exact = False
             # Accept one unambiguous final JSON decision after visible prose.
             # Never infer an action from prose, or choose between conflicting objects.
             candidates = []
-            decoder = json.JSONDecoder()
+            decoder = json.JSONDecoder(object_pairs_hook=unique_object,
+                                       parse_constant=reject_constant, parse_float=finite_float)
             for match in re.finditer(r"\{", raw):
                 try:
                     candidate, end = decoder.raw_decode(raw[match.start():])
                     if isinstance(candidate, dict) and "action" in candidate:
                         candidates.append((candidate, match.start()+end))
-                except ValueError:
+                except json.JSONDecodeError:
                     continue
             if len(candidates) != 1 or raw[candidates[0][1]:].strip().strip("`").strip():
                 raise ValueError("No single unambiguous final JSON decision")
@@ -305,6 +324,15 @@ class Runtime:
         self.halt: str | None = None
         self.failures: dict[str, int] = {}
 
+    def prompt(self, case: dict, role: str) -> str:
+        return prompt_for(case, role)
+
+    def action_labels(self, case: dict, role: str) -> dict:
+        return labels(case, role)
+
+    def reasoning_effort(self, case: dict, role: str) -> str:
+        return "low"
+
     def begin_batch(self) -> None:
         # Each eval() owns an event loop / HTTP client lifecycle. Reusing these
         # Model objects in the next eval can reuse sockets bound to a closed
@@ -323,7 +351,7 @@ class Runtime:
         for role in roles:
             model = case["model"] if role == "row" else case["opponent_model"]
             pricing = self.payload["preflight"]["models"][model]["price_ceiling_per_token"]
-            reservations.append((role, model, call_ceiling(prompt_for(case, role), self.max_tokens, pricing)))
+            reservations.append((role, model, call_ceiling(self.prompt(case, role), self.max_tokens, pricing)))
         if self.ledger.committed + sum(item[2] for item in reservations) > self.ledger.data["cap_usd"]:
             self.halt = "budget_limit"
             return None
@@ -336,10 +364,10 @@ class Runtime:
         from inspect_ai.log import transcript
         import phase_space_provider  # registers the raw-billing adapter
         model = case["model"] if role == "row" else case["opponent_model"]
-        prompt = prompt_for(case, role)
+        prompt = self.prompt(case, role)
         pricing = self.payload["preflight"]["models"][model]["price_ceiling_per_token"]
         bound = call_ceiling(prompt, self.max_tokens, pricing)
-        config = GenerateConfig(max_tokens=self.max_tokens, reasoning_effort="low",
+        config = GenerateConfig(max_tokens=self.max_tokens, reasoning_effort=self.reasoning_effort(case, role),
                                 max_retries=0, timeout=180, attempt_timeout=180,
                                 cache=False, cache_prompt=False)
         try:
@@ -356,7 +384,7 @@ class Runtime:
             receipt = (response.metadata or {}).get("phase_space_billing", {})
             cost = receipt.get("cost_usd")
             self.ledger.settle(reservation, cost, "returned")
-            decision = parse_decision(response.completion, labels(case, role))
+            decision = parse_decision(response.completion, self.action_labels(case, role))
             decision.update(usage=usage, billing_receipt=receipt, returned_model=response.model,
                             stop_reason=str(response.choices[0].stop_reason) if response.choices else None,
                             raw_completion=response.completion)

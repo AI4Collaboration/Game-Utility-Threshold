@@ -580,7 +580,14 @@
     }
   },
   "threshold_transitions": {
+    "definition": "Legacy pooled rate: full three-point checks plus zero-defense two-point checks",
     "expected_transition_rate": 0.65,
+    "full_triplets": {
+      "count": 16,
+      "definition": "COOPERATE -> COOPERATE -> ATTACK",
+      "rate": 0.5625,
+      "successes": 9
+    },
     "records": [
       {
         "actions": {
@@ -779,6 +786,12 @@
         "provider": "openai"
       }
     ],
-    "transition_count": 20
+    "transition_count": 20,
+    "zero_defense_pairs": {
+      "count": 4,
+      "definition": "COOPERATE -> ATTACK",
+      "rate": 1.0,
+      "successes": 4
+    }
   }
 }

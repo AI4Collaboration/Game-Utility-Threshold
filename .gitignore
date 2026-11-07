@@ -11,3 +11,4 @@ logs/**/*.log.gz
 lean/.lake/
 results/phase_space/*.lock
 results/phase_space/*.json.tmp
+/work/

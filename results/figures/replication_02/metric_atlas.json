@@ -75247,7 +75247,20 @@
         },
         "expected_threshold_transition": false
       }
-    ]
+    ],
+    "definition": "Legacy pooled rate: full three-point checks plus zero-defense two-point checks",
+    "full_triplets": {
+      "count": 16,
+      "successes": 7,
+      "rate": 0.4375,
+      "definition": "COOPERATE -> COOPERATE -> ATTACK"
+    },
+    "zero_defense_pairs": {
+      "count": 4,
+      "successes": 4,
+      "rate": 1.0,
+      "definition": "COOPERATE -> ATTACK"
+    }
   },
   "threshold_catalog": [
     {

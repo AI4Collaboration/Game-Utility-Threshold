@@ -11,6 +11,47 @@ latent-state payoff lotteries, Bayesian beliefs, six risk criteria, executable
 institutional mechanisms, repeated play, true multi-provider model gameplay,
 and granular AISI Inspect traces.
 
+## Paper 1: controlled studies and bounded claims
+
+The new [Paper 1 protocol](docs/research/paper-one-protocol.md) defines the
+research questions, outcome measures, collection rules, and remaining gates.
+The [primary-source review](docs/research/literature-review.md) explains which
+published methods we reuse and their limits. The new designs are **unrun
+pilots**, not additional empirical results or evidence that Paper 1 is finished.
+
+For a one-shot Prisoner's Dilemma, normalize mutual-cooperation payoff to 1
+and mutual-defection payoff to 0. Vary the temptation payoff or exploitation
+loss separately. Defection still maximizes individual points throughout the
+strict PD region; any observed cooperation crossover is behavioral. A separate
+single-mechanism action cost supplies a calculable intervention threshold.
+Chicken, Stag Hunt, and asymmetric protocol coordination use their own
+best-response boundaries and joint outcome measures.
+
+```bash
+uv sync --frozen --extra research
+uv run run_research_study.py plan \
+  --config experiments/paper_one/fixed_opponent_pilot.json \
+  --output work/paper_one/manifest.json
+uv run analyze_research_study.py \
+  --manifest work/paper_one/manifest.json --output work/paper_one/preview
+uv run scripts/research_oversight_examples.py --check
+```
+
+These commands make no model calls. The [experiment guide](experiments/paper_one/README.md)
+also covers public price quotes, explicit spending caps, provenance, resuming,
+and separate self-play/representation controls. The report exports CSV, JSON,
+PNG, and SVG with all planned denominators and visible invalid/missing records.
+The [statistical methods](docs/research/statistical-methods.md) explain why
+small pilots often leave thresholds unresolved and when a confidence claim is
+justified. No connecting curve is invented between sampled settings.
+
+The [uncertain-priority extension](docs/research/oversight-bounds.md) adds exact
+private-priority optimization, explicit attack-risk constraints, bounded-error
+certificates, and distances to a change in behavior. Its
+[replayable examples](results/research_theory/README.md) are mathematical
+calculations. Their guarantees concern the stated model, including its
+detection/prevention assumptions; they are not deployment safety guarantees.
+
 ## Symmetric-game phase-space sweeps
 
 The [phase-space study](docs/phase-space-experiments.md) implements the SIAM
@@ -33,9 +74,11 @@ Python–Lean parity checks, 312 Inspect policy-baseline samples, and 156 real
 cross-provider model decisions.
 
 The model matrix is factorially complete. Overall, 98.72% of actions were
-parseable and 85.90% were utility-optimal, but only 65% of provider/defense
-triplets exhibited the correct local transition from just-safe through the
-boundary to just-unsafe. See
+parseable and 85.90% were utility-optimal. Of the 16 complete three-point
+checks, 9 (56.25%) exhibited the correct transition from just-safe through
+the boundary to just-unsafe. Four separate two-point checks at zero defense
+also succeeded; pooling those with the triplets gives the legacy 13/20 (65%)
+rate, which is not a triplet rate. See
 [docs/phase-one-research-package.md](docs/phase-one-research-package.md) for the
 formal specification, methods, results, error analysis, limitations, artifact
 map, and reproduction commands. The publication-ready milestone manuscript is
@@ -205,14 +248,14 @@ Requires Python 3.11 or newer.
 For a fully pinned environment:
 
 ```bash
-uv sync --frozen
+uv sync --frozen --extra research
 uv run scripts/validate_research_package.sh
 ```
 
 Or install directly with pip:
 
 ```bash
-python3 -m pip install -e .
+python3 -m pip install -e '.[research]'
 scripts/validate_research_package.sh
 ```
 
