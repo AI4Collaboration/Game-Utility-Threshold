@@ -156,7 +156,8 @@ function renderMatrix() {
     for (let column = 0; column < 2; column++) {
       const cell = r.cells.find((c) => c.row === row && c.column === column);
       const label = `Player 1 ${r.actions[row]}, Player 2 ${r.actions[column]}: ${number(cell.payoffs[0])} and ${number(cell.payoffs[1])} points${cell.pure_equilibrium ? "; neither player gains by changing alone" : ""}`;
-      html += `<button class="matrix-cell" data-cell="${row},${column}" aria-label="${escapeHTML(label)}" aria-pressed="${selected && state.selection[0] === row && state.selection[1] === column}"><span class="row-text">${number(cell.payoffs[0])}</span><span class="slash">/</span><span class="column-text">${number(cell.payoffs[1])}</span>${cell.pure_equilibrium ? '<i class="equilibrium-dot" aria-hidden="true"></i>' : ""}</button>`;
+      const dense = Math.max(...cell.payoffs.map((p) => number(p).length)) > 4;
+      html += `<button class="matrix-cell${dense ? " long-values" : ""}" data-cell="${row},${column}" aria-label="${escapeHTML(label)}" aria-pressed="${selected && state.selection[0] === row && state.selection[1] === column}"><span class="row-text">${number(cell.payoffs[0])}</span><span class="slash">/</span><span class="column-text">${number(cell.payoffs[1])}</span>${cell.pure_equilibrium ? '<i class="equilibrium-dot" aria-hidden="true"></i>' : ""}</button>`;
     }
   }
   $("#payoff-matrix").innerHTML = html + "</div>";

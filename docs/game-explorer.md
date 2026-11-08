@@ -120,3 +120,22 @@ The visual direction is an original undersea lobby with dark panels and
 cyan/pink accents, inspired by the atmosphere of
 [Puffer Party](https://krillion.io/party). Threshold Tide uses its own branding
 and original local artwork.
+
+## Verification
+
+On 8 November 2026, the complete suite passed **425 tests and 340 subtests**;
+the existing Lean check was skipped because its toolchain is unavailable.
+The explorer adds 110 tests for constructor parity, both player roles, exact
+crossings and ties, input validation, and the local HTTP service.
+
+Browser checks covered all four games, the two preset sources, the PD cost
+tie at `0.375`, canonical Chicken and Stag Hunt crossings, the two distinct
+coordination-game crossings, outcome previews, and practice rounds from
+either player role. Downloaded JSON and CSV were parsed and checked against
+their saved payoff matrices. Invalid numeric entries keep play disabled,
+including after changing role; older responses cannot overwrite newer settings.
+
+The desktop view and a 390 × 844 phone viewport were inspected, including
+long decimal payoffs and the responsive chart. No horizontal page overflow
+or browser errors were present in the checked states. These checks establish
+software behavior, not empirical research findings.
