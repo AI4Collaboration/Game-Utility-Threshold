@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#081a29">
+  <title>Threshold Tide · The game lab</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#arena">Skip to the game</a>
+  <svg class="sprite-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <symbol id="fish" viewBox="0 0 32 32">
+        <path fill="#235b65" d="M9 7h13v2h5v5h3v8h-4v4H9v-3H5v-3H2v-8h4V9h3z"/>
+        <path fill="currentColor" d="M10 5h11v3h5v5h3v8h-4v4H10v-2H6v-3H3v-7h4V9h3zM2 12H0V7h3v2h3v4z"/>
+        <path fill="#fff3ca" d="M8 18h20v4h-4v3H11v-2H8z"/>
+        <path fill="#a57731" d="M13 6h3v3h-3zm8 4h3v3h-3zm-11 4h3v3h-3zm7-3h2v2h-2z"/>
+        <path fill="#082131" d="M22 14h3v4h-3zm-5 4h3v2h-3z"/>
+        <path fill="#fff" d="M22 14h1v1h-1z"/>
+        <path fill="#ffcf72" d="M8 25h5v3h-3v-2H8zm9-1h4v3h-4z"/>
+      </symbol>
+      <symbol id="crab" viewBox="0 0 32 32">
+        <path fill="currentColor" d="M8 13h16v3h3v8h-3v3H8v-3H5v-8h3zM2 6h4v7H2V6zm24 0h4v7h-4zM0 3h3v4H0zm5 0h3v4H5zm19 0h3v4h-3zm5 0h3v4h-3zM3 12h5v6H5v-3H3zm21 0h5v3h-2v3h-3zM2 21h5v3H2zm23 0h5v3h-5zM4 26h7v3H8v2H5v-3H4zm17 0h7v2h-1v3h-3v-2h-3zM10 8h3v8h-3zm9 0h3v8h-3z"/>
+        <path fill="#fff3d9" d="M10 8h3v4h-3zm9 0h3v4h-3zM12 22h8v2h-8z"/>
+        <path fill="#102838" d="M11 9h2v3h-2zm8 0h2v3h-2z"/>
+        <path fill="#fbb0a5" d="M9 16h13v3H9z"/>
+      </symbol>
+      <symbol id="squid" viewBox="0 0 32 32">
+        <path fill="currentColor" d="M14 2h4v3h4v4h3v12h-4v4h-3v-3h-4v3h-3v-4H7V9h3V5h4zM7 22h4v6H8v3H5v-4h2zm14 0h4v5h2v4h-3v-3h-3zm-8 2h3v7h-3zm4 0h3v5h-3z"/>
+        <path fill="#c9f8e8" d="M12 7h7v3h-7zM9 14h5v5H9zm9 0h5v5h-5z"/>
+        <path fill="#0d2331" d="M11 15h3v4h-3zm7 0h3v4h-3z"/>
+      </symbol>
+      <symbol id="shell" viewBox="0 0 32 32">
+        <path fill="currentColor" d="M9 4h14v3h5v5h3v9h-4v4h-5v4H10v-4H5v-4H1v-9h3V7h5z"/>
+        <path stroke="#091f30" stroke-width="2" fill="none" d="M16 26V6m-2 19L7 9m11 16 7-16M12 26 3 15m17 11 9-11"/>
+        <path fill="#ffe2bf" d="M10 27h12v3H10z"/>
+      </symbol>
+    </defs>
+  </svg>
+  <div class="ocean-light" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="wordmark" href="/" aria-label="Threshold Tide home"><span class="brand-icon">▧</span> AI4<span>COLLABORATION</span></a>
+    <div class="top-links"><span class="local-status"><i></i> LOCAL GAME LAB</span><button class="text-button" id="help-open">How to play <span>↗</span></button><a href="https://github.com/AI4Collaboration/Game-Utility-Threshold" target="_blank" rel="noopener noreferrer" class="source-link">Repository ↗</a></div>
+  </header>
+  <main>
+    <div class="masthead">
+      <div class="masthead-fish" aria-hidden="true"><svg><use href="#fish"/></svg><span class="bubble b1"></span><span class="bubble b2"></span></div>
+      <div><p class="eyebrow">SMALL GAMES. BIG QUESTIONS.</p><h1>THRESHOLD <span>TIDE</span></h1><p class="tagline">Change the stakes. Make your move. See what changes.</p></div>
+      <span class="edition">FIELD NOTES<br><b>VOL. 01 / 2×2</b></span>
+    </div>
+    <div id="connection-error" class="error-banner" role="alert" hidden><span></span><button id="retry" class="text-button">Try again</button></div>
+    <div class="lab-layout" id="lab" aria-busy="true">
+      <aside class="setup-column" aria-label="Game settings">
+        <section class="panel game-picker">
+          <h2 class="panel-label"><span>01</span> PICK A GAME <i></i></h2>
+          <div id="game-options" class="game-options" aria-label="Game family"><p class="loading-copy">Bringing the games ashore…</p></div>
+        </section>
+        <section class="panel settings-panel">
+          <div class="panel-label"><h2><span>02</span> SET THE STAKES</h2><button id="reset-settings" class="icon-button" aria-label="Reset this game's settings" title="Reset settings">↺</button></div>
+          <label class="field-label" for="basis">PAYOFF SET</label>
+          <select id="basis"><option value="paper">Paper 1 · abstract settings</option><option value="canonical">Repository · scenario settings</option></select>
+          <p id="basis-note" class="microcopy"></p>
+          <label class="field-label" for="axis">CHANGE ONE THING</label>
+          <select id="axis"></select>
+          <div class="slider-label"><label id="axis-label" for="axis-range">Value</label><input id="axis-number" type="number" step="any" aria-label="Exact axis value"></div>
+          <input id="axis-range" type="range" step="any" aria-labelledby="axis-label">
+          <div class="range-ends"><span id="axis-min"></span><span id="axis-max"></span></div>
+          <p class="microcopy" id="axis-note"></p>
+          <div id="opponent-control" class="opponent-control">
+            <div class="slider-label"><label for="q-range">Other player picks <strong id="q-action">the first action</strong></label><output id="q-value" for="q-range">50%</output></div>
+            <input type="range" id="q-range" min="0" max="1" step="0.01" value="0.5">
+            <div class="range-ends"><span>Never</span><span>Always</span></div>
+          </div>
+          <span class="field-label">YOUR POINT OF VIEW</span>
+          <div class="segmented role-control" role="group" aria-label="Your player role"><button data-role="row" aria-pressed="true">Player 1</button><button data-role="column" aria-pressed="false">Player 2</button></div>
+          <p class="fixed-note"><span>⌁</span> Every other payoff stays at its preset.</p>
+        </section>
+      </aside>
+      <div class="play-column">
+        <section class="panel arena-panel" id="arena" tabindex="-1" aria-labelledby="game-title">
+          <div class="arena-heading"><div><p class="eyebrow" id="game-kicker">THE TWO-PLAYER ROOM</p><h2 id="game-title">Prisoner’s Dilemma</h2></div><span class="players-pill">● ● &nbsp; 2 PLAYERS</span></div>
+          <p id="game-explanation" class="game-explanation">One choice each. Four possible outcomes.</p>
+          <div class="mode-switch segmented" role="group" aria-label="Interaction mode"><button data-mode="explore" aria-pressed="true">Explore outcomes</button><button data-mode="play" aria-pressed="false">Play a round</button></div>
+          <div class="underwater-stage">
+            <span class="stage-bubble sb1" aria-hidden="true"></span><span class="stage-bubble sb2" aria-hidden="true"></span><span class="stage-bubble sb3" aria-hidden="true"></span>
+            <div class="player player-one"><span class="player-tag">PLAYER 1 <span class="you-tag" id="you-row">YOU</span></span><div class="avatar avatar-crab"><svg aria-hidden="true"><use href="#crab"/></svg></div><span class="move-bubble" id="row-move">Choose a move</span><div class="move-buttons" id="row-actions"></div></div>
+            <div class="stage-center"><span class="versus">×</span><span class="stage-caption" id="stage-caption">ONE SHARED<br>OUTCOME</span></div>
+            <div class="player player-two"><span class="player-tag">PLAYER 2 <span class="you-tag" id="you-column" hidden>YOU</span></span><div class="avatar avatar-squid"><svg aria-hidden="true"><use href="#squid"/></svg></div><span class="move-bubble" id="column-move">Choose a move</span><div class="move-buttons" id="column-actions"></div></div>
+          </div>
+          <div class="outcome-strip" id="outcome-strip" aria-live="polite"></div>
+          <div class="arena-footer"><p id="play-instructions">Choose each player’s move, or click a square in the table.</p><button class="primary-button" id="next-round" hidden>Next round <span>→</span></button></div>
+        </section>
+        <section class="panel chart-panel" aria-labelledby="chart-title">
+          <div class="panel-label"><h2><span>03</span> FOLLOW THE INCENTIVE</h2><span class="theory-tag">CALCULATED</span></div>
+          <div class="chart-heading"><h3 id="chart-title">Which choice earns more?</h3><span id="perspective-label">Player 1’s average points</span></div>
+          <div class="chart-legend" id="chart-legend"></div>
+          <div id="chart" class="chart" tabindex="0" aria-label="Calculated average points across the selected setting"></div>
+          <div class="threshold-note" id="threshold-note"></div>
+          <p class="chart-footnote">Lines are calculated from the table and the other player’s stated chance. They do not predict how an AI will behave.</p>
+        </section>
+      </div>
+      <aside class="insight-column" aria-label="Game explanation and outcomes">
+        <section class="panel matrix-panel">
+          <div class="panel-label"><h2>THE PAYOFF TABLE</h2><span class="tiny-chip">LIVE</span></div>
+          <p class="matrix-intro">Each square is one possible outcome.<br><span class="row-text">Player 1’s points</span> / <span class="column-text">Player 2’s points</span></p>
+          <div id="payoff-matrix"></div>
+          <div class="matrix-key"><span class="equilibrium-dot"></span><span>Neither player gains by changing alone</span></div>
+          <div id="regime-note" class="regime-note"></div>
+        </section>
+        <section class="panel intuition-panel">
+          <h2 class="panel-label">THE IDEA, IN PLAIN ENGLISH</h2>
+          <div class="insight-mark" aria-hidden="true">?</div>
+          <h3 id="insight-title">A better shared outcome can be hard to reach.</h3>
+          <p id="insight-body"></p>
+          <div class="expected-values" id="expected-values"></div>
+          <p id="best-choice" class="best-choice" aria-live="polite"></p>
+        </section>
+        <section class="panel history-panel">
+          <div class="panel-label"><h2>YOUR PRACTICE ROUNDS</h2><span id="history-count" class="tiny-chip">0</span></div>
+          <div id="history-list" class="history-list"><p class="empty-history">A little theory. Then a little practice.<br>Play a round to start your log.</p></div>
+          <div class="history-tools"><button class="text-button" id="export-json" disabled>JSON ↓</button><button class="text-button" id="export-csv" disabled>CSV ↓</button><button class="text-button muted" id="clear-history" disabled>Clear</button></div>
+          <p class="microcopy">Local examples, not research observations. Download your rounds before closing this page.</p>
+        </section>
+      </aside>
+    </div>
+    <footer class="page-footer"><span><i></i> A sandbox for understanding incentives.</span><span>Original interface inspired by <a href="https://krillion.io/party" target="_blank" rel="noopener noreferrer">Puffer Party ↗</a></span></footer>
+  </main>
+  <dialog id="help-dialog" aria-labelledby="help-title"><div class="dialog-top"><span class="eyebrow">WELCOME TO THE TIDE</span><button id="help-close" class="icon-button" aria-label="Close instructions">×</button></div><h2 id="help-title">Two players. Two choices.<br>A world of consequences.</h2><ol><li><strong>Pick a game.</strong> Each game gives the players a different reason to work together, compete, or coordinate.</li><li><strong>Read the table.</strong> Rows are Player 1’s moves; columns are Player 2’s. Each square shows both players’ points.</li><li><strong>Change one thing.</strong> Move the slider and watch the table and calculated average points update. All other payoff settings return to the preset when you choose a different control.</li><li><strong>Try it yourself.</strong> In “Play a round,” the other player’s move is drawn from the displayed chance before you choose. It is not a live AI or another person.</li></ol><p>“Neither gains by changing alone” means that, with the other player’s move held fixed, neither can earn more by switching. It does not mean the result is best for both.</p><p>The Paper 1 and repository scenario presets use different payoff settings. Practice rounds are saved only in this page and never enter the research dataset.</p><button id="help-done" class="primary-button">Let’s explore <span>→</span></button></dialog>
+  <noscript><div class="error-banner">This interactive game explorer needs JavaScript enabled.</div></noscript>
+</body>
+</html>

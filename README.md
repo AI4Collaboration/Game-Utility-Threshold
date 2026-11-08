@@ -11,6 +11,22 @@ latent-state payoff lotteries, Bayesian beliefs, six risk criteria, executable
 institutional mechanisms, repeated play, true multi-provider model gameplay,
 and granular AISI Inspect traces.
 
+## Try the local game explorer
+
+**Threshold Tide** lets you explore all four games in an undersea game room.
+Change one incentive, inspect the payoff table and calculated crossing, or
+play practice rounds against a random opponent.
+
+```bash
+python3 serve_game_explorer.py
+```
+
+Open [http://127.0.0.1:8765](http://127.0.0.1:8765). Python 3.11 or newer is
+required; no extra packages, build step, API key or model calls are needed.
+Practice rounds and JSON/CSV downloads are illustrative examples, not research
+observations. See the [game explorer guide](docs/game-explorer.md) for presets,
+controls, the meaning of a crossing and local history.
+
 ## Paper 1: controlled studies and bounded claims
 
 The new [Paper 1 protocol](docs/research/paper-one-protocol.md) defines the
