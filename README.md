@@ -27,6 +27,8 @@ Practice rounds and JSON/CSV downloads are illustrative examples, not research
 observations. See the [game explorer guide](docs/game-explorer.md) for presets,
 controls, the meaning of a crossing and local history.
 
+[![Threshold Tide showing the calculated Prisoner's Dilemma cost boundary](docs/images/game-explorer.jpg)](docs/game-explorer.md)
+
 ## Paper 1: controlled studies and bounded claims
 
 The new [Paper 1 protocol](docs/research/paper-one-protocol.md) defines the
