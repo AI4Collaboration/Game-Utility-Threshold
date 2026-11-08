@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1400" viewBox="0 0 1600 1400">
+ <defs><radialGradient id="water" cx=".5" cy=".12" r=".8"><stop stop-color="#1d4b5c"/><stop offset=".48" stop-color="#0d293b"/><stop offset="1" stop-color="#071522"/></radialGradient><pattern id="dust" width="113" height="101" patternUnits="userSpaceOnUse"><path fill="#a8d7d3" opacity=".09" d="M17 23h2v2h-2zm56 55h2v2h-2zm29-43h1v1h-1z"/></pattern><pattern id="scan" width="4" height="4" patternUnits="userSpaceOnUse"><path fill="#020e1c" opacity=".12" d="M0 3h4v1H0z"/></pattern><g id="weed" fill="none" stroke="#0b2130" stroke-width="7" stroke-linecap="square"><path d="M0 180V20m0 110-24-20V83m24 65 29-23v-24M0 90l21-19V46M0 55l-14-13V22M0 170l-37-27v-25"/></g></defs>
+ <path fill="url(#water)" d="M0 0h1600v1400H0z"/>
+ <path fill="#569da4" opacity=".025" d="M430 0h160l-250 1400H0zm520 0h100l500 1400h-260z"/>
+ <path fill="url(#dust)" d="M0 0h1600v1400H0z"/>
+ <g opacity=".75"><use href="#weed" transform="translate(28 80) scale(1.8)"/><use href="#weed" transform="translate(1580 100) scale(-1.7 1.7)"/><use href="#weed" transform="translate(83 500) scale(2)"/><use href="#weed" transform="translate(1540 680) scale(-2.5 2.5)"/></g>
+ <path fill="#091b28" d="M0 1300h45v-40h80v30h70v-25h100v50h110v-15h160v35h100v-18h150v22h160v-30h130v-30h100v-20h120v30h95v-60h85v-20h95v-20h100v211H0z"/>
+ <path fill="url(#scan)" d="M0 0h1600v1400H0z"/>
+</svg>
