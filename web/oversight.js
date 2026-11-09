@@ -110,11 +110,11 @@ function render(data) {
     `Your ${percent(data.d)} defense is not an optimal human choice in any pure subgame-perfect equilibrium of this game.`;
 }
 
-async function load(requestVersion) {
+function load(requestVersion) {
+  if (requestVersion!==version) return;
   try {
-    const response=await fetch(`/api/oversight?${query()}`), data=await response.json();
+    const data=GutEngine.oversightState(query());
     if (requestVersion!==version) return;
-    if (!response.ok) throw new Error(data.error);
     state=data; render(data);
     el('live').hidden=false; el('live').setAttribute('aria-busy','false');
     el('error').hidden=true; el('status').textContent='Up to date · exact payoffs and solvers · calculated outcomes, not LLM observations';
@@ -145,7 +145,7 @@ function describeBaseline() {
   el('tie').disabled=el('baseline').value!=='payoff_maximizer';
 }
 
-async function runSimulation() {
+function runSimulation() {
   if (!state) return;
   const current=++simulationVersion, stateVersion=version, params=query();
   for (const k of ['baseline','tie','scope']) params.set(k,el(k).value);
@@ -153,9 +153,8 @@ async function runSimulation() {
   el('sim-results').hidden=true; simulation=null;
   el('download-json').disabled=el('download-csv').disabled=true;
   try {
-    const response=await fetch(`/api/oversight/simulate?${params}`), data=await response.json();
+    const data=GutEngine.oversightSimulation(params);
     if (current!==simulationVersion || stateVersion!==version) return;
-    if (!response.ok) throw new Error(data.error);
     simulation=data;
     el('sim-summary').textContent=`${data.summary.rounds} independent round${data.summary.rounds===1?'':'s'} · ${data.summary.cooperate_count} cooperation choices · Average human payoff: ${exact(data.summary.mean_human)} · Average AI payoff: ${exact(data.summary.mean_ai)}.`;
     el('sim-table').innerHTML=`<table><thead><tr><th>Round</th><th>Defense</th><th>AI choice</th><th>Your payoff</th><th>AI payoff</th><th>AI points left behind</th><th>Human harm</th></tr></thead><tbody>${data.records.map(r=>`<tr><td>${r.round}</td><td>${percent(r.d)}</td><td>${action(r.action)}</td><td>${exact(r.human)}</td><td>${exact(r.ai)}</td><td>${exact(r.ai_regret)}</td><td>${exact(r.remaining_harm)}</td></tr>`).join('')}</tbody></table>`;
@@ -210,7 +209,7 @@ for (const name of ['explore','simulation']) {
 }
 keys.forEach(k=>el(k).addEventListener('input',schedule));
 el('defense').addEventListener('input',schedule);
-el('game').addEventListener('change',()=>{if(el('game').value!=='oversight')location.href=`/games?game=${encodeURIComponent(el('game').value)}`;});
+el('game').addEventListener('change',()=>{if(el('game').value!=='oversight')location.href=`games.html?game=${encodeURIComponent(el('game').value)}`;});
 el('reset').addEventListener('click',()=>{keys.forEach(k=>el(k).value=defaults[k]);el('defense').value=3;schedule();});
 el('tie-example').addEventListener('click',()=>{keys.forEach(k=>el(k).value=defaults[k]);el('p').value=0;el('defense').value=5;schedule();});
 document.addEventListener('click',e=>{const button=e.target.closest('[data-defense]');if(button){el('defense').value=Math.round(Number(button.dataset.defense)*10);schedule();}});

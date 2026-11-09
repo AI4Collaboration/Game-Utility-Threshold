@@ -109,10 +109,20 @@ class HTTPTests(unittest.TestCase):
             (root / "web/index.html").write_text("<h1>Thresholds</h1>")
             (root / "web/oversight.html").write_text("<h1>Oversight</h1>")
             (root / "web/oversight.js").write_text("'use strict';")
+            (root / "web/games.html").write_text("<h1>Games</h1>")
+            (root / "web/results.html").write_text("<h1>Results</h1>")
+            (root / "web/game-engine.js").write_text("globalThis.GutEngine = {};")
             (root / "data/oversight/2026-11-09/analysis").mkdir(parents=True)
             (root / "data/oversight/2026-11-09/analysis/report.html").write_text("<h1>Validation</h1>")
             (root / ".env").write_text("private fixture value")
             (root / "report/index.html").symlink_to(root / ".env")
+            (root / "_site/docs").mkdir(parents=True)
+            (root / "_site/docs/methods.md").write_text("Public methods")
+            (root / "_site/unlisted.txt").write_text("Not published")
+            (root / "_site/private.txt").symlink_to(root / ".env")
+            (root / "_site/site-manifest.json").write_text(json.dumps({
+                "schema": "gut-pages-v1", "files": {
+                    "docs/methods.md": "fixture", "private.txt": "fixture", "../.env": "fixture"}}))
             with ThreadingHTTPServer(("127.0.0.1", 0), serve.Handler) as server:
                 thread = Thread(target=server.serve_forever, daemon=True)
                 thread.start()
@@ -157,10 +167,16 @@ class HTTPTests(unittest.TestCase):
                     self.assertEqual(get("/api/oversight?"+params+"&d=0")[0], 400)
                     self.assertEqual(get("/api/oversight?")[0], 400)
                     self.assertEqual(get("/oversight")[0], 200)
+                    for page in ("index.html", "games.html", "oversight.html", "results.html", "game-engine.js"):
+                        self.assertEqual(get("/"+page)[0], 200)
                     status, headers, _ = get("/oversight.js")
                     self.assertEqual(status, 200)
                     self.assertIn("text/javascript", headers["Content-Type"])
                     self.assertEqual(get("/validation/report.html")[0], 200)
+                    self.assertEqual(get("/docs/methods.md")[2], b"Public methods")
+                    self.assertEqual(get("/site-manifest.json")[0], 200)
+                    for path in ("/private.txt", "/unlisted.txt", "/_site/site-manifest.json"):
+                        self.assertEqual(get(path)[0], 404)
                     self.assertEqual(get("/validation/../../.env")[0], 404)
                     for path in ("/.env", "/../.env", "/%2e%2e/.env", "/web/index.html", "/report/index.html"):
                         status, _, body = get(path)

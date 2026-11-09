@@ -5,6 +5,7 @@ __pycache__/
 .DS_Store
 .pytest_cache/
 report/
+_site/
 /work/
 *.egg-info/
 runs/

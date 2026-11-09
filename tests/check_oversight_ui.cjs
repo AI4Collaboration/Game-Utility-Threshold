@@ -1,4 +1,4 @@
-/* UI-controller checks with a minimal DOM stub and real Python calculations.
+/* UI-controller checks with a minimal DOM and Python-backed GutEngine stub.
  * This is not a browser/layout test. Requires Node and Python, no npm packages.
  */
 const assert = require('node:assert/strict');
@@ -17,23 +17,26 @@ for (const match of html.matchAll(/<[^>]+\bid="([^"]+)"[^>]*>/g)) {
     setAttribute(name,value) {this.attrs[name]=value;}, focus() {this.focused=true;}});
 }
 Object.entries({baseline:'payoff_maximizer',scope:'all',tie:'cooperate',game:'oversight'}).forEach(([k,v])=>nodes.get(k).value=v);
-let timerId=0, timers=new Map(), blobs=[], downloads=[];
+let timerId=0, timers=new Map(), blobs=[], downloads=[], calculations=0;
 const nativeURL = URL;
 class DownloadURL extends nativeURL {
   static createObjectURL(blob) {blobs.push(blob);return 'blob:test';}
   static revokeObjectURL() {}
 }
-function calculate(url) {
-  const parsed=new URL(url,'http://localhost');
-  const input={}; for(const [k,v] of parsed.searchParams) (input[k]??=[]).push(v);
-  const code='import json,sys,serve\ntry:\n f=serve.oversight_simulation if sys.argv[1].endswith("simulate") else serve.oversight_state\n print(json.dumps({"ok":True,"data":f(json.loads(sys.argv[2]))}))\nexcept ValueError as e:\n print(json.dumps({"ok":False,"data":{"error":str(e)}}))';
-  const result=spawnSync(process.env.PYTHON || 'python3',['-c',code,parsed.pathname,JSON.stringify(input)],{encoding:'utf8'});
+function calculate(method, params) {
+  calculations++;
+  const input={}; for(const [k,v] of params) (input[k]??=[]).push(v);
+  const code='import json,sys,serve\ntry:\n f=serve.oversight_simulation if sys.argv[1]=="simulate" else serve.oversight_state\n print(json.dumps({"ok":True,"data":f(json.loads(sys.argv[2]))}))\nexcept ValueError as e:\n print(json.dumps({"ok":False,"data":{"error":str(e)}}))';
+  const result=spawnSync(process.env.PYTHON || 'python3',['-c',code,method,JSON.stringify(input)],{encoding:'utf8'});
   assert.equal(result.status,0,result.stderr);
   const response=JSON.parse(result.stdout);
-  return {ok:response.ok,json:async()=>response.data};
+  if(!response.ok)throw new Error(response.data.error);
+  return response.data;
 }
 const context=vm.createContext({console,URL:DownloadURL,URLSearchParams,Blob,
-  location:{href:''}, fetch:async url=>calculate(url),
+  location:{href:''},
+  GutEngine:{oversightState:params=>calculate('state',params),oversightSimulation:params=>calculate('simulate',params)},
+  fetch(){throw new Error('The static UI must not call a server.');},
   setTimeout(fn){timers.set(++timerId,fn);return timerId;},clearTimeout(id){timers.delete(id);},
   document:{getElementById:id=>{assert(nodes.has(id),`Missing HTML id: ${id}`);return nodes.get(id);},
     addEventListener(){},body:{appendChild(){}},
@@ -88,7 +91,7 @@ async function change(id,value){node(id).value=value;node(id).listeners.input();
   assert.equal(node('sim-results').hidden,true);
   assert.equal(node('download-json').disabled,true);
   node('reset').listeners.click();await flush();
-  await change('v','1e-99'); // HTML-valid, but rejected by the exact API parser.
+  await change('v','1e-99'); // HTML-valid, but rejected by the exact engine parser.
   assert.equal(node('live').hidden,true);
   assert.match(node('error').textContent,/decimal places/);
   for(const id of ['v','r','a','p','b','w','h','c'])node(id).value='0';
@@ -96,15 +99,27 @@ async function change(id,value){node(id).value=value;node(id).listeners.input();
   assert.equal(node('minimum').textContent,'None');
   assert.match(node('thresholds').innerHTML,/Both actions tie throughout/);
   assert.doesNotMatch(node('payoff-chart').innerHTML,/NaN|Infinity|undefined/);
-  // A slow old response must not replace the state for a newer defense.
+  // An obsolete queued calculation must not replace or recalculate a newer state.
   node('reset').listeners.click();await flush();
-  const pending=[];context.fetch=url=>new Promise(resolve=>pending.push({url,resolve}));
-  node('defense').value='0';run('schedule()');const old=flush();
-  node('defense').value='3';run('schedule()');const newer=flush();
-  pending[1].resolve(calculate(pending[1].url));await newer;
-  pending[0].resolve(calculate(pending[0].url));await old;
+  node('defense').value='0';run('schedule()');
+  const stale=[...timers.values()][0];timers.clear();
+  node('defense').value='3';run('schedule()');await flush();
+  const completedCalculations=calculations;stale();
+  assert.equal(calculations,completedCalculations);
   assert.equal(node('best').textContent,'Cooperate');
+  // A rejected toy calculation clears exports and restores the run button.
+  const originalSimulation=context.GutEngine.oversightSimulation;
+  context.GutEngine.oversightSimulation=()=>{throw new Error('Rejected test setting');};
+  await node('run').listeners.click();
+  assert.equal(node('sim-results').hidden,true);
+  assert.equal(node('download-json').disabled,true);
+  assert.equal(node('run').disabled,false);
+  assert.match(node('sim-status').textContent,/Rejected test setting/);
+  context.GutEngine.oversightSimulation=originalSimulation;
+  node('simulation-tab').listeners.keydown({key:'Home',preventDefault(){}});
+  assert.equal(node('explore-tab').attrs['aria-selected'],'true');
+  assert.equal(node('explore-tab').focused,true);
   node('game').value='chicken';node('game').listeners.change();
-  assert.equal(context.location.href,'/games?game=chicken');
+  assert.equal(context.location.href,'games.html?game=chicken');
   console.log('Oversight UI controller checks passed (no browser/layout assertions).');
 })().catch(error=>{console.error(error);process.exitCode=1;});

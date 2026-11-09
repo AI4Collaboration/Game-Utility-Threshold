@@ -4,10 +4,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Four games · Utility thresholds</title>
 <style>
-:root{color-scheme:dark;font:15px/1.6 system-ui,sans-serif;background:#0c1c26;color:#e8eff0}*{box-sizing:border-box}body{margin:0}main{max-width:1040px;margin:auto;padding:28px 22px}a{color:#83dfd2}nav{display:flex;justify-content:space-between;border-bottom:1px solid #29414e;padding-bottom:16px;font-size:13px}h1{font-size:34px;letter-spacing:-.04em;margin-bottom:8px}h2{font-size:17px;margin-top:0}p{color:#a4b7c2}.intro{max-width:760px}.controls{display:flex;gap:22px;align-items:end;flex-wrap:wrap;margin:28px 0}label{display:block;font-size:13px;margin-bottom:7px}select,input{font:inherit;background:#122633;color:inherit;border:1px solid #49616e;border-radius:7px;padding:9px}input[type=number]{width:110px}input[type=range]{width:240px;accent-color:#83dfd2;padding:0}a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #83dfd2;outline-offset:4px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.card{border:1px solid #29414e;background:#122633;border-radius:12px;padding:21px;margin-bottom:18px}table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}th,td{text-align:center;padding:10px;border-bottom:1px solid #29414e}th{font-size:12px;color:#a4b7c2}td{font-size:14px}.row{color:#83dfd2}.column{color:#f0a8bb}.note{font-size:12px;color:#a4b7c2}.tag{color:#83dfd2;font-size:11px;letter-spacing:.1em}#error{color:#ffcad9}#error[hidden]{display:none}#chart svg{width:100%;height:auto}.wide{overflow-x:auto}.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12px}.legend i{display:inline-block;width:18px;border-top:2px solid;margin-right:6px}footer{font-size:12px;color:#a4b7c2;margin:15px 0}#status{font-size:12px;color:#a4b7c2}@media(max-width:650px){.grid{grid-template-columns:1fr}.controls{gap:14px}h1{font-size:29px}.card{padding:15px}main{padding:20px 14px}th,td{padding:9px 5px}}
+:root{color-scheme:dark;font:15px/1.6 system-ui,sans-serif;background:#0c1c26;color:#e8eff0}*{box-sizing:border-box}body{margin:0}main{max-width:1040px;margin:auto;padding:28px 22px}a{color:#83dfd2}nav{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;border-bottom:1px solid #29414e;padding-bottom:16px;font-size:13px}h1{font-size:34px;letter-spacing:-.04em;margin-bottom:8px}h2{font-size:17px;margin-top:0}p{color:#a4b7c2}.intro{max-width:760px}.controls{display:flex;gap:22px;align-items:end;flex-wrap:wrap;margin:28px 0}label{display:block;font-size:13px;margin-bottom:7px}select,input{font:inherit;background:#122633;color:inherit;border:1px solid #49616e;border-radius:7px;padding:9px}input[type=number]{width:110px}input[type=range]{width:240px;accent-color:#83dfd2;padding:0}a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #83dfd2;outline-offset:4px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.card{border:1px solid #29414e;background:#122633;border-radius:12px;padding:21px;margin-bottom:18px}table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}th,td{text-align:center;padding:10px;border-bottom:1px solid #29414e}th{font-size:12px;color:#a4b7c2}td{font-size:14px}.row{color:#83dfd2}.column{color:#f0a8bb}.note{font-size:12px;color:#a4b7c2}.tag{color:#83dfd2;font-size:11px;letter-spacing:.1em}#error{color:#ffcad9}#error[hidden]{display:none}#chart svg{width:100%;height:auto}.wide{overflow-x:auto}.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12px}.legend i{display:inline-block;width:18px;border-top:2px solid;margin-right:6px}footer{font-size:12px;color:#a4b7c2;margin:15px 0}#status{font-size:12px;color:#a4b7c2}@media(max-width:650px){.grid{grid-template-columns:1fr}.controls{gap:14px}h1{font-size:29px}.card{padding:15px}main{padding:20px 14px}th,td{padding:9px 5px}}
 </style>
 <main>
-<nav><strong>UTILITY THRESHOLDS</strong><a href="/oversight">Human–AI oversight ↗</a><a href="/">Post’s PD calculator ↗</a></nav>
+<nav><strong>UTILITY THRESHOLDS</strong><a href="oversight.html">Human–AI oversight ↗</a><a href="index.html">Post’s PD calculator ↗</a><a href="results.html">Experimental results ↗</a></nav>
 <section class="intro"><p class="tag">ONE ROUND · TWO PLAYERS · ONE CHANGING COST</p><h1 id="title">Four canonical games</h1><p id="description">Select a game to compare its incentives.</p></section>
 <div class="controls">
   <div><label for="game">Starting game</label><select id="game"><option value="pd">Prisoner's Dilemma</option><option value="stag_hunt">Stag Hunt</option><option value="chicken">Chicken</option><option value="battle_of_sexes">Battle of the Sexes</option><option value="oversight">Human–AI oversight</option></select></div>
@@ -20,8 +20,9 @@
 <section class="card"><h2 id="chart-title">Payoff advantage of the first action</h2><p class="note">Above zero: the first action pays more. Below zero: the second pays more. Zero is a tie. Both players’ comparisons are shown; identical lines overlap in symmetric games.</p><div class="legend"><span class="row"><i></i>Row player</span><span class="column"><i></i>Column player</span><span>Solid: against first action · Dashed: against second</span></div><div id="chart"></div></section>
 <section class="card"><h2>Exact comparisons at this cost</h2><div class="wide"><table><thead><tr><th>Player</th><th>Other chooses</th><th>First − second points</th><th>Best action</th><th>Cost where they tie</th></tr></thead><tbody id="comparisons"></tbody></table></div><p class="note">A negative tie cost lies outside this nonnegative-cost experiment.</p><p id="stable"></p><p class="note">Listed outcomes are the pure Nash equilibria: neither player can gain by changing alone. Tied best responses are included. This list does not predict which outcome people or models will choose, and does not list mixed strategies.</p></section>
 </div>
-<footer>Calculated incentives only. The experiment runner separately collects observations. These four games use simultaneous choices and an action cost; the <a href="/oversight">oversight game</a> adds a human defense choice observed by the AI. In Battle of the Sexes, X and Y are alternatives with conflicting preferences; neither means cooperation or defection.</footer>
+<footer>Calculated incentives only. The experiment runner separately collects observations. These four games use simultaneous choices and an action cost; the <a href="oversight.html">oversight game</a> adds a human defense choice observed by the AI. In Battle of the Sexes, X and Y are alternatives with conflicting preferences; neither means cooperation or defection.</footer>
 </main>
+<script src="game-engine.js"></script>
 <script>
 const byId=id=>document.getElementById(id), fmt=v=>Number(v.toFixed(4)).toString();
 let version=0, timer;
@@ -35,11 +36,11 @@ function plot(data){
  svg+=`<path d="M${x(data.z)} ${t}V${h-b}" stroke="#fff" opacity=".55"/><text x="${Math.min(w-55,Math.max(70,x(data.z)))}" y="15" text-anchor="middle" fill="#e8eff0" font-size="11">z = ${fmt(data.z)}</text><text x="${w/2}" y="${h-3}" text-anchor="middle" fill="#a4b7c2" font-size="12">Cost of ${data.actions[1]}</text></svg>`;
  byId('chart').innerHTML=svg;
 }
-async function load(v){
+function load(v){
+ if(v!==version)return;
  try{
-  const response=await fetch(`/api/canonical?${new URLSearchParams({game:byId('game').value,z:byId('cost').value})}`),data=await response.json();
+  const data=GutEngine.canonicalState(new URLSearchParams({game:byId('game').value,z:byId('cost').value}));
   if(v!==version)return;
-  if(!response.ok)throw new Error(data.error);
   byId('title').textContent=data.name;byId('description').textContent=data.description;
   byId('cost-label').textContent=`Cost of ${data.actions[1]} (z)`;
   byId('cost-note').textContent=`Subtract z from each player choosing ${data.actions[1]}. Keep all starting payoffs fixed.`;
@@ -51,7 +52,7 @@ async function load(v){
  }catch(error){if(v!==version)return;byId('error').textContent=`Could not update. ${error.message} Any previous results are stale.`;byId('error').hidden=false;byId('status').textContent='Update needed';byId('results').setAttribute('aria-busy','false');}
 }
 function schedule(){clearTimeout(timer);const v=++version;if(!byId('cost').value||!byId('cost').checkValidity()){byId('error').textContent='Enter a cost from 0 to 20. Previous results are stale.';byId('error').hidden=false;byId('status').textContent='Update needed';byId('results').setAttribute('aria-busy','false');return;}byId('results').setAttribute('aria-busy','true');byId('status').textContent='Calculating…';timer=setTimeout(()=>load(v),100);}
-byId('game').addEventListener('change',()=>{if(byId('game').value==='oversight'){location.href='/oversight';return;}byId('cost').value=byId('slider').value=0;schedule();});
+byId('game').addEventListener('change',()=>{if(byId('game').value==='oversight'){location.href='oversight.html';return;}byId('cost').value=byId('slider').value=0;schedule();});
 byId('slider').addEventListener('input',()=>{byId('cost').value=byId('slider').value;schedule();});
 byId('cost').addEventListener('input',()=>{byId('slider').value=byId('cost').value;schedule();});
 const requestedGame=new URLSearchParams(location.search).get('game');

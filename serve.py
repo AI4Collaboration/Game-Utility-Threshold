@@ -1,4 +1,4 @@
-"""Read-only local view of the post's two conditional payoff comparisons."""
+"""Local explorers, reference calculation APIs, and published result files."""
 
 import argparse
 from decimal import Decimal, InvalidOperation
@@ -196,8 +196,12 @@ class Handler(BaseHTTPRequestHandler):
             except ValueError as exc:
                 self.reply(400, json.dumps({"error": str(exc)}).encode(), "application/json")
             return
-        allowed = {"/": ROOT / "web/index.html", "/games": ROOT / "web/games.html",
-                   "/oversight": ROOT / "web/oversight.html", "/oversight.js": ROOT / "web/oversight.js"}
+        web_names = ("index.html", "games.html", "oversight.html", "results.html",
+                     "oversight.js", "game-engine.js")
+        web_routes = {f"/{name}": ROOT / "web" / name for name in web_names}
+        web_routes.update({"/": ROOT / "web/index.html", "/games": ROOT / "web/games.html",
+                           "/oversight": ROOT / "web/oversight.html"})
+        allowed = dict(web_routes)
         validation = ROOT / "data/oversight/2026-11-09/analysis"
         validation_names = ["report.html", "summary.json", "cells.csv", "blocks.csv", "observations.csv"]
         validation_names += [f"{name}.{extension}" for name in
@@ -209,13 +213,29 @@ class Handler(BaseHTTPRequestHandler):
         allowed.update({f"/report/{name}": ROOT / "report" / name for name in report_names})
         path = allowed.get(url.path)
         directory = ROOT.resolve() / ("data/oversight/2026-11-09/analysis" if url.path.startswith("/validation/") else
-                                      "web" if url.path in ("/", "/games", "/oversight", "/oversight.js") else "report")
+                                      "web" if url.path in web_routes else "report")
+        # A completed static build supplies result downloads and method pages.
+        # Serve only manifest-listed files; never expose the repository itself.
+        site = ROOT.resolve() / "_site"
+        manifest_path = site / "site-manifest.json"
+        if url.path not in web_routes and manifest_path.is_file() and manifest_path.resolve().is_relative_to(site):
+            try:
+                manifest = json.loads(manifest_path.read_text())
+                requested = url.path.removeprefix("/")
+                if (isinstance(manifest, dict) and manifest.get("schema") == "gut-pages-v1"
+                        and isinstance(manifest.get("files"), dict)
+                        and (requested in manifest["files"] or requested == "site-manifest.json")):
+                    path, directory = site / requested, site
+            except (ValueError, OSError):
+                pass
         if path is None or not path.resolve().is_relative_to(directory) or not path.is_file():
             self.reply(404, b"Not found. See README for report generation commands.", "text/plain")
             return
         content_type = {".html": "text/html; charset=utf-8", ".svg": "image/svg+xml", ".png": "image/png",
                         ".json": "application/json", ".csv": "text/csv; charset=utf-8",
-                        ".js": "text/javascript; charset=utf-8"}[path.suffix]
+                        ".js": "text/javascript; charset=utf-8", ".md": "text/plain; charset=utf-8",
+                        ".txt": "text/plain; charset=utf-8", ".zip": "application/zip",
+                        ".gz": "application/gzip"}.get(path.suffix, "application/octet-stream")
         self.reply(200, path.read_bytes(), content_type)
 
 

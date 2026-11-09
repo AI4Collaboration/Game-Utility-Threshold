@@ -1,11 +1,16 @@
 # Game Utility Thresholds
 
+[Open the public game UI](https://ai4collaboration.github.io/Game-Utility-Threshold/)
+· [Experimental results](https://ai4collaboration.github.io/Game-Utility-Threshold/results.html)
+· [Human–AI oversight lab](https://ai4collaboration.github.io/Game-Utility-Threshold/oversight.html)
+
 A small, reproducible starting point for [When Defection Stops Paying: Why Utility Thresholds Matter for AI Safety](https://www.lesswrong.com/posts/HJSWoWCQefj2L8W8d/when-defection-stops-paying-why-utility-thresholds-matter-1).
 
 The starting point contains the post's symmetric, one-shot, two-player
 games, its defection-cost calculations, and the saved experiment behind its
 169-setting model heatmap. It has one game implementation, one data reader,
-one reproduction command, and a small local explorer. The next addition is a
+one reproduction command, and a small explorer that runs locally or on GitHub
+Pages. The next addition is a
 controlled PD cost experiment with a small Lean framework for verifying
 recorded choices. See [the experiment guide](docs/experiments.md) and
 [the proof guide](lean/README.md).
@@ -36,6 +41,25 @@ python3 oversight_experiment.py report data/oversight/2026-11-09
 ```
 
 ## Start here
+
+The public site runs all game calculations in your browser, including exact
+thresholds, pure Nash/Stackelberg solutions, and toy simulations. No account or
+API key is needed. Its results catalogue distinguishes the new oversight study
+from the historical PD/Stag Hunt/Chicken payoff grid and the game demos that
+have no new live study. Both retained datasets, raw responses, tables, figures,
+and methods are downloadable. Earlier results remain linked as a separate archive.
+
+To build the same static publication offline:
+
+```sh
+python3 -m pip install 'matplotlib>=3.8,<4'
+python3 build_site.py
+python3 -m http.server 8765 --bind 127.0.0.1 --directory _site
+```
+
+GitHub Actions checks the games, browser/Python agreement, source data, and Lean
+proofs before deploying `main`. [Publication details](docs/pages.md) describe
+the allowlisted build and result coverage. The build makes no model calls.
 
 Python 3.11 or newer is enough for the game, data audit, explorer and tests.
 No API key, paid call, JavaScript build, or extra package is needed for them.

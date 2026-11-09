@@ -122,5 +122,6 @@ proof pipeline has not been extended to this oversight model.
   Their randomized commitment setting differs from our observed pure defense;
   their security-game theorems are not automatically results for our model.
 
-This increment does not implement uncertain monitoring, incomplete information,
-repeated play, learned strategies, or a new live LLM experiment.
+The baseline does not implement uncertain monitoring, incomplete information,
+repeated play, or learned strategies. The completed first live LLM study is
+documented in [validation results](oversight-validation-results.md).

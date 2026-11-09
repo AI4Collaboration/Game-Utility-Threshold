@@ -8,7 +8,7 @@
   <style>
     :root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#e8eff0;background:#0c1c26;line-height:1.5;--muted:#a4b7c2;--line:#29414e;--cyan:#83dfd2;--pink:#f0a8bb}
     *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 0 0,#14303d 0,transparent 55%)}button,input{font:inherit}a{color:var(--cyan);text-underline-offset:4px}button,a,input,summary{outline-offset:5px}button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--cyan)}
-    .wrap{max-width:1140px;margin:auto;padding:25px 26px 42px}header{display:flex;justify-content:space-between;align-items:center;gap:20px;padding-bottom:21px;border-bottom:1px solid var(--line)}.brand{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:750;display:flex;gap:10px;align-items:center}.brand svg{width:27px;height:27px;color:var(--cyan)}header a{font-size:13px}
+    .wrap{max-width:1140px;margin:auto;padding:25px 26px 42px}header{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;padding-bottom:21px;border-bottom:1px solid var(--line)}.brand{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:750;display:flex;gap:10px;align-items:center}.brand svg{width:27px;height:27px;color:var(--cyan)}header a{font-size:13px}
     .intro{margin:30px 0 26px;max-width:750px}.eyebrow{margin:0 0 8px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);font-weight:700}h1{font-size:clamp(28px,4vw,38px);line-height:1.16;letter-spacing:-.035em;font-weight:650;margin:0 0 12px}.intro p:last-child{color:var(--muted);font-size:15px;margin:0;max-width:650px}
     .layout{display:grid;grid-template-columns:280px minmax(0,1fr);gap:20px;align-items:start}.panel{background:#122633;border:1px solid var(--line);border-radius:12px;padding:21px}.controls h2,.matrix-card h2,.chart-heading h2{font-size:15px;margin:0;letter-spacing:-.01em}.small{font-size:12px;color:var(--muted);margin:8px 0 0}.preset-buttons{display:flex;gap:8px;margin:15px 0 23px}.preset-buttons button{flex:1;background:#1b3443;border:1px solid #3a5564;color:#e8eff0;border-radius:7px;padding:8px;cursor:pointer;font-size:12px}.preset-buttons button:hover{border-color:var(--cyan);background:#244351}
     .field{padding-top:18px;border-top:1px solid var(--line);margin-top:18px}.field-head{display:flex;justify-content:space-between;align-items:center;gap:8px}.field label{font-size:13px;font-weight:650}.field label span{color:var(--muted);font-weight:400}.field input[type=number]{width:89px;min-width:0;border:1px solid #49616e;border-radius:6px;background:#0c1e29;padding:7px 5px 7px 8px;color:#f3f8f8;font-variant-numeric:tabular-nums}.field input[type=range]{display:block;width:100%;height:22px;margin:13px 0 3px;accent-color:var(--cyan)}.field .small{line-height:1.45}.limits{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums}.constants{display:flex;gap:8px;margin-top:21px}.constants span{border:1px solid var(--line);border-radius:6px;padding:6px 9px;font-size:12px;color:#d2dfe5}.constants strong{color:#fff;font-weight:550}.fixed-note{font-size:11px;color:var(--muted);line-height:1.5;margin:9px 0 0}
@@ -26,7 +26,7 @@
   <div class="wrap">
     <header>
       <div class="brand"><svg viewBox="0 0 28 28" fill="none" aria-hidden="true"><path d="M3 9c4-5 7 5 11 0s7 5 11 0M3 16c4-5 7 5 11 0s7 5 11 0M3 23c4-5 7 5 11 0s7 5 11 0" stroke="currentColor" stroke-width="1.6"/></svg>Utility thresholds</div>
-      <a href="/oversight">Human–AI oversight ↗</a><a href="/games">Explore four games ↗</a><a href="/report/index.html">Post report ↗</a>
+      <a href="oversight.html">Human–AI oversight ↗</a><a href="games.html">Explore four games ↗</a><a href="results.html">Experimental results ↗</a>
     </header>
     <section class="intro">
       <p class="eyebrow">One round · Two actions</p>
@@ -62,9 +62,10 @@
       </div>
     </main>
     <details><summary>Units, ties and the familiar (5, 3, 1, 0) example</summary><p>The baseline uses <code>R = 1</code> and <code>P = 0</code>. Starting from raw payoffs <code>(T, R, P, S) = (5, 3, 1, 0)</code>, subtract 1 and divide by 2 to obtain <code>(2, 1, 0, −0.5)</code>, the Figure 3A preset. A raw defection penalty <code>k</code> therefore corresponds to <code>z = k/2</code>, or <code>k = 2z</code>. This change of units preserves mathematical payoff comparisons; it does not establish that a language model responds identically to the rewritten numbers.</p><p>At either calculated threshold, the two actions tie against that particular opponent action. At or above both thresholds, cooperation is at least as good against either action; strictly above both, it is strictly better. A tie is not a requirement to choose cooperation. Before intervention, strict Prisoner's Dilemma has <code>T &gt; 1</code> and <code>S &lt; 0</code>, so defection is better against either action throughout that region.</p><p>The baseline can remain a strict Prisoner's Dilemma even when <code>T + S &gt; 2</code>. In that case an unequal outcome gives more combined points than mutual cooperation. The action ordering alone does not establish that mutual cooperation maximizes total points. The penalty can also change the game's decision structure, as reported above.</p></details>
-    <footer><p>This page calculates the post's payoff model. It makes no model calls, draws no random opponent actions and records no research observations.</p><p>Line crossings are calculated equal-payoff points, not measured changes in AI behavior. The separate <a href="/report/index.html">experiment report</a> identifies the evidence behind its results.</p></footer>
+    <footer><p>This page calculates the post's payoff model. It makes no model calls, draws no random opponent actions and records no research observations.</p><p>Line crossings are calculated equal-payoff points, not measured changes in AI behavior. The separate <a href="report/index.html">experiment report</a> identifies the evidence behind its results.</p></footer>
   </div>
   <noscript><p class="wrap">Enable JavaScript to use the calculator. The experiment report remains available from the link above.</p></noscript>
+  <script src="game-engine.js"></script>
   <script>
     "use strict";
     const byId = (id) => document.getElementById(id);
@@ -81,7 +82,7 @@
 
     function renderPlot(data) {
       // Only display geometry is calculated here. All payoff values, curve
-      // points, thresholds and scientific bounds come from the Python API.
+      // points and thresholds come from the exact browser calculation engine.
       const p=data.plot, w=660, h=260, left=46, right=16, top=27, bottom=43;
       const x=(v)=>left+(v-p.x_min)/(p.x_max-p.x_min)*(w-left-right);
       const y=(v)=>top+(p.y_max-v)/(p.y_max-p.y_min)*(h-top-bottom);
@@ -130,13 +131,12 @@
       byId("error").hidden=true;
     }
 
-    async function load(currentVersion) {
+    function load(currentVersion) {
+      if(currentVersion!==version)return;
       try {
         const query=new URLSearchParams(fields.map((key)=>[key,byId(key).value]));
-        const response=await fetch(`/api/game?${query}`);
-        const data=await response.json();
+        const data=GutEngine.analyze(query);
         if(currentVersion!==version)return;
-        if(!response.ok)throw new Error(data.error || "The server could not calculate these settings.");
         render(data);
       } catch(error) {
         if(currentVersion!==version)return;
