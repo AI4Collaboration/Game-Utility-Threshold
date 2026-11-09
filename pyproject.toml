@@ -7,3 +7,4 @@ dependencies = []
 
 [project.optional-dependencies]
 figures = ["matplotlib>=3.8,<4"]
+validation = ["matplotlib>=3.8,<4", "pandas>=2.2,<3", "seaborn>=0.13,<0.14", "scikit-learn>=1.5,<2"]

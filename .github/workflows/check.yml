@@ -8,12 +8,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - run: python -m pip install 'matplotlib>=3.8,<4' 'pandas>=2.2,<3' 'seaborn>=0.13,<0.14' 'scikit-learn>=1.5,<2'
       - run: python -m unittest discover -s tests -v
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
       - run: node tests/check_oversight_ui.cjs
-      - run: python -m pip install 'matplotlib>=3.8,<4'
       - run: python reproduce.py
       - run: python experiment.py plan runs/ci --repetitions 2
       - run: python experiment.py run runs/ci
