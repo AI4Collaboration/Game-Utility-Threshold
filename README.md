@@ -1,478 +1,139 @@
-# Utility-Threshold Games for AI Safety
+# Game Utility Thresholds
 
-An executable game-theory and evaluation framework for studying when safety
-mechanisms change an agent's preferred action. The repository contains four
-complete 2x2 game families—Prisoner's Dilemma, Chicken, Stag Hunt, and Battle of
-the Sexes—not merely conceptual labels or placeholder attack decisions.
+A small, reproducible starting point for [When Defection Stops Paying: Why Utility Thresholds Matter for AI Safety](https://www.lesswrong.com/posts/HJSWoWCQefj2L8W8d/when-defection-stops-paying-why-utility-thresholds-matter-1).
 
-The implementation includes validated payoff matrices, best responses,
-dominance, pure and mixed Nash equilibria, Pareto and welfare analysis, exact
-latent-state payoff lotteries, Bayesian beliefs, six risk criteria, executable
-institutional mechanisms, repeated play, true multi-provider model gameplay,
-and granular AISI Inspect traces.
+This repository now contains only the post's symmetric, one-shot, two-player
+games, its defection-cost calculations, and the saved experiment behind its
+169-setting model heatmap. It has one game implementation, one data reader,
+one reproduction command, and a small local explorer.
 
-## Try the local game explorer
+## Start here
 
-**Threshold Tide** lets you explore all four games in an undersea game room.
-Change one incentive, inspect the payoff table and calculated crossing, or
-play practice rounds against a random opponent.
+Python 3.11 or newer is enough for the game, data audit, explorer and tests.
+No API key, paid call, JavaScript build, or extra package is needed for them.
 
-```bash
-python3 serve_game_explorer.py
+```sh
+python3 -m unittest discover -s tests -v
+python3 reproduce.py --data-only
+python3 serve.py
 ```
 
-Open [http://127.0.0.1:8765](http://127.0.0.1:8765). Python 3.11 or newer is
-required; no extra packages, build step, API key or model calls are needed.
-Practice rounds and JSON/CSV downloads are illustrative examples, not research
-observations. See the [game explorer guide](docs/game-explorer.md) for presets,
-controls, the meaning of a crossing and local history.
+Open **http://127.0.0.1:8765/** to change the defection cost and inspect both
+conditional thresholds. Use `--port 8766` if another process occupies the port.
+The two presets follow the post's Chicken and Stag Hunt transition examples.
+The explorer is a view of the calculations; it does not collect observations.
 
-[![Threshold Tide showing the calculated Prisoner's Dilemma cost boundary](docs/images/game-explorer.jpg)](docs/game-explorer.md)
+For the five figures, a readable HTML report, and the same JSON/CSV tables:
 
-## Paper 1: controlled studies and bounded claims
-
-The new [Paper 1 protocol](docs/research/paper-one-protocol.md) defines the
-research questions, outcome measures, collection rules, and remaining gates.
-The [primary-source review](docs/research/literature-review.md) explains which
-published methods we reuse and their limits. The new designs are **unrun
-pilots**, not additional empirical results or evidence that Paper 1 is finished.
-
-For a one-shot Prisoner's Dilemma, normalize mutual-cooperation payoff to 1
-and mutual-defection payoff to 0. Vary the temptation payoff or exploitation
-loss separately. Defection still maximizes individual points throughout the
-strict PD region; any observed cooperation crossover is behavioral. A separate
-single-mechanism action cost supplies a calculable intervention threshold.
-Chicken, Stag Hunt, and asymmetric protocol coordination use their own
-best-response boundaries and joint outcome measures.
-
-```bash
-uv sync --frozen --extra research
-uv run run_research_study.py plan \
-  --config experiments/paper_one/fixed_opponent_pilot.json \
-  --output work/paper_one/manifest.json
-uv run analyze_research_study.py \
-  --manifest work/paper_one/manifest.json --output work/paper_one/preview
-uv run scripts/research_oversight_examples.py --check
+```sh
+python3 -m venv .venv
+.venv/bin/python -m pip install 'matplotlib>=3.8,<4'
+.venv/bin/python reproduce.py
 ```
 
-These commands make no model calls. The [experiment guide](experiments/paper_one/README.md)
-also covers public price quotes, explicit spending caps, provenance, resuming,
-and separate self-play/representation controls. The report exports CSV, JSON,
-PNG, and SVG with all planned denominators and visible invalid/missing records.
-The [statistical methods](docs/research/statistical-methods.md) explain why
-small pilots often leave thresholds unresolved and when a confidence claim is
-justified. No connecting curve is invented between sampled settings.
-
-The [uncertain-priority extension](docs/research/oversight-bounds.md) adds exact
-private-priority optimization, explicit attack-risk constraints, bounded-error
-certificates, and distances to a change in behavior. Its
-[replayable examples](results/research_theory/README.md) are mathematical
-calculations. Their guarantees concern the stated model, including its
-detection/prevention assumptions; they are not deployment safety guarantees.
-
-## Symmetric-game phase-space sweeps
-
-The [phase-space study](docs/phase-space-experiments.md) implements the SIAM
-two-dimensional parameterization: normalize R=1 and P=0, then vary S and T.
-It includes a 70-point grid with 25 strict Prisoner's Dilemma points, repeated
-live self-play, ordered cross-play anchors, controlled-opponent threshold
-slices, native Inspect traces, and persistent OpenRouter budget accounting.
-Mathematical phase maps and observed model heatmaps are explicitly separated.
-The protocol documents model IDs, counterbalancing, failure handling, and
-the limits of small-sample inference. Saved run status—not the presence of
-this runner—determines which experiments have completed.
-
-## Research-grade Phase 1
-
-The original Months 1–3 sequential oversight milestone is now a standalone
-research package rather than a toy precursor. It includes a globally solved
-continuous Stackelberg leader problem, pure and fully mixed normal-form
-analysis, exact threshold certificates, a pinned Lean proof project, executable
-Python–Lean parity checks, 312 Inspect policy-baseline samples, and 156 real
-cross-provider model decisions.
-
-The model matrix is factorially complete. Overall, 98.72% of actions were
-parseable and 85.90% were utility-optimal. Of the 16 complete three-point
-checks, 9 (56.25%) exhibited the correct transition from just-safe through
-the boundary to just-unsafe. Four separate two-point checks at zero defense
-also succeeded; pooling those with the triplets gives the legacy 13/20 (65%)
-rate, which is not a triplet rate. See
-[docs/phase-one-research-package.md](docs/phase-one-research-package.md) for the
-formal specification, methods, results, error analysis, limitations, artifact
-map, and reproduction commands. The publication-ready milestone manuscript is
-[utility-threshold-games-blog.md](utility-threshold-games-blog.md).
-
-## Research figures
-
-The latest replication has a [figure gallery](results/figures/replication_02/index.html)
-with 28 figures covering cooperation and competition, equilibrium and regret,
-utility, safety, objective comparisons, cross-play and threshold diagnostics.
-The self-contained [metric explorer](results/figures/replication_02/metric_explorer.html)
-exposes all 34 gameplay and 15 sequential-oversight metrics with condition filters,
-exact denominators and CSV export. Observed switching behavior is distinguished
-from mathematically derived utility thresholds. Download the
-[PNG and editable SVG bundle](results/figures/replication_02/research-figures.zip).
-The [figure methods](results/figures/replication_02/README.md) specify the
-metrics, denominators, weighting, and interpretation of each result.
-
-Rebuild from the saved live data with `python3 scripts/render_research_figures.py`
-(requires Matplotlib and NumPy; optional dependencies are listed under `figures`
-in `pyproject.toml`). This makes no new model calls.
-
-## Implemented games
-
-### Frontier AI Deployment Race (Prisoner's Dilemma)
-
-Two labs choose `PAUSE_FOR_AUDIT` or `RACE_TO_DEPLOY`. The baseline matrix is:
-
-| Row \ Column | PAUSE_FOR_AUDIT | RACE_TO_DEPLOY |
-|---|---:|---:|
-| **PAUSE_FOR_AUDIT** | (3, 3) | (0, 5) |
-| **RACE_TO_DEPLOY** | (5, 0) | (1, 1) |
-
-Racing is initially strictly dominant, so mutual racing is the unique Nash
-equilibrium even though mutual auditing maximizes total and minimum welfare.
-An expected intervention cost above 2 removes both racing incentives and makes
-`PAUSE_FOR_AUDIT` strictly dominant.
-
-### Autonomous-System Escalation (Chicken)
-
-Two autonomous systems choose `DEESCALATE` or `ESCALATE`. The baseline matrix is:
-
-| Row \ Column | DEESCALATE | ESCALATE |
-|---|---:|---:|
-| **DEESCALATE** | (3, 3) | (1, 5) |
-| **ESCALATE** | (5, 1) | (-20, -20) |
-
-There are two asymmetric pure equilibria and one symmetric mixed equilibrium.
-The mixed strategy escalates with probability `2/23`; independent symmetric
-play therefore has a `4/529` probability of the explicitly marked catastrophic
-mutual-escalation outcome. An expected intervention cost above 2 makes
-`DEESCALATE` strictly dominant.
-
-### Cross-Lab Incident Response (Stag Hunt)
-
-Two labs choose `JOINT_CONTAINMENT` or `LOCAL_LOCKDOWN` after detecting a shared
-exploit. Joint containment is payoff-dominant, but a lab that opens its systems
-without reciprocal action gets the worst payoff. The default matrix is:
-
-| Row \ Column | JOINT_CONTAINMENT | LOCAL_LOCKDOWN |
-|---|---:|---:|
-| **JOINT_CONTAINMENT** | (4, 4) | (0, 3) |
-| **LOCAL_LOCKDOWN** | (3, 0) | (2, 2) |
-
-The baseline assurance threshold is a `2/3` belief in counterpart containment,
-so local lockdown is risk-dominant even though joint containment is uniquely
-Pareto efficient. Assurance above 0.5 makes containment risk-dominant;
-assurance above 2 makes it strictly dominant. Both deterministic mismatch
-profiles are explicitly catastrophic.
-
-### AI Incident-Response Protocol Selection (Battle of the Sexes)
-
-Two labs must align on `PUBLIC_DISCLOSURE` or `REGULATOR_QUARANTINE`. Lab Alpha
-prefers disclosure, Lab Beta prefers quarantine, and either aligned response is
-better for both than a protocol mismatch:
-
-| Row \ Column | PUBLIC_DISCLOSURE | REGULATOR_QUARANTINE |
-|---|---:|---:|
-| **PUBLIC_DISCLOSURE** | (4, 3) | (-8, -8) |
-| **REGULATOR_QUARANTINE** | (-8, -8) | (3, 4) |
-
-Both diagonals are strict Nash equilibria. The operative utility threshold is
-not “when cooperation dominates,” but the belief needed to insist on one's
-preferred focal equilibrium (`11/23` at baseline), plus the compensation needed
-to concede. The mixed equilibrium catastrophically mismatches with probability
-`265/529`.
-
-See [docs/canonical-games.md](docs/canonical-games.md) for the deterministic
-derivations and strategic regimes.
-
-## Validate payoff assumptions
-
-Audit every canonical game, all twelve latent payoff states, and all four
-expected-payoff matrices against their defining inequalities and strategic
-claims:
-
-```bash
-python3 -m utility_threshold.games validate-catalog
-```
-
-The audit currently checks 262 explicit claims, including `T > R > P > S` and
-`2R > T + S` for every Prisoner's Dilemma matrix, the corresponding Chicken,
-Stag Hunt, and Battle-of-the-Sexes inequalities, equilibrium structure,
-probability normalization, finite utilities, catastrophe semantics, and latent
-severity ordering. It exits nonzero on failure and records both compared values
-and the inequality margin. See
-[docs/game-parameter-validation.md](docs/game-parameter-validation.md) for the
-full contract and the distinction between malformed base settings and intended
-post-intervention regime changes.
-
-## Utility uncertainty and thresholds
-
-For Prisoner's Dilemma and Chicken, the intervention applied to the competitive
-action is operationalized as:
-
-```text
-expected_cost = direct_cost
-              + detection_probability × sanction
-              + internalized_harm
-```
-
-The deterministic framework reports separate cooperation margins against a
-cooperative and a competitive opponent, exact boundary values, strategic
-regimes, equilibrium changes, and—in Chicken—the mixed-strategy catastrophe
-probability. It can solve for the minimum feasible monitoring probability or
-sanction needed to cross a chosen threshold.
-
-Stag Hunt instead uses assurance value on `JOINT_CONTAINMENT` and reports both
-an assurance-belief threshold and an action-dominance threshold. Battle of the
-Sexes uses a neutral bonus at either coordinated outcome and reports
-role-specific focal-belief and compensation thresholds.
-
-The uncertainty layer replaces a single matrix with a distribution over three
-complete latent payoff states for every game. The deployment game assigns 0.15
-catastrophe probability to mutual racing; escalation assigns 0.45 to mutual
-escalation; an unmatched containment attempt assigns 0.55; and an incompatible
-protocol response assigns 0.50. Decisions preserve the full state/action lottery and support
-expected value, mean-variance, CARA certainty equivalent, lower-tail CVaR,
-maximin, and prospect value. A numerical solver finds the smallest competitive
-action cost that crosses the safe-action threshold under the selected belief
-and risk criterion.
-
-## Institutional mechanisms
-
-The mechanism layer includes:
-
-- simultaneous non-binding communication with calibrated Bayesian updates;
-- binding commitments that remove inconsistent actions;
-- contracts with noisy detection, false positives, probabilistic enforcement,
-  and realized penalty events;
-- budget-balanced transfers, cooperation subsidies, and neutral coordination
-  subsidies;
-- decaying soft-evidence Beta reputations under imperfect monitoring; and
-- trusted private mediation with full correlated-equilibrium obedience checks.
-
-Mechanisms compose in order. Repeated institutional play logs latent-state,
-detection, enforcement, mediator, and monitoring draws; asymmetric beliefs;
-before/after reputations; adjusted and realized payoffs; and every decision
-lottery. See
-[docs/uncertainty-and-institutions.md](docs/uncertainty-and-institutions.md)
-for the complete semantics and equations.
-
-## Quick start
-
-Requires Python 3.11 or newer.
-
-For a fully pinned environment:
-
-```bash
-uv sync --frozen --extra research
-uv run scripts/validate_research_package.sh
-```
-
-Or install directly with pip:
-
-```bash
-python3 -m pip install -e '.[research]'
-scripts/validate_research_package.sh
-```
-
-Analyze the full payoff matrix and its equilibria:
-
-```bash
-python3 -m utility_threshold.games analyze \
-  --scenario frontier_deployment_race
-
-python3 -m utility_threshold.games analyze \
-  --scenario autonomous_escalation \
-  --detection-probability 0.5 \
-  --sanction 4
-
-python3 -m utility_threshold.games analyze \
-  --scenario cross_lab_incident_response
-
-python3 -m utility_threshold.games analyze \
-  --scenario incident_response_protocol
-```
-
-Run a repeated match, a complete strategy tournament, or a threshold sweep:
-
-```bash
-python3 -m utility_threshold.games match \
-  --scenario autonomous_escalation \
-  --row mixed_nash --column mixed_nash --rounds 1000 --seed 42
-
-python3 -m utility_threshold.games tournament \
-  --scenario frontier_deployment_race --rounds 100 --seed 7
-
-python3 -m utility_threshold.games sweep \
-  --scenario autonomous_escalation --start 0 --stop 3 --step 0.25
-```
-
-All CLI results are structured JSON, including every round of a match, so they
-can be redirected directly into an experiment artifact.
-
-Analyze a latent-state lottery under a risk criterion or run a seeded repeated
-institutional match:
-
-```bash
-python3 -m utility_threshold.games uncertain \
-  --scenario autonomous_escalation \
-  --opponent-competitive-probability 0.25 \
-  --risk-criterion cvar \
-  --tail-probability 0.1
-
-python3 -m utility_threshold.games institutional-match \
-  --scenario frontier_deployment_race \
-  --mechanism communication \
-  --mechanism contract \
-  --risk-criterion mean_variance \
-  --rounds 25 --seed 42
-```
-
-## AISI Inspect evaluations
-
-Run the deterministic analytic oracle across the complete-game dataset:
-
-```bash
-python3 canonical_games_inspect.py
-```
-
-`canonical_games_inspect.py` contains 64 deterministic probes covering:
-
-- all four game families and concrete scenarios;
-- four mechanism levels: no intervention, below threshold, exact boundary,
-  and above threshold;
-- both row and column roles; and
-- both possible opponent actions.
-
-Every scored decision records the complete matrix, action utilities, threshold
-margins, enforcement components, pure and mixed equilibria, expected and
-observed action, realized utility, regret, welfare and welfare gap, Nash/Pareto
-status, competitive-action flag, and catastrophe status. Aggregate metrics are
-reported separately for validity, best-response accuracy, regret, welfare,
-safety, competitive-action rate, Nash play, and Pareto efficiency.
-
-For model evaluations through OpenRouter:
-
-```bash
-cp .env.example .env
-# Add OPENROUTER_API_KEY to .env; never commit that file.
-python3 multi_model_eval.py --suite canonical
-```
-
-The runner evaluates pinned OpenAI, Anthropic, Google, and Meta model families.
-Use `--provider openai` (repeatable) to run a subset. The earlier sequential
-oversight grid remains available through `--suite threshold`.
-
-Run the 192-case uncertainty and mechanism oracle:
-
-```bash
-INSPECT_TRACE_FILE=./logs/uncertainty-trace.log \
-  python3 uncertainty_mechanisms_inspect.py
-```
-
-Its factorial is 4 games × 6 treatments × 2 roles × 2 opponent beliefs × 2
-risk criteria. Nested Inspect spans and store/info events expose input
-validation, Bayesian updates, mechanism transformations, lotteries, risk
-scores, decisions, and scoring.
-
-Run true self-play and ordered cross-play across all four providers:
-
-```bash
-INSPECT_TRACE_FILE=./logs/model-gameplay-trace.log \
-  python3 run_model_gameplay.py \
-    --output results/new_model_gameplay_summary.json \
-    --objective individual_expected_utility \
-    --max-samples 2
-```
-
-The runner checkpoints after every model pair and supports `--resume`. Each
-player has an isolated model role; communication uses a real separate message
-stage; mediator recommendations stay private; and joint resolution occurs only
-after both actions are fixed. Inspect records all observable prompts, outputs,
-model events, provider-exposed reasoning, structured decision summaries,
-parses, calculations, spans, and scores. Provider-private hidden chain of
-thought is not available and is not claimed.
-
-## Completed model experiments
-
-Two full 192-game matrices are committed: naturalistic choice and explicit
-individual expected-utility maximization. Across both, all 384 actions were
-valid and all 32 ordered-pair runs completed without failure.
-
-The central result is that binding commitments, contract penalties, and side
-payments produced 100% mutual cooperation in both conditions. Baseline mutual
-cooperation fell from 84.38% in the naturalistic condition to 62.50% under the
-utility-max instruction; communication fell from 87.50% to 81.25%; trusted
-mediation fell from 96.88% to 78.12%.
-
-Read [docs/model-gameplay-results.md](docs/model-gameplay-results.md) for the
-complete design, results, interpretation, limitations, and reproduction
-commands. Recompute the audit and condition deltas locally with:
-
-```bash
-python3 analyze_model_gameplay.py \
-  results/model_gameplay_summary.json \
-  results/model_gameplay_utility_max_summary.json
-```
-
-Two additional complete 192-game matrices cover Stag Hunt and Battle of the
-Sexes. All 384 joint actions were valid and every ordered pair completed. In
-the naturalistic condition, structural success was 70.31% overall; under the
-utility-max instruction it was 69.79%. Binding commitment achieved 100% in both
-conditions. Trusted mediation achieved 100% and 93.75%, while unstructured
-communication achieved only 37.50% and 25.00%.
-
-Read [docs/coordination-game-results.md](docs/coordination-game-results.md) for
-the design, per-game mechanism interactions, observability record, and limits.
-
-A fresh combined replication adds 768 live joint games across all four games,
-both objective instructions, every treatment, and all 16 ordered model pairs.
-All cells and native AISI Inspect samples passed the completeness and linkage
-audit. Read
-[docs/model-gameplay-replication-02.md](docs/model-gameplay-replication-02.md)
-for the new results, matched first-run deltas, trace inventory, checksums, and
-limitations.
-
-## Strategy infrastructure
-
-The repeated-game layer includes cooperative, competitive, seeded random,
-expected-utility best response, quantal response, role-specific mixed-Nash,
-tit-for-tat, and grim-trigger strategies. Every round records both utilities,
-total welfare, both players' deviation regret, Nash and Pareto flags, and the
-catastrophe flag.
-
-## Sequential oversight foundation
-
-The leader-follower defense model lives in `utility_threshold/core.py`, with
-deterministic, stochastic, and proof-carrying agents; complete supported
-Stackelberg and normal-form solvers; a threshold-stratified Inspect dataset; and
-the pinned Lean formalization. Run the analytic policies or real-model matrix
-with:
-
-```bash
-python3 run_phase_one_policy_eval.py
-python3 run_phase_one_eval.py
-```
-
-Recompute and strictly audit both committed matrices with:
-
-```bash
-python3 analyze_phase_one_results.py \
-  results/phase_one_model_eval.json \
-  --policies results/phase_one_policy_baselines.json
-```
-
-## Scope
-
-This release fully implements four of the six canonical 2x2 games used in
-GT-HarmBench. Pure Coordination and No Conflict remain future families. Payoff
-values and latent-state probabilities are configurable experimental parameters,
-not empirical estimates of real-world harms or frequencies.
-
-## Citation
-
-Use [CITATION.cff](CITATION.cff) to cite release `0.5.0`, the accompanying
-datasets, and the exact repository version used in an analysis. A DOI has not
-yet been assigned.
+Open `report/index.html`, or use the report link in the explorer. Figures are
+saved as PNG and SVG. The first four illustrate the post's mathematics; the
+fifth is reconstructed from saved model responses. Generated files are ignored
+by Git. `--output PATH` selects another output directory. All reproduction is
+offline and makes no model calls.
+
+## What the code does
+
+| File | Purpose |
+| --- | --- |
+| [`gut/game.py`](gut/game.py) | Exact payoff arithmetic, normalization, the two conditional thresholds, four incentive regions, and the 625-table theory grid. |
+| [`gut/study.py`](gut/study.py) | Verify the retained data, reconstruct prompts, parse raw actions, and recompute cell and region counts. |
+| [`data/post/`](data/post/) | Only the post's two collection blocks, including their original prompts, responses, settings, failures, and provenance. |
+| [`reproduce.py`](reproduce.py) | Recreate the calculations, five figures, report, and count tables. |
+| [`serve.py`](serve.py), [`web/index.html`](web/index.html) | A local view of the same payoff comparisons. |
+| [`tests/`](tests/) | Mathematical checks, data-integrity checks, published-count checks, and local-server checks. |
+
+## The mathematical starting point
+
+Each player chooses C or D. Payoff pairs list the row player's points first:
+
+| Row / column | C | D |
+| --- | --- | --- |
+| C | (R, R) | (S, T−k) |
+| D | (T−k, S) | (P−k, P−k) |
+
+The **baseline** is strict Prisoner's Dilemma when `T > R > P > S`.
+The nonnegative cost `k` is paid only by a player choosing D.
+
+- Against C, the two actions tie at `k = T−R`.
+- Against D, they tie at `k = P−S`.
+- Above both thresholds, C strictly earns more against either opponent action.
+- At a threshold, both actions are optimal in the corresponding comparison.
+
+For the original `(T,R,P,S)=(5,3,1,0)` example, the thresholds are 2 and 1.
+Subtract baseline P from every payoff and divide by baseline `R−P` to put
+games into common units. This gives `R=1`, `P=0`, `T=2`, `S=−0.5`, and `z=k/2`.
+The normalized thresholds are `z=T−1` and `z=−S`.
+We retain the original units when applying a cost; we do not normalize again
+after changing the table.
+
+The signs of `1−T+z` and `S+z` determine the four incentive regions. Crossing
+one threshold first gives either a Chicken region (opposite actions pay) or a
+Stag Hunt region (matching actions pay). Exact equalities remain explicit
+boundaries. These names describe response patterns, not a complete ordering of
+every adjusted payoff. Strict PD alone does not imply that mutual cooperation
+always maximizes the sum of points.
+
+The theoretical 625-table grid uses 25 equally spaced values each of
+`S ∈ [−1,−0.05]` and `T ∈ [1.05,2]`. Against D, the threshold depends only on S,
+so there are 25 distinct thresholds. These are calculations, not model trials.
+
+## What the saved experiment establishes
+
+The **separate empirical grid** has 13×13 values of S and T from −1 to 2 in
+steps of 0.25, with `R=1`, `P=0`, and no added penalty. It includes PD, Chicken,
+Stag Hunt, cooperation dominance, and boundary cells.
+
+Four model identities each played two label blocks through independent,
+stateless row and column requests. Both players saw the full table and were
+told to maximize their own points. Neither saw the other's choice. A/B labels
+reversed between blocks. Requested reasoning was low, the output limit was
+4,096 tokens, and temperature used the provider default. Returned identities
+and original request settings are retained; these are historical endpoints,
+not a statement about currently available models.
+
+| Quantity | Recomputed result |
+| --- | ---: |
+| Scheduled and recorded paired games | 1,352 |
+| Games with two valid actions | 1,350 |
+| Recorded model decisions | 2,704 |
+| Invalid actions | 2 |
+| Individually valid partners excluded with an invalid action | 2 |
+| Choices in the paired analysis | 2,700 |
+| Dominant-action matches / choices in strict-dominance regions | **1,277 / 1,280 (99.77%)** |
+
+The data reader verifies hashes, identities, prompts, payoffs, label blocks,
+and all scheduled records. It recomputes actions from raw answers instead of
+trusting old summary scores. Missing or duplicate records stop reproduction;
+invalid answers remain in the data. See [data provenance](data/post/README.md).
+
+There are at most **two games per model per payoff setting**. These are
+exploratory observations. Cooperation rates in Chicken and Stag Hunt do not
+by themselves establish correct choices, because the best response depends on
+the opponent. The grid did **not** test responses to the defection-cost
+intervention. It does not establish precise behavioral thresholds or real-world
+safety. Reported beliefs and confidence are retained but are not used to score
+the post's heatmap or dominance result.
+
+## Scope and the next step
+
+The next experiment described by the post is to hold one baseline PD fixed
+and vary only the defection cost near its two conditional thresholds. It is a
+future experiment, not a completed result or an automatic paid run.
+
+Repeated interactions, asymmetric games, uncertain monitoring, institutional
+mechanisms, risk criteria, the separate oversight game, Lean proofs, and the
+broader Paper 1 planning/collection framework are outside this starting point.
+They have been removed from the active tree, along with unrelated datasets and
+duplicated engines. This also removes the advanced risk paths identified as
+incorrect during the preceding assessment; it does not claim to have fixed them.
+
+The complete earlier repository is recoverable at
+[`before-lesswrong-simplification-2026-11-09`](https://github.com/AI4Collaboration/Game-Utility-Threshold/tree/before-lesswrong-simplification-2026-11-09)
+(`63e411fb54e7eaab00bd38b72f27dd7c3e32f0fd`). No historical experiment was
+relabelled as a new run. No new model calls were made during this simplification.

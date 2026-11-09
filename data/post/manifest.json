@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "post": {
+    "url": "https://www.lesswrong.com/posts/HJSWoWCQefj2L8W8d/when-defection-stops-paying-why-utility-thresholds-matter-1",
+    "title": "When Defection Stops Paying: Why Utility Thresholds Matter for AI Safety",
+    "published": "2026-11-03",
+    "accessed": "2026-11-09"
+  },
+  "cohort": {
+    "stage": "perspective_grid",
+    "protocol": "phase-space-v1-neutral-utility",
+    "replicates": [
+      0,
+      1
+    ],
+    "grid": {
+      "s_min": -1,
+      "s_max": 2,
+      "t_min": -1,
+      "t_max": 2,
+      "step": 0.25,
+      "R": 1,
+      "P": 0
+    },
+    "planned_games": 1352,
+    "planned_decisions": 2704,
+    "selection": "Only records whose case.stage equals perspective_grid; retain all planned roles, including invalid outputs. No other stages or refinement are included."
+  },
+  "historical": {
+    "exploratory": true,
+    "post_hoc_presentation_change": true,
+    "new_collection": false,
+    "source_engine_commit": "b4a2e54b6aa34973d2849ff92e38502b4b0e6869",
+    "source_bundle": "results oct 10",
+    "source_raw_path": "data/attempts.jsonl.gz",
+    "source_compressed_sha256": "b016a6358fe8b0ca2eb6a95b6d4ce91d2f80716ffd2a154f028788f510c54525",
+    "source_uncompressed_sha256": "8c3f995078bd7b0ef14e476ebd653a42b5bbff6e49b44a4ed0086ecd37b13c79",
+    "extracted_uncompressed_sha256": "4328c94df40259c0dcb3ac42afad4df5725ca2b5d84e529cda5aac9894082312",
+    "first_started_utc": "2026-10-09T19:54:23.826246+00:00",
+    "last_finished_utc": "2026-10-09T20:01:20.569853+00:00"
+  },
+  "sha256": {
+    "block-0.json": "daefe3961469b04d8cecc4e96b4dc9d061f4280d26d2122ba556fec386d4e8fc",
+    "block-1.json": "23cdea05a5784519ca2843329f2bfc3dfce9d0d7b2443878304a7845f534399a",
+    "records.jsonl.gz": "193f558536f6980058cc1d0d6c0b74b4ef055f1c2d85816111b3d78697d5623c"
+  }
+}

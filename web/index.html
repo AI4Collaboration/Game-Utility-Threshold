@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Prisoner's Dilemma · Utility thresholds</title>
+  <style>
+    :root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#e8eff0;background:#0c1c26;line-height:1.5;--muted:#a4b7c2;--line:#29414e;--cyan:#83dfd2;--pink:#f0a8bb}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 0 0,#14303d 0,transparent 55%)}button,input{font:inherit}a{color:var(--cyan);text-underline-offset:4px}button,a,input,summary{outline-offset:5px}button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--cyan)}
+    .wrap{max-width:1140px;margin:auto;padding:25px 26px 42px}header{display:flex;justify-content:space-between;align-items:center;gap:20px;padding-bottom:21px;border-bottom:1px solid var(--line)}.brand{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:750;display:flex;gap:10px;align-items:center}.brand svg{width:27px;height:27px;color:var(--cyan)}header a{font-size:13px}
+    .intro{margin:30px 0 26px;max-width:750px}.eyebrow{margin:0 0 8px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);font-weight:700}h1{font-size:clamp(28px,4vw,38px);line-height:1.16;letter-spacing:-.035em;font-weight:650;margin:0 0 12px}.intro p:last-child{color:var(--muted);font-size:15px;margin:0;max-width:650px}
+    .layout{display:grid;grid-template-columns:280px minmax(0,1fr);gap:20px;align-items:start}.panel{background:#122633;border:1px solid var(--line);border-radius:12px;padding:21px}.controls h2,.matrix-card h2,.chart-heading h2{font-size:15px;margin:0;letter-spacing:-.01em}.small{font-size:12px;color:var(--muted);margin:8px 0 0}.preset-buttons{display:flex;gap:8px;margin:15px 0 23px}.preset-buttons button{flex:1;background:#1b3443;border:1px solid #3a5564;color:#e8eff0;border-radius:7px;padding:8px;cursor:pointer;font-size:12px}.preset-buttons button:hover{border-color:var(--cyan);background:#244351}
+    .field{padding-top:18px;border-top:1px solid var(--line);margin-top:18px}.field-head{display:flex;justify-content:space-between;align-items:center;gap:8px}.field label{font-size:13px;font-weight:650}.field label span{color:var(--muted);font-weight:400}.field input[type=number]{width:89px;min-width:0;border:1px solid #49616e;border-radius:6px;background:#0c1e29;padding:7px 5px 7px 8px;color:#f3f8f8;font-variant-numeric:tabular-nums}.field input[type=range]{display:block;width:100%;height:22px;margin:13px 0 3px;accent-color:var(--cyan)}.field .small{line-height:1.45}.limits{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums}.constants{display:flex;gap:8px;margin-top:21px}.constants span{border:1px solid var(--line);border-radius:6px;padding:6px 9px;font-size:12px;color:#d2dfe5}.constants strong{color:#fff;font-weight:550}.fixed-note{font-size:11px;color:var(--muted);line-height:1.5;margin:9px 0 0}
+    .content{display:grid;gap:16px}.matrices{display:grid;grid-template-columns:1fr 1fr;gap:16px}.matrix-card{padding:18px}.matrix-caption{color:var(--muted);font-size:11px;margin:4px 0 13px}table{width:100%;border-collapse:separate;border-spacing:4px;text-align:center;font-variant-numeric:tabular-nums}th{color:var(--muted);font-weight:500;font-size:11px;padding:3px}td{border:1px solid #35505f;border-radius:6px;padding:13px 5px;background:#0f212d;font-size:14px}td .row-points{color:var(--cyan)}td .column-points{color:var(--pink)}.pair-separator{color:#6f8794;margin:0 6px}.matrix-placeholder{color:var(--muted);padding:30px 0;font-size:12px}.matrix-key{font-size:10px;color:var(--muted);margin:8px 0 0;text-align:center}
+    .chart-panel{padding:20px}.chart-heading{display:flex;justify-content:space-between;gap:12px;align-items:center}.theory-tag{font-size:9px;color:var(--cyan);border:1px solid #3d756f;border-radius:4px;padding:3px 6px;letter-spacing:.06em;white-space:nowrap}.legend{display:flex;flex-wrap:wrap;gap:17px;font-size:11px;color:#cfdee5;margin-top:16px}.legend span{display:flex;align-items:center;gap:6px}.legend i{display:block;width:17px;border-top:2px solid var(--cyan)}.legend .second{border-color:var(--pink)}#chart{margin-top:10px;min-height:200px}#chart svg{display:block;width:100%;height:auto;overflow:visible}.axis-text{fill:#a4b7c2;font-size:10px;font-family:inherit}.chart-grid{stroke:#29414e;stroke-width:1}.zero-line{stroke:#839aa6;stroke-width:1}.threshold-line{stroke:#54707e;stroke-dasharray:4 4;stroke-width:1}.current-line{stroke:#e8eff0;stroke-opacity:.5;stroke-width:1}.curve-c{stroke:var(--cyan)}.curve-d{stroke:var(--pink)}.curve-c,.curve-d{fill:none;stroke-width:2.7}.curve-note{font-size:11px;color:var(--muted);margin:7px 0 0}
+    .thresholds{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}.threshold{border:1px solid var(--line);border-radius:7px;padding:11px 12px;background:#10212c}.threshold-label{font-size:11px;color:var(--muted);display:block}.threshold strong{font-size:15px;font-weight:550;color:var(--cyan)}.threshold:nth-child(2) strong{color:var(--pink)}.threshold .exact{font-size:10px;color:var(--muted);display:block;margin-top:2px}.threshold .formula{font-size:10px;color:var(--muted)}
+    .current-panel{padding:18px 20px}.current-heading{display:flex;justify-content:space-between;align-items:center;gap:15px}.current-heading h2{font-size:14px;margin:0}.status{font-size:10px;color:var(--muted)}.margin-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:14px 0}.margin-label{font-size:11px;color:var(--muted)}.margin-value{font-size:21px;font-variant-numeric:tabular-nums;display:block;font-weight:550}.margin-formula{font-size:10px;color:var(--muted)}.response{font-size:11px;display:block;margin-top:3px}.region{padding-top:12px;border-top:1px solid var(--line);font-size:12px}.region strong{font-weight:650}.region p{margin:5px 0 0;color:var(--muted)}
+    .error{background:#38232e;border:1px solid #9a5b71;color:#ffdae5;padding:12px 15px;border-radius:8px;margin:0 0 18px;font-size:13px}.error[hidden]{display:none}details{border-top:1px solid var(--line);margin-top:25px;padding-top:17px;max-width:850px}summary{font-size:13px;cursor:pointer;color:#d1e1e7}details p{font-size:12px;line-height:1.7;color:var(--muted);max-width:810px}code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#d3e8ec;font-size:.94em}footer{margin-top:22px;font-size:11px;color:var(--muted);max-width:820px}footer p{margin:6px 0}
+    @media(max-width:800px){.wrap{padding:19px 17px 30px}.layout{grid-template-columns:1fr}.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.controls-top,.control-notes{grid-column:1/-1}.preset-buttons{max-width:300px;margin-bottom:0}.field{margin:0;padding-top:13px}.field-head{align-items:start;flex-direction:column;gap:8px}.field input[type=number]{width:100%}.constants{margin-top:0}.intro{margin:24px 0}.controls-top h2{display:inline}.control-notes{margin-top:-4px}}
+    @media(max-width:480px){header{gap:10px}.brand{font-size:10px;letter-spacing:.07em}header a{font-size:11px}.controls{gap:10px;padding:17px}.field label{font-size:12px}.field .small{font-size:11px}.matrices{gap:10px}.matrix-card{padding:12px 9px}.matrix-card h2{font-size:13px}.matrix-caption{font-size:10px}td{font-size:12px;padding:11px 2px}.pair-separator{margin:0 3px}th{font-size:10px}.chart-panel{padding:16px 12px}.thresholds{gap:7px}.threshold{padding:10px}.threshold strong{font-size:13px}.current-panel{padding:16px}.legend{gap:10px;font-size:10px}.theory-tag{font-size:8px}}
+    @media(prefers-reduced-motion:no-preference){button{transition:background .12s,border-color .12s}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand"><svg viewBox="0 0 28 28" fill="none" aria-hidden="true"><path d="M3 9c4-5 7 5 11 0s7 5 11 0M3 16c4-5 7 5 11 0s7 5 11 0M3 23c4-5 7 5 11 0s7 5 11 0" stroke="currentColor" stroke-width="1.6"/></svg>Utility thresholds</div>
+      <a href="/report/index.html">Experiment report ↗</a>
+    </header>
+    <section class="intro">
+      <p class="eyebrow">One round · Two actions</p>
+      <h1>Prisoner's Dilemma</h1>
+      <p>Change the payoffs and add a cost to defection. Compare cooperation (C) with defection (D) against each possible move of the other player.</p>
+    </section>
+    <div id="error" class="error" role="alert" hidden></div>
+    <main class="layout">
+      <aside class="panel controls" aria-label="Game inputs">
+        <div class="controls-top"><h2>Set the baseline</h2><p class="small">Presets from Figure 3 of the post.</p><div class="preset-buttons"><button type="button" data-preset="a">Figure 3A</button><button type="button" data-preset="b">Figure 3B</button></div></div>
+        <div class="field"><div class="field-head"><label for="s">Payoff when exploited <span>S</span></label><input id="s" type="number" min="-10" max="-0.001" step="any" value="-0.5" aria-describedby="s-help"></div><input id="s-range" type="range" min="-10" max="-0.001" step="0.001" value="-0.5" aria-label="Payoff when exploited S"><div class="limits"><span>−10</span><span>Below 0</span></div><p class="small" id="s-help">Your points for cooperating while the other player defects.</p></div>
+        <div class="field"><div class="field-head"><label for="t">Temptation payoff <span>T</span></label><input id="t" type="number" min="1.001" max="10" step="any" value="2" aria-describedby="t-help"></div><input id="t-range" type="range" min="1.001" max="10" step="0.001" value="2" aria-label="Temptation payoff T"><div class="limits"><span>Above 1</span><span>10</span></div><p class="small" id="t-help">Your points for defecting while the other player cooperates.</p></div>
+        <div class="field"><div class="field-head"><label for="z">Defection penalty <span>z</span></label><input id="z" type="number" min="0" max="20" step="any" value="0" aria-describedby="z-help"></div><input id="z-range" type="range" min="0" max="20" step="0.001" value="0" aria-label="Defection penalty z"><div class="limits"><span>0</span><span>20</span></div><p class="small" id="z-help">Deducted from a player's payoff whenever that player chooses D.</p></div>
+        <div class="control-notes"><div class="constants"><span>Baseline <strong>R = 1</strong></span><span>Baseline <strong>P = 0</strong></span></div><p class="fixed-note">Both cooperate: 1 each. Both defect: 0 each before the penalty. The adjusted table stays in these same units.</p></div>
+      </aside>
+      <div class="content" id="results" aria-busy="true">
+        <div class="matrices">
+          <section class="panel matrix-card"><h2>Before the penalty</h2><p class="matrix-caption">Baseline Prisoner's Dilemma</p><div id="baseline-matrix" class="matrix-placeholder">Calculating…</div><p class="matrix-key">Row player's points / column player's points</p></section>
+          <section class="panel matrix-card"><h2>After the penalty</h2><p class="matrix-caption">Subtract z from each defector's points</p><div id="adjusted-matrix" class="matrix-placeholder">Calculating…</div><p class="matrix-key">Row player's points / column player's points</p></section>
+        </div>
+        <section class="panel chart-panel" aria-labelledby="chart-title">
+          <div class="chart-heading"><h2 id="chart-title">Cooperation's payoff advantage</h2><span class="theory-tag">CALCULATED</span></div>
+          <div class="legend"><span><i></i>If the other player cooperates</span><span><i class="second"></i>If the other player defects</span></div>
+          <div id="chart"></div>
+          <p class="curve-note">Above zero: cooperation earns more. Below zero: defection earns more. The chart varies only z, with S and T held fixed.</p>
+          <div class="thresholds"><div class="threshold"><span class="threshold-label">Tie against cooperation</span><strong id="threshold-c">—</strong> <span class="formula">z = T − 1</span><span class="exact" id="threshold-c-exact"></span></div><div class="threshold"><span class="threshold-label">Tie against defection</span><strong id="threshold-d">—</strong> <span class="formula">z = −S</span><span class="exact" id="threshold-d-exact"></span></div></div>
+        </section>
+        <section class="panel current-panel" aria-labelledby="current-title">
+          <div class="current-heading"><h2 id="current-title">At the selected penalty</h2><span id="status" class="status" role="status">Calculating…</span></div>
+          <div class="margin-grid"><div><span class="margin-label">Against C</span><strong id="margin-c" class="margin-value">—</strong><span class="margin-formula">1 − T + z<br><span id="margin-c-exact"></span></span><span id="response-c" class="response"></span></div><div><span class="margin-label">Against D</span><strong id="margin-d" class="margin-value">—</strong><span class="margin-formula">S + z<br><span id="margin-d-exact"></span></span><span id="response-d" class="response"></span></div></div>
+          <div class="region"><strong id="region-label">Reading the payoff comparisons…</strong><p id="region-description"></p></div>
+        </section>
+      </div>
+    </main>
+    <details><summary>Units, ties and the familiar (5, 3, 1, 0) example</summary><p>The baseline uses <code>R = 1</code> and <code>P = 0</code>. Starting from raw payoffs <code>(T, R, P, S) = (5, 3, 1, 0)</code>, subtract 1 and divide by 2 to obtain <code>(2, 1, 0, −0.5)</code>, the Figure 3A preset. A raw defection penalty <code>k</code> therefore corresponds to <code>z = k/2</code>, or <code>k = 2z</code>. This change of units preserves mathematical payoff comparisons; it does not establish that a language model responds identically to the rewritten numbers.</p><p>At either calculated threshold, the two actions tie against that particular opponent action. At or above both thresholds, cooperation is at least as good against either action; strictly above both, it is strictly better. A tie is not a requirement to choose cooperation. Before intervention, strict Prisoner's Dilemma has <code>T &gt; 1</code> and <code>S &lt; 0</code>, so defection is better against either action throughout that region.</p><p>The baseline can remain a strict Prisoner's Dilemma even when <code>T + S &gt; 2</code>. In that case an unequal outcome gives more combined points than mutual cooperation. The action ordering alone does not establish that mutual cooperation maximizes total points. The penalty can also change the game's decision structure, as reported above.</p></details>
+    <footer><p>This page calculates the post's payoff model. It makes no model calls, draws no random opponent actions and records no research observations.</p><p>Line crossings are calculated equal-payoff points, not measured changes in AI behavior. The separate <a href="/report/index.html">experiment report</a> identifies the evidence behind its results.</p></footer>
+  </div>
+  <noscript><p class="wrap">Enable JavaScript to use the calculator. The experiment report remains available from the link above.</p></noscript>
+  <script>
+    "use strict";
+    const byId = (id) => document.getElementById(id);
+    const fields = ["s", "t", "z"];
+    const format = (value) => new Intl.NumberFormat("en", {maximumFractionDigits:4}).format(Object.is(value,-0) ? 0 : value);
+    const escapeHTML = (value) => String(value).replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+    const responses = {cooperate:"Cooperation earns more.",defect:"Defection earns more.",tie:"Equal points; either action is best."};
+    let timer, version = 0, hasResults = false;
+    const resultState = () => hasResults ? "The display still shows the last valid settings." : "No calculated result is available yet.";
+
+    function matrixHTML(matrix, name) {
+      return `<table aria-label="${name}"><thead><tr><th scope="col">You / other</th><th scope="col">C</th><th scope="col">D</th></tr></thead><tbody>` + matrix.map((row,i) => `<tr><th scope="row">${i ? "D" : "C"}</th>` + row.map((pair) => `<td><span class="row-points">${format(pair[0])}</span><span class="pair-separator">/</span><span class="column-points">${format(pair[1])}</span></td>`).join("") + "</tr>").join("") + "</tbody></table>";
+    }
+
+    function renderPlot(data) {
+      // Only display geometry is calculated here. All payoff values, curve
+      // points, thresholds and scientific bounds come from the Python API.
+      const p=data.plot, w=660, h=260, left=46, right=16, top=27, bottom=43;
+      const x=(v)=>left+(v-p.x_min)/(p.x_max-p.x_min)*(w-left-right);
+      const y=(v)=>top+(p.y_max-v)/(p.y_max-p.y_min)*(h-top-bottom);
+      let svg=`<svg viewBox="0 0 ${w} ${h}" role="img" aria-labelledby="plot-title plot-description"><title id="plot-title">Cooperation payoff minus defection payoff as the penalty changes</title><desc id="plot-description">Two calculated margin lines. Equal payoffs against cooperation at ${escapeHTML(data.thresholds.against_c.exact)}; against defection at ${escapeHTML(data.thresholds.against_d.exact)}.</desc>`;
+      for(let i=0;i<=4;i++) {
+        const xv=p.x_min+(p.x_max-p.x_min)*i/4, yv=p.y_min+(p.y_max-p.y_min)*i/4;
+        svg+=`<line class="chart-grid" x1="${left}" x2="${w-right}" y1="${y(yv)}" y2="${y(yv)}"/><text class="axis-text" x="${left-9}" y="${y(yv)+4}" text-anchor="end">${format(yv)}</text><text class="axis-text" x="${x(xv)}" y="${h-bottom+20}" text-anchor="middle">${format(xv)}</text>`;
+      }
+      svg+=`<line class="zero-line" x1="${left}" x2="${w-right}" y1="${y(0)}" y2="${y(0)}"/>`;
+      for(const key of ["against_c","against_d"]) {
+        const threshold=data.thresholds[key].value;
+        svg+=`<line class="threshold-line" x1="${x(threshold)}" x2="${x(threshold)}" y1="${top}" y2="${h-bottom}"/>`;
+      }
+      for(const series of p.series) {
+        const cls=series.key==="against_c" ? "curve-c" : "curve-d";
+        const path=series.points.map((point,i)=>`${i ? "L" : "M"}${x(point.x)},${y(point.y)}`).join(" ");
+        svg+=`<path class="${cls}" d="${path}"/>`;
+      }
+      const now=x(data.inputs.z);
+      svg+=`<line class="current-line" x1="${now}" x2="${now}" y1="${top}" y2="${h-bottom}"/><text class="axis-text" x="${Math.min(w-40,Math.max(58,now))}" y="14" text-anchor="middle">z = ${format(data.inputs.z)}</text>`;
+      for(const key of ["against_c","against_d"]) svg+=`<circle cx="${now}" cy="${y(data.margins[key].value)}" r="4" fill="${key==="against_c" ? "#83dfd2" : "#f0a8bb"}" stroke="#122633" stroke-width="1.5"/>`;
+      svg+=`<text class="axis-text" x="${(left+w-right)/2}" y="${h-3}" text-anchor="middle">Defection penalty z</text></svg>`;
+      byId("chart").innerHTML=svg;
+    }
+
+    function render(data) {
+      for(const [id,key] of [["baseline-matrix","baseline"],["adjusted-matrix","adjusted"]]) {
+        byId(id).classList.remove("matrix-placeholder");
+        byId(id).innerHTML=matrixHTML(data.matrices[key],key==="baseline" ? "Baseline payoffs" : "Payoffs after penalty");
+      }
+      for(const [suffix,key] of [["c","against_c"],["d","against_d"]]) {
+        const margin=data.margins[key], threshold=data.thresholds[key];
+        byId(`margin-${suffix}`).textContent=margin.value!==0 && Math.abs(margin.value)<0.0001 ? margin.value.toExponential(3) : format(margin.value);
+        byId(`margin-${suffix}`).title=`Exact margin: ${margin.exact}`;
+        byId(`margin-${suffix}-exact`).textContent=`Exact: ${margin.exact}`;
+        byId(`response-${suffix}`).textContent=responses[margin.response];
+        byId(`threshold-${suffix}`).textContent=`z = ${format(threshold.value)}`;
+        byId(`threshold-${suffix}-exact`).textContent=`Exact: ${threshold.exact}`;
+      }
+      byId("region-label").textContent=data.region.label;
+      byId("region-description").textContent=data.region.description;
+      renderPlot(data);
+      hasResults=true;
+      byId("status").textContent="Up to date";
+      byId("results").setAttribute("aria-busy","false");
+      byId("error").hidden=true;
+    }
+
+    async function load(currentVersion) {
+      try {
+        const query=new URLSearchParams(fields.map((key)=>[key,byId(key).value]));
+        const response=await fetch(`/api/game?${query}`);
+        const data=await response.json();
+        if(currentVersion!==version)return;
+        if(!response.ok)throw new Error(data.error || "The server could not calculate these settings.");
+        render(data);
+      } catch(error) {
+        if(currentVersion!==version)return;
+        byId("error").textContent=`Could not update the calculator. ${error.message} ${resultState()}`;
+        byId("error").hidden=false;
+        byId("status").textContent="Update needed";
+        byId("results").setAttribute("aria-busy","false");
+      }
+    }
+
+    function schedule(immediate=false) {
+      clearTimeout(timer);const currentVersion=++version;
+      const valid=fields.every((key)=>byId(key).value!=="" && byId(key).checkValidity());
+      if(!valid) {
+        byId("error").textContent=`Use S from −10 to −0.001, T from 1.001 to 10, and z from 0 to 20. ${resultState()}`;
+        byId("error").hidden=false;byId("status").textContent="Update needed";
+        byId("results").setAttribute("aria-busy","false");return;
+      }
+      byId("status").textContent="Calculating…";
+      byId("results").setAttribute("aria-busy","true");
+      timer=setTimeout(()=>load(currentVersion),immediate ? 0 : 100);
+    }
+
+    for(const key of fields) {
+      byId(`${key}-range`).addEventListener("input",()=>{byId(key).value=byId(`${key}-range`).value;schedule();});
+      byId(key).addEventListener("input",()=>{if(byId(key).checkValidity())byId(`${key}-range`).value=byId(key).value;schedule();});
+    }
+    document.querySelectorAll("[data-preset]").forEach((button)=>button.addEventListener("click",()=>{
+      const preset=button.dataset.preset==="a" ? {s:"-0.5",t:"2",z:"0"} : {s:"-1",t:"1.5",z:"0"};
+      for(const key of fields)byId(key).value=byId(`${key}-range`).value=preset[key];
+      schedule(true);
+    }));
+    schedule(true);
+  </script>
+</body>
+</html>

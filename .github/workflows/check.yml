@@ -1,0 +1,13 @@
+name: Reproduce the post
+on: [push, workflow_dispatch]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m unittest discover -s tests -v
+      - run: python -m pip install 'matplotlib>=3.8,<4'
+      - run: python reproduce.py

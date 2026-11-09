@@ -1,14 +1,9 @@
 [project]
-name = "utility-threshold-games"
-version = "0.5.0"
-description = "Research-grade utility-threshold games with formal and AISI Inspect observability."
+name = "game-utility-threshold"
+version = "0.6.0"
+description = "The symmetric one-shot games and saved experiment in the LessWrong post."
 requires-python = ">=3.11"
-dependencies = ["inspect-ai>=0.3.259", "openai>=1", "python-dotenv>=1"]
+dependencies = []
 
 [project.optional-dependencies]
-figures = ["matplotlib>=3.8", "numpy>=1.26"]
-research = ["matplotlib>=3.8", "numpy>=1.26", "pytest>=8"]
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-pythonpath = ["."]
+figures = ["matplotlib>=3.8,<4"]
