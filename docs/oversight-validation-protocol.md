@@ -114,10 +114,10 @@ main results. The study manifest records the pilot schedule and spending.
 The three story checkpoints cover no defense, a defense just above the
 theoretical crossing, and full defense. With 40 requests per checkpoint this
 is a limited framing check, not a precise estimate of small prompt effects.
-The primary defense crossing is `2/7`, between 0.2 and 0.3. **No planned live
-main-study condition is an exact payoff tie.** The separate compatibility pilot
-does include one exact-tie prompt per model. The scorer handles ties correctly, but do
-not claim that this run directly tests tie behavior or locates a continuous
+The primary defense crossing is `2/7`, between 0.2 and 0.3. **No main-study
+condition is an exact payoff tie.** The separate compatibility pilot includes
+one exact-tie prompt per model. The scorer handles ties correctly, but do
+not claim that the main study tests tie behavior or locates a continuous
 behavioral threshold. Numerical conditions shared by the neutral and story
 parts retain separate identifiers and are reported separately.
 
@@ -165,6 +165,11 @@ Record a durable start event before sending each request. Retain its condition,
 presentation block, repetition, exact prompt, request settings, timestamps,
 HTTP status, returned metadata, usage/cost, and complete raw response. Never
 store authorization headers or the API key in prompts, logs, exports, or Git.
+
+After an interrupted or ambiguous request, continuation requires a recorded
+audit explaining the failure. Its unknown cost remains fully reserved; its
+original status stays in the dataset. Continuation only sends fresh,
+previously unattempted jobs. It never repeats the failed request.
 
 Strictly parse the requested response format and decode A/B using the saved
 mapping. Verify model/provider identity. Recompute choices and payoff scores

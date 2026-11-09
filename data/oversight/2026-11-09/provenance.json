@@ -1,0 +1,22 @@
+{
+  "study": "oversight-llm-v1",
+  "date": "2026-11-09",
+  "frozen_protocol_commit": "4638954dc8f6f6bdec0b8a4f36de0d99a476ff7a",
+  "plan_sha256": "5b51c5a7a5acd42b493cd046777388f81a810399015f00834429db127b92bb28",
+  "planned_main": 3660,
+  "planned_pilot": 12,
+  "attempted_total": 3672,
+  "finished_total": 3672,
+  "unique_generation_ids": 3672,
+  "status_counts_including_pilot": {
+    "valid": 3672
+  },
+  "budget_usd": "50",
+  "total_reported_cost_usd": "0.670963194",
+  "pilot_cost_usd": "0.002170674",
+  "started_utc": "2026-11-09T20:08:47.074054+00:00",
+  "finished_utc": "2026-11-09T20:17:27.151047+00:00",
+  "automatic_retries": 0,
+  "unresolved_costs": 0,
+  "credential_scan": "passed"
+}

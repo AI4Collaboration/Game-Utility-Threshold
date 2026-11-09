@@ -74,6 +74,7 @@ class SummaryTests(unittest.TestCase):
         self.assertEqual(cell["optimal_rate"], .5)
         self.assertAlmostEqual(cell["mean_regret"], .05)
         self.assertAlmostEqual(cell["mean_human_payoff"], -1.7)
+        self.assertAlmostEqual(cell["mean_remaining_harm"], 2.1)
         self.assertEqual(result["known_cost_usd"], "0.010")
         self.assertEqual(result["attempts_with_unresolved_cost"], 6)
 

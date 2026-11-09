@@ -198,13 +198,20 @@ class Handler(BaseHTTPRequestHandler):
             return
         allowed = {"/": ROOT / "web/index.html", "/games": ROOT / "web/games.html",
                    "/oversight": ROOT / "web/oversight.html", "/oversight.js": ROOT / "web/oversight.js"}
+        validation = ROOT / "data/oversight/2026-11-09/analysis"
+        validation_names = ["report.html", "summary.json", "cells.csv", "blocks.csv", "observations.csv"]
+        validation_names += [f"{name}.{extension}" for name in
+                             ("sweep-defense", "framing", "presentation-blocks", "confusion")
+                             for extension in ("svg", "png")]
+        allowed.update({f"/validation/{name}": validation / name for name in validation_names})
         report_names = ["index.html", "summary.json", "cells.csv", "regions.csv", "theory-grid.csv"]
         report_names += [f"figure-{i}.{suffix}" for i in range(1, 6) for suffix in ("svg", "png")]
         allowed.update({f"/report/{name}": ROOT / "report" / name for name in report_names})
         path = allowed.get(url.path)
-        directory = ROOT.resolve() / ("web" if url.path in ("/", "/games", "/oversight", "/oversight.js") else "report")
+        directory = ROOT.resolve() / ("data/oversight/2026-11-09/analysis" if url.path.startswith("/validation/") else
+                                      "web" if url.path in ("/", "/games", "/oversight", "/oversight.js") else "report")
         if path is None or not path.resolve().is_relative_to(directory) or not path.is_file():
-            self.reply(404, b"Not found. Build the report with: python3 reproduce.py", "text/plain")
+            self.reply(404, b"Not found. See README for report generation commands.", "text/plain")
             return
         content_type = {".html": "text/html; charset=utf-8", ".svg": "image/svg+xml", ".png": "image/png",
                         ".json": "application/json", ".csv": "text/csv; charset=utf-8",

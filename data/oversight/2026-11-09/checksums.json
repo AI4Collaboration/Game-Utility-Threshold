@@ -1,0 +1,11 @@
+{
+  "README.md": "fa3dffe3806b0aad1bc3c56218cfce512f15ca706e7e2b80637c8737bcc251bf",
+  "analysis-requirements.txt": "d98d730e97c33fe2f7ec4f8d689a5ede208d944ccd07d63d0e4681ba5e5cf706",
+  "anthropic--claude-haiku-4.5-endpoints.json": "dd25119091dbe50d7c74e9519eba3eb0f950cff638fb3e218cedf26422525cb7",
+  "google--gemini-2.5-flash-endpoints.json": "a8aede0e475b1d4108aea14b514ac59b6d2af27d20e8c9c7cea9280813d8afa7",
+  "models.json": "75c5bc78d160dbaf9a5d59427c3ccfd436e95a445fcb6e99b4e301c4e9dcb91f",
+  "openai--gpt-4.1-mini-endpoints.json": "a80b63140be0e90c64cb35a122ad6a5cee31ac62f067260b7ef0de555ec150c6",
+  "plan.json.gz": "abb8c9d881c1d9ff08aa471453110ad2f18fa6afba153bb8b2a9f3bac3dfcb9c",
+  "provenance.json": "c996c1069e2bb16c5b7b663deab9e3349f7e44bebfc9004590890783a3ba56fa",
+  "records.jsonl.gz": "6eea48d5515fa5ad57f39593b8632c2401f8066df8769973b09551973348e314"
+}

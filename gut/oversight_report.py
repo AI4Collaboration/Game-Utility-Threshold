@@ -119,6 +119,9 @@ def summarize(plan, rows):
                                for block, n in zip(blocks, planned))/4
             row.update({f"mean_{metric}": mean, f"{metric}_lower_95": lower, f"{metric}_upper_95": upper,
                         f"{metric}_missing_lower": float(missing_low), f"{metric}_missing_upper": float(missing_high)})
+        harm_blocks = [[game.h*(1-d) if r["action"] == "attack" else F(0) for r in block] for block in blocks]
+        harm, harm_low, harm_high = interval(harm_blocks, F(0), game.h*(1-d))
+        row.update(mean_remaining_harm=harm, remaining_harm_lower_95=harm_low, remaining_harm_upper_95=harm_high)
         for block, observations in enumerate(blocks):
             n, successes = len(observations), sum(c_blocks[block])
             row[f"block{block}_valid"] = n
@@ -157,6 +160,7 @@ def report(directory):
 
     directory = Path(directory)
     plan, rows = observations(directory)
+    matplotlib.rcParams["svg.hashsalt"] = plan["sha256"]
     result = summarize(plan, rows)
     output = directory / "analysis"
     output.mkdir(exist_ok=True)
@@ -245,16 +249,21 @@ def report(directory):
         save(fig, "framing", "Neutral and oversight wording at matched payoff settings. Error bars are pointwise, not a test of differences. No pooled framing effect is fitted.")
 
     # Presentation blocks are shown separately; do not assume undocumented bit meanings.
-    block_frame = pd.DataFrame([r for r in result["blocks"] if r["sweep"] == "defense"])
+    block_frame = pd.DataFrame([r for r in result["blocks"] if r["sweep"] in ("defense", "framing")])
     if not block_frame.empty:
-        fig, axes = plt.subplots(1, len(model_ids), squeeze=False, figsize=(5*len(model_ids), 4), layout="constrained")
-        for column, model in enumerate(model_ids):
-            part = block_frame[block_frame.model == model]
-            sns.lineplot(data=part, x="x", y="cooperation_rate", hue="block", marker="o", estimator=None,
-                         palette=sns.color_palette("colorblind", 4), ax=axes[0, column])
-            axes[0, column].set(title=model, xlabel="Defense d", ylabel="Within-block cooperation rate", ylim=(-.05, 1.05))
+        frames = [f for f in ("neutral", "oversight") if f in set(block_frame.framing)]
+        fig, axes = plt.subplots(len(frames), len(model_ids), squeeze=False,
+                                 figsize=(5*len(model_ids), 3.6*len(frames)), layout="constrained")
+        for row_index, frame in enumerate(frames):
+            for column, model in enumerate(model_ids):
+                part = block_frame[(block_frame.model == model) & (block_frame.framing == frame)]
+                sns.lineplot(data=part, x="x", y="cooperation_rate", hue="block", marker="o", estimator=None,
+                             palette=sns.color_palette("colorblind", 4), ax=axes[row_index, column])
+                counts = ",".join(str(n) for n in sorted(set(part.planned)))
+                axes[row_index, column].set(title=f"{model}\n{frame} · planned n={counts} per block/point",
+                                           xlabel="Defense d", ylabel="Within-block cooperation rate", ylim=(-.05, 1.05))
         fig.suptitle(f"{prefix}\nLabel/order presentation checks · four blocks shown separately")
-        save(fig, "presentation-blocks", "Descriptive within-block rates, without pooled uncertainty. Blocks encode the frozen label/order variations; consult the plan for their mapping. Missing block estimates remain absent.")
+        save(fig, "presentation-blocks", "Descriptive within-block rates for both wordings, without pooled uncertainty. Blocks 0/1 map A to cooperation; blocks 2/3 map B to cooperation. Even blocks show cooperation first; odd blocks show attack first. Missing block estimates remain absent. Lines connect sampled settings and are not fitted response curves.")
 
     confusion = []
     fig, axes = plt.subplots(1, len(model_ids), squeeze=False, figsize=(4*len(model_ids), 4), layout="constrained")
@@ -283,7 +292,7 @@ def report(directory):
 <title>Oversight validation report</title><style>body{{font:16px/1.6 system-ui,sans-serif;color:#203540;margin:32px auto;padding:0 20px;max-width:1200px}}h1{{line-height:1.2}}img{{max-width:100%;height:auto}}figure{{margin:35px 0}}figcaption,.note{{font-size:13px;color:#526570}}table{{border-collapse:collapse;font-size:13px}}th,td{{padding:8px;border:1px solid #d8e0e3;text-align:left}}.table{{overflow:auto}}a{{color:#146c66}}code{{overflow-wrap:anywhere}}</style>
 <h1>{escape(prefix)}: oversight validation</h1><p>{escape(result['scope'])}</p>
 <p>Planned requests: <b>{result['planned']}</b>. Attempted: <b>{result['attempted']}</b>. Status counts: <code>{escape(json.dumps(result['status_counts']))}</code>.</p>
-<p>Known reported cost: US${escape(result['known_cost_usd'])}. Attempted requests with unresolved cost: {result['attempts_with_unresolved_cost']}. Known cost alone is not a complete bill when costs are unresolved.</p>
+<p>Main-study reported cost (pilot excluded): US${escape(result['known_cost_usd'])}. Attempted requests with unresolved cost: {result['attempts_with_unresolved_cost']}. Known cost alone is not a complete bill when costs are unresolved.</p>
 <p>{escape(result['estimand'])} {escape(result['uncertainty'])} {escape(result['missingness'])}</p>
 <p>Missing block data produces no combined estimate. Exact ties allow either action; they are not evidence of strict agreement. No behavioral threshold or model ranking is fitted.</p>
 <p><a href="observations.csv">Every planned observation</a> · <a href="cells.csv">Condition summaries</a> · <a href="blocks.csv">Presentation blocks</a> · <a href="summary.json">Full summary and software versions</a></p>

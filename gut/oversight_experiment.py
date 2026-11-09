@@ -225,6 +225,7 @@ def observations(directory):
         rows.append({**row, "attempted": job["id"] in started, "status": status, "action": action,
                      "theoretical_best": list(game.best_responses(d)), "margin": str(game.margin(d)),
                      "human_payoff": str(human) if action else None, "ai_payoff": str(ai) if action else None,
+                     "remaining_harm": str(game.h*(1-d) if action == "attack" else F(0)) if action else None,
                      "regret": str(max(game.payoff(d, a)[1] for a in ("cooperate", "attack"))-ai) if action else None,
                      "cost_usd": str(cost_from_body(finish["body"])) if finish and cost_from_body(finish["body"]) is not None else None})
     return plan, rows

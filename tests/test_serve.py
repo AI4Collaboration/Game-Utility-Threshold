@@ -109,6 +109,8 @@ class HTTPTests(unittest.TestCase):
             (root / "web/index.html").write_text("<h1>Thresholds</h1>")
             (root / "web/oversight.html").write_text("<h1>Oversight</h1>")
             (root / "web/oversight.js").write_text("'use strict';")
+            (root / "data/oversight/2026-11-09/analysis").mkdir(parents=True)
+            (root / "data/oversight/2026-11-09/analysis/report.html").write_text("<h1>Validation</h1>")
             (root / ".env").write_text("private fixture value")
             (root / "report/index.html").symlink_to(root / ".env")
             with ThreadingHTTPServer(("127.0.0.1", 0), serve.Handler) as server:
@@ -158,6 +160,8 @@ class HTTPTests(unittest.TestCase):
                     status, headers, _ = get("/oversight.js")
                     self.assertEqual(status, 200)
                     self.assertIn("text/javascript", headers["Content-Type"])
+                    self.assertEqual(get("/validation/report.html")[0], 200)
+                    self.assertEqual(get("/validation/../../.env")[0], 404)
                     for path in ("/.env", "/../.env", "/%2e%2e/.env", "/web/index.html", "/report/index.html"):
                         status, _, body = get(path)
                         self.assertEqual(status, 404)

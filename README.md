@@ -20,6 +20,21 @@ pure Nash and Stackelberg solvers, and a toy-simulation tab with JSON/CSV export
 See [the oversight guide](docs/oversight.md) for the executable assumptions,
 tie handling, references, and the distinction between calculations and data.
 
+The first **oversight LLM validation is complete**: 3,660 main-study decisions
+from three models, plus 12 separate pilot calls. See the
+[results and limits](docs/oversight-validation-results.md), the
+[literature-based protocol](docs/oversight-validation-protocol.md), and the
+[saved dataset](data/oversight/2026-11-09/). The local results page is
+`/validation/report.html`, linked from the oversight UI. This tests responses
+to fixed defense choices, not empirical Nash or Stackelberg play.
+
+Rebuild its tables and 2D figures without an API key or new model calls:
+
+```sh
+python3 -m pip install -r data/oversight/2026-11-09/analysis-requirements.txt
+python3 oversight_experiment.py report data/oversight/2026-11-09
+```
+
 ## Start here
 
 Python 3.11 or newer is enough for the game, data audit, explorer and tests.

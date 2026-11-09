@@ -1,4 +1,5 @@
 from decimal import Decimal as D
+import gzip
 import json
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -45,6 +46,14 @@ class OversightExperimentTests(unittest.TestCase):
             self.assertEqual(len(rows), 56)
             self.assertTrue(all(r["status"] == "valid" and r["regret"] == "0" for r in rows))
             self.assertEqual(load_run(path)[3], 0)
+            # Published compressed artifacts reproduce without permitting live append.
+            for name in ("plan.json", "records.jsonl"):
+                original = Path(path)/name
+                (Path(path)/(name+".gz")).write_bytes(gzip.compress(original.read_bytes(), mtime=0))
+                original.unlink()
+            self.assertEqual(observations(path)[1], rows)
+            with self.assertRaises(ValueError):
+                collect(path)
 
     def test_strict_parsing_and_provider_identity(self):
         plan = make_plan([MODEL], "1", mode="synthetic", primary_reps=1, framing_reps=1)
