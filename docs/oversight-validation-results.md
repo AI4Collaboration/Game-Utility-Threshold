@@ -49,7 +49,7 @@ At every sampled defense other than 0.3, all valid main-study choices matched
 the uniquely higher AI payoff. All three models attacked at defenses 0–0.2
 and cooperated at defenses 0.4–1 in the neutral sweep.
 
-The near-threshold departures are not all interchangeable random errors:
+The near-threshold departures differ across presentation blocks:
 
 * GPT-4.1 mini's 40 oversight-story choices at d=0.3 followed the **first
   displayed payoff row** in every case. Cooperation was chosen in both

@@ -180,7 +180,10 @@ def report(directory):
 
     def save(fig, name, caption):
         fig.savefig(output / f"{name}.png", dpi=160)
-        fig.savefig(output / f"{name}.svg", metadata={"Date": None})
+        svg_path = output / f"{name}.svg"
+        fig.savefig(svg_path, metadata={"Date": None})
+        # Matplotlib leaves trailing spaces in path data; keep generated diffs clean.
+        svg_path.write_text("\n".join(line.rstrip() for line in svg_path.read_text().splitlines()) + "\n")
         plt.close(fig)
         figures.append({"file": f"{name}.png", "svg": f"{name}.svg", "caption": caption})
 
