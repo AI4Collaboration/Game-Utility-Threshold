@@ -12,13 +12,62 @@ from unittest.mock import patch
 
 from gut import Game
 import serve
+from gut.oversight import Oversight
 
 
 def query(s="-0.5", t="2", z="0"):
     return {"s": [s], "t": [t], "z": [z]}
 
 
+def oversight_query(**changes):
+    return {k: [str(v)] for k, v in {**Oversight().__dict__, "d": "0.3", **changes}.items()}
+
+
 class AdapterTests(unittest.TestCase):
+    def test_oversight_api_keeps_exact_values_and_map_agrees(self):
+        result = serve.oversight_state(oversight_query())
+        self.assertEqual(result["thresholds"]["d"]["root"]["exact"], "2/7")
+        self.assertEqual(result["selected"]["best"], ["cooperate"])
+        self.assertEqual(result["first_strict_defense"]["exact"], "3/10")
+        self.assertEqual(result["equilibria"]["stackelberg_favorable"][0]["d"]["exact"], "3/10")
+        for cell in result["map"]["cells"]:
+            game = Oversight(v=cell["v"]["exact"], p=cell["p"]["exact"])
+            self.assertEqual(cell["best"], list(game.best_responses(F(3, 10))))
+        zero = serve.oversight_state(oversight_query(**{k: 0 for k in Oversight.__dataclass_fields__}))
+        self.assertIsNone(zero["thresholds"]["d"]["root"])
+        self.assertIsNone(zero["first_strict_defense"])
+        self.assertEqual(zero["first_weak_defense"]["exact"], "0")
+
+    def test_oversight_simulation_is_labeled_and_retains_payoffs(self):
+        for baseline in ("always_cooperate", "always_attack", "payoff_maximizer"):
+            result = serve.oversight_simulation(oversight_query(baseline=baseline, tie="attack", scope="all"))
+            self.assertTrue(result["synthetic"])
+            self.assertEqual(len(result["records"]), 11)
+            for row in result["records"]:
+                human, ai = Oversight().payoff(row["d"]["exact"], row["action"])
+                self.assertEqual(F(row["human"]["exact"]), human)
+                self.assertEqual(F(row["ai"]["exact"]), ai)
+        result = serve.oversight_simulation(oversight_query(p=0, d="0.5", baseline="payoff_maximizer", tie="attack", scope="selected"))
+        self.assertEqual(result["summary"]["rounds"], 1)
+        self.assertEqual(result["records"][0]["action"], "attack")
+        self.assertEqual(result["records"][0]["ai_regret"]["exact"], "0")
+
+    def test_oversight_rejects_invalid_inputs(self):
+        for key in Oversight.__dataclass_fields__:
+            for value in ("-1", "1001", "NaN", "Infinity", "1e999", "1e-99", ""):
+                with self.subTest(key=key, value=value), self.assertRaises(ValueError):
+                    serve.oversight_state(oversight_query(**{key: value}))
+        for value in ("0.05", "1.1", "-0.1"):
+            with self.assertRaises(ValueError):
+                serve.oversight_state(oversight_query(d=value))
+        with self.assertRaises(ValueError):
+            serve.oversight_state({**oversight_query(), "d": ["0", "1"]})
+        for key, value in (("scope", "random"), ("tie", "random"), ("baseline", "unknown")):
+            args = dict(scope="all", tie="cooperate", baseline="always_attack")
+            args[key] = value
+            with self.assertRaises(ValueError):
+                serve.oversight_simulation(oversight_query(**args))
+
     def test_both_post_paths_match_game_before_at_and_after_each_threshold(self):
         for s, t in (("-0.5", "2"), ("-1", "1.5")):
             game = Game(s=s, t=t)
@@ -58,6 +107,8 @@ class HTTPTests(unittest.TestCase):
             (root / "web").mkdir()
             (root / "report").mkdir()
             (root / "web/index.html").write_text("<h1>Thresholds</h1>")
+            (root / "web/oversight.html").write_text("<h1>Oversight</h1>")
+            (root / "web/oversight.js").write_text("'use strict';")
             (root / ".env").write_text("private fixture value")
             (root / "report/index.html").symlink_to(root / ".env")
             with ThreadingHTTPServer(("127.0.0.1", 0), serve.Handler) as server:
@@ -94,6 +145,19 @@ class HTTPTests(unittest.TestCase):
                     self.assertEqual(status, 200)
                     self.assertEqual(json.loads(body)["stable_outcomes"], ["XX", "YY"])
                     self.assertEqual(get("/api/canonical?game=unknown&z=0")[0], 400)
+                    params = "v=4&r=1&a=1&p=3&b=1&w=2&h=6&c=2&d=0.3"
+                    status, _, body = get("/api/oversight?"+params)
+                    self.assertEqual(status, 200)
+                    self.assertEqual(json.loads(body)["selected"]["best"], ["cooperate"])
+                    status, _, body = get("/api/oversight/simulate?"+params+"&baseline=always_attack&tie=attack&scope=all")
+                    self.assertEqual(status, 200)
+                    self.assertTrue(json.loads(body)["synthetic"])
+                    self.assertEqual(get("/api/oversight?"+params+"&d=0")[0], 400)
+                    self.assertEqual(get("/api/oversight?")[0], 400)
+                    self.assertEqual(get("/oversight")[0], 200)
+                    status, headers, _ = get("/oversight.js")
+                    self.assertEqual(status, 200)
+                    self.assertIn("text/javascript", headers["Content-Type"])
                     for path in ("/.env", "/../.env", "/%2e%2e/.env", "/web/index.html", "/report/index.html"):
                         status, _, body = get(path)
                         self.assertEqual(status, 404)

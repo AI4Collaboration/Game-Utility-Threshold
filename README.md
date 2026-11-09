@@ -14,6 +14,12 @@ The same tools now also support fixed **Stag Hunt, Chicken, and Battle of the
 Sexes** examples. [The four-game guide](docs/games.md) states their payoffs,
 thresholds, collection design, and limits. The local explorer is at `/games`.
 
+The **human–AI oversight lab** at `/oversight` now adds an observed human
+defense choice, explicit resource/attack/harm payoffs, live exact thresholds,
+pure Nash and Stackelberg solvers, and a toy-simulation tab with JSON/CSV exports.
+See [the oversight guide](docs/oversight.md) for the executable assumptions,
+tie handling, references, and the distinction between calculations and data.
+
 ## Start here
 
 Python 3.11 or newer is enough for the game, data audit, explorer and tests.
@@ -136,11 +142,12 @@ and map choices to Lean proofs. Offline synthetic runs test the pipeline;
 the new live experiment has not been conducted.
 
 Repeated interactions, uncertain monitoring, institutional
-mechanisms, risk criteria, the separate oversight game, and the
+mechanisms, risk criteria, and the
 broader Paper 1 planning/collection framework are outside this starting point.
-They have been removed from the active tree, along with unrelated datasets and
+They were removed from the active tree, along with the old oversight model, unrelated datasets and
 duplicated engines. This also removes the advanced risk paths identified as
 incorrect during the preceding assessment; it does not claim to have fixed them.
+The new deterministic oversight lab is a small, separately specified implementation.
 
 The complete earlier repository is recoverable at
 [`before-lesswrong-simplification-2026-11-09`](https://github.com/AI4Collaboration/Game-Utility-Threshold/tree/before-lesswrong-simplification-2026-11-09)
