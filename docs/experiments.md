@@ -24,6 +24,8 @@ Only the plot requires matplotlib. Only `proofs --check` requires the pinned
 Lean toolchain (see [the proof guide](../lean/README.md)). All four commands
 above are offline. Synthetic mode uses a deliberately artificial noisy rule;
 its plots, summaries and verification manifests are marked **synthetic**.
+The demonstration rule changes its first-action probability from 0.1 to 0.9
+above z=0.75; it is not an equilibrium model or a prediction for any game.
 Successful proof checking of synthetic choices is a software check, not model
 evidence. Each output directory is a separate immutable plan; choose a new
 directory when changing settings.
@@ -111,3 +113,7 @@ The separate `missing_lower` and `missing_upper` columns bound the finite
 planned sample by treating every excluded pair as all-D or all-C. They are
 missing-data bounds, not confidence intervals. The plot shows valid and planned
 pair counts, and never substitutes zero for a missing estimate.
+
+The [three additional games](games.md) use this same collector. Their
+role-specific tables, cost schedules and outcome meanings are documented
+separately. Existing PD v1 plans and prompts remain unchanged.

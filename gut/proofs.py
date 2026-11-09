@@ -7,13 +7,14 @@ from math import lcm
 from pathlib import Path
 import subprocess
 
-from .experiment import PD, observations
+from .experiment import observations
+from .canonical import example
 
 LEAN = Path(__file__).resolve().parents[1] / "lean"
 
 
-def exact_table(z):
-    matrix = PD.matrix(z)
+def exact_table(z, game="pd", role="row"):
+    matrix = example(game).perspective(role, z)
     values = [matrix[i][j][0] for i in range(2) for j in range(2)]
     denominator = lcm(*(v.denominator for v in values))
     return denominator, [int(v*denominator) for v in values]
@@ -26,6 +27,7 @@ def comparison(value):
 def export_proofs(directory, *, check=False, lake="lake"):
     directory = Path(directory)
     plan, choices, pairs = observations(directory)
+    game = plan.get("game", "pd")
     partners = {p["id"]: p for p in pairs}
     output = directory / "proofs"
     output.mkdir(exist_ok=True)
@@ -37,7 +39,7 @@ def export_proofs(directory, *, check=False, lake="lake"):
         if choice["action"] is not None:
             a = choice["action"]
             name = f"choice_{index}"
-            denominator, table = exact_table(choice["z"])
+            denominator, table = exact_table(choice["z"], game, choice["role"])
             margins = [table[2*a+j]-table[2*(1-a)+j] for j in (0, 1)]
             outcomes = list(map(comparison, margins))
             selected = ".first" if a == 0 else ".second"
@@ -54,7 +56,8 @@ def export_proofs(directory, *, check=False, lake="lake"):
                 opponent = ".first" if partner == 0 else ".second"
                 source += [f"theorem {name}_observed : {'¬ ' if margins[partner] < 0 else ''}BestResponse {name}_table {selected} {opponent} := by decide",
                            f"#print axioms {name}_observed"]
-            row.update(certificate=f"RecordedChoices.{name}", denominator=denominator, payoff_integers=table,
+            row.update(certificate=f"RecordedChoices.{name}", semantic_action=example(game).actions[a],
+                       denominator=denominator, payoff_integers=table,
                        against_first=outcomes[0], against_second=outcomes[1], dominant=dominant,
                        observed_opponent=partner, observed_comparison=outcomes[partner] if partner is not None else None,
                        selected_minus_alternative=[str(Fraction(m, denominator)) for m in margins])
@@ -62,7 +65,7 @@ def export_proofs(directory, *, check=False, lake="lake"):
     source += ["end RecordedChoices", ""]
     path = output / "Choices.lean"
     path.write_text("\n".join(source))
-    result = {"plan_sha256": plan["sha256"], "mode": plan["mode"], "model": plan["model"],
+    result = {"plan_sha256": plan["sha256"], "mode": plan["mode"], "model": plan["model"], "game": game,
               "records_sha256": sha256((directory / "records.jsonl").read_bytes()).hexdigest()
               if (directory / "records.jsonl").exists() else None,
               "source_sha256": sha256(path.read_bytes()).hexdigest(),
@@ -71,6 +74,7 @@ def export_proofs(directory, *, check=False, lake="lake"):
               "verified": False, "mapped_choices": sum("certificate" in row for row in mapping),
               "unmapped_choices": sum("certificate" not in row for row in mapping)}
     (output / "mapping.json").write_text(json.dumps(mapping, indent=2) + "\n")
+    result["mapping_sha256"] = sha256((output / "mapping.json").read_bytes()).hexdigest()
     manifest = output / "verification.json"
     manifest.write_text(json.dumps(result, indent=2) + "\n")
     if check:

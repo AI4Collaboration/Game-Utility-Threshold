@@ -90,6 +90,10 @@ class HTTPTests(unittest.TestCase):
                     result = json.loads(body)
                     self.assertEqual(result["margins"]["against_d"]["response"], "tie")
                     self.assertEqual(result["thresholds"]["against_d"]["exact"], "1/2")
+                    status, _, body = get("/api/canonical?game=battle_of_sexes&z=1")
+                    self.assertEqual(status, 200)
+                    self.assertEqual(json.loads(body)["stable_outcomes"], ["XX", "YY"])
+                    self.assertEqual(get("/api/canonical?game=unknown&z=0")[0], 400)
                     for path in ("/.env", "/../.env", "/%2e%2e/.env", "/web/index.html", "/report/index.html"):
                         status, _, body = get(path)
                         self.assertEqual(status, 404)

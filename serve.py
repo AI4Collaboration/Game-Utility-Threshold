@@ -9,6 +9,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 
 from gut.game import Game
+from gut.canonical import example
 
 ROOT = Path(__file__).resolve().parent
 REGIONS = {
@@ -66,6 +67,31 @@ def analyze(query):
     }
 
 
+def canonical_state(query):
+    if set(query) != {"game", "z"} or any(len(v) != 1 for v in query.values()):
+        raise ValueError("Supply exactly one game and z.")
+    game = example(query["game"][0])
+    z = number(query["z"][0], Decimal("0"), Decimal("20"))
+    comparisons = []
+    for role in ("row", "column"):
+        for i, (margin, threshold) in enumerate(zip(game.margins(role, z), game.thresholds(role))):
+            comparisons.append({"role": role, "against": game.actions[i], "margin": str(margin),
+                                "value": float(margin), "threshold": str(threshold), "tie_at": float(threshold),
+                                "best": game.actions[0] if margin > 0 else game.actions[1] if margin < 0 else "tie"})
+    maximum = max(Fraction(3, 2), z*Fraction(11, 10),
+                  *(t*Fraction(6, 5) for role in ("row", "column") for t in game.thresholds(role)))
+    lines = [{"role": row["role"], "against": row["against"], "start": -row["tie_at"],
+              "end": float(maximum)-row["tie_at"]} for row in comparisons]
+    values = [v for line in lines for v in (line["start"], line["end"])]
+    def exact(matrix):
+        return [[[str(v) for v in cell] for cell in row] for row in matrix]
+    return {"name": game.name, "actions": game.actions, "description": game.explanation, "z": float(z),
+            "baseline": game.matrix(), "adjusted": game.matrix(z), "comparisons": comparisons,
+            "baseline_exact": exact(game.matrix()), "adjusted_exact": exact(game.matrix(z)),
+            "stable_outcomes": [game.actions[i]+game.actions[j] for i, j in game.stable_outcomes(z)],
+            "plot": {"xmax": float(maximum), "ymin": min(values)-0.2, "ymax": max(values)+0.2, "lines": lines}}
+
+
 class Handler(BaseHTTPRequestHandler):
     def reply(self, status, body, content_type):
         self.send_response(status)
@@ -92,12 +118,19 @@ class Handler(BaseHTTPRequestHandler):
             except ValueError as exc:
                 self.reply(400, json.dumps({"error": str(exc)}).encode(), "application/json")
             return
-        allowed = {"/": ROOT / "web/index.html"}
+        if url.path == "/api/canonical":
+            try:
+                result = canonical_state(parse_qs(url.query, keep_blank_values=True, max_num_fields=2))
+                self.reply(200, json.dumps(result, default=float).encode(), "application/json")
+            except ValueError as exc:
+                self.reply(400, json.dumps({"error": str(exc)}).encode(), "application/json")
+            return
+        allowed = {"/": ROOT / "web/index.html", "/games": ROOT / "web/games.html"}
         report_names = ["index.html", "summary.json", "cells.csv", "regions.csv", "theory-grid.csv"]
         report_names += [f"figure-{i}.{suffix}" for i in range(1, 6) for suffix in ("svg", "png")]
         allowed.update({f"/report/{name}": ROOT / "report" / name for name in report_names})
         path = allowed.get(url.path)
-        directory = ROOT.resolve() / ("web" if url.path == "/" else "report")
+        directory = ROOT.resolve() / ("web" if url.path in ("/", "/games") else "report")
         if path is None or not path.resolve().is_relative_to(directory) or not path.is_file():
             self.reply(404, b"Not found. Build the report with: python3 reproduce.py", "text/plain")
             return

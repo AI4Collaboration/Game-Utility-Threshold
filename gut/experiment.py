@@ -13,10 +13,11 @@ import urllib.error
 import urllib.request
 
 from .game import Game
+from .canonical import example, PD_COSTS
 from .study import _json
 
 PD = Game(t=2, s="-0.5")
-COSTS = ("0", "1/4", "9/20", "1/2", "11/20", "3/4", "19/20", "1", "21/20", "5/4")
+COSTS = PD_COSTS
 ENDPOINT = "https://openrouter.ai/api/v1/chat/completions"
 
 
@@ -32,9 +33,9 @@ def labels(block):
     return ("A", "B") if block == 0 else ("B", "A")
 
 
-def prompt(z, role, block):
+def prompt(z, role, block, game="pd"):
     names = labels(block)
-    table = PD.matrix(z)
+    table = example(game).perspective(role, z)
     rows = "\n".join(f"Your action {names[i]}, other action {names[j]}: "
                      f"your points {table[i][j][0]}, other points {table[i][j][1]}"
                      for i in range(2) for j in range(2))
@@ -48,7 +49,8 @@ def prompt(z, role, block):
 
 
 def make_plan(mode="synthetic", model="synthetic/demo", provider="local", repetitions=10,
-              seed=20261109, temperature=0.7, max_tokens=512):
+              seed=20261109, temperature=0.7, max_tokens=512, game="pd"):
+    spec = example(game)
     if mode not in ("synthetic", "openrouter"):
         raise ValueError("mode must be synthetic or openrouter")
     if type(repetitions) is not int or not 1 <= repetitions <= 10000:
@@ -66,13 +68,13 @@ def make_plan(mode="synthetic", model="synthetic/demo", provider="local", repeti
     if mode == "openrouter" and (model.startswith("synthetic/") or provider == "local"):
         raise ValueError("supply an explicit live model and provider")
     jobs = []
-    for ci, z in enumerate(COSTS):
+    for ci, z in enumerate(spec.costs):
         for block in (0, 1):
             for repeat in range(repetitions):
                 pair = f"z{ci:02}-b{block}-r{repeat:05}"
                 for role in ("row", "column"):
                     request = {"model": model, "temperature": temperature, "max_tokens": max_tokens,
-                               "messages": [{"role": "user", "content": prompt(z, role, block)}],
+                               "messages": [{"role": "user", "content": prompt(z, role, block, game)}],
                                "response_format": {"type": "json_object"},
                                "provider": {"only": [provider], "allow_fallbacks": False,
                                             "require_parameters": True}}
@@ -82,6 +84,9 @@ def make_plan(mode="synthetic", model="synthetic/demo", provider="local", repeti
     plan = {"protocol": "pd-cost-v1", "mode": mode, "model": model, "provider": provider,
             "repetitions": repetitions, "seed": seed, "temperature": temperature,
             "max_tokens": max_tokens, "jobs": jobs}
+    # Preserve already-frozen PD v1 plans byte-for-byte.
+    if game != "pd":
+        plan.update(protocol="canonical-cost-v1", game=game)
     return {**plan, "sha256": digest(plan)}
 
 
@@ -97,6 +102,8 @@ def load_run(directory):
     directory = Path(directory)
     plan = _json((directory / "plan.json").read_text())
     settings = {k: plan[k] for k in ("mode", "model", "provider", "repetitions", "seed", "temperature", "max_tokens")}
+    if "game" in plan:
+        settings["game"] = plan["game"]
     if plan != make_plan(**settings):
         raise ValueError("plan differs from the fixed protocol, prompts, or schedule")
     jobs = {j["id"]: j for j in plan["jobs"]}
@@ -248,22 +255,37 @@ def bounds(values_by_block):
 
 def summarize(directory):
     plan, choices, pairs = observations(directory)
+    game = plan.get("game", "pd")
+    spec = example(game)
     rows = []
-    for z in COSTS:
+    for z in spec.costs:
         planned = [p for p in pairs if p["z"] == z]
         valid = [p for p in planned if p["row"] is not None and p["column"] is not None]
         by_block = [[((p["row"] == 0)+(p["column"] == 0))/2 for p in valid if p["block"] == b] for b in (0, 1)]
         rate, low, high = bounds(by_block)
-        counts = Counter("CD"[p["row"]]+"CD"[p["column"]] for p in valid)
-        c = 2*counts["CC"] + counts["CD"] + counts["DC"]
+        counts = Counter(spec.actions[p["row"]]+spec.actions[p["column"]] for p in valid)
+        c = sum((p["row"] == 0)+(p["column"] == 0) for p in valid)
+        details = {}
+        for metric, score in (("row_first", lambda p: p["row"] == 0),
+                              ("column_first", lambda p: p["column"] == 0),
+                              ("matching", lambda p: p["row"] == p["column"])):
+            values = [[int(score(p)) for p in valid if p["block"] == b] for b in (0, 1)]
+            estimate, lower, upper = bounds(values)
+            details.update({f"{metric}_rate": estimate, f"{metric}_lower_95": lower, f"{metric}_upper_95": upper})
+        table = spec.matrix(z)
+        for i, role in enumerate(("row", "column")):
+            payoffs = [[table[p["row"]][p["column"]][i] for p in valid if p["block"] == b] for b in (0, 1)]
+            details[f"{role}_mean_payoff"] = float(sum(sum(v)/len(v) for v in payoffs)/2) if all(payoffs) else None
         rows.append({"z_exact": z, "z": float(Fraction(z)), "planned_games": len(planned),
                      "valid_games": len(valid), "excluded_games": len(planned)-len(valid),
                      "block0_valid": len(by_block[0]), "block1_valid": len(by_block[1]),
-                     "cooperation_rate": rate, "lower_95": low, "upper_95": high,
+                     "first_action_rate": rate, "cooperation_rate": rate if game != "battle_of_sexes" else None,
+                     "lower_95": low, "upper_95": high,
                      "missing_lower": c/(2*len(planned)),
                      "missing_upper": (c+2*(len(planned)-len(valid)))/(2*len(planned)),
-                     **{k: counts[k] for k in ("CC", "CD", "DC", "DD")}})
+                     **{a+b: counts[a+b] for a in spec.actions for b in spec.actions}, **details})
     return {"protocol": plan["protocol"], "mode": plan["mode"], "model": plan["model"],
+            "game": game, "game_name": spec.name, "actions": spec.actions,
             "plan_sha256": plan["sha256"], "planned_decisions": len(choices),
             "attempted_decisions": sum(c["attempted"] for c in choices),
             "decision_statuses": dict(Counter(c["status"] for c in choices)), "cells": rows}

@@ -33,6 +33,13 @@ def _cost(value: Number) -> Fraction:
     return result
 
 
+def penalized_matrix(baseline: tuple, cost: Number = 0) -> tuple:
+    """Subtract one shared cost only from the actor choosing action index 1."""
+    cost = _cost(cost)
+    return tuple(tuple((baseline[i][j][0] - i*cost, baseline[i][j][1] - j*cost)
+                       for j in range(2)) for i in range(2))
+
+
 @dataclass(frozen=True)
 class Game:
     """A symmetric payoff table with R>P, before any cost is added.
@@ -54,9 +61,8 @@ class Game:
 
     def matrix(self, k: Number = 0) -> tuple:
         """Return four (row points, column points) pairs in C,D order."""
-        k = _cost(k)
-        return (((self.r, self.r), (self.s, self.t-k)),
-                ((self.t-k, self.s), (self.p-k, self.p-k)))
+        return penalized_matrix((((self.r, self.r), (self.s, self.t)),
+                                 ((self.t, self.s), (self.p, self.p))), k)
 
     def margins(self, k: Number = 0) -> tuple[Fraction, Fraction]:
         """C minus D points against an opponent choosing C, then D."""

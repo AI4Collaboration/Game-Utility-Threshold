@@ -36,7 +36,7 @@ classification and outcome fields inherited from the archive are not used to
 calculate results. `gut.study.prompt(s, t, role, replicate)` reconstructs the
 collection prompt without importing the former engine or making any calls.
 
-From the repository root, using Python 3.10 or newer:
+From the repository root, using Python 3.11 or newer:
 
 ```bash
 python3 -c 'from gut.study import load_study; print(load_study().summary())'

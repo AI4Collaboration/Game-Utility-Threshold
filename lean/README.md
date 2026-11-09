@@ -29,6 +29,9 @@ job ID to a named Lean certificate. It records the chosen action, both possible
 opponent actions, exact payoff differences, and the source table. The outcomes
 are **better**, **tied**, or **worse**. Both actions are best responses at a tie.
 Unparseable and missing responses have no invented action or certificate.
+The same mapper handles all four examples, using each player's own payoff
+table. In Battle of the Sexes the row and column tables are different; the
+mapping retains both the neutral action index and its X/Y meaning.
 
 The generated `Choices.lean` proves:
 
@@ -59,7 +62,7 @@ integer statements using `decide`; it does not independently parse the JSON
 or prove that the model actually received the prompt. This small translation
 and the interpretation of the statements remain part of the trusted boundary.
 
-The verification manifest hashes the plan, raw log, generated Lean source and
+The verification manifest hashes the plan, raw log, mapping, generated Lean source and
 core theorem file. The compiler output and axiom listings are saved in
 `lean-check.log`. No placeholder proof, custom axiom, or `native_decide` is used.
 See Lean's [proof validation guidance](https://lean-lang.org/doc/reference/latest/ValidatingProofs/)

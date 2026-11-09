@@ -1,4 +1,4 @@
-name: Reproduce the post
+name: Check games and proofs
 on: [push, workflow_dispatch]
 jobs:
   check:

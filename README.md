@@ -10,6 +10,10 @@ controlled PD cost experiment with a small Lean framework for verifying
 recorded choices. See [the experiment guide](docs/experiments.md) and
 [the proof guide](lean/README.md).
 
+The same tools now also support fixed **Stag Hunt, Chicken, and Battle of the
+Sexes** examples. [The four-game guide](docs/games.md) states their payoffs,
+thresholds, collection design, and limits. The local explorer is at `/games`.
+
 ## Start here
 
 Python 3.11 or newer is enough for the game, data audit, explorer and tests.
@@ -131,7 +135,7 @@ freeze a plan, collect and resume requests, reproduce uncertainty and counts,
 and map choices to Lean proofs. Offline synthetic runs test the pipeline;
 the new live experiment has not been conducted.
 
-Repeated interactions, asymmetric games, uncertain monitoring, institutional
+Repeated interactions, uncertain monitoring, institutional
 mechanisms, risk criteria, the separate oversight game, and the
 broader Paper 1 planning/collection framework are outside this starting point.
 They have been removed from the active tree, along with unrelated datasets and
