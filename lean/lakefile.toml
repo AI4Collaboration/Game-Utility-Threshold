@@ -1,0 +1,6 @@
+name = "game-choice-proofs"
+version = "0.1.0"
+defaultTargets = ["AgentProof"]
+
+[[lean_lib]]
+name = "AgentProof"

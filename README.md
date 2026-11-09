@@ -2,10 +2,13 @@
 
 A small, reproducible starting point for [When Defection Stops Paying: Why Utility Thresholds Matter for AI Safety](https://www.lesswrong.com/posts/HJSWoWCQefj2L8W8d/when-defection-stops-paying-why-utility-thresholds-matter-1).
 
-This repository now contains only the post's symmetric, one-shot, two-player
+The starting point contains the post's symmetric, one-shot, two-player
 games, its defection-cost calculations, and the saved experiment behind its
 169-setting model heatmap. It has one game implementation, one data reader,
-one reproduction command, and a small local explorer.
+one reproduction command, and a small local explorer. The next addition is a
+controlled PD cost experiment with a small Lean framework for verifying
+recorded choices. See [the experiment guide](docs/experiments.md) and
+[the proof guide](lean/README.md).
 
 ## Start here
 
@@ -122,12 +125,14 @@ the post's heatmap or dominance result.
 
 ## Scope and the next step
 
-The next experiment described by the post is to hold one baseline PD fixed
-and vary only the defection cost near its two conditional thresholds. It is a
-future experiment, not a completed result or an automatic paid run.
+`experiment.py` now implements the next experiment: hold one baseline PD fixed
+and vary only the defection cost near its two conditional thresholds. It can
+freeze a plan, collect and resume requests, reproduce uncertainty and counts,
+and map choices to Lean proofs. Offline synthetic runs test the pipeline;
+the new live experiment has not been conducted.
 
 Repeated interactions, asymmetric games, uncertain monitoring, institutional
-mechanisms, risk criteria, the separate oversight game, Lean proofs, and the
+mechanisms, risk criteria, the separate oversight game, and the
 broader Paper 1 planning/collection framework are outside this starting point.
 They have been removed from the active tree, along with unrelated datasets and
 duplicated engines. This also removes the advanced risk paths identified as

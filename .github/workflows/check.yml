@@ -11,3 +11,14 @@ jobs:
       - run: python -m unittest discover -s tests -v
       - run: python -m pip install 'matplotlib>=3.8,<4'
       - run: python reproduce.py
+      - run: python experiment.py plan runs/ci --repetitions 2
+      - run: python experiment.py run runs/ci
+      - run: python experiment.py report runs/ci --plot
+      - uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: lean
+          build: "true"
+          test: "false"
+          use-mathlib-cache: "false"
+      - run: python experiment.py proofs runs/ci --check
+      - run: python tests/check_lean.py
