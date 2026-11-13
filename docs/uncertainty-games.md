@@ -11,6 +11,23 @@ benchmark. It reuses the original `Oversight` payoffs and exact fractions in
 threshold and tie; decimal values are display coordinates only. Neither new
 model has been formalized in Lean.
 
+## Play on the public UI
+
+- [Resource control](https://ai4collaboration.github.io/Game-Utility-Threshold/resource-control.html)
+- [Off-switch](https://ai4collaboration.github.io/Game-Utility-Threshold/off-switch.html)
+
+Both pages explain the players, information and incentives, update live payoff
+plots, and export complete toy runs. Choose defense and play to reveal the
+resource type. In the off-switch page, a deferring AI hands the decision to
+the user: the outcome is revealed to the human, settings lock, and Allow/Stop
+records the actual verdict. Cancel creates no record. The forecast still
+assumes the specified noisy human policy; the played verdict can depart from
+it. Automated batches use the configured actual accuracy. Downloads retain
+the completed run’s settings even after controls change. Only the latest
+completed round or batch is exported; these practice interactions are not a
+controlled human study. Browser data is inspectable, not a secure hidden-state
+benchmark. No session is uploaded.
+
 ## Resource control: the human does not know the AI's incentive
 
 1. Nature draws low or high resource value. Only the AI observes its type.

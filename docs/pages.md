@@ -64,3 +64,11 @@ site. These controls reduce accidental disclosure; only reviewed datasets
 should be added to the explicit publication list.
 
 Report generation and site deployment do not collect new model responses.
+
+The Months 3–5 applications are published at `/resource-control.html` and
+`/off-switch.html`. Both reuse `game-engine.js` exact arithmetic through the
+shared `uncertainty-engine.js`. The static allowlist includes their controller,
+styles, and specification. Their toy/interactive outputs are clearly separate
+from the two retained LLM studies. The off-switch human verdict stays in the
+browser; no data is uploaded. Node checks cover exact game rules and controller
+state before publication.

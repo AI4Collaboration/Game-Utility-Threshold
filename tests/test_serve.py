@@ -116,6 +116,8 @@ class HTTPTests(unittest.TestCase):
             (root / "web/science.css").write_text("body{margin:0}")
             (root / "web/science.js").write_text("'use strict';")
             (root / "web/science-engine.js").write_text("globalThis.ScienceGame = {};")
+            for name in ("resource-control.html", "off-switch.html", "uncertainty.css", "uncertainty.js", "uncertainty-engine.js"):
+                (root / "web" / name).write_text("Public uncertainty game fixture")
             (root / "data/oversight/2026-11-09/analysis").mkdir(parents=True)
             (root / "data/oversight/2026-11-09/analysis/report.html").write_text("<h1>Validation</h1>")
             (root / ".env").write_text("private fixture value")
@@ -172,6 +174,9 @@ class HTTPTests(unittest.TestCase):
                     self.assertEqual(get("/api/oversight?")[0], 400)
                     self.assertEqual(get("/oversight")[0], 200)
                     self.assertEqual(get("/science")[0], 200)
+                    for route in ("resource-control", "off-switch", "resource-control.html", "off-switch.html", "uncertainty.js", "uncertainty-engine.js"):
+                        self.assertEqual(get("/" + route)[0], 200)
+                    self.assertIn("text/css", get("/uncertainty.css")[1]["Content-Type"])
                     for page in ("science.html", "science.js", "science-engine.js"):
                         self.assertEqual(get("/"+page)[0], 200)
                     self.assertIn("text/css", get("/science.css")[1]["Content-Type"])

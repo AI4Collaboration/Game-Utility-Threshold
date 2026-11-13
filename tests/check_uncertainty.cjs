@@ -125,3 +125,21 @@ for(const options of [{rounds:0},{rounds:10001},{seed:-1},{seed:.5},{policy:'unk
 assert.throws(()=>game.simulate('resource',{vLow:0,vHigh:0,a:0,b:0,p:0,riskLimit:0},{defensePolicy:'cautious'}));
 assert.throws(()=>game.analyze('wrong'));
 console.log(`Uncertainty games: ${cases} enumerated cases, interval bounds, exact ties, information boundaries and replay passed.`);
+// A played human verdict replaces the noisy rule and leaves the AI decision intact.
+for(const truth of [0,1])for(const verdict of ['allow','stop']){
+ const played=game.judgeOff({truth,cost:.25},{seed:42,policy:'defer'},verdict),r=played.records[0];
+ assert.equal(played.humanMode,'interactive');assert.equal(r.humanDecision,verdict);
+ assert.equal(r.executed,verdict==='allow');assert.equal(r.human.exact,r.ai.exact);
+ near(r.human.value,(verdict==='allow'?(truth?4:-6):0)-.25);
+ near(played.summary.meanHuman.value,r.human.value);
+ assert.equal(played.summary.unsafeCount,(!truth&&verdict==='allow')?1:0);
+ assert.equal(played.summary.blockedBenefitCount,(truth&&verdict==='stop')?1:0);
+}
+assert.throws(()=>game.judgeOff({}, {policy:'proceed'},'allow'));
+assert.throws(()=>game.judgeOff({}, {policy:'defer'},'unknown'));
+const benchmark=require('../uncertainty-experiment.cjs');
+assert.equal(benchmark.run('resource',{simulation:{rounds:2}}).runs.length,12);
+assert.equal(benchmark.run('off-switch',{simulation:{rounds:2}}).runs.length,4);
+assert.equal(benchmark.run('resource',{config:{vLow:0,vHigh:0,a:0,b:0,p:0,riskLimit:0},simulation:{rounds:2}}).unavailable.length,3);
+assert.throws(()=>benchmark.run('resource',{simulation:{policy:'attack'}}));
+console.log('Human verdicts and shared offline benchmark passed.');

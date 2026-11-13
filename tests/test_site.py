@@ -108,6 +108,10 @@ class BuiltSiteTests(unittest.TestCase):
         self.assertIn(f"{post['dominance_correct']:,} / {post['dominance_decisions']:,}", page)
         self.assertIn("new fixed-baseline penalty sweep not run", page)
         self.assertIn("Battle of the Sexes", page)
+        self.assertIn("Resource control · hidden incentives", page)
+        self.assertIn("Off-switch", page)
+        for filename in ("resource-control.html", "off-switch.html", "uncertainty.css", "uncertainty.js", "uncertainty-engine.js"):
+            self.assertEqual((self.site / filename).read_bytes(), (build_site.ROOT / "web" / filename).read_bytes())
         self.assertIn("before-lesswrong-simplification-2026-11-09", page)
         self.assertIn("not been revalidated or pooled", page)
         self.assertIn("not empirical Nash or Stackelberg play", page)

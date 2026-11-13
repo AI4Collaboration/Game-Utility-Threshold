@@ -202,7 +202,22 @@
       generator:'mulberry32-rational-rejection-v1',config:model.analysis.config,options:o,summary,records,
       description:'Independent toy rounds under fixed rules. Frequencies are simulation output, not observed LLM or human behavior.'});
   }
-  const engine=Object.freeze({RESOURCE_DEFAULTS,OFF_DEFAULTS,analyze,simulate});
+  // Human-play adapter. The AI still chooses from its belief before seeing the
+  // state. Only the human verdict is replaced; forecasts retain the noisy rule.
+  function judgeOff(input,options,humanDecision) {
+    if(!['allow','stop'].includes(humanDecision))fail('Choose allow or stop.');
+    const result=simulate('off-switch',input,{...options,rounds:1});
+    const record=result.records[0];
+    if(record.action!=='defer')fail('A human verdict is available only when the AI defers.');
+    const p=config(input,OFF_DEFAULTS),good=record.state==='beneficial',executed=humanDecision==='allow';
+    const score=(executed?(good?p.gain:p.loss.neg()):Z).sub(p.cost),harm=executed&&!good?p.loss:Z;
+    Object.assign(record,serialize({humanDecision,executed,human:score,ai:score,harm,
+      unsafe:executed&&!good,blockedBenefit:!executed&&good}));
+    Object.assign(result.summary,serialize({unsafeCount:record.unsafe?1:0,unsafeRate:record.unsafe?O:Z,
+      meanHuman:score,meanAI:score,meanHarm:harm,blockedBenefitCount:record.blockedBenefit?1:0}));
+    return {...result,humanMode:'interactive',forecastAssumes:'A state-dependent noisy human policy; the recorded verdict here is the user choice.'};
+  }
+  const engine=Object.freeze({RESOURCE_DEFAULTS,OFF_DEFAULTS,analyze,simulate,judgeOff});
   root.UncertaintyGames=engine;
   if(typeof module!=='undefined'&&module.exports)module.exports=engine;
 })(globalThis);

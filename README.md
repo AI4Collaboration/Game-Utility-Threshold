@@ -2,6 +2,8 @@
 
 [Open the public game UI](https://ai4collaboration.github.io/Game-Utility-Threshold/)
 · [Experimental results](https://ai4collaboration.github.io/Game-Utility-Threshold/results.html)
+· [Resource control](https://ai4collaboration.github.io/Game-Utility-Threshold/resource-control.html)
+· [Off-switch game](https://ai4collaboration.github.io/Game-Utility-Threshold/off-switch.html)
 · [Science audit game](https://ai4collaboration.github.io/Game-Utility-Threshold/science.html)
 · [Human–AI oversight lab](https://ai4collaboration.github.io/Game-Utility-Threshold/oversight.html)
 
@@ -31,6 +33,16 @@ example. Review a synthetic catalyst report, choose an evidence budget and
 penalty, inspect lab records, and judge the claim. It has a live payoff chart,
 four simulated reporting policies, an answer reveal, and session JSON export.
 It makes no live model calls. [Rules and limits](docs/science-game.md).
+
+The **Months 3–5 uncertainty labs** add two interactive games. In
+[resource control](https://ai4collaboration.github.io/Game-Utility-Threshold/resource-control.html),
+choose protection before the AI’s private resource value is revealed; compare
+average and cautious protection. In the
+[off-switch game](https://ai4collaboration.github.io/Game-Utility-Threshold/off-switch.html),
+the AI may proceed, stop, or ask you. If asked, inspect the outcome and choose
+Allow or Stop. Both include live 2D payoff views, exact thresholds and ties,
+safety margins, baseline batches, and JSON/CSV exports. These are synthetic
+demonstrations, not new LLM validation. [Rules and offline benchmark](docs/uncertainty-games.md).
 
 The first **oversight LLM validation is complete**: 3,660 main-study decisions
 from three models, plus 12 separate pilot calls. See the
