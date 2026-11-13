@@ -233,7 +233,9 @@
         mean_ai: records.reduce((sum, row) => sum.add(row.ai), ZERO).div(F(records.length))}});
   }
 
-  const engine = Object.freeze({analyze, canonicalState, oversightState, oversightSimulation});
+  // The uncertainty games reuse this payoff definition and exact arithmetic.
+  const engine = Object.freeze({analyze, canonicalState, oversightState, oversightSimulation,
+    Fraction, number, serialize, Oversight});
   root.GutEngine = engine;
   if (typeof module !== 'undefined' && module.exports) module.exports = engine;
 })(globalThis);
