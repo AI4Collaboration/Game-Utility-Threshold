@@ -7,8 +7,10 @@ use the published explorer.
 
 The browser uses exact rational arithmetic for decisions, ties, thresholds,
 and equilibria; decimals are only display coordinates. Tests compare the
-browser calculations with the Python reference. The original oversight game still uses eleven human defense choices, observed defense, deterministic
-payoffs, and pure strategies.
+browser calculations with the Python reference. The original oversight game
+still uses eleven human defense choices, observed defense, deterministic
+payoffs, and pure strategies. The science demo uses exact integer comparisons
+for decisions and a seeded generator for replayable synthetic rounds.
 
 ## Build without paid calls
 

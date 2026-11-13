@@ -58,7 +58,7 @@
     el('reported-mean').textContent = `${fmt(round.reportedMean)}%`;
     el('report-text').textContent = `“Across eight runs, K-17 produced a mean yield of ${fmt(round.reportedMean)}%. ${round.reportedTargetMet ? 'This meets' : 'This does not meet'} the preregistered 52% target.”`;
     el('audit-count').textContent = `${round.config.budget} / 8 RECORDS`;
-    el('audit-prompt').textContent = round.config.budget ? `Your reviewer will compare ${round.config.budget} randomly chosen reported readings with their original instrument logs. The remaining logs stay covered.` : 'You chose zero records. The reviewer will provide no evidence; you must decide under uncertainty.';
+    el('audit-prompt').textContent = round.config.budget ? `Your reviewer will compare ${round.config.budget} randomly chosen reported readings with their original instrument logs. ${round.config.budget === 8 ? 'Every log will be inspected.' : 'The remaining logs stay covered.'}` : 'You chose zero records. The reviewer will provide no evidence; you must decide under uncertainty.';
     el('inspect').textContent = round.config.budget ? 'Run the simulated reviewer' : 'Proceed without evidence';
     el('start').textContent = 'Round in progress';
     el('round').scrollIntoView({block: 'start'});
@@ -89,7 +89,7 @@
     el('truth-table').innerHTML = round.records.map((row, i) => `<tr${row.actual !== row.reported ? ' class="mismatch-row"' : ''}><th scope="row">${row.id}</th><td>${row.actual}%</td><td>${row.reported}%${row.actual !== row.reported ? ' · altered' : ''}</td><td>${round.auditIndices.includes(i) ? 'Yes' : 'No'}</td></tr>`).join('');
     el('truth-summary').textContent = `Original mean: ${fmt(round.actualMean)}%. Reported mean: ${fmt(round.reportedMean)}%. Research-agent policy: ${round.config.policy}.`;
     el('lesson').textContent = result.correctReport ? 'The independent answer check separates a faithful report from an exciting result. Oversight should preserve accurate negative findings too.' : round.reviewerFoundError ? 'The review budget exposed the altered reading. Its effect on incentives depends on the judge acting on that evidence.' : 'The altered reading was outside the sample. A clean partial audit can miss a false report; increasing the budget raises the modeled chance of finding it.';
-    el('session-summary').textContent = `${session.length} completed ${session.length === 1 ? 'round' : 'rounds'} · ${session.filter(row => row.result.correctVerdict).length} correct verdicts · ${signed(session.reduce((sum, row) => sum + row.result.humanPoints, 0))} total human points.`;
+    el('session-summary').textContent = `${session.length} completed ${session.length === 1 ? 'round' : 'rounds'} · ${session.filter(row => row.result.correctVerdict).length} correct ${session.filter(row => row.result.correctVerdict).length === 1 ? 'verdict' : 'verdicts'} · ${signed(session.reduce((sum, row) => sum + row.result.humanPoints, 0))} total human points.`;
     el('history').innerHTML = session.map(row => `<tr><td>${row.number}</td><td>${row.config.budget}/8</td><td>${labels[row.action]}</td><td>${row.result.verdict === 'accept' ? 'Accept' : 'Return'}</td><td>${row.result.correctVerdict ? 'Yes' : 'No'}</td><td>${signed(row.result.humanPoints)}</td></tr>`).join('');
     el('session-table').hidden = false; el('export').disabled = false;
     lock(false); el('start').textContent = 'Start next science review →';
