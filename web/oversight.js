@@ -209,7 +209,7 @@ for (const name of ['explore','simulation']) {
 }
 keys.forEach(k=>el(k).addEventListener('input',schedule));
 el('defense').addEventListener('input',schedule);
-el('game').addEventListener('change',()=>{if(el('game').value!=='oversight')location.href=`games.html?game=${encodeURIComponent(el('game').value)}`;});
+el('game').addEventListener('change',()=>{if(el('game').value==='science'){location.href='science.html';return;}if(el('game').value!=='oversight')location.href=`games.html?game=${encodeURIComponent(el('game').value)}`;});
 el('reset').addEventListener('click',()=>{keys.forEach(k=>el(k).value=defaults[k]);el('defense').value=3;schedule();});
 el('tie-example').addEventListener('click',()=>{keys.forEach(k=>el(k).value=defaults[k]);el('p').value=0;el('defense').value=5;schedule();});
 document.addEventListener('click',e=>{const button=e.target.closest('[data-defense]');if(button){el('defense').value=Math.round(Number(button.dataset.defense)*10);schedule();}});

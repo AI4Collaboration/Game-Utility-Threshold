@@ -2,6 +2,7 @@
 
 [Open the public game UI](https://ai4collaboration.github.io/Game-Utility-Threshold/)
 · [Experimental results](https://ai4collaboration.github.io/Game-Utility-Threshold/results.html)
+· [Science audit game](https://ai4collaboration.github.io/Game-Utility-Threshold/science.html)
 · [Human–AI oversight lab](https://ai4collaboration.github.io/Game-Utility-Threshold/oversight.html)
 
 A small, reproducible starting point for [When Defection Stops Paying: Why Utility Thresholds Matter for AI Safety](https://www.lesswrong.com/posts/HJSWoWCQefj2L8W8d/when-defection-stops-paying-why-utility-thresholds-matter-1).
@@ -24,6 +25,12 @@ defense choice, explicit resource/attack/harm payoffs, live exact thresholds,
 pure Nash and Stackelberg solvers, and a toy-simulation tab with JSON/CSV exports.
 See [the oversight guide](docs/oversight.md) for the executable assumptions,
 tie handling, references, and the distinction between calculations and data.
+
+The **science audit game** at `/science` is a quick, playable AI-for-science
+example. Review a synthetic catalyst report, choose an evidence budget and
+penalty, inspect lab records, and judge the claim. It has a live payoff chart,
+four simulated reporting policies, an answer reveal, and session JSON export.
+It makes no live model calls. [Rules and limits](docs/science-game.md).
 
 The first **oversight LLM validation is complete**: 3,660 main-study decisions
 from three models, plus 12 separate pilot calls. See the

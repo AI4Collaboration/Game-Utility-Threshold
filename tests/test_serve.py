@@ -112,6 +112,10 @@ class HTTPTests(unittest.TestCase):
             (root / "web/games.html").write_text("<h1>Games</h1>")
             (root / "web/results.html").write_text("<h1>Results</h1>")
             (root / "web/game-engine.js").write_text("globalThis.GutEngine = {};")
+            (root / "web/science.html").write_text("<h1>Science audit</h1>")
+            (root / "web/science.css").write_text("body{margin:0}")
+            (root / "web/science.js").write_text("'use strict';")
+            (root / "web/science-engine.js").write_text("globalThis.ScienceGame = {};")
             (root / "data/oversight/2026-11-09/analysis").mkdir(parents=True)
             (root / "data/oversight/2026-11-09/analysis/report.html").write_text("<h1>Validation</h1>")
             (root / ".env").write_text("private fixture value")
@@ -167,6 +171,10 @@ class HTTPTests(unittest.TestCase):
                     self.assertEqual(get("/api/oversight?"+params+"&d=0")[0], 400)
                     self.assertEqual(get("/api/oversight?")[0], 400)
                     self.assertEqual(get("/oversight")[0], 200)
+                    self.assertEqual(get("/science")[0], 200)
+                    for page in ("science.html", "science.js", "science-engine.js"):
+                        self.assertEqual(get("/"+page)[0], 200)
+                    self.assertIn("text/css", get("/science.css")[1]["Content-Type"])
                     for page in ("index.html", "games.html", "oversight.html", "results.html", "game-engine.js"):
                         self.assertEqual(get("/"+page)[0], 200)
                     status, headers, _ = get("/oversight.js")

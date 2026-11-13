@@ -197,10 +197,11 @@ class Handler(BaseHTTPRequestHandler):
                 self.reply(400, json.dumps({"error": str(exc)}).encode(), "application/json")
             return
         web_names = ("index.html", "games.html", "oversight.html", "results.html",
-                     "oversight.js", "game-engine.js")
+                     "oversight.js", "game-engine.js", "science.html", "science.css",
+                     "science.js", "science-engine.js")
         web_routes = {f"/{name}": ROOT / "web" / name for name in web_names}
         web_routes.update({"/": ROOT / "web/index.html", "/games": ROOT / "web/games.html",
-                           "/oversight": ROOT / "web/oversight.html"})
+                           "/oversight": ROOT / "web/oversight.html", "/science": ROOT / "web/science.html"})
         allowed = dict(web_routes)
         validation = ROOT / "data/oversight/2026-11-09/analysis"
         validation_names = ["report.html", "summary.json", "cells.csv", "blocks.csv", "observations.csv"]
@@ -233,7 +234,7 @@ class Handler(BaseHTTPRequestHandler):
             return
         content_type = {".html": "text/html; charset=utf-8", ".svg": "image/svg+xml", ".png": "image/png",
                         ".json": "application/json", ".csv": "text/csv; charset=utf-8",
-                        ".js": "text/javascript; charset=utf-8", ".md": "text/plain; charset=utf-8",
+                        ".js": "text/javascript; charset=utf-8", ".css": "text/css; charset=utf-8", ".md": "text/plain; charset=utf-8",
                         ".txt": "text/plain; charset=utf-8", ".zip": "application/zip",
                         ".gz": "application/gzip"}.get(path.suffix, "application/octet-stream")
         self.reply(200, path.read_bytes(), content_type)

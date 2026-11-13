@@ -7,8 +7,7 @@ use the published explorer.
 
 The browser uses exact rational arithmetic for decisions, ties, thresholds,
 and equilibria; decimals are only display coordinates. Tests compare the
-browser calculations with the Python reference. The scope of the game is
-unchanged: eleven human defense choices, observed defense, deterministic
+browser calculations with the Python reference. The original oversight game still uses eleven human defense choices, observed defense, deterministic
 payoffs, and pure strategies.
 
 ## Build without paid calls
@@ -30,6 +29,9 @@ replace an existing nonempty directory unless it has this builder's
 
 * `index.html`, `games.html`, `oversight.html`: interactive mathematical
   explorers and deterministic toy simulations.
+* `science.html`: a simulated science audit with synthetic instrument logs,
+  sampled evidence, human verdicts, and a conditional payoff threshold.
+  Its practice records are not an additional LLM experiment.
 * `results.html`: catalogue and concise explanation of the two retained
   experimental studies, with their separate assumptions and limitations.
 * `report/`: offline reproduction of the original 169-setting, four-model
