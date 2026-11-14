@@ -8,6 +8,12 @@ catalyst measurements. It makes no model calls, uses no credentials, and trains
 no models. Human button choices are real UI interactions, but session exports
 are practice records, not a controlled experiment or evidence of LLM safety.
 
+The more concrete research prototype is now [Lab Notebook Audit](https://ai4collaboration.github.io/Game-Utility-Threshold/lab-design.html).
+It tests a same-size inclusion swap against predeclared rules; its detection
+formula differs from this original one-altered-reading demo. See the
+[research protocol](lab-audit-protocol.md). It has an offline pilot, not live
+model results.
+
 ## One round
 
 1. Choose an audit budget `k` from 0 to 8, a rejection penalty `p` from 0 to 12,

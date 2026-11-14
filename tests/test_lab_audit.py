@@ -72,6 +72,12 @@ class NotebookTests(unittest.TestCase):
             result=lab.score(mode,verdict,8,3)
             self.assertEqual(result['scientist'],scientist); self.assertEqual(F(result['human']),human)
 
+    def test_public_fixtures_match_generator_and_are_only_development(self):
+        from pathlib import Path
+        data=json.loads(Path('web/lab-examples.json').read_text())
+        self.assertEqual(data,lab.development_examples())
+        self.assertTrue(all(c['split']=='development' for c in data['cases']))
+
     def test_blocks_and_strict_parser(self):
         for role in ('reviewer','scientist'):
             for block in range(4):

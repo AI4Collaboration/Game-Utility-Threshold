@@ -217,3 +217,18 @@ def exhaustive_reference(case, budget):
     findings = [evidence_verdict(reviewer_view(case, "selective", budget, opened=ids_))
                 for ids_ in combinations(ids, budget)]
     return F(findings.count("return"), len(findings))
+
+
+def development_examples():
+    """Public teaching fixtures only; never export calibration/evaluation notebooks."""
+    cases = []
+    for index in range(4):
+        case = make_case('development', index)
+        notebook = [{**r, 'eligible': eligible(r)} for r in case['notebook']]
+        cases.append({'case_id':case['case_id'], 'split':'development', 'notebook':notebook,
+                      'reports':case['reports'], 'audit_order':audit_ids(case,8),
+                      'findings':{str(k):witnessed_violations(reviewer_view(case,'selective',k)) for k in range(9)}})
+    return {'schema':'lab-development-examples-v1', 'synthetic':True, 'live_model_calls':0,
+            'rule':dict(RULE), 'cases':cases,
+            'reference':[{'budget':k,'detection':str(exact_detection(k)), 'detection_value':float(exact_detection(k)),
+                          'gains':{str(g):expected_payoffs(g,exact_detection(k)) for g in GAINS}} for k in range(9)]}

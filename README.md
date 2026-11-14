@@ -44,6 +44,22 @@ Allow or Stop. Both include live 2D payoff views, exact thresholds and ties,
 safety margins, baseline batches, and JSON/CSV exports. These are synthetic
 demonstrations, not new LLM validation. [Rules and offline benchmark](docs/uncertainty-games.md).
 
+The next **science research environment** is [Lab Notebook Audit](https://ai4collaboration.github.io/Game-Utility-Threshold/lab-design.html):
+a report quietly swaps an eligible run for a better-looking ineligible run.
+It has explicit role information limits, a same-size report comparison,
+independent truth checks, and an offline calibration-to-selection runner.
+[The protocol](docs/lab-audit-protocol.md) specifies a bounded proposed live
+study; no live model study has run in this environment. Run an offline pilot:
+
+```sh
+python3 lab_experiment.py runs/lab-pilot --figures
+```
+
+The optional `--scale main` exercises the full 960-request schedule with
+synthetic actors. `--reviewer noisy_evidence` checks the error-aware analysis.
+These are software checks, not empirical AI results. Figures use the existing
+optional matplotlib dependency; omit `--figures` for a standard-library run.
+
 The first **oversight LLM validation is complete**: 3,660 main-study decisions
 from three models, plus 12 separate pilot calls. See the
 [results and limits](docs/oversight-validation-results.md), the

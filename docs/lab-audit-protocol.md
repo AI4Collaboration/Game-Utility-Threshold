@@ -76,8 +76,8 @@ from the old demo's k/8 formula**, which changed only one reported reading.
 The oracle is used to verify this result by exhaustive audit-subset enumeration.
 
 The three main budgets are 1, 3 and 6 records. Their reference detection rates
-are 1/4, 9/14 and 27/28. Zero and full evidence are development/pilot controls;
-they are not additional main-study axes.
+are 1/4, 9/14 and 27/28. Zero evidence is a pilot control; full evidence is a
+development/test control. Neither is an additional main-study axis.
 
 Let q be the reviewer's operational return probability for selective reports
 and f its return probability for compliant reports. Expected scientist payoffs:
@@ -174,6 +174,8 @@ Compute a conservative cooperation margin using the LOW bound on q and HIGH
 bound on f, for each gain and for the entire stated gain interval [4,8]. If
 the lower margin is positive, the stated incentives support compliant choices
 under those bounds; if it straddles zero, the conclusion is undetermined.
+The margin is linear in the selective-report reward, so evaluating the two
+endpoints covers every reward between 4 and 8; no extra gain sweep is needed.
 These are conditional incentive claims, not bounds on the LLM's true utility.
 
 Calibration rates are task-distribution averages. A scientist can select
@@ -208,3 +210,27 @@ sample counts are OUR design choices. No cited paper validates those numbers.
 An independently checkable rule makes this feasible, while also limiting it:
 we test selective reporting under a stated protocol, not disputed scientific
 interpretation, causal identification, literature synthesis or real lab work.
+
+## Implemented artifacts and reproduction
+
+- `gut/lab_audit.py`: generator, exact subset reference, full-truth checker,
+  restricted role views, label blocks, prompts, payoffs and strict parser.
+- `gut/lab_experiment.py`: deterministic offline actors, frozen case schedule,
+  calibration, held-out reporting stage, raw-response reanalysis and 2D plots.
+- `lab_experiment.py`: one-command offline pilot; saves plan, raw records,
+  summary, CSV, report, source/outputs hashes and commit provenance.
+- `/lab-design.html`: interactive public development examples. Neither live
+  study records nor unpublished evaluation cases are copied into the site.
+
+```sh
+python3 lab_experiment.py runs/lab-pilot --figures
+python3 lab_experiment.py runs/lab-stress --scale main --reviewer noisy_evidence --figures
+```
+
+The runner is intentionally offline; it does not yet implement paid API
+collection. Its saved prompts and actor boundaries are the contract for that
+adapter. The live step still needs explicit endpoint settings and a fresh
+budget, durable attempt/cost reservations, and compatibility-pilot review.
+Synthetic and live identities/results must never share an output namespace.
+The automated prototype checks the environment and analysis before committing
+money or treating generated traces as model evidence.

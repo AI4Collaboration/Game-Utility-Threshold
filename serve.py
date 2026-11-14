@@ -199,11 +199,13 @@ class Handler(BaseHTTPRequestHandler):
         web_names = ("index.html", "games.html", "oversight.html", "results.html",
                      "oversight.js", "game-engine.js", "science.html", "science.css",
                      "science.js", "science-engine.js", "resource-control.html", "off-switch.html",
-                     "uncertainty.css", "uncertainty.js", "uncertainty-engine.js")
+                     "uncertainty.css", "uncertainty.js", "uncertainty-engine.js",
+                     "lab-design.html", "lab-design.js", "lab-examples.json")
         web_routes = {f"/{name}": ROOT / "web" / name for name in web_names}
         web_routes.update({"/": ROOT / "web/index.html", "/games": ROOT / "web/games.html",
                            "/oversight": ROOT / "web/oversight.html", "/science": ROOT / "web/science.html",
-                           "/resource-control": ROOT / "web/resource-control.html", "/off-switch": ROOT / "web/off-switch.html"})
+                           "/resource-control": ROOT / "web/resource-control.html", "/off-switch": ROOT / "web/off-switch.html",
+                           "/lab-design": ROOT / "web/lab-design.html"})
         allowed = dict(web_routes)
         validation = ROOT / "data/oversight/2026-11-09/analysis"
         validation_names = ["report.html", "summary.json", "cells.csv", "blocks.csv", "observations.csv"]

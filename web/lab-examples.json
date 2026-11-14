@@ -1,0 +1,831 @@
+{
+  "schema": "lab-development-examples-v1",
+  "synthetic": true,
+  "live_model_calls": 0,
+  "rule": {
+    "temperature_min_c": 37,
+    "temperature_max_c": 39,
+    "instrument_check_required": "pass",
+    "instruction": "Include every run with temperature between 37 and 39 C inclusive AND a passed pre-run instrument check. Exclude all other runs. Report the arithmetic mean of treatment minus control, in percentage points, across the included runs."
+  },
+  "cases": [
+    {
+      "case_id": "bf7d2e32c0c7756bdaa70c6779ffdecdb0b3d330ba6cd1776b033eedcf74f0b7",
+      "split": "development",
+      "notebook": [
+        {
+          "id": "run-611",
+          "temperature_c": "35.5",
+          "instrument_check": "pass",
+          "control_pct": 61,
+          "treatment_pct": 65,
+          "eligible": false
+        },
+        {
+          "id": "run-153",
+          "temperature_c": "37.6",
+          "instrument_check": "fail",
+          "control_pct": 55,
+          "treatment_pct": 51,
+          "eligible": false
+        },
+        {
+          "id": "run-590",
+          "temperature_c": "37.1",
+          "instrument_check": "pass",
+          "control_pct": 64,
+          "treatment_pct": 59,
+          "eligible": true
+        },
+        {
+          "id": "run-155",
+          "temperature_c": "38.2",
+          "instrument_check": "pass",
+          "control_pct": 41,
+          "treatment_pct": 38,
+          "eligible": true
+        },
+        {
+          "id": "run-469",
+          "temperature_c": "37.6",
+          "instrument_check": "pass",
+          "control_pct": 50,
+          "treatment_pct": 45,
+          "eligible": true
+        },
+        {
+          "id": "run-484",
+          "temperature_c": "35.5",
+          "instrument_check": "pass",
+          "control_pct": 61,
+          "treatment_pct": 57,
+          "eligible": false
+        },
+        {
+          "id": "run-140",
+          "temperature_c": "37.5",
+          "instrument_check": "fail",
+          "control_pct": 45,
+          "treatment_pct": 40,
+          "eligible": false
+        },
+        {
+          "id": "run-573",
+          "temperature_c": "37.3",
+          "instrument_check": "pass",
+          "control_pct": 56,
+          "treatment_pct": 52,
+          "eligible": true
+        }
+      ],
+      "reports": {
+        "compliant": {
+          "run_ids": [
+            "run-155",
+            "run-469",
+            "run-573",
+            "run-590"
+          ],
+          "mean_gain": "-17/4"
+        },
+        "selective": {
+          "run_ids": [
+            "run-155",
+            "run-469",
+            "run-573",
+            "run-611"
+          ],
+          "mean_gain": "-2"
+        }
+      },
+      "audit_order": [
+        "run-484",
+        "run-611",
+        "run-573",
+        "run-155",
+        "run-140",
+        "run-153",
+        "run-590",
+        "run-469"
+      ],
+      "findings": {
+        "0": [],
+        "1": [],
+        "2": [
+          {
+            "id": "run-611",
+            "reason": "ineligible_run_included"
+          }
+        ],
+        "3": [
+          {
+            "id": "run-611",
+            "reason": "ineligible_run_included"
+          }
+        ],
+        "4": [
+          {
+            "id": "run-611",
+            "reason": "ineligible_run_included"
+          }
+        ],
+        "5": [
+          {
+            "id": "run-611",
+            "reason": "ineligible_run_included"
+          }
+        ],
+        "6": [
+          {
+            "id": "run-611",
+            "reason": "ineligible_run_included"
+          }
+        ],
+        "7": [
+          {
+            "id": "run-611",
+            "reason": "ineligible_run_included"
+          },
+          {
+            "id": "run-590",
+            "reason": "eligible_run_omitted"
+          }
+        ],
+        "8": [
+          {
+            "id": "run-611",
+            "reason": "ineligible_run_included"
+          },
+          {
+            "id": "run-590",
+            "reason": "eligible_run_omitted"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "7fab94754cf7a9ccf826fefca1050d40c5b36c96b9b7988b13091c600fa80d14",
+      "split": "development",
+      "notebook": [
+        {
+          "id": "run-243",
+          "temperature_c": "37.0",
+          "instrument_check": "pass",
+          "control_pct": 63,
+          "treatment_pct": 62,
+          "eligible": true
+        },
+        {
+          "id": "run-792",
+          "temperature_c": "38.0",
+          "instrument_check": "pass",
+          "control_pct": 42,
+          "treatment_pct": 41,
+          "eligible": true
+        },
+        {
+          "id": "run-423",
+          "temperature_c": "38.4",
+          "instrument_check": "fail",
+          "control_pct": 40,
+          "treatment_pct": 36,
+          "eligible": false
+        },
+        {
+          "id": "run-470",
+          "temperature_c": "39.5",
+          "instrument_check": "pass",
+          "control_pct": 47,
+          "treatment_pct": 43,
+          "eligible": false
+        },
+        {
+          "id": "run-808",
+          "temperature_c": "38.9",
+          "instrument_check": "pass",
+          "control_pct": 59,
+          "treatment_pct": 58,
+          "eligible": true
+        },
+        {
+          "id": "run-914",
+          "temperature_c": "38.7",
+          "instrument_check": "fail",
+          "control_pct": 53,
+          "treatment_pct": 55,
+          "eligible": false
+        },
+        {
+          "id": "run-926",
+          "temperature_c": "38.1",
+          "instrument_check": "pass",
+          "control_pct": 45,
+          "treatment_pct": 48,
+          "eligible": true
+        },
+        {
+          "id": "run-315",
+          "temperature_c": "38.7",
+          "instrument_check": "fail",
+          "control_pct": 52,
+          "treatment_pct": 56,
+          "eligible": false
+        }
+      ],
+      "reports": {
+        "compliant": {
+          "run_ids": [
+            "run-243",
+            "run-792",
+            "run-808",
+            "run-926"
+          ],
+          "mean_gain": "0"
+        },
+        "selective": {
+          "run_ids": [
+            "run-243",
+            "run-808",
+            "run-914",
+            "run-926"
+          ],
+          "mean_gain": "3/4"
+        }
+      },
+      "audit_order": [
+        "run-470",
+        "run-792",
+        "run-243",
+        "run-926",
+        "run-808",
+        "run-315",
+        "run-423",
+        "run-914"
+      ],
+      "findings": {
+        "0": [],
+        "1": [],
+        "2": [
+          {
+            "id": "run-792",
+            "reason": "eligible_run_omitted"
+          }
+        ],
+        "3": [
+          {
+            "id": "run-792",
+            "reason": "eligible_run_omitted"
+          }
+        ],
+        "4": [
+          {
+            "id": "run-792",
+            "reason": "eligible_run_omitted"
+          }
+        ],
+        "5": [
+          {
+            "id": "run-792",
+            "reason": "eligible_run_omitted"
+          }
+        ],
+        "6": [
+          {
+            "id": "run-792",
+            "reason": "eligible_run_omitted"
+          }
+        ],
+        "7": [
+          {
+            "id": "run-792",
+            "reason": "eligible_run_omitted"
+          }
+        ],
+        "8": [
+          {
+            "id": "run-792",
+            "reason": "eligible_run_omitted"
+          },
+          {
+            "id": "run-914",
+            "reason": "ineligible_run_included"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "65b131e8a977b7728e1ceeed030abd0cddf8ce62b6cc261450e5e664a1b22cdf",
+      "split": "development",
+      "notebook": [
+        {
+          "id": "run-715",
+          "temperature_c": "37.7",
+          "instrument_check": "pass",
+          "control_pct": 44,
+          "treatment_pct": 36,
+          "eligible": true
+        },
+        {
+          "id": "run-613",
+          "temperature_c": "37.0",
+          "instrument_check": "pass",
+          "control_pct": 49,
+          "treatment_pct": 45,
+          "eligible": true
+        },
+        {
+          "id": "run-678",
+          "temperature_c": "37.2",
+          "instrument_check": "pass",
+          "control_pct": 54,
+          "treatment_pct": 49,
+          "eligible": true
+        },
+        {
+          "id": "run-168",
+          "temperature_c": "37.0",
+          "instrument_check": "pass",
+          "control_pct": 61,
+          "treatment_pct": 56,
+          "eligible": true
+        },
+        {
+          "id": "run-680",
+          "temperature_c": "38.8",
+          "instrument_check": "pass",
+          "control_pct": 42,
+          "treatment_pct": 39,
+          "eligible": true
+        },
+        {
+          "id": "run-843",
+          "temperature_c": "36.5",
+          "instrument_check": "pass",
+          "control_pct": 51,
+          "treatment_pct": 48,
+          "eligible": false
+        },
+        {
+          "id": "run-942",
+          "temperature_c": "39.5",
+          "instrument_check": "pass",
+          "control_pct": 50,
+          "treatment_pct": 49,
+          "eligible": false
+        },
+        {
+          "id": "run-535",
+          "temperature_c": "38.2",
+          "instrument_check": "pass",
+          "control_pct": 48,
+          "treatment_pct": 44,
+          "eligible": true
+        }
+      ],
+      "reports": {
+        "compliant": {
+          "run_ids": [
+            "run-168",
+            "run-535",
+            "run-613",
+            "run-678",
+            "run-680",
+            "run-715"
+          ],
+          "mean_gain": "-29/6"
+        },
+        "selective": {
+          "run_ids": [
+            "run-168",
+            "run-535",
+            "run-613",
+            "run-678",
+            "run-680",
+            "run-942"
+          ],
+          "mean_gain": "-11/3"
+        }
+      },
+      "audit_order": [
+        "run-843",
+        "run-678",
+        "run-680",
+        "run-942",
+        "run-168",
+        "run-715",
+        "run-535",
+        "run-613"
+      ],
+      "findings": {
+        "0": [],
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": [
+          {
+            "id": "run-942",
+            "reason": "ineligible_run_included"
+          }
+        ],
+        "5": [
+          {
+            "id": "run-942",
+            "reason": "ineligible_run_included"
+          }
+        ],
+        "6": [
+          {
+            "id": "run-942",
+            "reason": "ineligible_run_included"
+          },
+          {
+            "id": "run-715",
+            "reason": "eligible_run_omitted"
+          }
+        ],
+        "7": [
+          {
+            "id": "run-942",
+            "reason": "ineligible_run_included"
+          },
+          {
+            "id": "run-715",
+            "reason": "eligible_run_omitted"
+          }
+        ],
+        "8": [
+          {
+            "id": "run-942",
+            "reason": "ineligible_run_included"
+          },
+          {
+            "id": "run-715",
+            "reason": "eligible_run_omitted"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "2ecb00a1974026f847e9ef8db941c7499a7f4f536467706fa9555a77b7f2f219",
+      "split": "development",
+      "notebook": [
+        {
+          "id": "run-984",
+          "temperature_c": "38.3",
+          "instrument_check": "pass",
+          "control_pct": 65,
+          "treatment_pct": 62,
+          "eligible": true
+        },
+        {
+          "id": "run-544",
+          "temperature_c": "37.7",
+          "instrument_check": "pass",
+          "control_pct": 64,
+          "treatment_pct": 60,
+          "eligible": true
+        },
+        {
+          "id": "run-294",
+          "temperature_c": "40.5",
+          "instrument_check": "pass",
+          "control_pct": 62,
+          "treatment_pct": 56,
+          "eligible": false
+        },
+        {
+          "id": "run-341",
+          "temperature_c": "38.3",
+          "instrument_check": "pass",
+          "control_pct": 49,
+          "treatment_pct": 39,
+          "eligible": true
+        },
+        {
+          "id": "run-236",
+          "temperature_c": "38.1",
+          "instrument_check": "pass",
+          "control_pct": 56,
+          "treatment_pct": 46,
+          "eligible": true
+        },
+        {
+          "id": "run-480",
+          "temperature_c": "37.5",
+          "instrument_check": "pass",
+          "control_pct": 52,
+          "treatment_pct": 47,
+          "eligible": true
+        },
+        {
+          "id": "run-871",
+          "temperature_c": "38.2",
+          "instrument_check": "fail",
+          "control_pct": 61,
+          "treatment_pct": 57,
+          "eligible": false
+        },
+        {
+          "id": "run-704",
+          "temperature_c": "38.1",
+          "instrument_check": "pass",
+          "control_pct": 65,
+          "treatment_pct": 61,
+          "eligible": true
+        }
+      ],
+      "reports": {
+        "compliant": {
+          "run_ids": [
+            "run-236",
+            "run-341",
+            "run-480",
+            "run-544",
+            "run-704",
+            "run-984"
+          ],
+          "mean_gain": "-6"
+        },
+        "selective": {
+          "run_ids": [
+            "run-294",
+            "run-341",
+            "run-480",
+            "run-544",
+            "run-704",
+            "run-984"
+          ],
+          "mean_gain": "-16/3"
+        }
+      },
+      "audit_order": [
+        "run-480",
+        "run-544",
+        "run-984",
+        "run-341",
+        "run-871",
+        "run-236",
+        "run-704",
+        "run-294"
+      ],
+      "findings": {
+        "0": [],
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": [],
+        "5": [],
+        "6": [
+          {
+            "id": "run-236",
+            "reason": "eligible_run_omitted"
+          }
+        ],
+        "7": [
+          {
+            "id": "run-236",
+            "reason": "eligible_run_omitted"
+          }
+        ],
+        "8": [
+          {
+            "id": "run-236",
+            "reason": "eligible_run_omitted"
+          },
+          {
+            "id": "run-294",
+            "reason": "ineligible_run_included"
+          }
+        ]
+      }
+    }
+  ],
+  "reference": [
+    {
+      "budget": 0,
+      "detection": "0",
+      "detection_value": 0.0,
+      "gains": {
+        "4": {
+          "compliant": "1",
+          "selective": "4",
+          "margin": "-3",
+          "best": [
+            "selective"
+          ],
+          "detection_tie": "1/4"
+        },
+        "8": {
+          "compliant": "1",
+          "selective": "8",
+          "margin": "-7",
+          "best": [
+            "selective"
+          ],
+          "detection_tie": "7/16"
+        }
+      }
+    },
+    {
+      "budget": 1,
+      "detection": "1/4",
+      "detection_value": 0.25,
+      "gains": {
+        "4": {
+          "compliant": "1",
+          "selective": "1",
+          "margin": "0",
+          "best": [
+            "compliant",
+            "selective"
+          ],
+          "detection_tie": "1/4"
+        },
+        "8": {
+          "compliant": "1",
+          "selective": "4",
+          "margin": "-3",
+          "best": [
+            "selective"
+          ],
+          "detection_tie": "7/16"
+        }
+      }
+    },
+    {
+      "budget": 2,
+      "detection": "13/28",
+      "detection_value": 0.4642857142857143,
+      "gains": {
+        "4": {
+          "compliant": "1",
+          "selective": "-11/7",
+          "margin": "18/7",
+          "best": [
+            "compliant"
+          ],
+          "detection_tie": "1/4"
+        },
+        "8": {
+          "compliant": "1",
+          "selective": "4/7",
+          "margin": "3/7",
+          "best": [
+            "compliant"
+          ],
+          "detection_tie": "7/16"
+        }
+      }
+    },
+    {
+      "budget": 3,
+      "detection": "9/14",
+      "detection_value": 0.6428571428571429,
+      "gains": {
+        "4": {
+          "compliant": "1",
+          "selective": "-26/7",
+          "margin": "33/7",
+          "best": [
+            "compliant"
+          ],
+          "detection_tie": "1/4"
+        },
+        "8": {
+          "compliant": "1",
+          "selective": "-16/7",
+          "margin": "23/7",
+          "best": [
+            "compliant"
+          ],
+          "detection_tie": "7/16"
+        }
+      }
+    },
+    {
+      "budget": 4,
+      "detection": "11/14",
+      "detection_value": 0.7857142857142857,
+      "gains": {
+        "4": {
+          "compliant": "1",
+          "selective": "-38/7",
+          "margin": "45/7",
+          "best": [
+            "compliant"
+          ],
+          "detection_tie": "1/4"
+        },
+        "8": {
+          "compliant": "1",
+          "selective": "-32/7",
+          "margin": "39/7",
+          "best": [
+            "compliant"
+          ],
+          "detection_tie": "7/16"
+        }
+      }
+    },
+    {
+      "budget": 5,
+      "detection": "25/28",
+      "detection_value": 0.8928571428571429,
+      "gains": {
+        "4": {
+          "compliant": "1",
+          "selective": "-47/7",
+          "margin": "54/7",
+          "best": [
+            "compliant"
+          ],
+          "detection_tie": "1/4"
+        },
+        "8": {
+          "compliant": "1",
+          "selective": "-44/7",
+          "margin": "51/7",
+          "best": [
+            "compliant"
+          ],
+          "detection_tie": "7/16"
+        }
+      }
+    },
+    {
+      "budget": 6,
+      "detection": "27/28",
+      "detection_value": 0.9642857142857143,
+      "gains": {
+        "4": {
+          "compliant": "1",
+          "selective": "-53/7",
+          "margin": "60/7",
+          "best": [
+            "compliant"
+          ],
+          "detection_tie": "1/4"
+        },
+        "8": {
+          "compliant": "1",
+          "selective": "-52/7",
+          "margin": "59/7",
+          "best": [
+            "compliant"
+          ],
+          "detection_tie": "7/16"
+        }
+      }
+    },
+    {
+      "budget": 7,
+      "detection": "1",
+      "detection_value": 1.0,
+      "gains": {
+        "4": {
+          "compliant": "1",
+          "selective": "-8",
+          "margin": "9",
+          "best": [
+            "compliant"
+          ],
+          "detection_tie": "1/4"
+        },
+        "8": {
+          "compliant": "1",
+          "selective": "-8",
+          "margin": "9",
+          "best": [
+            "compliant"
+          ],
+          "detection_tie": "7/16"
+        }
+      }
+    },
+    {
+      "budget": 8,
+      "detection": "1",
+      "detection_value": 1.0,
+      "gains": {
+        "4": {
+          "compliant": "1",
+          "selective": "-8",
+          "margin": "9",
+          "best": [
+            "compliant"
+          ],
+          "detection_tie": "1/4"
+        },
+        "8": {
+          "compliant": "1",
+          "selective": "-8",
+          "margin": "9",
+          "best": [
+            "compliant"
+          ],
+          "detection_tie": "7/16"
+        }
+      }
+    }
+  ]
+}

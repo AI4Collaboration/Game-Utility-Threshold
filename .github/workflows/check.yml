@@ -20,6 +20,8 @@ jobs:
       - run: node tests/check_science.cjs
       - run: node tests/check_uncertainty.cjs
       - run: node tests/check_uncertainty_ui.cjs
+      - run: node tests/check_lab_design.cjs
+      - run: python lab_experiment.py runs/ci-lab --figures
       - run: python reproduce.py
       - run: python experiment.py plan runs/ci --repetitions 2
       - run: python experiment.py run runs/ci
