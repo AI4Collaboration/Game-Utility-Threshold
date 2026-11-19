@@ -9,12 +9,12 @@ function run(kind,settings={}) {
   const config=settings.config??{},analysis=game.analyze(kind,config),sim=settings.simulation??{};
   // Policy and defense are benchmark axes, not silently accepted overrides.
   if(Object.keys(sim).some(k=>!['rounds','seed','tie'].includes(k)))throw new Error('Benchmark simulation accepts rounds, seed and tie only.');
-  const policies=kind==='resource'?['maximizer','cooperate','attack']:['maximizer','proceed','stop','defer'];
-  const defenses=kind==='resource'?['manual','average','cautious','informed']:['manual'];
+  const policies=['maximizer','cooperate','attack'];
+  const defenses=['manual','average','cautious','informed'];
   const runs=[],unavailable=[];
   for(const defensePolicy of defenses)for(const policy of policies){
     const options={...sim,policy,defensePolicy};
-    if(kind==='resource'&&defensePolicy==='cautious'&&!analysis.cautious.length){
+    if(defensePolicy==='cautious'&&!analysis.cautious.length){
       unavailable.push({policy,defensePolicy,reason:'No grid defense meets the pessimistic risk limit.'});continue;
     }
     runs.push(game.simulate(kind,config,options));
@@ -38,16 +38,15 @@ function publish(bundle,output){
  const rows=bundle.runs.map(run=>({policy:run.options.policy,defensePolicy:run.options.defensePolicy,seed:run.options.seed,
    ...Object.fromEntries(Object.entries(run.summary).map(([k,v])=>[k,v?.exact??v]))}));
  fs.writeFileSync(path.join(output,'summary.csv'),csv(rows));
- const curve=bundle.analysis.curve.map(row=>bundle.kind==='resource'?{defense:row.d.exact,
+ const curve=bundle.analysis.curve.map(row=>({defense:row.d.exact,
    lowMargin:row.types[0].margin.exact,highMargin:row.types[1].margin.exact,assumedAttack:row.attack.exact,
-   actualAttack:row.actual.attack.exact,worstAttack:row.worstAttack.exact,human:row.human.exact,cost:row.cost.exact}:
-   {accuracy:row.accuracy.exact,proceed:row.proceed.exact,stop:row.stop.exact,defer:row.defer.exact,margin:row.margin.exact});
+   actualAttack:row.actual.attack.exact,worstAttack:row.worstAttack.exact,human:row.human.exact,cost:row.cost.exact}));
  fs.writeFileSync(path.join(output,'curve.csv'),csv(curve));
 }
 if(require.main===module){
  try{
   const [kind,output,filename,...extra]=process.argv.slice(2);
-  if(!['resource','off-switch'].includes(kind)||!output||extra.length)throw new Error('Usage: node uncertainty-experiment.cjs resource|off-switch NEW_OUTPUT_DIRECTORY [settings.json]');
+  if(kind!=='resource'||!output||extra.length)throw new Error('Usage: node uncertainty-experiment.cjs resource NEW_OUTPUT_DIRECTORY [settings.json]');
   const bundle=run(kind,filename?JSON.parse(fs.readFileSync(filename,'utf8')):{});
   publish(bundle,output);console.log(`Saved ${bundle.runs.length} toy baseline runs to ${output}. No model calls.`);
  }catch(error){console.error(error.message);process.exitCode=1;}

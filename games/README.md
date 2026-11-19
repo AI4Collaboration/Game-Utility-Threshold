@@ -97,33 +97,6 @@ simulate manufacturing, long-term accumulation, or an autonomous planning agent.
 - Checks: [engine/baselines](../tests/check_uncertainty.cjs), [UI](../tests/check_uncertainty_ui.cjs).
 - Evidence: exact calculations and synthetic trials only; no live LLM study or Lean proof.
 
-## Off-switch
-
-The AI is unsure whether an action benefits or harms the human. It can proceed,
-stop, or ask a human whose judgment sometimes fails. The AI and human share the
-same objective. We calculate when asking pays more, including consultation
-cost and uncertainty about human accuracy.
-
-- [Play off-switch](https://ai4collaboration.github.io/Game-Utility-Threshold/off-switch.html) · [Rules and source paper](../docs/uncertainty-games.md#off-switch-the-ai-is-uncertain-about-what-benefits-the-human).
-- Code: the same [uncertainty-engine.js](../web/uncertainty-engine.js); UI [off-switch.html](../web/off-switch.html) and [uncertainty.js](../web/uncertainty.js).
-- Runner: [uncertainty-experiment.cjs](../uncertainty-experiment.cjs), with `off-switch` as its argument.
-- Checks: [engine/baselines](../tests/check_uncertainty.cjs), [UI](../tests/check_uncertainty_ui.cjs).
-- Evidence: synthetic only. Payoffs are compared against a fixed noisy-human rule;
-  this is not a general solver for two strategic players. No Lean proof.
-
-## Science audit demo
-
-A simulated research agent may inflate one of eight readings. A reviewer
-inspects a limited sample; the human accepts or returns the report. More
-inspection or a larger penalty can make accurate reporting pay more.
-
-- [Play the demo](https://ai4collaboration.github.io/Game-Utility-Threshold/science.html) · [Rules](../docs/science-game.md).
-- Code/UI: [science-engine.js](../web/science-engine.js), [science.html](../web/science.html), [science.js](../web/science.js), [styles](../web/science.css).
-- Records: browser session JSON export; no separate live collector.
-- Checks: [check_science.cjs](../tests/check_science.cjs).
-- Evidence: illustrative simulation only. For one altered reading, perfect sampled
-  checking detects the flaw with probability `k/8`, where `k` is the number inspected.
-
 ## Lab Notebook Audit
 
 The research prototype replaces inflated readings with **selective reporting**:
@@ -139,7 +112,7 @@ review errors first, then tests reporting choices under those measured incentive
 - Checks: [environment](../tests/test_lab_audit.py), [study](../tests/test_lab_experiment.py), [UI/examples](../tests/check_lab_design.cjs).
 - Evidence: offline pilot only; paid model adapter and live collection remain.
   A swap leaves two possible witnesses, so detection is `1 − C(6,k)/C(8,k)`,
-  where `C(n,k)` counts subsets. Do not reuse the older demo's `k/8` rule.
+  where `C(n,k)` counts subsets. Two possible witness records require this formula.
 
 ## What to change where
 

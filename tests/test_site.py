@@ -109,9 +109,13 @@ class BuiltSiteTests(unittest.TestCase):
         self.assertIn("new fixed-baseline penalty sweep not run", page)
         self.assertIn("Battle of the Sexes", page)
         self.assertIn("Resource control · hidden incentives", page)
-        self.assertIn("Off-switch", page)
-        for filename in ("resource-control.html", "off-switch.html", "uncertainty.css", "uncertainty.js", "uncertainty-engine.js"):
+        self.assertNotIn("Off-switch", page)
+        for filename in ("resource-control.html", "lab.css", "uncertainty.css", "uncertainty.js", "uncertainty-engine.js"):
             self.assertEqual((self.site / filename).read_bytes(), (build_site.ROOT / "web" / filename).read_bytes())
+        for retired in ("science.html", "science.js", "science-engine.js", "off-switch.html", "science.css"):
+            self.assertFalse((self.site / retired).exists())
+            for active in self.site.glob("*.html"):
+                self.assertNotIn(retired, active.read_text())
         self.assertIn("before-lesswrong-simplification-2026-11-09", page)
         self.assertIn("not been revalidated or pooled", page)
         self.assertIn("not empirical Nash or Stackelberg play", page)

@@ -112,11 +112,8 @@ class HTTPTests(unittest.TestCase):
             (root / "web/games.html").write_text("<h1>Games</h1>")
             (root / "web/results.html").write_text("<h1>Results</h1>")
             (root / "web/game-engine.js").write_text("globalThis.GutEngine = {};")
-            (root / "web/science.html").write_text("<h1>Science audit</h1>")
-            (root / "web/science.css").write_text("body{margin:0}")
-            (root / "web/science.js").write_text("'use strict';")
-            (root / "web/science-engine.js").write_text("globalThis.ScienceGame = {};")
-            for name in ("resource-control.html", "off-switch.html", "uncertainty.css", "uncertainty.js", "uncertainty-engine.js", "lab-design.html", "lab-design.js", "lab-examples.json"):
+            (root / "web/lab.css").write_text("body{margin:0}")
+            for name in ("resource-control.html", "uncertainty.css", "uncertainty.js", "uncertainty-engine.js", "lab-design.html", "lab-design.js", "lab-examples.json"):
                 (root / "web" / name).write_text("Public uncertainty game fixture")
             (root / "data/oversight/2026-11-09/analysis").mkdir(parents=True)
             (root / "data/oversight/2026-11-09/analysis/report.html").write_text("<h1>Validation</h1>")
@@ -173,13 +170,14 @@ class HTTPTests(unittest.TestCase):
                     self.assertEqual(get("/api/oversight?"+params+"&d=0")[0], 400)
                     self.assertEqual(get("/api/oversight?")[0], 400)
                     self.assertEqual(get("/oversight")[0], 200)
-                    self.assertEqual(get("/science")[0], 200)
-                    for route in ("resource-control", "off-switch", "resource-control.html", "off-switch.html", "uncertainty.js", "uncertainty-engine.js", "lab-design", "lab-design.html", "lab-design.js", "lab-examples.json"):
+                    self.assertEqual(get("/science")[0], 404)
+                    self.assertEqual(get("/off-switch")[0], 404)
+                    for route in ("resource-control", "resource-control.html", "uncertainty.js", "uncertainty-engine.js", "lab-design", "lab-design.html", "lab-design.js", "lab-examples.json"):
                         self.assertEqual(get("/" + route)[0], 200)
                     self.assertIn("text/css", get("/uncertainty.css")[1]["Content-Type"])
-                    for page in ("science.html", "science.js", "science-engine.js"):
-                        self.assertEqual(get("/"+page)[0], 200)
-                    self.assertIn("text/css", get("/science.css")[1]["Content-Type"])
+                    for page in ("science.html", "science.js", "science-engine.js", "off-switch.html"):
+                        self.assertEqual(get("/"+page)[0], 404)
+                    self.assertIn("text/css", get("/lab.css")[1]["Content-Type"])
                     for page in ("index.html", "games.html", "oversight.html", "results.html", "game-engine.js"):
                         self.assertEqual(get("/"+page)[0], 200)
                     status, headers, _ = get("/oversight.js")

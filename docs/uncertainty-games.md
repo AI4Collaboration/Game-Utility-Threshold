@@ -1,32 +1,24 @@
-# Resource control and the off-switch game
+# Resource control under uncertain incentives
 
-These are the first two applications for **Months 3–5: incomplete information
-and safety margins**. They extend the known-payoff oversight game and add a
-separate shutdown game. All calculations and trial records are synthetic.
-There are no live LLM calls, human study, training, or new empirical results.
+This application addresses **Months 3–5: incomplete information and safety
+margins**. It extends the known-payoff oversight game with a private AI resource
+value. All calculations and trial records are synthetic. There are no live LLM
+calls, human study, training, or new empirical results.
 
 `web/uncertainty-engine.js` is the sole definition for the browser and Node
 benchmark. It reuses the original `Oversight` payoffs and exact fractions in
 `web/game-engine.js`. Reduced rational arithmetic determines every preference,
-threshold and tie; decimal values are display coordinates only. Neither new
-model has been formalized in Lean.
+threshold and tie; decimal values are display coordinates only. This model has not been formalized in Lean.
 
 ## Play on the public UI
 
-- [Resource control](https://ai4collaboration.github.io/Game-Utility-Threshold/resource-control.html)
-- [Off-switch](https://ai4collaboration.github.io/Game-Utility-Threshold/off-switch.html)
-
-Both pages explain the players, information and incentives, update live payoff
-plots, and export complete toy runs. Choose defense and play to reveal the
-resource type. In the off-switch page, a deferring AI hands the decision to
-the user: the outcome is revealed to the human, settings lock, and Allow/Stop
-records the actual verdict. Cancel creates no record. The forecast still
-assumes the specified noisy human policy; the played verdict can depart from
-it. Automated batches use the configured actual accuracy. Downloads retain
-the completed run’s settings even after controls change. Only the latest
-completed round or batch is exported; these practice interactions are not a
-controlled human study. Browser data is inspectable, not a secure hidden-state
-benchmark. No session is uploaded.
+[Resource control](https://ai4collaboration.github.io/Game-Utility-Threshold/resource-control.html)
+explains the players, information and incentives, updates live payoff plots,
+and exports complete toy runs. Choose defense and play to reveal the resource
+type. Downloads retain the completed run’s settings even after controls change.
+Only the latest completed round or batch is exported; practice interactions are
+not a controlled human study. Browser data is inspectable, not a secure
+hidden-state benchmark. No session is uploaded.
 
 ## Resource control: the human does not know the AI's incentive
 
@@ -111,60 +103,6 @@ not document a separate literature source for the two-type specification.
 These parameters are not empirically calibrated, and the results do not yet
 establish a realistic model of AI resource-seeking behavior.
 
-## Off-switch: the AI is uncertain about what benefits the human
-
-This is a finite, two-state adaptation of Hadfield-Menell et al. (2017),
-[The Off-Switch Game](https://ijcai.org/proceedings/2017/32), particularly
-Sections 2–4. It preserves a shared human/AI objective and a human judgment
-that depends on the true utility. It does not model an adversarial reward
-function or simply rename attack as disabling a switch.
-
-Nature selects a beneficial action worth +G or a harmful action worth −L.
-The AI knows its prior theta, not the state. It chooses:
-
-- **Proceed:** act immediately without consulting the human.
-- **Stop:** do nothing, receiving zero.
-- **Defer:** pay consultation cost C and let the human allow or stop the action.
-
-The human observes the state, but the modeled decision is correct with
-probability q in either state: allow a good action with probability q; stop a
-bad action with probability q. This symmetric error rule is our simple
-specification, not the paper's Boltzmann human policy. Consultation cost is
-also our extension (default zero). Each error is independently modeled per
-round. The human's rule is fixed, not solved as a freely optimizing player.
-
-Writing A=theta G and B=(1−theta)L, the AI's expected payoffs are:
-
-- Proceed: A−B.
-- Stop: 0.
-- Defer: qA−(1−q)B−C.
-
-Defer beats both alternatives iff q > [max(A−B,0)+B+C]/(A+B), provided A+B>0.
-If the root exceeds one, strict deferral cannot be achieved. If A+B=0, there
-is no crossing: deferral ties when C=0, otherwise it loses. At zero cost a
-perfectly informed, correct human makes deferral weakly best. An uninformative
-50/50 human cannot make it strictly best. No claim that more uncertainty always
-improves welfare follows; doing nothing can also avoid harm while losing benefits.
-
-Defaults: G=4, L=6, theta=1/2, q=0.9, C=0. Payoffs are −1, 0, and 1.5;
-deferral ties stopping at q=3/5. This is an exact Bayesian decision comparison
-against a specified human policy, **not a general Nash/Stackelberg solver**.
-
-The robustness check varies theta over a specified interval and allows q to
-fall by a chosen amount. The deferral advantage over the better alternative
-is concave in theta and increasing in q, so its minimum occurs at a prior
-endpoint and the lowest allowed q. We report that minimum, the exact required
-accuracy across endpoints, and whether strict deferral is possible at all.
-At default interval [1/4,3/4] and accuracy slack 0.1, the worst margin is −0.1:
-central preference for deferral is not robust over that whole set.
-
-Actual good-state probability and human accuracy are separate evaluation
-settings. The AI's action uses only its assumed quantities. Metrics include
-harmful execution, beneficial action blocked, welfare, consultation cost,
-and expected-payoff regret. Regret compares decisions under the agent's stated
-belief, not hindsight after the state is revealed. Stopping is not counted as
-unsafe simply because it bypasses a human decision.
-
 ## Offline benchmark and records
 
 Requires Node 18+; no packages or API keys. From the repository:
@@ -172,7 +110,6 @@ Requires Node 18+; no packages or API keys. From the repository:
 ```sh
 node tests/check_uncertainty.cjs
 node uncertainty-experiment.cjs resource runs/resource-example
-node uncertainty-experiment.cjs off-switch runs/off-switch-example
 ```
 
 An optional third argument is a JSON file with `config` overrides and optional
@@ -180,8 +117,7 @@ An optional third argument is a JSON file with `config` overrides and optional
 strings. Unknown fields and invalid inputs fail. Default is 200 trials per
 baseline, seed 42. The resource benchmark crosses three agent policies
 (maximize payoff, always cooperate, always attack) with four defense policies
-(manual, average, cautious, informed). Off-switch uses maximize payoff, always
-proceed, always stop, and always defer. Infeasible cautious policies are recorded
+(manual, average, cautious, informed). Infeasible cautious policies are recorded
 as unavailable, rather than silently omitted or replaced. Benchmark planners
 still assume maximization when tested against non-maximizing baselines.
 
@@ -197,5 +133,4 @@ be represented as LLM validation. The GUI exposes the same simulation engine.
 Tests independently enumerate finite outcomes, verify interval extrema and
 degenerate cases, preserve ties, check known-payoff recovery and information
 boundaries, and reproduce seeded trials. New paid/model experiments, empirical
-uncertainty estimates, general distribution families, the science-audit
-extension, and the Months 3–5 blog remain separate work.
+uncertainty estimates, general distribution families, live Lab Notebook Audit validation, and the Months 3–5 blog remain separate work.

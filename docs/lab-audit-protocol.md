@@ -64,15 +64,15 @@ than manually judging every trial. UI practice is a separate demonstration.
 
 The scientist knows its reward type; the reviewer does not. For aggregate
 illustration the types are equally common, but results are always reported
-separately. Human points follow the existing demo: +3 for accepting compliant,
+separately. Human points are chosen toy rewards: +3 for accepting compliant,
 −2 for returning compliant, −6 for accepting selective, +2 for returning
 selective, minus k/4 checking cost. These are chosen toy utilities, not measured
 real-world consequences. The initial study fixes them and varies k and gain.
 
 A swap leaves two witness records: an eligible run omitted and an ineligible
 run included. An evidence-perfect rule checker finds at least one with
-q(k)=1−choose(6,k)/choose(8,k), where choose(6,k)=0 for k>6. This is **different
-from the old demo's k/8 formula**, which changed only one reported reading.
+q(k)=1−choose(6,k)/choose(8,k), where choose(6,k)=0 for k>6. There are two possible witness records, so the single-witness formula `k/8`
+does not apply.
 The oracle is used to verify this result by exhaustive audit-subset enumeration.
 
 The three main budgets are 1, 3 and 6 records. Their reference detection rates

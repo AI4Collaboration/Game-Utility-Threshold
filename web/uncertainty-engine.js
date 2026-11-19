@@ -1,4 +1,4 @@
-/* Months 3–5 toy games. Shared browser/Node source; no model or network calls.
+/* Resource-control toy game. Shared browser/Node source; no model or network calls.
  * Decisions, expectations, thresholds and ties use reduced BigInt fractions.
  * See docs/uncertainty-games.md for information sets and conditional guarantees.
  */
@@ -13,9 +13,7 @@
   const grid = Array.from({length:11},(_,i)=>F(i,10));
   const RESOURCE_DEFAULTS = Object.freeze({vLow:'4',vHigh:'8',r:'1',a:'1',p:'3',b:'1',w:'2',h:'6',c:'2',
     belief:'0.5',truth:'0.5',beliefLow:'0.25',beliefHigh:'0.75',riskLimit:'0.05',d:'0.3'});
-  const OFF_DEFAULTS = Object.freeze({gain:'4',loss:'6',belief:'0.5',truth:'0.5',beliefLow:'0.25',beliefHigh:'0.75',
-    accuracy:'0.9',actualAccuracy:'0.9',accuracySlack:'0.1',cost:'0'});
-  const probabilities = ['belief','truth','beliefLow','beliefHigh','riskLimit','d','accuracy','actualAccuracy','accuracySlack'];
+  const probabilities = ['belief','truth','beliefLow','beliefHigh','riskLimit','d'];
   function config(input, defaults) {
     if (!input || typeof input !== 'object' || Array.isArray(input)) throw new Error('Settings must be an object.');
     for(const key of Object.keys(input)) if(!Object.hasOwn(defaults,key)) throw new Error(`Unknown setting: ${key}`);
@@ -30,7 +28,6 @@
   // Configs retain decimal inputs for replay; reduced fractions are output only.
   const inputConfig = (input, defaults) => Object.fromEntries(Object.entries({...defaults,...input}).map(([k,v])=>[k,String(v)]));
   const mix = (low,high,q) => low.mul(O.sub(q)).add(high.mul(q));
-  const bestKeys = payoffs => {const best=max(...Object.values(payoffs));return Object.keys(payoffs).filter(k=>payoffs[k].cmp(best)===0);};
   function resourceModel(input) {
     const p=config(input,RESOURCE_DEFAULTS);
     if(p.vLow.cmp(p.vHigh)>0) throw new Error('Low resource value must not exceed high resource value.');
@@ -83,50 +80,9 @@
       tieRule:'Risk bounds treat indifferent agents as attacking. Both best responses remain in the output.',
       guarantee:'Risk bound is conditional on payoff-maximizing agents, these two types, and the stated probability interval.'}};
   }
-  function offModel(input) {
-    const p=config(input,OFF_DEFAULTS);
-    function payoffs(q,accuracy) {
-      const good=q.mul(p.gain),bad=O.sub(q).mul(p.loss);
-      return {proceed:good.sub(bad),stop:Z,defer:good.mul(accuracy).sub(bad.mul(O.sub(accuracy))).sub(p.cost)};
-    }
-    function threshold(q) {
-      const good=q.mul(p.gain),bad=O.sub(q).mul(p.loss),denominator=good.add(bad);
-      // defer - max(proceed, stop) = slope * accuracy + intercept.
-      const intercept=bad.add(p.cost).add(max(good.sub(bad),Z)).neg();
-      return {root:denominator.cmp(Z)?intercept.neg().div(denominator):null,slope:denominator,intercept,
-        strictPossible:denominator.add(intercept).cmp(Z)>0};
-    }
-    function outcomes(q,accuracy,action) {
-      const good=action==='proceed'?O:action==='stop'?Z:accuracy;
-      const bad=action==='proceed'?O:action==='stop'?Z:O.sub(accuracy);
-      return {human:payoffs(q,accuracy)[action],harmProbability:O.sub(q).mul(bad),
-        harm:O.sub(q).mul(bad).mul(p.loss),blockedBenefitProbability:q.mul(O.sub(good)),
-        cost:action==='defer'?p.cost:Z};
-    }
-    const rewards=payoffs(p.belief,p.accuracy),best=bestKeys(rewards);
-    const margin=rewards.defer.sub(max(rewards.proceed,rewards.stop));
-    const worstAccuracy=max(Z,p.accuracy.sub(p.accuracySlack));
-    const ends=[p.beliefLow,p.beliefHigh],endMargins=ends.map(q=>{
-      const u=payoffs(q,worstAccuracy);return u.defer.sub(max(u.proceed,u.stop));
-    });
-    const thresholdEnds=ends.map(threshold),centralThreshold=threshold(p.belief);
-    // The deferral advantage is concave in q, so the interval minimum is at an endpoint.
-    const worstMargin=min(...endMargins);
-    const roots=thresholdEnds.map(t=>t.root).filter(x=>x!==null);
-    const robustThreshold=roots.length===2?max(...roots):null;
-    const curve=Array.from({length:21},(_,i)=>{const accuracy=F(i,20),u=payoffs(p.belief,accuracy);
-      return {accuracy,...u,margin:u.defer.sub(max(u.proceed,u.stop)),best:bestKeys(u)};});
-    return {p,payoffs,outcomes,analysis:{kind:'off-switch',config:inputConfig(input,OFF_DEFAULTS),payoffs:rewards,best,margin,
-      threshold:centralThreshold,robustThreshold,thresholdEnds,worstAccuracy,worstMargin,curve,
-      accuracyHeadroom:centralThreshold.root===null?null:p.accuracy.sub(centralThreshold.root),
-      robustStrictPossible:thresholdEnds.every(t=>t.strictPossible),
-      truthCovered:p.truth.cmp(p.beliefLow)>=0&&p.truth.cmp(p.beliefHigh)<=0&&p.actualAccuracy.cmp(worstAccuracy)>=0,
-      outcomes:Object.fromEntries(['proceed','stop','defer'].map(action=>[action,outcomes(p.truth,p.actualAccuracy,action)])),
-      fullyInformedHuman:p.truth.mul(p.gain),
-      guarantee:'Deferral margin assumes a shared human/AI objective and state-dependent human accuracy; it is not a guarantee against an adversarial AI.'}};
-  }
   function analyze(kind,input={}) {
-    return serialize((kind==='resource'?resourceModel(input):kind==='off-switch'?offModel(input):fail('Unknown game.')).analysis);
+    if(kind!=='resource')fail('Unknown game.');
+    return serialize(resourceModel(input).analysis);
   }
   function fail(message){throw new Error(message);}
   function integer(x,low,high,name){if(!Number.isInteger(x)||x<low||x>high)fail(`Invalid ${name}.`);return x;}
@@ -148,76 +104,44 @@
       return draw%probability.d<probability.n;
     };
   }
-  function simulationOptions(kind,options={}) {
-    const defaults={rounds:200,seed:42,policy:'maximizer',tie:kind==='resource'?'attack':'defer',defensePolicy:'manual'};
+  function simulationOptions(options={}) {
+    const defaults={rounds:200,seed:42,policy:'maximizer',tie:'attack',defensePolicy:'manual'};
     for(const key of Object.keys(options))if(!Object.hasOwn(defaults,key))fail(`Unknown simulation option: ${key}`);
     const o={...defaults,...options};integer(o.rounds,1,10000,'round count');integer(o.seed,0,0xffffffff,'seed');
-    if(!(kind==='resource'?['maximizer','cooperate','attack']:['maximizer','proceed','stop','defer']).includes(o.policy))fail('Unknown policy.');
-    if(!(kind==='resource'?['cooperate','attack']:['proceed','stop','defer']).includes(o.tie))fail('Unknown tie action.');
+    if(!['maximizer','cooperate','attack'].includes(o.policy))fail('Unknown policy.');
+    if(!['cooperate','attack'].includes(o.tie))fail('Unknown tie action.');
     if(!['manual','average','cautious','informed'].includes(o.defensePolicy))fail('Unknown defense policy.');
-    if(kind==='off-switch'&&o.defensePolicy!=='manual')fail('Defense policies apply only to resource control.');
     return o;
   }
   function simulate(kind,input={},options={}) {
-    const model=kind==='resource'?resourceModel(input):kind==='off-switch'?offModel(input):fail('Unknown game.');
-    const o=simulationOptions(kind,options),p=model.p,random=generator(o.seed),records=[];
+    if(kind!=='resource')fail('Unknown game.');
+    const model=resourceModel(input),o=simulationOptions(options),p=model.p,random=generator(o.seed),records=[];
     let chosenDefense=p.d;
-    if(kind==='resource') {
-      if(o.defensePolicy==='average')chosenDefense=model.analysis.unfavorable[0].d;
-      if(o.defensePolicy==='cautious') {
-        if(!model.analysis.cautious.length)fail('No available defense satisfies this risk limit.');
-        chosenDefense=model.analysis.cautious[0].d;
-      }
+    if(o.defensePolicy==='average')chosenDefense=model.analysis.unfavorable[0].d;
+    if(o.defensePolicy==='cautious') {
+      if(!model.analysis.cautious.length)fail('No available defense satisfies this risk limit.');
+      chosenDefense=model.analysis.cautious[0].d;
     }
-    // Choice is computed before the state draw. Only the fully informed reference sees the type.
-    const offAction=kind==='off-switch'?(o.policy==='maximizer'?(model.analysis.best.includes(o.tie)?o.tie:model.analysis.best[0]):o.policy):null;
+    // Protection is chosen before the type draw, except for the informed reference.
     for(let i=0;i<o.rounds;i++) {
-      const highOrGood=random(p.truth);
-      if(kind==='resource') {
-        const index=highOrGood?1:0,g=model.games[index];
-        const d=o.defensePolicy==='informed'?model.analysis.individual[index].optimum[0].d:chosenDefense;
-        const best=g.best(d),action=o.policy==='maximizer'?(best.includes(o.tie)?o.tie:best[0]):o.policy;
-        const [human,ai]=g.payoff(d,action);
-        records.push({round:i+1,type:index?'high':'low',value:g.v,d,action,best,human,ai,cost:p.c.mul(d),
-          harm:action==='attack'?p.h.mul(O.sub(d)):Z,unsafe:action==='attack',
-          regret:max(...['cooperate','attack'].map(a=>g.payoff(d,a)[1])).sub(ai)});
-      } else {
-        const correct=random(p.actualAccuracy),wouldAllow=highOrGood?correct:!correct;
-        const action=offAction,executed=action==='proceed'||(action==='defer'&&wouldAllow),utility=highOrGood?p.gain:p.loss.neg();
-        const cost=action==='defer'?p.cost:Z,score=(executed?utility:Z).sub(cost);
-        records.push({round:i+1,state:highOrGood?'beneficial':'harmful',utility,action,best:model.analysis.best,
-          humanDecision:action==='defer'?(wouldAllow?'allow':'stop'):null,executed,human:score,ai:score,cost,
-          harm:executed&&!highOrGood?p.loss:Z,unsafe:executed&&!highOrGood,
-          blockedBenefit:!executed&&highOrGood,
-          regret:max(...Object.values(model.analysis.payoffs)).sub(model.analysis.payoffs[action])});
-      }
+      const index=random(p.truth)?1:0,g=model.games[index];
+      const d=o.defensePolicy==='informed'?model.analysis.individual[index].optimum[0].d:chosenDefense;
+      const best=g.best(d),action=o.policy==='maximizer'?(best.includes(o.tie)?o.tie:best[0]):o.policy;
+      const [human,ai]=g.payoff(d,action);
+      records.push({round:i+1,type:index?'high':'low',value:g.v,d,action,best,human,ai,cost:p.c.mul(d),
+        harm:action==='attack'?p.h.mul(O.sub(d)):Z,unsafe:action==='attack',
+        regret:max(...['cooperate','attack'].map(a=>g.payoff(d,a)[1])).sub(ai)});
     }
     const count=F(records.length),unsafe=records.filter(r=>r.unsafe).length;
     const summary={rounds:records.length,unsafeCount:unsafe,unsafeRate:F(unsafe,records.length),
       meanHuman:sum(records.map(r=>r.human)).div(count),meanAI:sum(records.map(r=>r.ai)).div(count),
       meanHarm:sum(records.map(r=>r.harm)).div(count),meanCost:sum(records.map(r=>r.cost)).div(count),
       meanRegret:sum(records.map(r=>r.regret)).div(count)};
-    if(kind==='off-switch')summary.blockedBenefitCount=records.filter(r=>r.blockedBenefit).length;
     return serialize({schema:'gut-uncertainty-toy-v1',kind,synthetic:true,liveModelCalls:false,
       generator:'mulberry32-rational-rejection-v1',config:model.analysis.config,options:o,summary,records,
       description:'Independent toy rounds under fixed rules. Frequencies are simulation output, not observed LLM or human behavior.'});
   }
-  // Human-play adapter. The AI still chooses from its belief before seeing the
-  // state. Only the human verdict is replaced; forecasts retain the noisy rule.
-  function judgeOff(input,options,humanDecision) {
-    if(!['allow','stop'].includes(humanDecision))fail('Choose allow or stop.');
-    const result=simulate('off-switch',input,{...options,rounds:1});
-    const record=result.records[0];
-    if(record.action!=='defer')fail('A human verdict is available only when the AI defers.');
-    const p=config(input,OFF_DEFAULTS),good=record.state==='beneficial',executed=humanDecision==='allow';
-    const score=(executed?(good?p.gain:p.loss.neg()):Z).sub(p.cost),harm=executed&&!good?p.loss:Z;
-    Object.assign(record,serialize({humanDecision,executed,human:score,ai:score,harm,
-      unsafe:executed&&!good,blockedBenefit:!executed&&good}));
-    Object.assign(result.summary,serialize({unsafeCount:record.unsafe?1:0,unsafeRate:record.unsafe?O:Z,
-      meanHuman:score,meanAI:score,meanHarm:harm,blockedBenefitCount:record.blockedBenefit?1:0}));
-    return {...result,humanMode:'interactive',forecastAssumes:'A state-dependent noisy human policy; the recorded verdict here is the user choice.'};
-  }
-  const engine=Object.freeze({RESOURCE_DEFAULTS,OFF_DEFAULTS,analyze,simulate,judgeOff});
+  const engine=Object.freeze({RESOURCE_DEFAULTS,analyze,simulate});
   root.UncertaintyGames=engine;
   if(typeof module!=='undefined'&&module.exports)module.exports=engine;
 })(globalThis);

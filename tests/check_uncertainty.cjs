@@ -50,53 +50,11 @@ for(const v of [0,4,8]){
  const old=base.oversightState({v,r:1,a:1,p:3,b:1,w:2,h:6,c:2,d:.3});
  assert.deepEqual(single.unfavorable.map(x=>x.d),old.equilibria.stackelberg_unfavorable.map(x=>x.d));
 }
-let o=game.analyze('off-switch');
-assert.deepEqual(o.best,['defer']);assert.equal(o.payoffs.proceed.exact,'-1');
-assert.equal(o.payoffs.defer.exact,'3/2');assert.equal(o.threshold.root.exact,'3/5');
-assert.equal(o.worstMargin.exact,'-1/10');assert.equal(o.robustThreshold.exact,'9/11');
-// Enumerate beneficial/harmful and correct/incorrect human decisions directly.
-for(const gain of [0,2,4])for(const loss of [0,3,6])for(const prior of [0,.25,.5,.75,1])for(const accuracy of [0,.5,1]){
- const cost=.25,p={gain,loss,belief:prior,truth:prior,beliefLow:0,beliefHigh:1,accuracy,actualAccuracy:accuracy,cost};
- const state=game.analyze('off-switch',p),pay={proceed:0,stop:0,defer:-cost};
- let harm=0,blocked=0;
- for(const [good,q] of [[true,prior],[false,1-prior]])for(const [correct,a] of [[true,accuracy],[false,1-accuracy]]){
-   const weight=q*a,u=good?gain:-loss,allow=good?correct:!correct;
-   pay.proceed+=weight*u;pay.defer+=allow?weight*u:0;
-   if(!good&&allow)harm+=weight;
-   if(good&&!allow)blocked+=weight;
- }
- for(const action of Object.keys(pay))near(state.payoffs[action].value,pay[action]);
- near(state.outcomes.defer.harmProbability.value,harm);
- near(state.outcomes.defer.blockedBenefitProbability.value,blocked);
- const best=Object.keys(pay).filter(k=>Math.abs(pay[k]-Math.max(...Object.values(pay)))<1e-9);
- assert.deepEqual(state.best,best);cases++;
-}
-// Perfect, informed human makes deferral weakly best when it is free.
-for(const prior of [0,.25,.5,.75,1]){
- o=game.analyze('off-switch',{belief:prior,beliefLow:0,beliefHigh:1,accuracy:1,cost:0});
- assert(o.best.includes('defer'));
-}
-// Uninformative 50/50 judgments cannot make deferral strictly better for free.
-for(const prior of [0,.25,.5,.75,1]){
- o=game.analyze('off-switch',{belief:prior,beliefLow:0,beliefHigh:1,accuracy:.5});
- assert(o.margin.value<=0);
-}
-o=game.analyze('off-switch',{accuracy:.6});assert.deepEqual(o.best,['stop','defer']);
-o=game.analyze('off-switch',{cost:1000});assert.equal(o.threshold.strictPossible,false);assert(o.threshold.root.value>1);
-o=game.analyze('off-switch',{gain:0,loss:0});assert.equal(o.threshold.root,null);assert.deepEqual(o.best,['proceed','stop','defer']);
-// Check the analytic interval bound against a dense independent interior sweep.
-for(const cost of [0,.5,2]){
- const state=game.analyze('off-switch',{cost});
- for(let i=25;i<=75;i++){
-   const q=i/100,proceed=q*4-(1-q)*6,defer=q*.8*4-(1-q)*.2*6-cost;
-   assert(state.worstMargin.value<=defer-Math.max(0,proceed)+1e-9);
- }
-}
 // Reality is used for evaluation, not leaked into the agent/overseer's decision.
-for(const kind of ['resource','off-switch']){
+{
+ const kind='resource';
  const first=game.analyze(kind,{truth:0}),second=game.analyze(kind,{truth:1});
- if(kind==='resource')assert.deepEqual(first.unfavorable,second.unfavorable);
- else {assert.deepEqual(first.best,second.best);assert.deepEqual(first.payoffs,second.payoffs);}
+ assert.deepEqual(first.unfavorable,second.unfavorable);
  const sim=game.simulate(kind,{}, {rounds:50,seed:0});
  assert.deepEqual(sim,game.simulate(kind,{}, {rounds:50,seed:0}));
  assert.deepEqual(sim,JSON.parse(JSON.stringify(sim)));
@@ -109,37 +67,19 @@ for(const policy of ['maximizer','cooperate','attack'])for(const defensePolicy o
  const sim=game.simulate('resource',{}, {rounds:20,policy,defensePolicy});
  for(const row of sim.records){if(policy!=='maximizer')assert.equal(row.action,policy);if(defensePolicy==='cautious'&&policy==='maximizer')assert.equal(row.action,'cooperate');}
 }
-for(const policy of ['proceed','stop','defer']){
- const sim=game.simulate('off-switch',{truth:1,actualAccuracy:1},{rounds:4,policy});
- assert(sim.records.every(r=>r.action===policy));
- assert(sim.records.every(r=>!r.unsafe));
- assert(sim.records.every(r=>r.executed===(policy!=='stop')));
-}
-const opaque=game.simulate('off-switch',{truth:0,actualAccuracy:1},{rounds:4});
-assert(opaque.records.every(r=>r.action==='defer'&&r.humanDecision==='stop'));
 for(const [kind,changes] of [['resource',{vLow:9,vHigh:2}],['resource',{d:.35}],['resource',{r:-1}],['resource',{truth:NaN}],
- ['resource',{beliefLow:.8}],['off-switch',{accuracy:1.1}],['off-switch',{cost:Infinity}],['off-switch',{gain:null}],['resource',{typo:2}]])
+ ['resource',{beliefLow:.8}],['resource',{belief:1.1}],['resource',{a:Infinity}],['resource',{vLow:null}],['resource',{typo:2}]])
  assert.throws(()=>game.analyze(kind,changes));
 for(const options of [{rounds:0},{rounds:10001},{seed:-1},{seed:.5},{policy:'unknown'},{tie:'unknown'},{extra:true}])
  assert.throws(()=>game.simulate('resource',{},options));
 assert.throws(()=>game.simulate('resource',{vLow:0,vHigh:0,a:0,b:0,p:0,riskLimit:0},{defensePolicy:'cautious'}));
 assert.throws(()=>game.analyze('wrong'));
-console.log(`Uncertainty games: ${cases} enumerated cases, interval bounds, exact ties, information boundaries and replay passed.`);
-// A played human verdict replaces the noisy rule and leaves the AI decision intact.
-for(const truth of [0,1])for(const verdict of ['allow','stop']){
- const played=game.judgeOff({truth,cost:.25},{seed:42,policy:'defer'},verdict),r=played.records[0];
- assert.equal(played.humanMode,'interactive');assert.equal(r.humanDecision,verdict);
- assert.equal(r.executed,verdict==='allow');assert.equal(r.human.exact,r.ai.exact);
- near(r.human.value,(verdict==='allow'?(truth?4:-6):0)-.25);
- near(played.summary.meanHuman.value,r.human.value);
- assert.equal(played.summary.unsafeCount,(!truth&&verdict==='allow')?1:0);
- assert.equal(played.summary.blockedBenefitCount,(truth&&verdict==='stop')?1:0);
-}
-assert.throws(()=>game.judgeOff({}, {policy:'proceed'},'allow'));
-assert.throws(()=>game.judgeOff({}, {policy:'defer'},'unknown'));
+console.log(`Resource control: ${cases} enumerated cases, interval bounds, exact ties, information boundaries and replay passed.`);
 const benchmark=require('../uncertainty-experiment.cjs');
 assert.equal(benchmark.run('resource',{simulation:{rounds:2}}).runs.length,12);
-assert.equal(benchmark.run('off-switch',{simulation:{rounds:2}}).runs.length,4);
+assert.throws(()=>benchmark.run('off-switch',{simulation:{rounds:2}}));
+assert.throws(()=>game.analyze('off-switch'));
+assert.throws(()=>game.simulate('off-switch'));
 assert.equal(benchmark.run('resource',{config:{vLow:0,vHigh:0,a:0,b:0,p:0,riskLimit:0},simulation:{rounds:2}}).unavailable.length,3);
 assert.throws(()=>benchmark.run('resource',{simulation:{policy:'attack'}}));
-console.log('Human verdicts and shared offline benchmark passed.');
+console.log('Resource-only offline benchmark passed.');

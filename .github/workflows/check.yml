@@ -17,7 +17,6 @@ jobs:
           node-version: '22'
       - run: node tests/check_oversight_ui.cjs
       - run: node tests/check_browser_engine.cjs
-      - run: node tests/check_science.cjs
       - run: node tests/check_uncertainty.cjs
       - run: node tests/check_uncertainty_ui.cjs
       - run: node tests/check_lab_design.cjs

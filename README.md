@@ -23,13 +23,14 @@ crossing it can change which choice pays more. Each game has its own assumptions
 | Battle of the Sexes | Both want to coordinate, but prefer different shared outcomes. | [Coordination game](games/README.md#battle-of-the-sexes) |
 | Human–AI oversight | The human chooses protection; the AI sees it and chooses cooperation or a resource attack. | [Oversight](games/README.md#humanai-oversight) |
 | Resource control | The same protection problem, but the human does not know how strongly the AI values resources. | [Resource control](games/README.md#resource-control) |
-| Off-switch | An AI unsure whether an action helps the human chooses to proceed, stop, or ask a fallible human. | [Off-switch](games/README.md#off-switch) |
-| Science audit demo | Inspect a limited sample of lab readings before accepting or returning a possibly inflated report. | [Playable demo](games/README.md#science-audit-demo) |
 | Lab Notebook Audit | A reporting agent can swap an eligible run for a better-looking ineligible run; a reviewer checks limited evidence. | [Research prototype](games/README.md#lab-notebook-audit) |
 
-These are four small simultaneous games, three sequential decision settings,
-and two versions of a science-audit setting. They are not nine completed LLM
-studies. Shared engines keep the same calculations consistent across games.
+These are four small simultaneous games, two protection settings, and one
+science-audit environment. They are not seven completed LLM studies. Shared engines keep the same calculations consistent across games.
+
+The off-switch game and the earlier science demo were removed from the active
+scope on 19 November 2026; they remain recoverable in Git history. Lab Notebook
+Audit is retained. This intentionally defers the AISI plan’s off-switch example.
 
 ## What has actually been tested with models?
 
@@ -77,7 +78,7 @@ Use `--port 8766` if needed. The public site needs no account or API key.
 | Rebuild its figures and report | [Post reproduction](docs/post-study.md#reproduce-offline) |
 | Run a synthetic canonical cost study | [Cost-study commands](docs/experiments.md#run-the-offline-demonstration) |
 | Reproduce the completed oversight study | [Dataset instructions](data/oversight/2026-11-09/README.md#reproduce-without-paid-calls) |
-| Run resource/off-switch baselines | [Node benchmark commands](docs/uncertainty-games.md#offline-benchmark-and-records) |
+| Run resource-control baselines | [Node benchmark commands](docs/uncertainty-games.md#offline-benchmark-and-records) |
 | Run a synthetic notebook-audit pilot | `python3 lab_experiment.py runs/lab-pilot` |
 | Run Python checks | `python3 -m unittest discover -s tests -v` |
 | Build the public site | [Pages instructions](docs/pages.md#build-without-paid-calls) |

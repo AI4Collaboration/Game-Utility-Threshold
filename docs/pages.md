@@ -9,8 +9,7 @@ The browser uses exact rational arithmetic for decisions, ties, thresholds,
 and equilibria; decimals are only display coordinates. Tests compare the
 browser calculations with the Python reference. The original oversight game
 still uses eleven human defense choices, observed defense, deterministic
-payoffs, and pure strategies. The science demo uses exact integer comparisons
-for decisions and a seeded generator for replayable synthetic rounds.
+payoffs, and pure strategies. The notebook-audit page uses examples generated from the Python reference model.
 
 ## Build without paid calls
 
@@ -31,9 +30,9 @@ replace an existing nonempty directory unless it has this builder's
 
 * `index.html`, `games.html`, `oversight.html`: interactive mathematical
   explorers and deterministic toy simulations.
-* `science.html`: a simulated science audit with synthetic instrument logs,
-  sampled evidence, human verdicts, and a conditional payoff threshold.
-  Its practice records are not an additional LLM experiment.
+* `lab-design.html`: the notebook-audit environment with sampled evidence,
+  human practice verdicts and a conditional reporting threshold. Its practice
+  records are not an additional LLM experiment.
 * `results.html`: catalogue and concise explanation of the two retained
   experimental studies, with their separate assumptions and limitations.
 * `report/`: offline reproduction of the original 169-setting, four-model
@@ -65,10 +64,9 @@ should be added to the explicit publication list.
 
 Report generation and site deployment do not collect new model responses.
 
-The Months 3–5 applications are published at `/resource-control.html` and
-`/off-switch.html`. Both reuse `game-engine.js` exact arithmetic through the
-shared `uncertainty-engine.js`. The static allowlist includes their controller,
-styles, and specification. Their toy/interactive outputs are clearly separate
-from the two retained LLM studies. The off-switch human verdict stays in the
-browser; no data is uploaded. Node checks cover exact game rules and controller
-state before publication.
+The resource-control application is published at `/resource-control.html`.
+It reuses `game-engine.js` exact arithmetic through `uncertainty-engine.js`.
+The static allowlist includes its controller, styles and specification.
+Toy outputs remain separate from the two retained LLM studies. Node checks
+cover exact game rules and controller state before publication. The retired
+off-switch and science-demo pages are excluded from the build.

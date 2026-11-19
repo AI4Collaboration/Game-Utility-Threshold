@@ -10,8 +10,7 @@
 | Human protection, attack payoffs, exact thresholds and equilibrium assumptions | [Oversight rules](oversight.md) |
 | How the completed oversight model experiment was designed | [Validation protocol](oversight-validation-protocol.md) |
 | What that experiment found and what it cannot establish | [Validation results](oversight-validation-results.md) |
-| Hidden resource values, asking a human, safety margins and toy benchmarks | [Resource control and off-switch](uncertainty-games.md) |
-| A quick playable science-report example | [Science demo](science-game.md) |
+| Hidden resource values, safety margins and toy benchmarks | [Resource control](uncertainty-games.md) |
 | A concrete reporting/review environment, offline runner and proposed live study | [Lab Notebook Audit protocol](lab-audit-protocol.md) |
 | Building and publishing the site without new model calls | [GitHub Pages](pages.md) |
 | What the proof checker verifies | [Lean guide](../lean/README.md) |
