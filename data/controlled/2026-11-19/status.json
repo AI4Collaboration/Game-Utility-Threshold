@@ -5,18 +5,19 @@
   "protocol_commit": "963a0d94568098a6a35f99373982d50a8a396827",
   "planned_main": 16572,
   "planned_pilot": 120,
-  "attempted_pilot": 8,
+  "attempted_pilot": 9,
   "attempted_main": 0,
   "valid_model_choices": 0,
   "http_statuses": {
-    "402": 8
+    "402": 9
   },
   "reported_cost_usd": null,
-  "unknown_cost_reservations_usd": "2.8222592",
-  "cost_note": "Reservations are conservative budget holds, not reported charges. All eight responses lacked usage.",
+  "unknown_cost_reservations_usd": "3.1371520",
+  "cost_note": "Reservations are conservative budget holds, not reported charges. All nine responses lacked usage.",
   "first_attempt_utc": "2026-11-19T22:03:01.408956+00:00",
-  "last_finish_utc": "2026-11-19T22:03:01.606832+00:00",
+  "last_finish_utc": "2026-11-19T22:06:21.083990+00:00",
   "historical_files_verified_unchanged": 28,
   "automatic_retries": 0,
-  "next_step": "Resolve the account credit block. Retain the failed pilot; freeze any fresh compatibility pilot before main collection. No main study may run before compatibility passes."
+  "next_step": "Resolve the account credit block. Retain the failed pilot; freeze any fresh compatibility pilot before main collection. No main study may run before compatibility passes.",
+  "retry_note": "One fresh pilot request was attempted at the user request; HTTP 402 persisted. Active key matches the repository .env; no environment override."
 }
