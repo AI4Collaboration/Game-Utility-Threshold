@@ -41,13 +41,19 @@ Months 1–3 remain open: implemented equations, solvers and collectors do not
 complete the revised empirical work. Months 3–5 and 5–6 are also incomplete.
 See the [requirement-by-requirement assessment and next steps](docs/controlled-thresholds.md#aisi-status-all-three-stages-remain-open).
 
+The [new live protocol](docs/controlled-validation-protocol.md) is frozen.
+Collection was attempted on 19 November, but OpenRouter rejected all eight
+initial pilot requests for insufficient account credits. **No main requests or
+new model choices were collected.** [Failure records and status](data/controlled/2026-11-19/README.md)
+are preserved alongside the unchanged historical datasets.
+
 ## Historical model studies
 
 | Historical evidence | What was collected | What it does not establish for the current plan |
 | --- | --- | --- |
 | [Original payoff grid](docs/post-study.md) | Four models; 169 payoff settings; 1,350 valid paired games. Includes PD, Stag Hunt, Chicken, dominance and boundary regions. | No added-cost intervention, Battle of the Sexes study, or precise behavioral threshold estimate. |
 | [Earlier oversight study](docs/oversight-validation-results.md) | Three models; 3,660 main decisions plus 12 pilot decisions, at fixed human protection settings. | Not completion of the selected v2 validation. Some defense conditions overlap; the new diagnostic and broader suite remain unrun. No empirical equilibrium or safety guarantee. |
-| Selected v2 studies | Software setup and synthetic checks only. | No live results under the selected plans. The notebook audit's paid collector is still to be implemented. |
+| Selected v2 studies | Frozen live protocol, budgeted collector, synthetic checks and archived billing failures. | No live model results under the selected plans. The notebook audit's paid collector is still to be implemented. |
 
 Lean checks payoff statements for recorded choices in the four canonical
 games. It does not verify a model's internal reasoning or certify the oversight

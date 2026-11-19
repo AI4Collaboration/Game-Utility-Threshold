@@ -7,6 +7,14 @@ LLM datasets are historical evidence and do not close the new study's validation
 milestone. Saved v1 plans still replay. The progress assessment below supersedes
 the earlier claim that Months 1–3 were largely complete.
 
+**Live follow-up, 19 November:** the [bounded Months 1–3 protocol](controlled-validation-protocol.md)
+is now frozen and its shared dollar cap is implemented. The first eight pilot
+requests all received OpenRouter HTTP 402 (insufficient account credits), so
+collection stopped with **zero model choices and zero main attempts**. The
+[archived ledger and status](../data/controlled/2026-11-19/README.md) retain the
+failure. Original T/S and oversight data were verified unchanged. Validation
+remains open; a fresh compatibility pilot must pass after billing is resolved.
+
 ## The question and the rule
 
 **When an unwanted action stops paying, do model choices change as predicted?**

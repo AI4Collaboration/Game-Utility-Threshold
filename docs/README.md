@@ -23,3 +23,6 @@ identifies the two historical live studies. Neither closes the selected v2
 validation milestone; see the [current assessment](controlled-thresholds.md#aisi-status-all-three-stages-remain-open). References and limits are kept with
 each specification; the resource game's [design provenance](uncertainty-games.md#where-the-resource-game-design-came-from)
 distinguishes its original reference from our own assumptions.
+
+New collection: [frozen Months 1–3 live protocol](controlled-validation-protocol.md)
+and [billing-blocked pilot records](../data/controlled/2026-11-19/README.md).

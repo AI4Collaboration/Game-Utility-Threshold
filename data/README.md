@@ -9,6 +9,10 @@ as completion of the revised validation. Interactive games, theoretical plots
 and synthetic trials do not add empirical evidence. See the
 [current evidence assessment](../docs/controlled-thresholds.md#earlier-evidence-what-can-and-cannot-carry-over).
 
+The [new controlled collection](controlled/2026-11-19/README.md) contains frozen
+plans and eight archived HTTP 402 pilot failures. It has **zero model choices**;
+the account-credit block must be resolved before validation can proceed.
+
 | Dataset | What was measured | Where to start |
 | --- | --- | --- |
 | [post/](post/README.md) | Four models on 169 symmetric payoff tables, two label blocks. 1,352 scheduled paired games; 1,350 valid pairs. Covers PD, Stag Hunt, Chicken, dominance and boundary regions. | [Methods and interpretation](../docs/post-study.md), [raw records](post/records.jsonl.gz), [manifest](post/manifest.json) |
