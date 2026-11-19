@@ -4,6 +4,7 @@
 
 | Read this for… | Document |
 | --- | --- |
+| What to normalize, hold fixed and sweep before new model calls | [Parameterization audit and sweep design](sweep-design.md) |
 | Original post's mathematics, saved payoff grid and reproduction | [Original study](post-study.md) |
 | PD, Stag Hunt, Chicken and Battle of the Sexes: tables and meanings | [Four-game rules](games.md) |
 | Changing one action cost; collection, missing data and uncertainty | [Canonical cost-study protocol](experiments.md) |

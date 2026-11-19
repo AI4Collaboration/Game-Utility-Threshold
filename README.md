@@ -7,6 +7,7 @@ our games, exact calculations, interactive demos, and retained model experiments
 [Play the games](https://ai4collaboration.github.io/Game-Utility-Threshold/games.html)
 · [See experimental results](https://ai4collaboration.github.io/Game-Utility-Threshold/results.html)
 · [Find a game's code](games/README.md)
+· [Sweep design](docs/sweep-design.md)
 · [Methods and plans](docs/README.md)
 · [Datasets](data/README.md)
 

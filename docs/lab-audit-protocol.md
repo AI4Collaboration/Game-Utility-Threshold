@@ -5,6 +5,11 @@ offline pilot. No live scientist/reviewer study has been run. This document is
 not an external preregistration. Model identities, their serving settings, the
 live-run seed and a new spending limit must be frozen before paid collection.
 
+The [19 November parameterization audit](sweep-design.md#5-notebook-audit-inspection-reliability-is-measured-not-normalized-away)
+proposes budgets 1/2/3 for a future plan, to include the first strict reference
+crossing. The v1 runner and schedules below still use 1/3/6. No new live plan
+has been frozen.
+
 ## The question
 
 Can measured checking reliability predict when a reporting model switches

@@ -1,5 +1,9 @@
 # One game, one changing cost
 
+The [19 November design audit](sweep-design.md) reviews normalization, proposed
+schedule refinements and missing presentation controls. This document describes
+the existing collector; those proposals do not silently modify its plans.
+
 The first experiment fixes the baseline at T=2, R=1, P=0, S=−0.5. Choosing
 D subtracts z from that player's payoff. Nothing else in the payoff table is
 changed independently. We show the final adjusted table without telling the

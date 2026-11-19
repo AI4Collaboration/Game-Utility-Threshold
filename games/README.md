@@ -114,6 +114,8 @@ review errors first, then tests reporting choices under those measured incentive
   A swap leaves two possible witnesses, so detection is `1 − C(6,k)/C(8,k)`,
   where `C(n,k)` counts subsets. Two possible witness records require this formula.
 
+Before new model collection, read the [parameterization audit and proposed sweeps](../docs/sweep-design.md). It distinguishes current collector support from proposed controls.
+
 ## What to change where
 
 - **Rules/payoffs:** edit the source linked above, its specification and affected

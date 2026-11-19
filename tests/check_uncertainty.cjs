@@ -83,3 +83,14 @@ assert.throws(()=>game.simulate('off-switch'));
 assert.equal(benchmark.run('resource',{config:{vLow:0,vHigh:0,a:0,b:0,p:0,riskLimit:0},simulation:{rounds:2}}).unavailable.length,3);
 assert.throws(()=>benchmark.run('resource',{simulation:{policy:'attack'}}));
 console.log('Resource-only offline benchmark passed.');
+
+// A meaningful prior-uncertainty slice crosses the risk limit, not the AI's
+// within-type preference. The high type alone attacks at 30% protection.
+for(const upper of [.025,.05,.075]){
+ const state=game.analyze('resource',{belief:.025,beliefLow:0,beliefHigh:upper,riskLimit:.05});
+ assert.equal(state.selected.types[0].action,'cooperate');
+ assert.equal(state.selected.types[1].action,'attack');
+ near(state.selected.worstAttack.value,upper);
+ assert.equal(state.cautious[0].d.exact,upper<=.05?'3/10':'3/5');
+}
+console.log('Prior-risk boundary changes protection without changing type-conditioned choices.');
