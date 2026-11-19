@@ -1,4 +1,11 @@
-# First oversight validation: completed 9 November 2026
+# Historical oversight study: collected 9 November 2026
+
+**Current-plan status (19 November): this report is historical evidence, not
+completion of the selected controlled-study validation.** The old neutral
+defense conditions overlap with the new base-defense planner, but no new v2
+study has been collected. New diagnostic/resource conditions and the canonical
+cost studies are not covered. See the [current assessment](controlled-thresholds.md#earlier-evidence-what-can-and-cannot-carry-over).
+The original records and numerical findings below are preserved.
 
 The fixed study completed **3,660 main requests and 12 separate compatibility
 pilot requests**. Every request returned a valid action from its specified
@@ -84,10 +91,10 @@ classifier, monotone response curve, estimated threshold, or post-hoc model
 selection. Machine-readable summaries also include payoffs, modeled harm,
 and the points forgone by choosing the lower-paying action.
 
-## What this completes—and what it does not
+## What this historical study supports
 
-This completes a bounded first **LLM validation of responses to imposed human
-defense**, with reproducible data collection and analysis. It shows that
+This was a bounded study of **LLM responses to imposed human defense**, with
+reproducible data collection and analysis under its original protocol. It shows that
 implementing a mathematically correct incentive threshold does not ensure all
 tested prompts elicit the higher-paying choice immediately above it.
 

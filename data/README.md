@@ -2,8 +2,12 @@
 
 [Home](../README.md) · [Games](../games/README.md) · [Public results](https://ai4collaboration.github.io/Game-Utility-Threshold/results.html)
 
-Only **two live model studies** are retained in this active tree. Interactive
-games, theoretical plots and synthetic trials do not add to that count.
+Two **historical live model studies** are retained in this active tree.
+**Zero live studies have been completed under the selected v2 plans.** Historical
+records are preserved for their original questions; neither dataset is counted
+as completion of the revised validation. Interactive games, theoretical plots
+and synthetic trials do not add empirical evidence. See the
+[current evidence assessment](../docs/controlled-thresholds.md#earlier-evidence-what-can-and-cannot-carry-over).
 
 | Dataset | What was measured | Where to start |
 | --- | --- | --- |

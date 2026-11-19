@@ -6,6 +6,10 @@ Use this directory as the entry point for every game. Implementations stay in
 `gut/` and `web/` so shared calculations are not copied into separate engines.
 **Points are chosen toy rewards, not measured real-world benefits or harms.**
 
+**No selected v2 study has been validated with live LLM data.** Evidence entries
+below describe earlier studies or software checks, not completed validation of
+the controlled design. [Current milestone assessment](../docs/controlled-thresholds.md#aisi-status-all-three-stages-remain-open).
+
 ## Four simultaneous games
 
 Two players choose without seeing the other's choice. The table specifies

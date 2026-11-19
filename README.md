@@ -34,13 +34,20 @@ The off-switch game and the earlier science demo were removed from the active
 scope on 19 November 2026; they remain recoverable in Git history. Lab Notebook
 Audit is retained. This intentionally defers the AISI plan’s off-switch example.
 
-## What has actually been tested with models?
+## Current research status
 
-| Evidence | Completed | What it does not establish |
+**The selected controlled-study design has no completed live LLM validation.**
+Months 1–3 remain open: implemented equations, solvers and collectors do not
+complete the revised empirical work. Months 3–5 and 5–6 are also incomplete.
+See the [requirement-by-requirement assessment and next steps](docs/controlled-thresholds.md#aisi-status-all-three-stages-remain-open).
+
+## Historical model studies
+
+| Historical evidence | What was collected | What it does not establish for the current plan |
 | --- | --- | --- |
 | [Original payoff grid](docs/post-study.md) | Four models; 169 payoff settings; 1,350 valid paired games. Includes PD, Stag Hunt, Chicken, dominance and boundary regions. | No added-cost intervention, Battle of the Sexes study, or precise behavioral threshold estimate. |
-| [Oversight validation](docs/oversight-validation-results.md) | Three models; 3,660 main decisions plus 12 pilot decisions, at fixed human protection settings. | No empirical test of two-sided equilibrium play or general safety guarantee. |
-| Other games and new cost sweeps | Exact calculations, interactive examples and offline software checks. | No new live LLM results. The notebook audit's paid collector is still to be implemented. |
+| [Earlier oversight study](docs/oversight-validation-results.md) | Three models; 3,660 main decisions plus 12 pilot decisions, at fixed human protection settings. | Not completion of the selected v2 validation. Some defense conditions overlap; the new diagnostic and broader suite remain unrun. No empirical equilibrium or safety guarantee. |
+| Selected v2 studies | Software setup and synthetic checks only. | No live results under the selected plans. The notebook audit's paid collector is still to be implemented. |
 
 Lean checks payoff statements for recorded choices in the four canonical
 games. It does not verify a model's internal reasoning or certify the oversight
@@ -59,8 +66,8 @@ and uncertainty games. See [proof scope](lean/README.md).
 | [tests/](tests/) | Mathematical, data-integrity, browser and publication checks. |
 | Root scripts | Run experiments, reproduce reports, serve locally or build the website; see commands below. |
 
-`runs/`, `report/` and `_site/` are generated, Git-ignored outputs. Current
-results and the [older repository archive](docs/post-study.md#earlier-repository-snapshot)
+`runs/`, `report/` and `_site/` are generated, Git-ignored outputs. Retained
+historical studies and the [older repository archive](docs/post-study.md#earlier-repository-snapshot)
 remain separate.
 
 ## Run locally

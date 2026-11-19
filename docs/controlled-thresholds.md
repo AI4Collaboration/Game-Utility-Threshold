@@ -1,8 +1,11 @@
 # Controlled threshold experiments
 
 19 November 2026. **Implemented setup and offline checks; no new LLM results.**
-This is the selected next design. The earlier T/S grid remains exploratory
-evidence and is not relabelled as a cost experiment. Saved v1 plans still replay.
+This is an implemented experiment setup, **not a completed validation study**.
+**Zero live studies have been collected under these selected v2 plans.** Earlier
+LLM datasets are historical evidence and do not close the new study's validation
+milestone. Saved v1 plans still replay. The progress assessment below supersedes
+the earlier claim that Months 1–3 were largely complete.
 
 ## The question and the rule
 
@@ -124,21 +127,98 @@ Notebook execution uses `lab_experiment.py NEW_DIRECTORY --version v2`.
 Its paid adapter is **still missing**. Historical commands can use canonical
 `--version v1`, notebook `--version v1` or sequential `--design legacy`.
 
-## What this completes in the AISI plan
+## AISI status: all three stages remain open
 
-The source is the document's **existing** section titled “Work Timeline
-[Updated]”; no project timeline has been changed:
-[AISI project plan](https://docs.google.com/document/d/1NDQEa96_60jxY9EErIWxu6jisrLZxhHVAPT6WHK5qr8/edit?tab=t.0).
+Reassessed 19 November 2026 after correcting an overly generous completion
+summary. The source is the **existing** detailed Months 1–6 timeline in the
+[AISI project document](https://docs.google.com/document/d/1NDQEa96_60jxY9EErIWxu6jisrLZxhHVAPT6WHK5qr8/edit?tab=t.0),
+under its heading “Work Timeline [Updated]”. The proposal itself has not changed.
+The broader methodology also promises empirical validation; runnable collectors
+and synthetic checks do not satisfy that promise.
 
-| Milestone | Position after this implementation | Still needed |
+**Implemented** below means code and calculations exist for stated assumptions.
+**Validated** would require the relevant live data and completed analysis.
+We should not report a number of completed months or a completion percentage:
+the stages overlap, their requirements differ in effort, and validation remains open.
+
+### Earlier evidence: what can and cannot carry over
+
+| Artifact | What it supports | Credit toward the selected study |
 | --- | --- | --- |
-| Months 1–3: base formalization | The main technical foundation is present: oversight payoffs, supported deterministic equilibrium solvers, exact thresholds, toy policies and retained LLM oversight evidence. This setup strengthens its experimental methods. | These are conditional-response experiments, not empirical equilibrium play; review the supported assumptions and claims when assembling the deliverable. |
-| Months 3–5: incomplete information and safety margins | Partial. Two-value resource uncertainty, cautious planning, conditional margins, a concrete audit environment and a configurable collection scaffold exist. | Validate resource responses; implement and run the audit live adapter/calibration; establish how uncertainty and model deviations affect claimed protection margins; complete the second blog. Off-switch is explicitly deferred by the current scope choice. |
-| Months 5–6: robustness and Paper 1 | Partial. Below/near/above-threshold collection and 2D analysis are now executable. | Run and analyze the selected live studies; define/test the fragility measure; isolate unequal reasoning effort; implement/evaluate defection monitoring; finish the theory and Paper 1. |
+| Original T/S grid: 1,350 valid paired games | Historical behavior across different zero-cost payoff tables | Does not test an intervention cost on fixed starting games. No credit for completing the new cost sweeps. |
+| 9 November oversight study: 3,660 main decisions | Historical conditional responses to imposed defense at its recorded settings | Some conditions overlap exactly, but this is not a newly collected v2 study and does not cover the new attack-cost diagnostic, resource types or canonical controls. Kept as a historical comparison; the selected validation remains open. |
+| v2 synthetic runs, passing software tests and Lean certificates | Collection plumbing, exact payoff comparisons and formal statements about those tables | No live LLM evidence, no proof of internal model reasoning, no real-world safety validation. |
 
-It would be misleading to say that setup alone completes five months of
-research. We have the first stage's technical foundation and parts of the later
-stages. No new empirical milestone is checked off until collection and analysis
-are complete. Final model selection, spending cap, precision goals and primary
-comparisons must be fixed before live collection. The off-switch example remains
-unfulfilled relative to the original plan, rather than quietly counted complete.
+The old data are not made numerically false by changing the design. The error
+was counting them as completion of the newly selected validation. A direct
+comparison found all 132 distinct neutral defense request variants (11 defenses
+× 4 presentation blocks × 3 historical model specifications) unchanged in the
+new basic-defense planner. That establishes a narrow overlap, not validation
+of the whole new suite. Any later reuse must be explicitly identified by
+condition, prompt, model/provider and settings, kept separate from fresh data,
+and declared before analysis; it must not masquerade as a fresh replication.
+
+### Months 1–3 — base model built in part; validation open
+
+| Requirement in the project document | Actual position | What closes it |
+| --- | --- | --- |
+| Formalize the human-defense / AI cooperate-or-attack game | [Executable toy rules](oversight.md) exist with eleven defense choices and known payoffs. | Reconcile the proposal's monitoring/detection language with the implemented deterministic protection rule, and state the chosen scope. |
+| Express resource value, attack costs and harm penalties | Explicit payoff functions are implemented. Numerical defaults are chosen toy values. | Review the assumptions and parameter meanings. Do not describe them as measured real-world utilities. |
+| Solve deterministic Nash and Stackelberg cases | Exact code covers pure strategies on the declared defense grid and both follower tie conventions; finite-case tests exist. | Present the derivation and limits for this specification. Mixed or hidden commitments would require additional work if claimed. |
+| Derive threshold inequalities | Exact equalities and strict/tied comparisons exist for the declared payoffs. | Tie each claim to its assumptions. Use the implemented payoff comparison, not the proposal's unsupported illustrative inequality `v > p − c`. |
+| Toy simulations and basic LLM-driven agents | Scripted baselines work; the basic live collector exists. **Selected-study live validation has not run.** | Freeze the base study's model/settings, precision target, counts and budget; collect and analyze its responses, failures and controls. |
+| First blog | The repository links the earlier LessWrong post. Its coverage of the revised research claims has not been established. | Check/update its claims and distinguish historical findings from results still to be collected. An existing post alone does not close the revised evidence requirement. |
+
+**Stage status: open.** Some mathematical/software tasks are implemented, but
+that does not justify saying the first three months are finished. The four
+canonical cost studies are our additional chosen paper design, not four games
+explicitly mandated in the original Months 1–3 list. All four also await live
+validation; their unrun status cannot be hidden inside the base-model milestone.
+
+### Months 3–5 — prototypes and restricted calculations; research incomplete
+
+| Requirement | Actual position | What remains |
+| --- | --- | --- |
+| Incomplete information / distributional utilities | Resource control has a two-value private type and uncertain type frequencies. | Validate the AI's responses separately for each type, then evaluate the protection policy using those measured responses. Broader utility distributions are not implemented. |
+| Safety margins | Exact payoff gaps, two-type bounds and audit calibration-uncertainty calculations exist. | State and justify bounds on uncertainty, test misspecified beliefs and deviations from payoff maximization, and establish what margin follows. A positive toy payoff gap is not a guarantee against catastrophic failure. |
+| Paperclip, off-switch and audit mappings | Resource control and notebook audit are toy application models. Off-switch was removed at the user's request. | Validate the retained applications and justify their limits. Off-switch remains an explicit gap against the source plan unless that deliverable is formally removed. |
+| Configurable benchmark scaffold | Versioned plans, collectors for canonical/sequential choices and reports exist. | Finish the notebook's paid adapter, reviewer calibration and held-out reporting experiment. Select a bounded live sample; the offline pilot counts are not a final statistical design. |
+| Second blog | No completed current-scope deliverable verified. | Produce it from the uncertainty/margin results and state unresolved findings honestly. |
+
+The resource adapter currently imposes defense and measures the AI response.
+It does not test an empirical two-sided equilibrium or a human choosing
+protection. Those stronger claims would require another experiment. Inspect
+integration is also still a planned logging improvement; custom JSON logs
+already exist. Inspect is not a named requirement in the original Months 1–3 list.
+
+### Months 5–6 — collection tools ready; substantive deliverables open
+
+| Requirement | Actual position | What remains |
+| --- | --- | --- |
+| Fragility measure | No completed, agreed measure with supporting results. | Specify the outcome, parameter units and how ties/multiple equilibria or abrupt switches are handled; derive and test the measure or the proposal's justified statistical fallback. |
+| Sweeps below, near and above thresholds | v2 schedules, controls and separate 2D analysis are implemented. | Run the selected live studies and analyze uncertainty, presentation effects, invalid outputs and disagreements with predictions. Do not infer a precise behavioral threshold from sparse cells. |
+| Unequal reasoning depths | Not implemented as a controlled comparison. | Vary reasoning effort while holding model and payoff settings fixed where supported; record the actual settings and resource use. Different model names do not isolate reasoning depth. |
+| Statistical defection monitoring | Choice-rate intervals exist, but no evaluated alert/detection procedure. | Define an alert rule and evaluate false alarms and missed changes on separate data. |
+| Theory, codebase and Paper 1 | Working code and methods notes exist; a finished theory contribution and paper are not established. | Consolidate proofs, empirical results, limitations and reproducible artifacts; complete and submit the paper. |
+
+### Revised order of work and completion gates
+
+1. **Resolve claims and freeze the live protocol.** Fix the base game's
+   interpretation, primary comparisons, endpoints, repetitions, precision goal,
+   missing-output policy and total budget. Keep the historical data separate.
+   Decide which studies are primary and which are later checks; do not run every
+   generated plan by default.
+2. **Complete base validation and canonical cost studies.** Start with a
+   compatibility pilot, then the predeclared sample. Completion requires raw
+   records and analyzed results with counts/uncertainty, including inconclusive
+   findings. Only then update the first-stage empirical status and first blog.
+3. **Complete uncertainty and audit research.** Collect resource responses;
+   evaluate policies under mistaken type assumptions; finish the audit adapter;
+   calibrate the reviewer and test reporting on fresh notebooks. Establish the
+   limited safety-margin claims those results actually support.
+4. **Complete robustness and monitoring.** Define/test fragility, run a
+   controlled reasoning-effort comparison and evaluate the monitoring rule.
+5. **Finish the deliverables.** Reconcile the deferred off-switch requirement,
+   write the second blog and complete the theory/paper/reproduction package.
+
+No paid experiments or new results were produced by this status correction.

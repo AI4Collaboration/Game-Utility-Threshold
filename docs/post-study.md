@@ -6,6 +6,8 @@ This is the starting study behind [When Defection Stops Paying: Why Utility
 Thresholds Matter for AI Safety](https://www.lesswrong.com/posts/HJSWoWCQefj2L8W8d/when-defection-stops-paying-why-utility-thresholds-matter-1).
 Its saved payoff grid and theoretical cost calculations are separate. The
 later [controlled cost-study framework](experiments.md) has no new live results.
+The historical grid does not test a cost intervention and does not close any
+validation requirement for the selected controlled study.
 
 ## Reproduce offline
 
