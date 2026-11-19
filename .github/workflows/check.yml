@@ -25,6 +25,7 @@ jobs:
       - run: python experiment.py plan runs/ci --repetitions 2
       - run: python experiment.py run runs/ci
       - run: python experiment.py report runs/ci --plot
+      - run: python prepare_threshold_studies.py runs/ci-thresholds --repetitions 1 --simulate --figures
       - uses: leanprover/lean-action@v1
         with:
           lake-package-directory: lean

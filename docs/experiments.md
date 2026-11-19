@@ -1,15 +1,17 @@
 # One game, one changing cost
 
-The [19 November design audit](sweep-design.md) reviews normalization, proposed
-schedule refinements and missing presentation controls. This document describes
-the existing collector; those proposals do not silently modify its plans.
+New command-line plans use **canonical-cost-v2**: fixed starting tables, focused
+cost sweeps, four label/order blocks, separate scale/offset checks and both
+BoS penalty directions. The [selected setup](controlled-thresholds.md) lists
+every condition and how this fits the AISI milestones. Earlier v1 plans and
+prompts remain reproducible; use `--version v1` to create a historical design.
 
 The first experiment fixes the baseline at T=2, R=1, P=0, S=−0.5. Choosing
 D subtracts z from that player's payoff. Nothing else in the payoff table is
 changed independently. We show the final adjusted table without telling the
 model a preferred answer or asking it to explain its reasoning.
 
-The ten costs are 0, 0.25, 0.45, **0.5**, 0.55, 0.75, 0.95, **1**, 1.05,
+The ten primary PD costs are 0, 0.25, 0.45, **0.5**, 0.55, 0.75, 0.95, **1**, 1.05,
 and 1.25. Cooperation ties with defection against D at 0.5, and against C at
 1. Below 0.5, D is strictly better against either action; above 1, C is.
 Between these values the best response depends on the opponent. We do not fit
@@ -42,7 +44,7 @@ model. These are explicit choices, not hard-coded historical endpoints:
 ```sh
 python3 experiment.py plan runs/pd-pilot --mode openrouter \
   --model YOUR_MODEL_ID --provider YOUR_PROVIDER_SLUG \
-  --repetitions 10 --temperature 0.7 --max-tokens 512
+  --repetitions 2 --temperature 0.7 --max-tokens 512
 python3 experiment.py run runs/pd-pilot --live --max-calls 20
 python3 experiment.py report runs/pd-pilot --plot
 python3 experiment.py proofs runs/pd-pilot --check
@@ -54,19 +56,23 @@ limit on the provider key: `--max-calls` limits **new attempts in that invocatio
 not dollars or cumulative spending. Run the same command again to continue
 unattempted jobs. No live experiment was performed during implementation.
 
-The default is a **pipeline pilot**, not a justified final research sample:
-10 games for each of two label mappings at each of ten costs = 200 paired
-games / 400 requests. Choose a final sample size and budget before collection.
-At 20 complete games per cost, the conservative error radius is about 0.304.
-For a radius at most 0.10, this bound requires at least 186 complete games per
-cost, balanced between labels. More calls do not solve prompt or model bias.
+The default is a **software pilot**, not a final research sample: two games
+per each of four presentation blocks per condition. For PD, ten primary costs
+plus eight separate scale/offset conditions = 144 paired games / 288 requests.
+Do not pool the controls into the primary curve. Choose a final sample size
+and budget before collection. With eight complete pairs in a condition, the
+conservative 95% error radius is about .480. A radius at most .10 requires at
+least 188 complete pairs, balanced across four blocks, under the independence
+assumption. This is a precision illustration, not a requirement to run that
+many at every cell; narrow the primary claims first.
 
 Both players see the whole matrix from their own perspective. The calls are
 stateless, with no sharing of answers; transport need not occur at the same
 instant to keep decisions informationally simultaneous. The schedule shuffles
 all requests using a recorded seed. This is a schedule seed, not a promise of
-deterministic model responses. Each cost has equal planned counts for the two
-A/B label mappings. Settings remain fixed within the run.
+deterministic model responses. Each condition crosses two
+A/B label mappings with two table orders (four balanced blocks). Settings remain
+fixed within the run. Both orders preserve each player's perspective.
 
 Routing uses one specified provider, no fallback, and requires support for
 the supplied settings. Raw response metadata is retained. A returned model
@@ -78,7 +84,8 @@ and [routing controls](https://openrouter.ai/docs/guides/routing/provider-select
 ## Audit trail and interruptions
 
 `plan.json` contains the exact prompts, settings, paired-game IDs, label maps
-encoded by block, cost values, complete randomized schedule, and a checksum.
+encoded by block, cost values, treatment/representation conditions, complete
+randomized schedule, baseline table and a checksum.
 `records.jsonl` records a durable start before each call, followed by the raw
 response body, HTTP status and timestamps. Usage, returned provider and model
 identities stay in that body. Parsing always starts from the raw answer.
@@ -100,13 +107,14 @@ is excluded from the paired result but can still receive a conditional Lean
 comparison against each possible action.
 
 For each complete game define X as the fraction of its two players choosing
-C: 0, 1/2 or 1. Compute a mean in each label block, then average those two
+C: 0, 1/2 or 1. Compute a mean in each label block, then average all four
 means with equal weight. Do not treat two players as two independent games.
-If either label block has no complete games, the combined estimate is absent.
+If any presentation block has no complete games, the combined estimate is absent.
 
 We use the bounded-variable inequality in [Hoeffding (1963), Theorem 2](https://www.tandfonline.com/doi/abs/10.1080/01621459.1963.10500830).
-For n0 and n1 complete games in the two blocks, the 95% radius is
-`sqrt(log(40) × (1/n0 + 1/n1) / 8)`, clipped to [0,1]. These conservative,
+For complete-game counts n0,…,n3 in the four blocks, the 95% radius is
+`sqrt(log(40) × (1/n0 + 1/n1 + 1/n2 + 1/n3) / 32)`. Clip the interval to [0,1].
+The v1 two-block denominator remains 8. These conservative,
 pointwise bounds assume independent games and do not simultaneously cover
 the entire curve. They do not establish representativeness across prompts,
 model versions, providers or time. Shared service effects can violate the
@@ -115,8 +123,11 @@ independence assumption. Synthetic intervals demonstrate the calculation only.
 Missing outputs may be selective; complete-case uncertainty does not fix that.
 The separate `missing_lower` and `missing_upper` columns bound the finite
 planned sample by treating every excluded pair as all-D or all-C. They are
-missing-data bounds, not confidence intervals. The plot shows valid and planned
-pair counts, and never substitutes zero for a missing estimate.
+missing-data bounds, not confidence intervals. Each separate 2D plot shows valid and planned
+pair counts, and never substitutes zero for a missing estimate. File names
+include the targeted action and representation. `cells.csv` retains exact
+conditional payoff margins and each block's counts/rates. Average payoffs
+are in the displayed table's units; do not pool scales or offsets.
 
 The [three additional games](games.md) use this same collector. Their
 role-specific tables, cost schedules and outcome meanings are documented

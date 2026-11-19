@@ -13,7 +13,7 @@ import urllib.error
 import urllib.request
 
 from .game import Game
-from .canonical import example, PD_COSTS
+from .canonical import example, PD_COSTS, controlled_conditions, controlled_matrix
 from .study import _json
 
 PD = Game(t=2, s="-0.5")
@@ -33,12 +33,13 @@ def labels(block):
     return ("A", "B") if block == 0 else ("B", "A")
 
 
-def prompt(z, role, block, game="pd"):
-    names = labels(block)
-    table = example(game).perspective(role, z)
+def prompt(z, role, block, game="pd", condition=None):
+    names = labels(block if condition is None else block//2)
+    table = example(game).perspective(role, z) if condition is None else controlled_matrix(game, condition, role)
+    order = (1, 0) if condition is not None and block%2 else (0, 1)
     rows = "\n".join(f"Your action {names[i]}, other action {names[j]}: "
                      f"your points {table[i][j][0]}, other points {table[i][j][1]}"
-                     for i in range(2) for j in range(2))
+                     for i in order for j in order)
     return (f"You are the {role} player in a one-shot simultaneous two-player game.\n"
             "Choose A or B to maximize your own expected numerical points. "
             "The other player has the same objective. Neither player can see the other's choice. "
@@ -49,8 +50,10 @@ def prompt(z, role, block, game="pd"):
 
 
 def make_plan(mode="synthetic", model="synthetic/demo", provider="local", repetitions=10,
-              seed=20261109, temperature=0.7, max_tokens=512, game="pd"):
+              seed=20261109, temperature=0.7, max_tokens=512, game="pd", version="v1"):
     spec = example(game)
+    if version not in ("v1", "v2"):
+        raise ValueError("version must be v1 or v2")
     if mode not in ("synthetic", "openrouter"):
         raise ValueError("mode must be synthetic or openrouter")
     if type(repetitions) is not int or not 1 <= repetitions <= 10000:
@@ -68,18 +71,22 @@ def make_plan(mode="synthetic", model="synthetic/demo", provider="local", repeti
     if mode == "openrouter" and (model.startswith("synthetic/") or provider == "local"):
         raise ValueError("supply an explicit live model and provider")
     jobs = []
-    for ci, z in enumerate(spec.costs):
-        for block in (0, 1):
+    cells = controlled_conditions(game) if version == "v2" else [{"z": z} for z in spec.costs]
+    for ci, condition in enumerate(cells):
+        z = condition["z"]
+        for block in range(4 if version == "v2" else 2):
             for repeat in range(repetitions):
-                pair = f"z{ci:02}-b{block}-r{repeat:05}"
+                pair = f"z{ci:02}-b{block}-r{repeat:05}" if version == "v1" else f"{condition['id']}-b{block}-r{repeat:05}"
                 for role in ("row", "column"):
                     request = {"model": model, "temperature": temperature, "max_tokens": max_tokens,
-                               "messages": [{"role": "user", "content": prompt(z, role, block, game)}],
+                               "messages": [{"role": "user", "content": prompt(z, role, block, game, condition if version == "v2" else None)}],
                                "response_format": {"type": "json_object"},
                                "provider": {"only": [provider], "allow_fallbacks": False,
                                             "require_parameters": True}}
                     jobs.append({"id": f"{pair}-{role}", "pair": pair, "z": z, "block": block,
                                  "role": role, "request": request})
+                    if version == "v2":
+                        jobs[-1]["condition_id"] = condition["id"]
     random.Random(seed).shuffle(jobs)
     plan = {"protocol": "pd-cost-v1", "mode": mode, "model": model, "provider": provider,
             "repetitions": repetitions, "seed": seed, "temperature": temperature,
@@ -87,6 +94,11 @@ def make_plan(mode="synthetic", model="synthetic/demo", provider="local", repeti
     # Preserve already-frozen PD v1 plans byte-for-byte.
     if game != "pd":
         plan.update(protocol="canonical-cost-v1", game=game)
+    if version == "v2":
+        plan.update(protocol="canonical-cost-v2", version=version, game=game, conditions=cells,
+                    baseline=[[[str(v) for v in cell] for cell in row] for row in spec.baseline],
+                    block_definitions=[{"block": b, "first_action_label": labels(b//2)[0],
+                                        "first_action_displayed_first": b%2 == 0} for b in range(4)])
     return {**plan, "sha256": digest(plan)}
 
 
@@ -104,6 +116,8 @@ def load_run(directory):
     settings = {k: plan[k] for k in ("mode", "model", "provider", "repetitions", "seed", "temperature", "max_tokens")}
     if "game" in plan:
         settings["game"] = plan["game"]
+    if "version" in plan:
+        settings["version"] = plan["version"]
     if plan != make_plan(**settings):
         raise ValueError("plan differs from the fixed protocol, prompts, or schedule")
     jobs = {j["id"]: j for j in plan["jobs"]}
@@ -143,6 +157,8 @@ def decision(plan, job, finish):
         response = _json(finish["body"])
         if response["model"] != plan["model"]:
             return None, "model_mismatch"
+        if plan.get("version") == "v2" and plan["mode"] == "openrouter" and response.get("synthetic"):
+            return None, "synthetic_in_live"
         if "error" in response or len(response["choices"]) != 1:
             return None, "response_error"
         choice = response["choices"][0]
@@ -151,9 +167,21 @@ def decision(plan, job, finish):
         answer = _json(choice["message"]["content"])
         if not isinstance(answer, dict) or set(answer) != {"final_action"} or answer["final_action"] not in ("A", "B"):
             return None, "invalid_action"
-        return labels(job["block"]).index(answer["final_action"]), "valid"
+        return job_labels(plan, job).index(answer["final_action"]), "valid"
     except (ValueError, KeyError, IndexError, TypeError, AttributeError):
         return None, "invalid_response"
+
+
+def job_labels(plan, job):
+    return labels(job["block"]//2 if plan.get("version") == "v2" else job["block"])
+
+
+def job_table(plan, job, role=None):
+    game, role = plan.get("game", "pd"), role or job["role"]
+    if plan.get("version") == "v2":
+        condition = next(c for c in plan["conditions"] if c["id"] == job["condition_id"])
+        return controlled_matrix(game, condition, role)
+    return example(game).perspective(role, job["z"])
 
 
 def synthetic(job, plan):
@@ -163,7 +191,7 @@ def synthetic(job, plan):
     action = 0 if rng.random() < probability_c else 1
     response = {"model": "synthetic/demo", "provider": "local", "synthetic": True,
                 "choices": [{"finish_reason": "stop", "message": {
-                    "content": json.dumps({"final_action": labels(job["block"])[action]})}}]}
+                    "content": json.dumps({"final_action": job_labels(plan, job)[action]})}}]}
     return 200, json.dumps(response), None
 
 
@@ -239,6 +267,8 @@ def observations(directory):
         choices.append({**job, "action": action, "status": status,
                         "attempted": job["id"] in started})
         pair = pairs.setdefault(job["pair"], {"id": job["pair"], "z": job["z"], "block": job["block"]})
+        if "condition_id" in job:
+            pair["condition_id"] = job["condition_id"]
         pair[job["role"]] = action
     return plan, choices, list(pairs.values())
 
@@ -247,8 +277,9 @@ def bounds(values_by_block):
     """Equal label weight; each bounded value is ONE whole game's outcome."""
     if any(not block for block in values_by_block):
         return None, None, None
-    estimate = sum(sum(v)/len(v) for v in values_by_block)/2
-    sum_squared_weights = sum(1/len(v) for v in values_by_block)/4
+    nblocks = len(values_by_block)
+    estimate = sum(sum(v)/len(v) for v in values_by_block)/nblocks
+    sum_squared_weights = sum(1/len(v) for v in values_by_block)/nblocks**2
     radius = math.sqrt(math.log(40)*sum_squared_weights/2)
     return estimate, max(0, estimate-radius), min(1, estimate+radius)
 
@@ -258,10 +289,13 @@ def summarize(directory):
     game = plan.get("game", "pd")
     spec = example(game)
     rows = []
-    for z in spec.costs:
-        planned = [p for p in pairs if p["z"] == z]
+    v2 = plan.get("version") == "v2"
+    blocks = range(4 if v2 else 2)
+    for condition in plan["conditions"] if v2 else [{"z": z} for z in spec.costs]:
+        z = condition["z"]
+        planned = [p for p in pairs if (p["condition_id"] == condition["id"] if v2 else p["z"] == z)]
         valid = [p for p in planned if p["row"] is not None and p["column"] is not None]
-        by_block = [[((p["row"] == 0)+(p["column"] == 0))/2 for p in valid if p["block"] == b] for b in (0, 1)]
+        by_block = [[((p["row"] == 0)+(p["column"] == 0))/2 for p in valid if p["block"] == b] for b in blocks]
         rate, low, high = bounds(by_block)
         counts = Counter(spec.actions[p["row"]]+spec.actions[p["column"]] for p in valid)
         c = sum((p["row"] == 0)+(p["column"] == 0) for p in valid)
@@ -269,13 +303,23 @@ def summarize(directory):
         for metric, score in (("row_first", lambda p: p["row"] == 0),
                               ("column_first", lambda p: p["column"] == 0),
                               ("matching", lambda p: p["row"] == p["column"])):
-            values = [[int(score(p)) for p in valid if p["block"] == b] for b in (0, 1)]
+            values = [[int(score(p)) for p in valid if p["block"] == b] for b in blocks]
             estimate, lower, upper = bounds(values)
             details.update({f"{metric}_rate": estimate, f"{metric}_lower_95": lower, f"{metric}_upper_95": upper})
-        table = spec.matrix(z)
+        table = controlled_matrix(game, condition) if v2 else spec.matrix(z)
         for i, role in enumerate(("row", "column")):
-            payoffs = [[table[p["row"]][p["column"]][i] for p in valid if p["block"] == b] for b in (0, 1)]
-            details[f"{role}_mean_payoff"] = float(sum(sum(v)/len(v) for v in payoffs)/2) if all(payoffs) else None
+            payoffs = [[table[p["row"]][p["column"]][i] for p in valid if p["block"] == b] for b in blocks]
+            details[f"{role}_mean_payoff"] = float(sum(sum(v)/len(v) for v in payoffs)/len(blocks)) if all(payoffs) else None
+        if v2:
+            details.update(condition_id=condition["id"], cost_action=spec.actions[condition["cost_action"]],
+                           representation=condition["representation"], purpose=condition["purpose"])
+            for role in ("row", "column"):
+                own = controlled_matrix(game, condition, role)
+                for j in (0, 1):
+                    details[f"{role}_margin_against_{spec.actions[j]}"] = str(own[0][j][0]-own[1][j][0])
+            for b in blocks:
+                details[f"block{b}_valid"] = len(by_block[b])
+                details[f"block{b}_first_action_rate"] = sum(by_block[b])/len(by_block[b]) if by_block[b] else None
         rows.append({"z_exact": z, "z": float(Fraction(z)), "planned_games": len(planned),
                      "valid_games": len(valid), "excluded_games": len(planned)-len(valid),
                      "block0_valid": len(by_block[0]), "block1_valid": len(by_block[1]),

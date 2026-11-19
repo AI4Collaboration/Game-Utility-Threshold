@@ -6,9 +6,9 @@ not an external preregistration. Model identities, their serving settings, the
 live-run seed and a new spending limit must be frozen before paid collection.
 
 The [19 November parameterization audit](sweep-design.md#5-notebook-audit-inspection-reliability-is-measured-not-normalized-away)
-proposes budgets 1/2/3 for a future plan, to include the first strict reference
-crossing. The v1 runner and schedules below still use 1/3/6. No new live plan
-has been frozen.
+is now implemented as the v2 offline schedule: budgets 1/2/3 include the first
+strict reference crossing. Historical v1 plans keep 1/3/6. The command-line
+runner defaults to v2; no new live plan has been frozen.
 
 ## The question
 
@@ -80,9 +80,9 @@ q(k)=1−choose(6,k)/choose(8,k), where choose(6,k)=0 for k>6. There are two pos
 does not apply.
 The oracle is used to verify this result by exhaustive audit-subset enumeration.
 
-The three main budgets are 1, 3 and 6 records. Their reference detection rates
-are 1/4, 9/14 and 27/28. Zero evidence is a pilot control; full evidence is a
-development/test control. Neither is an additional main-study axis.
+The three v2 main budgets are 1, 2 and 3 records. Their reference detection
+rates are 1/4, 13/28 and 9/14. At budget2 the high-reward compliance margin is
+3/7, close to zero. Zero and full evidence are pilot controls. Neither is an additional main-study axis.
 
 Let q be the reviewer's operational return probability for selective reports
 and f its return probability for compliant reports. Expected scientist payoffs:
@@ -118,8 +118,9 @@ adding at most **240 reviewer requests**. Score from the full notebook.
 The reviewer never receives the scientist's reasoning or payoff type.
 
 This is at most **960 main requests for one pairing**. A separate compatibility
-pilot uses 32 reviewer requests (budgets 0,1,3,6, both report types, all blocks)
-plus 24 scientist and at most 24 resulting reviewer requests: **80 pilot calls**.
+pilot uses 40 reviewer requests (budgets 0,1,2,3,8, both report types, all blocks)
+plus 24 scientist and at most 24 resulting reviewer requests: **88 pilot calls**.
+Historical v1 pilots retain their 80-request ceiling.
 No training, debate, tool-search agent, multi-round reputation, or model grid
 is required. Select inexpensive explicit endpoints after compatibility and
 pricing checks; never infer a spending authorization from the old PD/oversight

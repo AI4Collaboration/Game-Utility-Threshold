@@ -1,6 +1,13 @@
 # Parameterization audit and next experiment design
 
-19 November 2026. **Design review, not a frozen collection plan or new results.**
+19 November 2026. **Original design review, not new results.**
+
+**Implementation follow-up:** the chosen controlled design now has v2 schedules,
+four canonical presentation blocks, BoS mirrors, canonical scale/offset checks,
+a separate oversight tie diagnostic, a resource-response adapter and the audit
+1/2/3 schedule. See [current setup and remaining work](controlled-thresholds.md).
+The sections below preserve the review's original proposed/current distinctions;
+they are a historical snapshot, not the latest implementation status.
 No model calls were made for this audit. The active suite contains four canonical
 games, known-payoff oversight, resource control and Lab Notebook Audit. The
 off-switch and introductory science demo have been retired from active scope.

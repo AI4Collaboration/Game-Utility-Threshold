@@ -14,6 +14,8 @@ def main():
     plan.add_argument("--models", type=Path, required=True, help="Explicit model/provider/price specifications JSON")
     plan.add_argument("--budget-usd", required=True)
     plan.add_argument("--mode", choices=("openrouter", "synthetic"), default="openrouter")
+    plan.add_argument("--design", choices=("legacy", "defense", "attack_cost", "resource"), default="defense",
+                      help="One fixed-payoff sweep; legacy recreates the retained v1 protocol")
     plan.add_argument("--primary-reps", type=int, default=25)
     plan.add_argument("--framing-reps", type=int, default=10)
     run = commands.add_parser("run")

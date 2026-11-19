@@ -7,14 +7,14 @@ from math import lcm
 from pathlib import Path
 import subprocess
 
-from .experiment import observations
+from .experiment import observations, job_table
 from .canonical import example
 
 LEAN = Path(__file__).resolve().parents[1] / "lean"
 
 
-def exact_table(z, game="pd", role="row"):
-    matrix = example(game).perspective(role, z)
+def exact_table(z, game="pd", role="row", matrix=None):
+    matrix = example(game).perspective(role, z) if matrix is None else matrix
     values = [matrix[i][j][0] for i in range(2) for j in range(2)]
     denominator = lcm(*(v.denominator for v in values))
     return denominator, [int(v*denominator) for v in values]
@@ -39,7 +39,7 @@ def export_proofs(directory, *, check=False, lake="lake"):
         if choice["action"] is not None:
             a = choice["action"]
             name = f"choice_{index}"
-            denominator, table = exact_table(choice["z"], game, choice["role"])
+            denominator, table = exact_table(choice["z"], matrix=job_table(plan, choice))
             margins = [table[2*a+j]-table[2*(1-a)+j] for j in (0, 1)]
             outcomes = list(map(comparison, margins))
             selected = ".first" if a == 0 else ".second"
@@ -62,6 +62,8 @@ def export_proofs(directory, *, check=False, lake="lake"):
                        observed_opponent=partner, observed_comparison=outcomes[partner] if partner is not None else None,
                        selected_minus_alternative=[str(Fraction(m, denominator)) for m in margins])
         mapping.append(row)
+        if "condition_id" in choice:
+            row["condition_id"] = choice["condition_id"]
     source += ["end RecordedChoices", ""]
     path = output / "Choices.lean"
     path.write_text("\n".join(source))

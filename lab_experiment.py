@@ -13,12 +13,13 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('output',type=Path,help='New output directory (never overwritten)')
     parser.add_argument('--scale',choices=('pilot','main'),default='pilot')
+    parser.add_argument('--version',choices=('v1','v2'),default='v2')
     parser.add_argument('--reviewer',choices=study.REVIEWERS,default='evidence')
     parser.add_argument('--scientist',choices=study.SCIENTISTS,default='maximizer')
     parser.add_argument('--seed',type=int,default=20261113)
     parser.add_argument('--figures',action='store_true')
     args=parser.parse_args()
-    plan=study.make_plan(seed=args.seed,scale=args.scale,reviewer=args.reviewer,scientist=args.scientist)
+    plan=study.make_plan(seed=args.seed,scale=args.scale,reviewer=args.reviewer,scientist=args.scientist,version=args.version)
     if args.figures:
         import matplotlib  # fail before creating any output if optional package missing
     args.output.mkdir(parents=True,exist_ok=False)

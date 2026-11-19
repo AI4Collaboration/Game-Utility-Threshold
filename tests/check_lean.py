@@ -16,11 +16,12 @@ def main():
     lake = os.environ.get("LAKE", "lake")
     with tempfile.TemporaryDirectory() as tmp:
         for game in EXAMPLES:
-            run = Path(tmp) / game
-            save_plan(run, game=game, repetitions=1)
-            collect(run)
-            result = export_proofs(run, check=True, lake=lake)
-            assert result["verified"] and result["mapped_choices"] == 40
+            for version in ("v1", "v2"):
+                run = Path(tmp) / f"{game}-{version}"
+                plan = save_plan(run, game=game, version=version, repetitions=1)
+                collect(run)
+                result = export_proofs(run, check=True, lake=lake)
+                assert result["verified"] and result["mapped_choices"] == len(plan["jobs"])
         false = Path(tmp) / "FalseClaim.lean"
         false.write_text("import AgentProof\nopen AgentProof\n"
                          "example : Dominant ⟨20, -10, 40, 0⟩ .first := by decide\n")

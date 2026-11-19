@@ -134,3 +134,12 @@ Tests independently enumerate finite outcomes, verify interval extrema and
 degenerate cases, preserve ties, check known-payoff recovery and information
 boundaries, and reproduce seeded trials. New paid/model experiments, empirical
 uncertainty estimates, general distribution families, live Lab Notebook Audit validation, and the Months 3–5 blog remain separate work.
+
+## Controlled response study
+
+The versioned `oversight_experiment.py --design resource` planner/collector
+now supports 22 imposed-defense conditions: 11 defenses separately for each
+known-to-AI value type. It reuses the exact oversight payoffs and four neutral
+label/order blocks. [Setup and scope](controlled-thresholds.md) distinguish this
+conditional-response study from the Node human-planning benchmark above.
+No new live resource responses have been collected.

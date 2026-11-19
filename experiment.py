@@ -1,4 +1,4 @@
-"""Plan, collect, summarize, and verify one controlled PD cost sweep."""
+"""Plan, collect, summarize, and verify a controlled canonical cost sweep."""
 
 import argparse
 import csv
@@ -22,44 +22,54 @@ def report(directory, plot=False):
         writer.writeheader()
         writer.writerows(rows)
     if plot:
-        os.environ.setdefault("MPLCONFIGDIR", str(Path(tempfile.gettempdir()) / "gut-matplotlib"))
-        import matplotlib
-        matplotlib.use("Agg")
-        import matplotlib.pyplot as plt
-        bos = result["game"] == "battle_of_sexes"
-        fig, axes = plt.subplots(4 if bos else 2, 1, figsize=(9, 10 if bos else 6), sharex=True,
-                                 gridspec_kw={"height_ratios": [2, 2, 2, 1] if bos else [3, 1]}, layout="constrained")
-        counts = axes[-1]
-        metrics = [("row_first_rate", "row_first_lower_95", "row_first_upper_95", "Row chooses X"),
-                   ("column_first_rate", "column_first_lower_95", "column_first_upper_95", "Column chooses X"),
-                   ("matching_rate", "matching_lower_95", "matching_upper_95", "Players match")] if bos else [
-                   ("cooperation_rate", "lower_95", "upper_95", "Cooperation; 95% pointwise bounds")]
-        for ax, (center, low, high, label) in zip(axes[:-1], metrics):
-            available = [r for r in rows if r[center] is not None]
-            ax.errorbar([r["z"] for r in available], [r[center] for r in available],
-                        yerr=[[r[center]-r[low] for r in available], [r[high]-r[center] for r in available]],
-                        fmt="o", capsize=3, alpha=0.8, label=label)
-            ax.set(ylim=(-0.04, 1.04), ylabel=label if bos else "Cooperation rate")
-            ax.set_title("95% pointwise bounds · equal weight per label block", fontsize=9)
-        spec = example(result["game"])
-        thresholds = {(t, f'{role}: tie against {spec.actions[i]}') for role in ("row", "column")
-                      for i, t in enumerate(spec.thresholds(role)) if t >= 0}
-        for threshold in sorted({t for t, _ in thresholds}):
-            label = " / ".join(sorted(label for t, label in thresholds if t == threshold))
-            for ax in axes[:-1]:
-                ax.axvline(float(threshold), color="#777", ls="--", lw=1, label=label)
-        axes[0].legend(fontsize=8)
-        counts.plot([r["z"] for r in rows], [r["valid_games"] for r in rows], "o", label="Valid pairs")
-        counts.plot([r["z"] for r in rows], [r["planned_games"] for r in rows], "_", label="Planned pairs")
-        counts.set(xlabel=f"{spec.name} · cost of {spec.actions[1]} (z)", ylabel="Games", ylim=(0, None))
-        counts.legend(fontsize=8)
-        prefix = "SYNTHETIC PIPELINE DEMO — NOT MODEL EVIDENCE" if result["mode"] == "synthetic" else result["model"]
-        fig.suptitle(prefix)
-        filename = "outcomes" if bos else "cooperation"
-        fig.savefig(output / f"{filename}.png", dpi=180)
-        fig.savefig(output / f"{filename}.svg", metadata={"Date": None})
-        plt.close(fig)
+        groups = sorted({(r.get("cost_action", result["actions"][1]), r.get("representation", "original")) for r in rows})
+        for target, representation in groups:
+            selected = [r for r in rows if r.get("cost_action", target) == target and r.get("representation", "original") == representation]
+            plot_cells(result, selected, output, target, representation)
     return result
+
+
+def plot_cells(result, rows, output, target, representation):
+    os.environ.setdefault("MPLCONFIGDIR", str(Path(tempfile.gettempdir()) / "gut-matplotlib"))
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    bos = result["game"] == "battle_of_sexes"
+    fig, axes = plt.subplots(4 if bos else 2, 1, figsize=(9, 10 if bos else 6), sharex=True,
+                             gridspec_kw={"height_ratios": [2, 2, 2, 1] if bos else [3, 1]}, layout="constrained")
+    counts = axes[-1]
+    metrics = [("row_first_rate", "row_first_lower_95", "row_first_upper_95", "Row chooses X"),
+               ("column_first_rate", "column_first_lower_95", "column_first_upper_95", "Column chooses X"),
+               ("matching_rate", "matching_lower_95", "matching_upper_95", "Players match")] if bos else [
+               ("cooperation_rate", "lower_95", "upper_95", "Cooperation; 95% pointwise bounds")]
+    for ax, (center, low, high, label) in zip(axes[:-1], metrics):
+        available = [r for r in rows if r[center] is not None]
+        ax.errorbar([r["z"] for r in available], [r[center] for r in available],
+                    yerr=[[r[center]-r[low] for r in available], [r[high]-r[center] for r in available]],
+                    fmt="o", capsize=3, alpha=0.8, label=label)
+        ax.set(ylim=(-0.04, 1.04), ylabel=label if bos else "Cooperation rate")
+        ax.set_title("95% pointwise bounds · equal weight per label block", fontsize=9)
+    spec = example(result["game"])
+    sign = 1 if target == spec.actions[1] else -1
+    thresholds = {(sign*t, f'{role}: tie against {spec.actions[i]}') for role in ("row", "column")
+                  for i, t in enumerate(spec.thresholds(role)) if sign*t >= 0}
+    for threshold in sorted({t for t, _ in thresholds}):
+        label = " / ".join(sorted(label for t, label in thresholds if t == threshold))
+        for ax in axes[:-1]:
+            ax.axvline(float(threshold), color="#777", ls="--", lw=1, label=label)
+    axes[0].legend(fontsize=8)
+    counts.plot([r["z"] for r in rows], [r["valid_games"] for r in rows], "o", label="Valid pairs")
+    counts.plot([r["z"] for r in rows], [r["planned_games"] for r in rows], "_", label="Planned pairs")
+    counts.set(xlabel=f"{spec.name} · cost of {target} (z, starting-table units)", ylabel="Games", ylim=(0, None))
+    counts.legend(fontsize=8)
+    prefix = "SYNTHETIC PIPELINE DEMO — NOT MODEL EVIDENCE" if result["mode"] == "synthetic" else result["model"]
+    fig.suptitle(f"{prefix}\nDisplay: {representation} · cost on {target}")
+    filename = "outcomes" if bos else "cooperation"
+    if result["protocol"] == "canonical-cost-v2":
+        filename += f"-cost-{target}-{representation}"
+    fig.savefig(output / f"{filename}.png", dpi=180)
+    fig.savefig(output / f"{filename}.svg", metadata={"Date": None})
+    plt.close(fig)
 
 
 def main():
@@ -68,10 +78,11 @@ def main():
     plan = commands.add_parser("plan", help="freeze settings and randomized job order; no API calls")
     plan.add_argument("directory", type=Path)
     plan.add_argument("--game", choices=tuple(EXAMPLES), default="pd")
+    plan.add_argument("--version", choices=("v1", "v2"), default="v2", help="v2: focused cost sweeps, four presentation blocks, scale/offset checks and BoS mirror")
     plan.add_argument("--mode", choices=("synthetic", "openrouter"), default="synthetic")
     plan.add_argument("--model", default="synthetic/demo")
     plan.add_argument("--provider", default="local")
-    plan.add_argument("--repetitions", type=int, default=10, help="games per label block per cost; pilot default")
+    plan.add_argument("--repetitions", type=int, default=2, help="games per presentation block per condition; software-pilot default")
     plan.add_argument("--seed", type=int, default=20261109, help="schedule randomization, not a provider seed")
     plan.add_argument("--temperature", type=float, default=0.7)
     plan.add_argument("--max-tokens", type=int, default=512)

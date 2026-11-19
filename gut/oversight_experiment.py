@@ -29,6 +29,23 @@ def conditions(primary_reps=25, framing_reps=10):
     return rows
 
 
+def controlled_conditions(design, repetitions):
+    """One intervention per study; type panels remain separate in resource control."""
+    base = {k: str(v) for k, v in Oversight().__dict__.items()}
+    if design == "defense":
+        return [c for c in conditions(repetitions, repetitions) if c["sweep"] == "defense"]
+    if design == "attack_cost":
+        return [{"id": f"attack-cost-{a}", "sweep": "attack_cost", "x": a, "d": "3/10",
+                 "framing": "neutral", "parameters": {**base, "a": a}, "repetitions": repetitions}
+                for a in ("4/5", "17/20", "9/10", "19/20", "1")]
+    if design == "resource":
+        return [{"id": f"resource-{kind}-d{int(d*10):02}", "sweep": f"resource_{kind}",
+                 "x": str(d), "d": str(d), "framing": "neutral", "type": kind,
+                 "parameters": {**base, "v": value}, "repetitions": repetitions}
+                for kind, value in (("low", "4"), ("high", "8")) for d in DEFENSES]
+    raise ValueError("Unknown controlled design")
+
+
 def prompt(condition, block):
     game = Oversight(**condition["parameters"])
     d = F(condition["d"])
@@ -62,7 +79,10 @@ def reservation(model, max_tokens=128):
             D(model["completion_price"])*max_tokens+D(model.get("request_price", "0")))
 
 
-def make_plan(models, budget_usd, mode="openrouter", primary_reps=25, framing_reps=10, seed=20261109):
+def make_plan(models, budget_usd, mode="openrouter", primary_reps=25, framing_reps=10, seed=20261109,
+              design="legacy"):
+    if design not in ("legacy", "defense", "attack_cost", "resource"):
+        raise ValueError("Unknown study design")
     if mode not in ("openrouter", "synthetic"):
         raise ValueError("Unknown collection mode.")
     if any(type(n) is not int or not 1 <= n <= 100 for n in (primary_reps, framing_reps)):
@@ -81,10 +101,14 @@ def make_plan(models, budget_usd, mode="openrouter", primary_reps=25, framing_re
             raise ValueError("Invalid price ceiling.")
         if reservation(model) > budget:
             raise ValueError("Budget cannot reserve even one conservative call for a model.")
-    cells = conditions(primary_reps, framing_reps)
-    pilot_cells = [dict(cells[i], id="pilot-"+cells[i]["id"], repetitions=1) for i in (0, 3, 10)]
+    cells = conditions(primary_reps, framing_reps) if design == "legacy" else controlled_conditions(design, primary_reps)
+    pilot_indices = (0, 3, 10) if design == "legacy" else (0, len(cells)//2, len(cells)-1)
+    pilot_cells = [dict(cells[i], id="pilot-"+cells[i]["id"], repetitions=1) for i in pilot_indices]
     tied = dict(pilot_cells[1], id="pilot-tie", d="1/2", x="1/2",
                 parameters={**pilot_cells[1]["parameters"], "p": "0"})
+    if design != "legacy":
+        tied.update(sweep="pilot", parameters={**base_parameters(), "p": "0"})
+        tied.pop("type", None)
     pilot_cells.append(tied)
     jobs = []
     for stage, selected in (("pilot", pilot_cells), ("main", cells)):
@@ -114,7 +138,16 @@ def make_plan(models, budget_usd, mode="openrouter", primary_reps=25, framing_re
             "budget_usd": str(budget), "primary_reps": primary_reps, "framing_reps": framing_reps,
             "seed": seed, "block_definitions": BLOCKS, "conditions": cells,
             "pilot_conditions": pilot_cells, "jobs": jobs}
+    if design != "legacy":
+        plan.update(protocol="oversight-threshold-v2", design=design,
+                    scope="Conditional AI choices at imposed protection; no empirical human planning or equilibrium play.")
+        if design == "resource":
+            plan["information"] = "AI receives its own type-specific final payoffs. Human defense is imposed before the response; no type-dependent human policy is tested. Prior is not an AI treatment."
     return {**plan, "sha256": digest(plan)}
+
+
+def base_parameters():
+    return {k: str(v) for k, v in Oversight().__dict__.items()}
 
 
 def save_plan(directory, **settings):
@@ -180,7 +213,10 @@ def artifact_text(directory, name):
 def load_run(directory):
     directory = Path(directory)
     plan = _json(artifact_text(directory, "plan.json"))
-    expected = make_plan(**{k: plan[k] for k in ("models", "budget_usd", "mode", "primary_reps", "framing_reps", "seed")})
+    settings = {k: plan[k] for k in ("models", "budget_usd", "mode", "primary_reps", "framing_reps", "seed")}
+    if "design" in plan:
+        settings["design"] = plan["design"]
+    expected = make_plan(**settings)
     if plan != expected:
         raise ValueError("Plan differs from its frozen protocol, schedule or prompts.")
     jobs = {j["id"]: j for j in plan["jobs"]}

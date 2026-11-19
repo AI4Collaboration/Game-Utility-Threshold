@@ -19,7 +19,9 @@ import tempfile
 from .oversight import ACTIONS, Oversight
 
 SWEEPS = {"defense": ("Defense level d", "d"), "value": ("Resource value v", "v"),
-          "attack_cost": ("Attack cost a", "a"), "penalty": ("Full-defense penalty p", "p")}
+          "attack_cost": ("Attack cost a", "a"), "penalty": ("Full-defense penalty p", "p"),
+          "resource_low": ("Defense d · low-value type (v=4)", "d"),
+          "resource_high": ("Defense d · high-value type (v=8)", "d")}
 
 
 def interval(blocks, lower=0, upper=1):
@@ -252,35 +254,42 @@ def report(directory):
         save(fig, "framing", "Neutral and oversight wording at matched payoff settings. Error bars are pointwise, not a test of differences. No pooled framing effect is fitted.")
 
     # Presentation blocks are shown separately; do not assume undocumented bit meanings.
-    block_frame = pd.DataFrame([r for r in result["blocks"] if r["sweep"] in ("defense", "framing")])
+    panel_field = "sweep" if plan.get("design") else "framing"
+    block_frame = pd.DataFrame([r for r in result["blocks"] if r["sweep"] in SWEEPS or r["sweep"] == "framing"])
     if not block_frame.empty:
-        frames = [f for f in ("neutral", "oversight") if f in set(block_frame.framing)]
+        frames = sorted(set(block_frame[panel_field]))
         fig, axes = plt.subplots(len(frames), len(model_ids), squeeze=False,
                                  figsize=(5*len(model_ids), 3.6*len(frames)), layout="constrained")
         for row_index, frame in enumerate(frames):
             for column, model in enumerate(model_ids):
-                part = block_frame[(block_frame.model == model) & (block_frame.framing == frame)]
+                part = block_frame[(block_frame.model == model) & (block_frame[panel_field] == frame)]
                 sns.lineplot(data=part, x="x", y="cooperation_rate", hue="block", marker="o", estimator=None,
                              palette=sns.color_palette("colorblind", 4), ax=axes[row_index, column])
                 counts = ",".join(str(n) for n in sorted(set(part.planned)))
                 axes[row_index, column].set(title=f"{model}\n{frame} · planned n={counts} per block/point",
-                                           xlabel="Defense d", ylabel="Within-block cooperation rate", ylim=(-.05, 1.05))
+                                           xlabel=SWEEPS.get(frame, ("Defense d", "d"))[0], ylabel="Within-block cooperation rate", ylim=(-.05, 1.05))
         fig.suptitle(f"{prefix}\nLabel/order presentation checks · four blocks shown separately")
         save(fig, "presentation-blocks", "Descriptive within-block rates for both wordings, without pooled uncertainty. Blocks 0/1 map A to cooperation; blocks 2/3 map B to cooperation. Even blocks show cooperation first; odd blocks show attack first. Missing block estimates remain absent. Lines connect sampled settings and are not fitted response curves.")
 
     confusion = []
-    fig, axes = plt.subplots(1, len(model_ids), squeeze=False, figsize=(4*len(model_ids), 4), layout="constrained")
-    for column, model in enumerate(model_ids):
-        subset = [r for r in rows if r["model"] == model and r["status"] == "valid"
-                  and condition_by_id[r["condition_id"]]["sweep"] == "defense" and len(r["theoretical_best"]) == 1]
-        matrix = confusion_matrix([r["theoretical_best"][0] for r in subset], [r["action"] for r in subset], labels=list(ACTIONS))
-        confusion.append({"model": model, "scope": "Primary defense sweep; valid strict-preference choices only; raw counts",
-                          "labels": list(ACTIONS), "matrix": matrix.tolist(), "valid_strict": len(subset)})
-        sns.heatmap(matrix, annot=True, fmt="d", cmap="Blues", cbar=False, xticklabels=ACTIONS, yticklabels=ACTIONS,
-                    ax=axes[0, column])
-        axes[0, column].set(title=model, xlabel="Observed action", ylabel="Strictly better action")
-    fig.suptitle(f"{prefix}\nPrimary defense sweep · confusion matrices (raw counts)")
-    save(fig, "confusion", "scikit-learn confusion matrices show raw counts, not balanced rate estimates. Exact ties and invalid/missing responses are excluded here and retained in the count tables.")
+    comparison_sweeps = ["resource_low", "resource_high"] if plan.get("design") == "resource" else [
+        "attack_cost" if plan.get("design") == "attack_cost" else "defense"]
+    fig, axes = plt.subplots(len(comparison_sweeps), len(model_ids), squeeze=False,
+                             figsize=(4*len(model_ids), 4*len(comparison_sweeps)), layout="constrained")
+    for ri, sweep in enumerate(comparison_sweeps):
+        for column, model in enumerate(model_ids):
+            subset = [r for r in rows if r["model"] == model and r["status"] == "valid"
+                      and condition_by_id[r["condition_id"]]["sweep"] == sweep and len(r["theoretical_best"]) == 1]
+            matrix = confusion_matrix([r["theoretical_best"][0] for r in subset], [r["action"] for r in subset],
+                                      labels=list(ACTIONS)).tolist() if subset else [[0, 0], [0, 0]]
+            scope = "Primary defense sweep; valid strict-preference choices only; raw counts" if sweep == "defense" else f"{sweep}; valid strict-preference choices only; raw counts"
+            confusion.append({"model": model, "scope": scope, "labels": list(ACTIONS),
+                              "matrix": matrix, "valid_strict": len(subset)})
+            sns.heatmap(matrix, annot=True, fmt="d", cmap="Blues", cbar=False, xticklabels=ACTIONS, yticklabels=ACTIONS,
+                        ax=axes[ri, column])
+            axes[ri, column].set(title=f"{model}\n{sweep}", xlabel="Observed action", ylabel="Strictly better action")
+    fig.suptitle(f"{prefix}\nPayoff comparisons · confusion matrices (raw counts)")
+    save(fig, "confusion", "scikit-learn confusion matrices show raw counts, not balanced rate estimates. Exact ties and invalid/missing responses are excluded here and retained in the count tables. Zero counts mean no eligible observations, not perfect behavior.")
     result["confusion_matrices"] = confusion
     result["figures"] = figures
     result["block_definitions"] = plan.get("block_definitions", [])

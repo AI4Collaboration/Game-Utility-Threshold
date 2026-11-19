@@ -8,6 +8,7 @@ our games, exact calculations, interactive demos, and retained model experiments
 · [See experimental results](https://ai4collaboration.github.io/Game-Utility-Threshold/results.html)
 · [Find a game's code](games/README.md)
 · [Sweep design](docs/sweep-design.md)
+· [Controlled experiment setup and AISI progress](docs/controlled-thresholds.md)
 · [Methods and plans](docs/README.md)
 · [Datasets](data/README.md)
 
@@ -78,6 +79,7 @@ Use `--port 8766` if needed. The public site needs no account or API key.
 | Audit the retained original grid | `python3 reproduce.py --data-only` |
 | Rebuild its figures and report | [Post reproduction](docs/post-study.md#reproduce-offline) |
 | Run a synthetic canonical cost study | [Cost-study commands](docs/experiments.md#run-the-offline-demonstration) |
+| Prepare all controlled threshold studies, without API calls | `python3 prepare_threshold_studies.py runs/threshold-plans` |
 | Reproduce the completed oversight study | [Dataset instructions](data/oversight/2026-11-09/README.md#reproduce-without-paid-calls) |
 | Run resource-control baselines | [Node benchmark commands](docs/uncertainty-games.md#offline-benchmark-and-records) |
 | Run a synthetic notebook-audit pilot | `python3 lab_experiment.py runs/lab-pilot` |

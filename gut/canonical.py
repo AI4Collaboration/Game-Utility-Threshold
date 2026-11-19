@@ -62,3 +62,47 @@ def example(key):
     if key not in EXAMPLES:
         raise ValueError(f"unknown game: {key}")
     return EXAMPLES[key]
+
+
+def controlled_conditions(key):
+    """Version 2: fixed baselines, focused costs, separately identified controls.
+
+    Keep EXAMPLES.costs unchanged so old frozen plans remain reproducible.
+    The BoS mirror changes the substantive intervention, not just its label.
+    """
+    spec = example(key)
+    costs = spec.costs if key in ("pd", "battle_of_sexes") else PD_COSTS[:6]
+    targets = (1, 0) if key == "battle_of_sexes" else (1,)
+    conditions = []
+    for target in targets:
+        ties = {abs(t) for role in ("row", "column") for t in spec.thresholds(role)
+                if (t >= 0 if target == 1 else t <= 0)}
+        checks = {Fraction(0), Fraction(costs[-1]), *ties}
+        for representation, scale, offset in (("original", "1", "0"),
+                                               ("scale10", "10", "0"),
+                                               ("offset5", "1", "5")):
+            for index, z in enumerate(costs):
+                if representation != "original" and Fraction(z) not in checks:
+                    continue
+                conditions.append({"id": f"cost{target}-{representation}-z{index:02}",
+                    "z": z, "cost_action": target, "representation": representation,
+                    "scale": scale, "offset": offset,
+                    "purpose": "primary" if representation == "original" else "representation_control"})
+    return conditions
+
+
+def controlled_matrix(key, condition, role="row"):
+    """Subtract cost first, then transform EVERY final payoff into display units."""
+    spec = example(key)
+    z, scale, offset = (Fraction(condition[k]) for k in ("z", "scale", "offset"))
+    target = condition["cost_action"]
+    if z < 0 or scale <= 0 or type(target) is not int or target not in (0, 1):
+        raise ValueError("Invalid cost, scale or targeted action")
+    matrix = tuple(tuple(tuple(scale*(cell[p] - z*((i, j)[p] == target)) + offset
+                               for p in (0, 1)) for j, cell in enumerate(row))
+                   for i, row in enumerate(spec.baseline))
+    if role == "row":
+        return matrix
+    if role == "column":
+        return tuple(tuple((matrix[j][i][1], matrix[j][i][0]) for j in (0, 1)) for i in (0, 1))
+    raise ValueError("role must be row or column")

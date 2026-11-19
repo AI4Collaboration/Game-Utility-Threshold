@@ -60,7 +60,9 @@ The table is never normalized again after applying the cost.
 
 In Battle of the Sexes this deliberately favors coordination on X. It is
 not a neutral coordination aid: it penalizes the column player's preferred
-baseline agreement. Interpret effects and each player's payoff separately.
+baseline agreement. The v2 collector repeats the study with a cost on X,
+keeping preferences fixed; that mirror favors Y. Interpret each treatment
+and each player's payoff separately. The teaching UI shows the Y-cost case.
 
 | Game/player | Tie against first action | Tie against second action |
 |---|---:|---:|
@@ -97,21 +99,23 @@ Other identifiers are `pd`, `chicken`, and `battle_of_sexes`. For live runs,
 add the explicit model/provider settings when planning and use the live switch
 and call limit when collecting, as described in the experiment guide.
 
-Stag Hunt and Chicken use the PD cost schedule, which samples tightly around
-0.5. Battle of the Sexes uses 0, 0.5, 0.95, 1, 1.05, 1.5, 1.95, 2, 2.05,
-2.25, sampling both players' positive thresholds. All have two label mappings
-and the same default pilot size. Label changes do not exchange player roles
+Stag Hunt and Chicken use 0, .25, .45, .5, .55, .75 in v2, focusing on their
+positive tie at .5. Their historical v1 plans retain the longer PD schedule. Battle of the Sexes uses 0, 0.5, 0.95, 1, 1.05, 1.5, 1.95, 2, 2.05,
+2.25, sampling both players' positive thresholds. All cross two label mappings with two display orders
+and add separate scale/offset checks at selected costs. Label changes do not exchange player roles
 or preferences. Each player's prompt presents **their own payoff first**.
 
 For all games, the report includes joint outcomes, each player's first-action
 rate, matching rate, and each player's average adjusted payoff. Rates and
-means give equal weight to the two label blocks. The same game-level
+means give equal weight to the four presentation blocks. The same game-level
 uncertainty formula applies to each rate separately. Average payoffs are
 descriptive means, not confidence bounds. Reported `missing_lower/upper`
 bound the average first-action fraction in the full planned sample.
 
-For PD, Stag Hunt and Chicken, `cooperation.png` plots the rate of C. For
-Battle of the Sexes, `outcomes.png` shows row-X, column-X and matching rates;
+For PD, Stag Hunt and Chicken, `cooperation-cost-D-original.png` plots the
+primary rate of C. Separate scale10/offset5 figures show representation checks.
+For Battle of the Sexes, `outcomes-cost-Y-original.png` and its X-cost mirror
+show row-X, column-X and matching rates;
 `cooperation_rate` is deliberately null. The exact joint outcome counts
 distinguish XX from YY and do not pool the conflicting preferences.
 

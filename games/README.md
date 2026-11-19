@@ -64,7 +64,8 @@ player's points? X/Y do not mean cooperation/defection here.
 
 - ID: `battle_of_sexes`; [play the coordination game](https://ai4collaboration.github.io/Game-Utility-Threshold/games.html?game=battle_of_sexes).
 - Evidence: exact calculations and synthetic checks; no retained live model study.
-  The cost favors X, so report each player's outcomes separately.
+  The UI cost favors X; the v2 collector also tests a cost on X favoring Y.
+  Report each direction and player separately.
 
 ## Human–AI oversight
 
@@ -93,7 +94,8 @@ simulate manufacturing, long-term accumulation, or an autonomous planning agent.
 - [Play resource control](https://ai4collaboration.github.io/Game-Utility-Threshold/resource-control.html) · [Rules](../docs/uncertainty-games.md#resource-control-the-human-does-not-know-the-ais-incentive) · [Design provenance](../docs/uncertainty-games.md#where-the-resource-game-design-came-from).
 - Code: [uncertainty-engine.js](../web/uncertainty-engine.js), reusing [game-engine.js](../web/game-engine.js).
 - UI: [resource-control.html](../web/resource-control.html), shared [uncertainty.js](../web/uncertainty.js) and [styles](../web/uncertainty.css).
-- Runner: [uncertainty-experiment.cjs](../uncertainty-experiment.cjs), with `resource` as its game argument.
+- Toy planner benchmark: [uncertainty-experiment.cjs](../uncertainty-experiment.cjs), with `resource` as its game argument.
+- Type-specific response collector: [oversight_experiment.py](../oversight_experiment.py), with `--design resource`; fixed human defenses, no live run yet.
 - Checks: [engine/baselines](../tests/check_uncertainty.cjs), [UI](../tests/check_uncertainty_ui.cjs).
 - Evidence: exact calculations and synthetic trials only; no live LLM study or Lean proof.
 
@@ -114,7 +116,7 @@ review errors first, then tests reporting choices under those measured incentive
   A swap leaves two possible witnesses, so detection is `1 − C(6,k)/C(8,k)`,
   where `C(n,k)` counts subsets. Two possible witness records require this formula.
 
-Before new model collection, read the [parameterization audit and proposed sweeps](../docs/sweep-design.md). It distinguishes current collector support from proposed controls.
+Before new model collection, read the [implemented controlled setup](../docs/controlled-thresholds.md) and its remaining live-study requirements. The [parameterization audit](../docs/sweep-design.md) records the rationale.
 
 ## What to change where
 

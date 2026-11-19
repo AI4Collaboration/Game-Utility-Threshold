@@ -19,12 +19,15 @@ REVIEWERS = ("evidence", "noisy_evidence", "always_accept", "always_return")
 SCIENTISTS = ("maximizer", "always_compliant", "always_selective")
 
 
-def make_plan(seed=20261113, scale="pilot", reviewer="evidence", scientist="maximizer"):
+def make_plan(seed=20261113, scale="pilot", reviewer="evidence", scientist="maximizer", version="v1"):
     lab.integer(seed, 0, 2**32-1, "Seed")
     if scale not in ("pilot", "main") or reviewer not in REVIEWERS or scientist not in SCIENTISTS:
         raise ValueError("Unknown scale or synthetic policy.")
+    if version not in ("v1", "v2"):
+        raise ValueError("Unknown plan version.")
     calibration_reps, evaluation_reps = (1, 1) if scale == "pilot" else (20, 10)
-    budgets = (0, *lab.BUDGETS) if scale == "pilot" else lab.BUDGETS
+    main_budgets = (1, 2, 3) if version == "v2" else lab.BUDGETS
+    budgets = (0, *main_budgets, *((8,) if version == "v2" else ())) if scale == "pilot" else main_budgets
     cases, calibration, evaluation = {}, [], []
     for budget in budgets:
         for report in ("compliant", "selective"):
@@ -34,7 +37,7 @@ def make_plan(seed=20261113, scale="pilot", reviewer="evidence", scientist="maxi
                     cases[case['case_id']] = case
                     calibration.append({"id": digest(["calibration", case['case_id'], budget, report, block]),
                                         "case_id": case['case_id'], "budget": budget, "report": report, "block": block})
-    for budget in lab.BUDGETS:
+    for budget in main_budgets:
         for gain in lab.GAINS:
             for block in range(4):
                 for repeat in range(evaluation_reps):
@@ -49,11 +52,16 @@ def make_plan(seed=20261113, scale="pilot", reviewer="evidence", scientist="maxi
             "calibration": calibration, "evaluation": evaluation,
             "max_requests": len(calibration)+2*len(evaluation),
             "warning": "Offline synthetic study. These are not live LLM responses or a registered protocol."}
+    if version == "v2":
+        plan.update(protocol="lab-audit-offline-v2", version=version, main_budgets=list(main_budgets))
     return {**plan, "sha256": digest(plan)}
 
 
 def verify_plan(plan):
-    expected = make_plan(**{k: plan[k] for k in ('seed','scale','reviewer','scientist')})
+    settings = {k: plan[k] for k in ('seed','scale','reviewer','scientist')}
+    if 'version' in plan:
+        settings['version'] = plan['version']
+    expected = make_plan(**settings)
     if plan != expected:
         raise ValueError("Plan, cases, or condition schedule differs from the fixed environment.")
 
@@ -146,14 +154,14 @@ def run(plan, *, reviewer_actor=None, scientist_actor=None):
             raw = reviewer_actor(view, job['block']) if reviewer_actor else synthetic_review(view, job['block'], plan['reviewer'])
             event['reviewer'] = raw_event(prompt, raw, 'synthetic/'+plan['reviewer'])
         evaluation.append(event)
-    return {'schema': PROTOCOL, 'plan_sha256': plan['sha256'], 'synthetic': True,
+    return {'schema': plan['protocol'], 'plan_sha256': plan['sha256'], 'synthetic': True,
             'calibration': calibration, 'calibrated_rates': rates, 'evaluation': evaluation}
 
 
 def validate_and_analyze(plan, result):
     """Reparse original answers and regenerate all prompts; never trust saved scores."""
     verify_plan(plan)
-    if result.get('schema') != PROTOCOL or result.get('plan_sha256') != plan['sha256'] or result.get('synthetic') is not True:
+    if result.get('schema') != plan['protocol'] or result.get('plan_sha256') != plan['sha256'] or result.get('synthetic') is not True:
         raise ValueError("Run does not belong to this synthetic plan.")
     rates = calibration_summary(plan, result['calibration'])
     if rates != result['calibrated_rates']:
@@ -193,7 +201,7 @@ def validate_and_analyze(plan, result):
             raise ValueError("An invalid scientist choice cannot create a reviewer request.")
         observations.append(observed)
     cells = []
-    for budget in lab.BUDGETS:
+    for budget in sorted({j['budget'] for j in plan['evaluation']}):
         for gain in lab.GAINS:
             selected = [r for r in observations if r['budget']==budget and r['gain']==gain]
             valid = [r for r in selected if r['scientist_status']=='valid']
@@ -216,7 +224,7 @@ def validate_and_analyze(plan, result):
     # endpoints, so the same simultaneous calibration bounds cover the
     # entire interval without pretending that we sampled every gain value.
     interval_margins = []
-    for budget in lab.BUDGETS:
+    for budget in sorted({j['budget'] for j in plan['evaluation']}):
         endpoints = [row for row in cells if row['budget'] == budget]
         low = min(row['margin_lower'] for row in endpoints)
         high = max(row['margin_upper'] for row in endpoints)
