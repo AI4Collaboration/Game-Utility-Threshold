@@ -83,6 +83,34 @@ the evaluation reports actual outcomes without allowing the planner to see
 that actual prior. The margin across both types is independent of the prior;
 the risk-constrained policy is a different criterion and may allow rare attacks.
 
+### Where the resource game design came from
+
+We constructed this game by extending the existing oversight model with two
+private resource values and uncertainty about how often each occurs. It is
+not a reproduction of a published paperclip-maximizer environment. “Paperclip”
+is an informal motivation for valuing resources; the implementation has no
+production process, long-term accumulation, learning, or autonomous planning.
+
+The traceable methodological reference is Korzhyk et al. (2011),
+[Stackelberg vs. Nash in Security Games](https://www.cs.cmu.edu/~conitzer/stackelbergJAIR11.pdf).
+It was cited in the
+[original oversight specification](https://github.com/AI4Collaboration/Game-Utility-Threshold/blob/d661e9f/docs/oversight.md#methods-references),
+before the
+[resource extension](https://github.com/AI4Collaboration/Game-Utility-Threshold/commit/d2d539d).
+It supplies background for defender commitment, an observing follower's best
+response, and favorable follower ties. Its randomized security setting differs
+from our observed, discrete protection choice; its theorems do not automatically
+apply here. The original guide also cites
+[Polak's backward-induction lecture](https://oyc.yale.edu/economics/econ-159/lecture-15).
+
+Our design choices are the linear resource/attack/penalty functions, eleven
+protection levels, values 4 and 8, their probabilities, and the cautious risk
+criterion. We chose these to make the uncertainty and comparisons explicit,
+then derived thresholds from those assumptions. The original extension does
+not document a separate literature source for the two-type specification.
+These parameters are not empirically calibrated, and the results do not yet
+establish a realistic model of AI resource-seeking behavior.
+
 ## Off-switch: the AI is uncertain about what benefits the human
 
 This is a finite, two-state adaptation of Hadfield-Menell et al. (2017),
