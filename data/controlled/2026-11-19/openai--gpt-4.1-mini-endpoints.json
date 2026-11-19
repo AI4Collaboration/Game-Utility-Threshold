@@ -1,0 +1,175 @@
+{
+  "data": {
+    "id": "openai/gpt-4.1-mini",
+    "name": "OpenAI: GPT-4.1 Mini",
+    "created": 1744651381,
+    "description": "GPT-4.1 Mini is a mid-sized model delivering performance competitive with GPT-4o at substantially lower latency and cost. It retains a 1 million token context window and scores 45.1% on hard...",
+    "architecture": {
+      "tokenizer": "GPT",
+      "instruct_type": null,
+      "modality": "text+image+file->text",
+      "input_modalities": [
+        "image",
+        "text",
+        "file"
+      ],
+      "output_modalities": [
+        "text"
+      ]
+    },
+    "endpoints": [
+      {
+        "name": "Azure | openai/gpt-4.1-mini-2025-04-14",
+        "model_id": "openai/gpt-4.1-mini",
+        "model_name": "OpenAI: GPT-4.1 Mini",
+        "context_length": 1047576,
+        "pricing": {
+          "prompt": "0.0000004",
+          "completion": "0.0000016",
+          "web_search": "0.01",
+          "input_cache_read": "0.0000001",
+          "discount": 0
+        },
+        "provider_name": "Azure",
+        "tag": "azure",
+        "service_tier": null,
+        "quantization": "unknown",
+        "max_completion_tokens": 942818,
+        "max_prompt_tokens": null,
+        "supported_parameters": [
+          "temperature",
+          "top_p",
+          "max_completion_tokens",
+          "tools",
+          "tool_choice",
+          "structured_outputs",
+          "response_format",
+          "seed"
+        ],
+        "supports_tool_choice": {
+          "none": true,
+          "auto": true,
+          "required": true,
+          "function": true
+        },
+        "status": 0,
+        "uptime_last_30m": 100,
+        "uptime_last_5m": 100,
+        "uptime_last_1d": 100,
+        "supports_implicit_caching": true,
+        "native_tools": {},
+        "supports_voice_cloning": false,
+        "supports_multiple_audio_references": false,
+        "supports_image_reference": false,
+        "supports_diarization": false,
+        "latency_last_30m": {
+          "p50": 2604,
+          "p75": 3010.25,
+          "p90": 3333,
+          "p99": 5264.620000000003
+        },
+        "throughput_last_30m": {
+          "p50": 85,
+          "p75": 72,
+          "p90": 58,
+          "p99": 33
+        },
+        "perf_last_30m_by_workload": {
+          "text_generation": {
+            "latency": {
+              "p50": 2604,
+              "p75": 3010.25,
+              "p90": 3333,
+              "p99": 5264.620000000003
+            },
+            "throughput": {
+              "p50": 85,
+              "p75": 72,
+              "p90": 58,
+              "p99": 33
+            },
+            "request_count": 26027
+          }
+        }
+      },
+      {
+        "name": "OpenAI | openai/gpt-4.1-mini-2025-04-14",
+        "model_id": "openai/gpt-4.1-mini",
+        "model_name": "OpenAI: GPT-4.1 Mini",
+        "context_length": 1047576,
+        "pricing": {
+          "prompt": "0.0000004",
+          "completion": "0.0000016",
+          "web_search": "0.01",
+          "input_cache_read": "0.0000001",
+          "discount": 0
+        },
+        "provider_name": "OpenAI",
+        "tag": "openai",
+        "service_tier": null,
+        "quantization": "unknown",
+        "max_completion_tokens": 32768,
+        "max_prompt_tokens": null,
+        "supported_parameters": [
+          "seed",
+          "max_tokens",
+          "response_format",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "temperature",
+          "top_p"
+        ],
+        "supports_tool_choice": {
+          "none": true,
+          "auto": true,
+          "required": true,
+          "function": true
+        },
+        "status": 0,
+        "uptime_last_30m": 100,
+        "uptime_last_5m": 100,
+        "uptime_last_1d": 100,
+        "supports_implicit_caching": true,
+        "native_tools": {
+          "openrouter:web_search": {
+            "type": "web_search"
+          }
+        },
+        "supports_voice_cloning": false,
+        "supports_multiple_audio_references": false,
+        "supports_image_reference": false,
+        "supports_diarization": false,
+        "latency_last_30m": {
+          "p50": 938,
+          "p75": 1110.25,
+          "p90": 1355.9000000000005,
+          "p99": 2737.600000000006
+        },
+        "throughput_last_30m": {
+          "p50": 71,
+          "p75": 60,
+          "p90": 49,
+          "p99": 28
+        },
+        "perf_last_30m_by_workload": {
+          "text_generation": {
+            "latency": {
+              "p50": 938,
+              "p75": 1110.25,
+              "p90": 1355.9000000000005,
+              "p99": 2737.600000000006
+            },
+            "throughput": {
+              "p50": 71,
+              "p75": 60,
+              "p90": 49,
+              "p99": 28
+            },
+            "request_count": 76377
+          }
+        }
+      }
+    ]
+  }
+}

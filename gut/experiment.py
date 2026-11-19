@@ -50,7 +50,8 @@ def prompt(z, role, block, game="pd", condition=None):
 
 
 def make_plan(mode="synthetic", model="synthetic/demo", provider="local", repetitions=10,
-              seed=20261109, temperature=0.7, max_tokens=512, game="pd", version="v1"):
+              seed=20261109, temperature=0.7, max_tokens=512, game="pd", version="v1",
+              control_repetitions=None, model_spec=None):
     spec = example(game)
     if version not in ("v1", "v2"):
         raise ValueError("version must be v1 or v2")
@@ -70,12 +71,21 @@ def make_plan(mode="synthetic", model="synthetic/demo", provider="local", repeti
         raise ValueError("synthetic runs must retain their synthetic identity")
     if mode == "openrouter" and (model.startswith("synthetic/") or provider == "local"):
         raise ValueError("supply an explicit live model and provider")
+    if control_repetitions is not None and (version != "v2" or type(control_repetitions) is not int or not 1 <= control_repetitions <= 10000):
+        raise ValueError("control_repetitions requires v2 and a positive count")
+    if model_spec is not None:
+        if version != "v2" or model_spec.get("id") != model or model_spec.get("provider") != provider:
+            raise ValueError("model_spec must match the v2 model and provider")
+        # Reuse the sequential collector's endpoint/price validation.
+        from .oversight_experiment import make_plan as validate_model
+        validate_model([model_spec], "50", mode=mode, primary_reps=1, framing_reps=1)
     jobs = []
     cells = controlled_conditions(game) if version == "v2" else [{"z": z} for z in spec.costs]
     for ci, condition in enumerate(cells):
         z = condition["z"]
+        repeats = control_repetitions if control_repetitions is not None and condition["purpose"] == "representation_control" else repetitions
         for block in range(4 if version == "v2" else 2):
-            for repeat in range(repetitions):
+            for repeat in range(repeats):
                 pair = f"z{ci:02}-b{block}-r{repeat:05}" if version == "v1" else f"{condition['id']}-b{block}-r{repeat:05}"
                 for role in ("row", "column"):
                     request = {"model": model, "temperature": temperature, "max_tokens": max_tokens,
@@ -83,6 +93,18 @@ def make_plan(mode="synthetic", model="synthetic/demo", provider="local", repeti
                                "response_format": {"type": "json_object"},
                                "provider": {"only": [provider], "allow_fallbacks": False,
                                             "require_parameters": True}}
+                    if model_spec is not None:
+                        from decimal import Decimal
+                        request["provider"]["max_price"] = {
+                            "prompt": float(Decimal(model_spec["prompt_price"])*1000000),
+                            "completion": float(Decimal(model_spec["completion_price"])*1000000),
+                            "request": float(Decimal(model_spec.get("request_price", "0")))}
+                        request["response_format"] = {"type": "json_schema", "json_schema": {
+                            "name": "choice", "strict": True, "schema": {"type": "object",
+                            "properties": {"final_action": {"type": "string", "enum": ["A", "B"]}},
+                            "required": ["final_action"], "additionalProperties": False}}}
+                        if model_spec.get("disable_reasoning"):
+                            request["reasoning"] = {"enabled": False}
                     jobs.append({"id": f"{pair}-{role}", "pair": pair, "z": z, "block": block,
                                  "role": role, "request": request})
                     if version == "v2":
@@ -99,6 +121,10 @@ def make_plan(mode="synthetic", model="synthetic/demo", provider="local", repeti
                     baseline=[[[str(v) for v in cell] for cell in row] for row in spec.baseline],
                     block_definitions=[{"block": b, "first_action_label": labels(b//2)[0],
                                         "first_action_displayed_first": b%2 == 0} for b in range(4)])
+    if control_repetitions is not None:
+        plan["control_repetitions"] = control_repetitions
+    if model_spec is not None:
+        plan["model_spec"] = model_spec
     return {**plan, "sha256": digest(plan)}
 
 
@@ -118,6 +144,9 @@ def load_run(directory):
         settings["game"] = plan["game"]
     if "version" in plan:
         settings["version"] = plan["version"]
+    for key in ("control_repetitions", "model_spec"):
+        if key in plan:
+            settings[key] = plan[key]
     if plan != make_plan(**settings):
         raise ValueError("plan differs from the fixed protocol, prompts, or schedule")
     jobs = {j["id"]: j for j in plan["jobs"]}
@@ -155,13 +184,17 @@ def decision(plan, job, finish):
         return None, "transport_error"
     try:
         response = _json(finish["body"])
-        if response["model"] != plan["model"]:
+        if response["model"] not in plan.get("model_spec", {}).get("accepted_models", [plan["model"]]):
             return None, "model_mismatch"
+        if "model_spec" in plan and response.get("provider") != plan["model_spec"]["returned_provider"]:
+            return None, "provider_mismatch"
         if plan.get("version") == "v2" and plan["mode"] == "openrouter" and response.get("synthetic"):
             return None, "synthetic_in_live"
         if "error" in response or len(response["choices"]) != 1:
             return None, "response_error"
         choice = response["choices"][0]
+        if choice["message"].get("refusal"):
+            return None, "refusal"
         if choice.get("finish_reason") != "stop":
             return None, "unfinished_output"
         answer = _json(choice["message"]["content"])

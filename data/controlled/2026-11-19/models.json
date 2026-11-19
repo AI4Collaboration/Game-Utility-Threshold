@@ -1,0 +1,43 @@
+[
+  {
+    "id": "openai/gpt-4.1-mini",
+    "provider": "openai",
+    "returned_provider": "OpenAI",
+    "accepted_models": [
+      "openai/gpt-4.1-mini",
+      "openai/gpt-4.1-mini-2025-04-14"
+    ],
+    "context_length": 1047576,
+    "prompt_price": "0.0000004",
+    "completion_price": "0.0000016",
+    "request_price": "0",
+    "disable_reasoning": false
+  },
+  {
+    "id": "anthropic/claude-haiku-4.5",
+    "provider": "anthropic",
+    "returned_provider": "Anthropic",
+    "accepted_models": [
+      "anthropic/claude-4.5-haiku-20251001",
+      "anthropic/claude-haiku-4.5"
+    ],
+    "context_length": 200000,
+    "prompt_price": "0.000001",
+    "completion_price": "0.000005",
+    "request_price": "0",
+    "disable_reasoning": true
+  },
+  {
+    "id": "google/gemini-2.5-flash",
+    "provider": "google-ai-studio",
+    "returned_provider": "Google AI Studio",
+    "accepted_models": [
+      "google/gemini-2.5-flash"
+    ],
+    "context_length": 1048576,
+    "prompt_price": "0.0000003",
+    "completion_price": "0.0000025",
+    "request_price": "0",
+    "disable_reasoning": true
+  }
+]
