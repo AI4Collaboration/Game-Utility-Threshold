@@ -14,6 +14,9 @@ collection stopped with **zero model choices and zero main attempts**. The
 [archived ledger and status](../data/controlled/2026-11-19/README.md) retain the
 failure. Original T/S and oversight data were verified unchanged. Validation
 remains open; a fresh compatibility pilot must pass after billing is resolved.
+The [replacement-key attempt](../data/controlled/2026-11-19-funded/README.md)
+also received HTTP 402 on its first request. It contains no model choices;
+both failed attempts remain separate from historical evidence and main trials.
 
 ## The question and the rule
 

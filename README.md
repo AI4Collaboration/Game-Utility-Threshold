@@ -46,6 +46,8 @@ Collection was attempted on 19 November, but OpenRouter rejected all eight
 initial pilot requests for insufficient account credits. **No main requests or
 new model choices were collected.** [Failure records and status](data/controlled/2026-11-19/README.md)
 are preserved alongside the unchanged historical datasets.
+The [replacement-key attempt](data/controlled/2026-11-19-funded/README.md)
+was also blocked by account credits on its first request; validation is still pending.
 
 ## Historical model studies
 

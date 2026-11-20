@@ -12,6 +12,8 @@ and synthetic trials do not add empirical evidence. See the
 The [new controlled collection](controlled/2026-11-19/README.md) contains frozen
 plans and eight archived HTTP 402 pilot failures. It has **zero model choices**;
 the account-credit block must be resolved before validation can proceed.
+The [replacement-key attempt](controlled/2026-11-19-funded/README.md) likewise
+contains one HTTP 402 rejection and no model choices. Both attempts are retained.
 
 | Dataset | What was measured | Where to start |
 | --- | --- | --- |

@@ -1,0 +1,23 @@
+{
+  "study": "months1-3-controlled-live-v1",
+  "status": "replacement_key_also_blocked_by_account_credits",
+  "plan_sha256": "4e9530d1460faed9b32529a8cb3153d552e1369ec53086164917e0b9ecbf92eb",
+  "protocol_commit": "4fd2622f7f887a820859927ab74cc3894f7e8cb8",
+  "planned_main": 16572,
+  "planned_pilot": 120,
+  "attempted_pilot": 1,
+  "attempted_main": 0,
+  "valid_model_choices": 0,
+  "http_statuses": {
+    "402": 1
+  },
+  "reported_cost_usd": null,
+  "unknown_cost_reservations_usd": "0.200640",
+  "cost_note": "Conservative reservation is not a reported charge; the rejection contains no usage.",
+  "first_attempt_utc": "2026-11-20T01:23:10.293272+00:00",
+  "last_finish_utc": "2026-11-20T01:23:10.374310+00:00",
+  "key_authentication": "successful",
+  "account_credit_lookup": "HTTP 403; organization-admin permission required",
+  "next_step": "Resolve the account/organization funding block before another compatibility attempt. All failed attempts remain archived.",
+  "automatic_retries": 0
+}
