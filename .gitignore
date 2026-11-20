@@ -8,5 +8,6 @@ report/
 _site/
 /work/
 *.egg-info/
+build/
 runs/
 lean/.lake/

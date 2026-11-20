@@ -7,6 +7,7 @@ our games, exact calculations, interactive demos, and retained model experiments
 [Play the games](https://ai4collaboration.github.io/Game-Utility-Threshold/games.html)
 · [See experimental results](https://ai4collaboration.github.io/Game-Utility-Threshold/results.html)
 · [Find a game's code](games/README.md)
+· [Try the audit game](https://ai4collaboration.github.io/Game-Utility-Threshold/audit.html)
 · [Design sources and scope](docs/design-sources.md)
 · [Controlled experiment setup and AISI progress](docs/controlled-thresholds.md)
 · [Months 3–5: literature and Inspect plan](docs/months3-5-design-review.md)
@@ -28,6 +29,12 @@ crossing it can change which choice pays more. Each game has its own assumptions
 These **four established game families** are the active paper experiments.
 Our particular payoff values, added costs and collection controls are adaptations,
 not a replication of one published experiment. Read the [design-source audit](docs/design-sources.md).
+
+The [published audit-game implementation](games/README.md#audit-game-known-and-hidden-rewards)
+adds a sequential setting: commit to where to check, then observe a violation or
+abstention. It supports known rewards and a finite private-reward extension,
+exact predictions, an interactive UI and native Inspect tasks. Its checks use
+scripted agents; **there are no live LLM results for this game**.
 
 The resource/paperclip game has been removed. Off-switch and the earlier science
 demo remain removed. Two custom prototypes remain available for inspection:
@@ -100,11 +107,14 @@ Use `--port 8766` if needed. The public site needs no account or API key.
 | Prepare the four canonical cost studies, without API calls | `python3 prepare_threshold_studies.py runs/threshold-plans` |
 | Reproduce the completed oversight study | [Dataset instructions](data/oversight/2026-11-09/README.md#reproduce-without-paid-calls) |
 | Run a synthetic notebook-audit pilot | `python3 lab_experiment.py runs/lab-pilot` |
+| Run a synthetic audit game with native Inspect logs | `python3 audit_experiment.py runs/audit-check --setting hidden` |
+| Open the audit traces | `inspect view --log-dir runs/audit-check` |
 | Run Python checks | `python3 -m unittest discover -s tests -v` |
 | Build the public site | [Pages instructions](docs/pages.md#build-without-paid-calls) |
 
 Figures need matplotlib; rebuilding the oversight analysis also needs the
 [pinned analysis packages](data/oversight/2026-11-09/analysis-requirements.txt).
+The native audit runner needs `python3 -m pip install '.[inspect]'`.
 Browser checks need Node 18+. Lean verification needs the pinned
 [Lean toolchain](lean/README.md). These offline tasks make no model calls.
 GitHub Actions runs the full checks and deploys successful `main` commits.

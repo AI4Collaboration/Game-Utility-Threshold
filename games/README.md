@@ -74,6 +74,43 @@ player's points? X/Y do not mean cooperation/defection here.
   The UI cost favors X; the v2 collector also tests a cost on X favoring Y.
   Report each direction and player separately.
 
+## Audit game: known and hidden rewards
+
+**One published game family, two information settings.** The defender commits
+to checking A with probability `q` and B with probability `1-q`; exactly one
+check happens. The attacker sees those chances and chooses A, B, or abstention.
+A detected violation receives the fixed punishment. In the hidden setting,
+only the attacker knows which reward profile it has; the defender knows all
+possible profiles and their probabilities.
+
+- [Play both settings](https://ai4collaboration.github.io/Game-Utility-Threshold/audit.html).
+- Rules: the two-target, fixed-punishment subcase of
+  [Blocki et al., *Audit Games*, §2](https://arxiv.org/abs/1303.0356), including
+  abstention. Private types use the Bayesian commitment structure of
+  [Paruchuri et al. (AAMAS 2008)](https://www.ifaamas.org/Proceedings/aamas08/proceedings/pdf/paper/AAMAS08_0057.pdf).
+  Our demo numbers and finite-type extension are explicit adaptations.
+- Code: [audit_game.py](../gut/audit_game.py), [exact commitment solver](../gut/commitment.py);
+  browser [engine](../web/audit-engine.js), [page](../web/audit.html), [controls](../web/audit.js).
+- Predictions: per-type action payoffs, exact checking thresholds, all-type
+  deterrence intervals and optimal checking policies under both tie conventions.
+  Punishment is fixed per game; this is not the full source algorithm or DOBSS.
+- Inspect: [task and scorer](../gut/audit_inspect.py), [offline runner](../audit_experiment.py).
+  Separate player prompts, explicit model roles, native `.eval` traces, exact
+  payoff scoring and a JSONL export. Invalid responses and provider failures
+  remain visible. Provider-exposed reasoning is logged, not treated as proof
+  of internal reasoning. The CLI is mock-only; live tasks require a separately
+  budgeted study (the adapter's cost limit is per sample, not a total-run cap).
+- Checks: [rules/solver](../tests/test_audit_game.py), [native Inspect round-trip](../tests/test_audit_inspect.py),
+  [Python/browser agreement and UI](../tests/check_audit.cjs). **Synthetic checks only; no live LLM validation.**
+
+From the repository root, install `python3 -m pip install '.[inspect]'`, run
+`python3 audit_experiment.py runs/audit-check --setting hidden`, then
+`inspect view --log-dir runs/audit-check`. Replace `hidden` with `known` for the
+control setting. `--baseline maximize|abstain|target_a|target_b` chooses a scripted
+agent. Samples cover every type and checking condition; aggregate with the
+declared type probabilities rather than assuming the balanced sample is a
+population draw. Browser rounds are separate, local simulations.
+
 ## Human–AI oversight
 
 **Custom prototype; not an approved paper experiment.** Its specific rules are

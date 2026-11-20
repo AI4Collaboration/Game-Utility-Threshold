@@ -83,8 +83,8 @@ class AuditGame:
             row["best_responses"] = tuple(ACTIONS[a] for a in row["best_responses"])
         result["worst_margin"] = min(t["margin"] for t in result["types"])
         result["attack_probability"] = {
-            "lower": sum(t["prior"] for t in result["types"] if "abstain" not in t["best_responses"]),
-            "upper": sum(t["prior"] for t in result["types"] if any(a != "abstain" for a in t["best_responses"]))}
+            "lower": sum((t["prior"] for t in result["types"] if "abstain" not in t["best_responses"]), F(0)),
+            "upper": sum((t["prior"] for t in result["types"] if any(a != "abstain" for a in t["best_responses"])), F(0))}
         return result
 
     def safe_region(self, slack=0):
