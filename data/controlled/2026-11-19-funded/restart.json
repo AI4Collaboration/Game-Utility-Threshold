@@ -1,0 +1,11 @@
+{
+  "reason": "User supplied a replacement credential after nine billing rejections. Fresh full compatibility pilot; no primary outcomes had been observed. Earlier failures remain archived separately.",
+  "earlier_attempt": "../2026-11-19/",
+  "earlier_plan_sha256": "6d5b9c749d44092213148c8b82352b6b5e9bcf3c1162c85f6271130567f4e91b",
+  "earlier_unknown_cost_reserve_usd": "3.1371520",
+  "new_budget_usd": "41.86",
+  "combined_ceiling_usd": "44.9971520",
+  "requests_and_schedule_unchanged": true,
+  "main_planned": 16572,
+  "fresh_pilot_planned": 120
+}

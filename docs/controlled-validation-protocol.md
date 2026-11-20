@@ -5,6 +5,15 @@ bounded first validation, not completion of all AISI deliverables. The user
 authorized new collection; the suite enforces **US$45 including pilots** within
 the previously agreed US$50 ceiling. Stop at the frozen sample even if cheaper.
 
+**Credential replacement, before successful collection:** nine requests in the
+first compatibility attempt returned billing rejections, with no model choices.
+The user supplied a new key. A fresh, complete compatibility pilot and the same
+untouched main schedule are frozen in `data/controlled/2026-11-19-funded/`.
+All request bodies, sampling settings and schedule entries are unchanged.
+The new ledger caps spending at **$41.86**; retaining the previous **$3.137152**
+unknown-cost hold keeps their combined ceiling below $45. The old failures stay
+in their original directory and are never relabeled as successful observations.
+
 ## Question and scope
 
 When a specified action becomes less profitable, do model choices change in
