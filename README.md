@@ -16,23 +16,67 @@ our games, exact calculations, interactive demos, and retained model experiments
 · [Datasets](data/README.md)
 · [Run the fixed study with an OpenRouter key](docs/manager-handoff.md)
 
-**Operator handoff:** `bash scripts/run_manager_study.sh` installs an isolated
-runtime and runs the frozen eight-study collection, pilots, analysis and ZIP
-export under one $45 budget. Enter your key privately when prompted. The
-[handoff guide](docs/manager-handoff.md) explains every game and the exact sample.
-This package has offline checks; it does not imply new live LLM results.
+## Run the prepared experiments
+
+With Git and Python 3.11+ installed, run these commands on macOS/Linux or Windows
+through WSL:
+
+```sh
+git clone https://github.com/AI4Collaboration/Game-Utility-Threshold.git
+cd Game-Utility-Threshold
+bash scripts/run_manager_study.sh
+```
+
+Enter your OpenRouter key at the hidden prompt. This installs dependencies and
+runs **all eight study configurations** below with fixed settings and a **shared
+$45 cap**. It automatically creates the report, 2D plots, tables and raw logs.
+Return **`runs/manager-study-v1/results.zip`**. Rerun the same command to resume;
+see the [handoff guide](docs/manager-handoff.md) if collection stops with an error.
+
+For a free scripted check, run `bash scripts/run_manager_study.sh smoke`.
+Neither that check nor the browser demos produce live LLM evidence.
 
 ## Find a game
 
 A **threshold** is a setting where two choices earn the same expected points;
 crossing it can change which choice pays more. Each game has its own assumptions.
 
-| Game | What happens | Guide and code |
-| --- | --- | --- |
-| Prisoner's Dilemma (PD) | Each player is tempted to defect, although both would gain from mutual cooperation. We vary the cost of defection. | [PD](games/README.md#prisoners-dilemma) |
-| Stag Hunt | The better joint outcome requires trust: cooperating alone is costly. | [Stag Hunt](games/README.md#stag-hunt) |
-| Chicken | Each wants the other to yield; both insisting gives the worst outcome. | [Chicken](games/README.md#chicken) |
-| Battle of the Sexes | Both want to coordinate, but prefer different shared outcomes. | [Coordination game](games/README.md#battle-of-the-sexes) |
+| Game | Rules / payoff code | Interactive demo | Study ID |
+| --- | --- | --- | --- |
+| Prisoner's Dilemma | [gut/canonical.py](gut/canonical.py) | [Play PD](https://ai4collaboration.github.io/Game-Utility-Threshold/games.html?game=pd) | `pd` |
+| Stag Hunt | [gut/canonical.py](gut/canonical.py) | [Play Stag Hunt](https://ai4collaboration.github.io/Game-Utility-Threshold/games.html?game=stag_hunt) | `stag_hunt` |
+| Chicken | [gut/canonical.py](gut/canonical.py) | [Play Chicken](https://ai4collaboration.github.io/Game-Utility-Threshold/games.html?game=chicken) | `chicken` |
+| Battle of the Sexes | [gut/canonical.py](gut/canonical.py) | [Play coordination game](https://ai4collaboration.github.io/Game-Utility-Threshold/games.html?game=battle_of_sexes) | `battle_of_sexes` |
+| Private-information PD | [gut/incomplete/games.py](gut/incomplete/games.py) | [Private games: select PD](https://ai4collaboration.github.io/Game-Utility-Threshold/private-games.html) | `private_pd_v1` |
+| Private-information Stag Hunt | [gut/incomplete/games.py](gut/incomplete/games.py) | [Private games: select Stag Hunt](https://ai4collaboration.github.io/Game-Utility-Threshold/private-games.html) | `private_stag_hunt_v1` |
+| Audit game | [gut/audit_game.py](gut/audit_game.py) | [Audit: select threshold or information experiment](https://ai4collaboration.github.io/Game-Utility-Threshold/audit.html) | `audit_threshold`, `audit_information` |
+
+The first four share one engine; the two private-information variants share a
+separate engine. Audit has two experiments, giving **seven game settings and
+eight study configurations**. The browser links need no installation or API key.
+[Game explanations and full module map](games/README.md).
+
+**Where collection lives:** [canonical Inspect tasks](gut/canonical_inspect.py),
+[private-game Inspect tasks](gut/incomplete/inspect_task.py),
+[audit Inspect tasks](gut/audit_inspect.py). The
+[fixed run settings](configs/manager-study-v1.json) and
+[shared runner](gut/inspect_study.py) connect them to the command above.
+
+### Run one game as a free software check
+
+After installing the runtime with the `smoke` command above, use a study ID from
+the table. This example runs only PD with scripted agents:
+
+```sh
+.venv-manager/bin/python inspect_study.py prepare runs/pd-demo --studies pd --repetitions 1 --budget-usd 1
+.venv-manager/bin/python inspect_study.py run runs/pd-demo --stage pilot --max-trials 10000
+.venv-manager/bin/python inspect_study.py run runs/pd-demo --stage main --max-trials 10000
+.venv-manager/bin/python inspect_study.py export runs/pd-demo runs/pd-demo-export
+```
+
+For another game, replace `pd` with its study ID and use new output directories.
+These commands default to synthetic mode and spend no API credits. For the
+prepared live LLM study, use the single command at the top of this page.
 
 These **four established game families** are the active paper experiments.
 Our particular payoff values, added costs and collection controls are adaptations,
@@ -83,7 +127,7 @@ remain intact. Fixing billing alone will not resume that superseded suite.
 | --- | --- | --- |
 | [Original payoff grid](docs/post-study.md) | Four models; 169 payoff settings; 1,350 valid paired games. Includes PD, Stag Hunt, Chicken, dominance and boundary regions. | No added-cost intervention, Battle of the Sexes study, or precise behavioral threshold estimate. |
 | [Earlier oversight study](docs/oversight-validation-results.md) | Three models; 3,660 main decisions plus 12 pilot decisions, at fixed human protection settings. | Custom-prototype evidence; not validation of a published oversight design or of the canonical cost studies. No empirical equilibrium or safety guarantee. |
-| Controlled cost studies | Budgeted collector, synthetic checks and archived billing failures. | No live results; the earlier mixed protocol is superseded. New suites contain only the four canonical games. |
+| Controlled cost studies | Budgeted collector, synthetic checks and archived billing failures. | No live results; the earlier mixed protocol is superseded. The prepared manager run includes the four canonical games plus the private/audit studies above. |
 
 Lean checks payoff statements for recorded choices in the four canonical
 games. It does not verify a model's internal reasoning or certify the oversight
