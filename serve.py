@@ -173,6 +173,13 @@ class Handler(BaseHTTPRequestHandler):
         except ValueError:
             self.reply(400, b"Invalid request URL.", "text/plain")
             return
+        # A stale generated site must not restore retired games or their assets.
+        retired = {"science", "science.html", "science.js", "science-engine.js",
+                   "off-switch", "off-switch.html", "resource-control", "resource-control.html",
+                   "uncertainty.js", "uncertainty-engine.js", "uncertainty.css"}
+        if url.path.removeprefix("/") in retired:
+            self.reply(404, b"This prototype has been retired. See docs/design-sources.md.", "text/plain")
+            return
         if url.path == "/api/game":
             try:
                 result = analyze(parse_qs(url.query, keep_blank_values=True, max_num_fields=3))
@@ -198,13 +205,10 @@ class Handler(BaseHTTPRequestHandler):
             return
         web_names = ("index.html", "games.html", "oversight.html", "results.html",
                      "oversight.js", "game-engine.js", "lab.css",
-                     "resource-control.html",
-                     "uncertainty.css", "uncertainty.js", "uncertainty-engine.js",
                      "lab-design.html", "lab-design.js", "lab-examples.json")
         web_routes = {f"/{name}": ROOT / "web" / name for name in web_names}
         web_routes.update({"/": ROOT / "web/index.html", "/games": ROOT / "web/games.html",
                            "/oversight": ROOT / "web/oversight.html",
-                           "/resource-control": ROOT / "web/resource-control.html",
                            "/lab-design": ROOT / "web/lab-design.html"})
         allowed = dict(web_routes)
         validation = ROOT / "data/oversight/2026-11-09/analysis"

@@ -1,4 +1,4 @@
-"""Plan, collect and report a small oversight LLM validation study."""
+"""Inspect historical oversight studies or run synthetic checks. New paid collection is on hold."""
 import argparse
 import json
 from pathlib import Path
@@ -13,8 +13,9 @@ def main():
     plan.add_argument("directory", type=Path)
     plan.add_argument("--models", type=Path, required=True, help="Explicit model/provider/price specifications JSON")
     plan.add_argument("--budget-usd", required=True)
-    plan.add_argument("--mode", choices=("openrouter", "synthetic"), default="openrouter")
-    plan.add_argument("--design", choices=("legacy", "defense", "attack_cost", "resource"), default="defense",
+    plan.add_argument("--mode", choices=("openrouter", "synthetic"), default="synthetic",
+                      help="Synthetic by default; openrouter plans are historical/review artifacts and cannot collect")
+    plan.add_argument("--design", choices=("legacy", "defense", "attack_cost"), default="defense",
                       help="One fixed-payoff sweep; legacy recreates the retained v1 protocol")
     plan.add_argument("--primary-reps", type=int, default=25)
     plan.add_argument("--framing-reps", type=int, default=10)

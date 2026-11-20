@@ -1,5 +1,11 @@
 # Parameterization audit and next experiment design
 
+**Historical parameterization review.** Resource control is now removed.
+The custom oversight and notebook designs are on hold; only the four canonical
+games remain in default study suites. Read the [current design-source audit](design-sources.md)
+and [current setup](controlled-thresholds.md). The retained sections below explain
+earlier choices; they are not authorization or instructions to run retired studies.
+
 19 November 2026. **Original design review, not new results.**
 
 **Implementation follow-up:** the chosen controlled design now has v2 schedules,

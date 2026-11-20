@@ -108,11 +108,17 @@ class BuiltSiteTests(unittest.TestCase):
         self.assertIn(f"{post['dominance_correct']:,} / {post['dominance_decisions']:,}", page)
         self.assertIn("new fixed-baseline penalty sweep not run", page)
         self.assertIn("Battle of the Sexes", page)
-        self.assertIn("Resource control · hidden incentives", page)
+        self.assertNotIn("Resource control · hidden incentives", page)
         self.assertNotIn("Off-switch", page)
-        for filename in ("resource-control.html", "lab.css", "uncertainty.css", "uncertainty.js", "uncertainty-engine.js"):
+        for prototype in ("oversight.html", "lab-design.html"):
+            content = (self.site / prototype).read_text()
+            self.assertIn("Custom prototype", content)
+            self.assertIn("design-sources.md", content)
+        self.assertIn("published-design mapping", page)
+        self.assertTrue((self.site / "docs/design-sources.md").is_file())
+        for filename in ("lab.css",):
             self.assertEqual((self.site / filename).read_bytes(), (build_site.ROOT / "web" / filename).read_bytes())
-        for retired in ("science.html", "science.js", "science-engine.js", "off-switch.html", "science.css"):
+        for retired in ("science.html", "science.js", "science-engine.js", "off-switch.html", "science.css", "resource-control.html", "uncertainty.css", "uncertainty.js", "uncertainty-engine.js"):
             self.assertFalse((self.site / retired).exists())
             for active in self.site.glob("*.html"):
                 self.assertNotIn(retired, active.read_text())

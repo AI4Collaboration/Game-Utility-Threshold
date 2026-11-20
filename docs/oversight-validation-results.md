@@ -1,5 +1,10 @@
 # Historical oversight study: collected 9 November 2026
 
+**Historical custom-prototype evidence.** These observations remain valid
+records of this specific task. The game is outside the active paper experiments
+pending [design review](design-sources.md); these data do not validate a
+published oversight design or the canonical cost studies.
+
 **Current-plan status (19 November): this report is historical evidence, not
 completion of the selected controlled-study validation.** The old neutral
 defense conditions overlap with the new base-defense planner, but no new v2

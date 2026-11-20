@@ -63,7 +63,7 @@ def construct(directory, studies, budget_usd, seed):
 
 
 def prepare(directory, models, budget_usd='45', repetitions=10, control_repetitions=3,
-            defense_reps=25, tie_reps=10, seed=20261119):
+            seed=20261119):
     directory = Path(directory)
     if (directory/'manifest.json').exists():
         raise FileExistsError('Never overwrite an existing suite')
@@ -77,11 +77,6 @@ def prepare(directory, models, budget_usd='45', repetitions=10, control_repetiti
                        model_spec=model, repetitions=repetitions, control_repetitions=control_repetitions,
                        seed=seed+mi, temperature=.7, max_tokens=128)
             studies.append({'name': name, 'family': 'canonical', 'sha256': plan['sha256']})
-    for design, repeats in (('defense', defense_reps), ('attack_cost', tie_reps)):
-        name = 'oversight-'+design
-        plan = sequential.save_plan(directory/name, models=models, budget_usd=budget_usd,
-                  primary_reps=repeats, framing_reps=repeats, seed=seed, design=design)
-        studies.append({'name': name, 'family': 'sequential', 'sha256': plan['sha256']})
     manifest, _ = construct(directory, studies, budget_usd, seed)
     (directory/'manifest.json').write_text(json.dumps(manifest, indent=2)+'\n')
     return manifest
@@ -155,6 +150,9 @@ def collect(directory, stage, *, live=False, max_calls=100, workers=8, transport
     if not live or stage not in ('pilot', 'main') or type(max_calls) is not int or max_calls < 1 or type(workers) is not int or not 1 <= workers <= 16:
         raise ValueError('Require --live, explicit stage/call cap, and 1..16 workers')
     directory = Path(directory)
+    manifest = _json((directory/'manifest.json').read_text())
+    if any(s['family'] != 'canonical' for s in manifest['studies']):
+        raise ValueError('This suite contains an unapproved custom prototype. Paid collection is on hold pending a published-design mapping; create a new canonical-only plan. See docs/design-sources.md.')
     key = sequential.local_key() if transport is None else None
     lock = directory/'.collect.lock'
     with lock.open('x') as out:

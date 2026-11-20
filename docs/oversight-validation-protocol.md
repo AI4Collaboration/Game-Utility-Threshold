@@ -1,5 +1,9 @@
 # Oversight game: LLM validation protocol
 
+**Historical protocol for a custom prototype.** Retained for reproducibility,
+not an approved new paper experiment. Paid collection is blocked pending
+[a published-design mapping](design-sources.md).
+
 This protocol specifies the first empirical test of the deterministic
 [oversight game](oversight.md). It is a plan, not a statement that observations
 have already been collected. The saved study manifest identifies the actual

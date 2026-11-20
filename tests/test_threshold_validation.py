@@ -5,9 +5,12 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import Mock, patch
 
 from gut import experiment as canonical
 from gut import threshold_validation as suite
+from gut import oversight_experiment as sequential
+from gut.canonical import EXAMPLES
 
 
 MODEL = {'id': 'test/model', 'provider': 'test', 'returned_provider': 'Test',
@@ -28,7 +31,35 @@ class SharedValidationTests(unittest.TestCase):
 
     def prepare(self, budget='1'):
         return suite.prepare(self.path, [MODEL], budget_usd=budget, repetitions=2,
-                             control_repetitions=1, defense_reps=1, tie_reps=1)
+                             control_repetitions=1)
+
+    def test_new_live_suite_contains_only_established_games(self):
+        plan = self.prepare()
+        self.assertEqual({s['family'] for s in plan['studies']}, {'canonical'})
+        self.assertEqual({s['name'] for s in plan['studies']}, {f'{g}-m0' for g in EXAMPLES})
+        self.assertEqual(len(plan['studies']), 4)
+        self.assertFalse((self.path/'ledger.jsonl').exists())
+
+    def test_historical_mixed_suite_can_be_read_but_not_collected(self):
+        plan = self.prepare()
+        old = sequential.save_plan(self.path/'oversight', models=[MODEL], budget_usd='1',
+                                   mode='openrouter', primary_reps=1, framing_reps=1)
+        studies = plan['studies'] + [{'name': 'oversight', 'family': 'sequential', 'sha256': old['sha256']}]
+        mixed, _ = suite.construct(self.path, studies, '1', plan['seed'])
+        manifest = self.path/'manifest.json'
+        manifest.write_text(json.dumps(mixed))
+        original = manifest.read_bytes()
+        self.assertEqual(suite.read_ledger(self.path)[0], mixed)
+        transport = Mock()
+        with patch('gut.oversight_experiment.local_key') as key:
+            for override in (None, transport):
+                with self.assertRaisesRegex(ValueError, 'unapproved custom prototype'):
+                    suite.collect(self.path, 'pilot', live=True, transport=override)
+            key.assert_not_called()
+        transport.assert_not_called()
+        self.assertEqual(manifest.read_bytes(), original)
+        self.assertFalse((self.path/'ledger.jsonl').exists())
+        self.assertFalse((self.path/'.collect.lock').exists())
 
     def test_smaller_controls_balance_every_role_and_block(self):
         plan = canonical.make_plan(version='v2', repetitions=10, control_repetitions=3)

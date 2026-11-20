@@ -8,7 +8,7 @@ import os
 from pathlib import Path
 import random
 
-from .experiment import digest, labels, now, openrouter
+from .experiment import digest, labels, now
 from .oversight import DEFENSES, Oversight
 from .study import _json
 
@@ -30,7 +30,7 @@ def conditions(primary_reps=25, framing_reps=10):
 
 
 def controlled_conditions(design, repetitions):
-    """One intervention per study; type panels remain separate in resource control."""
+    """Historical prototype designs; new paid collection is on hold."""
     base = {k: str(v) for k, v in Oversight().__dict__.items()}
     if design == "defense":
         return [c for c in conditions(repetitions, repetitions) if c["sweep"] == "defense"]
@@ -38,11 +38,6 @@ def controlled_conditions(design, repetitions):
         return [{"id": f"attack-cost-{a}", "sweep": "attack_cost", "x": a, "d": "3/10",
                  "framing": "neutral", "parameters": {**base, "a": a}, "repetitions": repetitions}
                 for a in ("4/5", "17/20", "9/10", "19/20", "1")]
-    if design == "resource":
-        return [{"id": f"resource-{kind}-d{int(d*10):02}", "sweep": f"resource_{kind}",
-                 "x": str(d), "d": str(d), "framing": "neutral", "type": kind,
-                 "parameters": {**base, "v": value}, "repetitions": repetitions}
-                for kind, value in (("low", "4"), ("high", "8")) for d in DEFENSES]
     raise ValueError("Unknown controlled design")
 
 
@@ -81,7 +76,7 @@ def reservation(model, max_tokens=128):
 
 def make_plan(models, budget_usd, mode="openrouter", primary_reps=25, framing_reps=10, seed=20261109,
               design="legacy"):
-    if design not in ("legacy", "defense", "attack_cost", "resource"):
+    if design not in ("legacy", "defense", "attack_cost"):
         raise ValueError("Unknown study design")
     if mode not in ("openrouter", "synthetic"):
         raise ValueError("Unknown collection mode.")
@@ -141,8 +136,6 @@ def make_plan(models, budget_usd, mode="openrouter", primary_reps=25, framing_re
     if design != "legacy":
         plan.update(protocol="oversight-threshold-v2", design=design,
                     scope="Conditional AI choices at imposed protection; no empirical human planning or equilibrium play.")
-        if design == "resource":
-            plan["information"] = "AI receives its own type-specific final payoffs. Human defense is imposed before the response; no type-dependent human policy is tested. Prior is not an AI treatment."
     return {**plan, "sha256": digest(plan)}
 
 
@@ -337,9 +330,8 @@ def collect(directory, stage="pilot", *, live=False, max_calls=100, workers=4, t
     if stage not in ("pilot", "main") or type(max_calls) is not int or max_calls < 1 or type(workers) is not int or not 1 <= workers <= 8:
         raise ValueError("Invalid stage, call count or worker count.")
     plan, _, _, _ = load_run(directory)
-    if plan["mode"] == "openrouter" and not live:
-        raise ValueError("Paid requests require --live.")
-    key = local_key() if plan["mode"] == "openrouter" and transport is None else None
+    if plan["mode"] == "openrouter":
+        raise ValueError("Paid oversight collection is on hold: this custom prototype needs a published-design mapping. See docs/design-sources.md. Historical analysis and synthetic checks remain available.")
     lock = directory/".collect.lock"
     with lock.open("x") as out:
         out.write(str(os.getpid()))
@@ -372,7 +364,7 @@ def collect(directory, stage="pilot", *, live=False, max_calls=100, workers=4, t
 
             def call(job):
                 try:
-                    return transport(job, plan) if transport else synthetic(job, plan) if plan["mode"] == "synthetic" else openrouter(job, key)
+                    return transport(job, plan) if transport else synthetic(job, plan)
                 except Exception as exc:
                     return 0, "", type(exc).__name__
 
@@ -397,9 +389,6 @@ def collect(directory, stage="pilot", *, live=False, max_calls=100, workers=4, t
                 for future in done:
                     job = pending.pop(future)
                     status, body, error = future.result()
-                    # Neither prompts nor logs contain the key, even if a service echoes it.
-                    if key:
-                        body = body.replace(key, "[REDACTED_API_KEY]")
                     event = {"event": "finished", "id": job["id"], "http_status": status, "body": body, "error": error}
                     append(event)
                     cost = cost_from_body(body)

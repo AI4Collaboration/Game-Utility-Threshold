@@ -19,9 +19,7 @@ import tempfile
 from .oversight import ACTIONS, Oversight
 
 SWEEPS = {"defense": ("Defense level d", "d"), "value": ("Resource value v", "v"),
-          "attack_cost": ("Attack cost a", "a"), "penalty": ("Full-defense penalty p", "p"),
-          "resource_low": ("Defense d · low-value type (v=4)", "d"),
-          "resource_high": ("Defense d · high-value type (v=8)", "d")}
+          "attack_cost": ("Attack cost a", "a"), "penalty": ("Full-defense penalty p", "p")}
 
 
 def interval(blocks, lower=0, upper=1):
@@ -272,8 +270,7 @@ def report(directory):
         save(fig, "presentation-blocks", "Descriptive within-block rates for both wordings, without pooled uncertainty. Blocks 0/1 map A to cooperation; blocks 2/3 map B to cooperation. Even blocks show cooperation first; odd blocks show attack first. Missing block estimates remain absent. Lines connect sampled settings and are not fitted response curves.")
 
     confusion = []
-    comparison_sweeps = ["resource_low", "resource_high"] if plan.get("design") == "resource" else [
-        "attack_cost" if plan.get("design") == "attack_cost" else "defense"]
+    comparison_sweeps = ["attack_cost" if plan.get("design") == "attack_cost" else "defense"]
     fig, axes = plt.subplots(len(comparison_sweeps), len(model_ids), squeeze=False,
                              figsize=(4*len(model_ids), 4*len(comparison_sweeps)), layout="constrained")
     for ri, sweep in enumerate(comparison_sweeps):

@@ -6,9 +6,12 @@ Use this directory as the entry point for every game. Implementations stay in
 `gut/` and `web/` so shared calculations are not copied into separate engines.
 **Points are chosen toy rewards, not measured real-world benefits or harms.**
 
-**No selected v2 study has been validated with live LLM data.** Evidence entries
+**The four controlled cost studies have not been validated with live LLM data.** Evidence entries
 below describe earlier studies or software checks, not completed validation of
 the controlled design. [Current milestone assessment](../docs/controlled-thresholds.md#aisi-status-all-three-stages-remain-open).
+
+Resource control, off-switch and the earlier science demo are removed. Every
+game must meet the [same source standard](../docs/design-sources.md).
 
 ## Four simultaneous games
 
@@ -73,6 +76,10 @@ player's points? X/Y do not mean cooperation/defection here.
 
 ## Human–AI oversight
 
+**Custom prototype; not an approved paper experiment.** Its specific rules are
+ours. New paid collection is blocked, and default study suites exclude it.
+[Published-design review required](../docs/design-sources.md).
+
 The human first buys protection. The AI sees that choice and cooperates for a
 fixed reward or attacks for resources. Protection reduces captured resources
 and harm, and adds an AI penalty. It is **not a probability of detecting an attack**.
@@ -86,24 +93,11 @@ response would choose protection.
 - Evidence: [3,660 main decisions plus 12 pilot decisions](../docs/oversight-validation-results.md).
   Fixed human protection was tested; empirical two-sided equilibrium play was not.
 
-## Resource control
-
-This extends oversight by making the AI's resource value private: resources
-are worth either 4 or 8 points per unit to it. The human knows the possibilities,
-but not the drawn type. We compare protection chosen for the expected outcome
-with protection chosen to limit attack risk under uncertain type frequencies.
-“Paperclip/resource maximizer” is an informal motivation; the game does not
-simulate manufacturing, long-term accumulation, or an autonomous planning agent.
-
-- [Play resource control](https://ai4collaboration.github.io/Game-Utility-Threshold/resource-control.html) · [Rules](../docs/uncertainty-games.md#resource-control-the-human-does-not-know-the-ais-incentive) · [Design provenance](../docs/uncertainty-games.md#where-the-resource-game-design-came-from).
-- Code: [uncertainty-engine.js](../web/uncertainty-engine.js), reusing [game-engine.js](../web/game-engine.js).
-- UI: [resource-control.html](../web/resource-control.html), shared [uncertainty.js](../web/uncertainty.js) and [styles](../web/uncertainty.css).
-- Toy planner benchmark: [uncertainty-experiment.cjs](../uncertainty-experiment.cjs), with `resource` as its game argument.
-- Type-specific response collector: [oversight_experiment.py](../oversight_experiment.py), with `--design resource`; fixed human defenses, no live run yet.
-- Checks: [engine/baselines](../tests/check_uncertainty.cjs), [UI](../tests/check_uncertainty_ui.cjs).
-- Evidence: exact calculations and synthetic trials only; no live LLM study or Lean proof.
-
 ## Lab Notebook Audit
+
+**Custom prototype; not an approved paper experiment.** The proposed task is
+not taken from the cited oversight experiments. It stays offline and outside
+default study suites pending [design review](../docs/design-sources.md).
 
 The research prototype replaces inflated readings with **selective reporting**:
 swap an eligible low-scoring run for an ineligible better-scoring run. The

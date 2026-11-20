@@ -1,5 +1,10 @@
 # Human–AI oversight lab
 
+**Design status: custom prototype, outside the active paper experiments.**
+The linear payoffs below are ours, not a published experimental design. Paid
+collection is blocked pending [design review](design-sources.md). Historical
+analysis and offline demonstrations remain available.
+
 Run `python3 serve.py` and open <http://127.0.0.1:8765/oversight>.
 The selector also opens the existing four canonical games. Defense belongs to
 this oversight game; it is not silently added to their payoff tables.

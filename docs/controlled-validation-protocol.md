@@ -1,5 +1,14 @@
 # Months 1–3: controlled LLM validation
 
+**Superseded mixed-suite protocol — retained as a historical record.** The
+source audit excludes custom oversight from new study suites. Both archived
+attempts and their dollar holds remain unchanged; the mixed suite is blocked
+from paid collection even if billing is fixed. New plans contain only the four
+canonical games. With the same three model configurations and repetition counts,
+they would contain 12,672 main and 96 pilot requests; no new live plan or calls
+were created in the removal task. The historical sample below is not the current
+runnable suite. See [design sources and scope](design-sources.md).
+
 Frozen 19 November 2026 **before any paid request in this study**. This is a
 bounded first validation, not completion of all AISI deliverables. The user
 authorized new collection; the suite enforces **US$45 including pilots** within
@@ -120,15 +129,13 @@ byte-for-byte and checked against a precollection SHA-256 inventory. Do not pool
 them with this study or silently count them as new observations. New records
 are stored under `data/controlled/2026-11-19/`. API keys and headers are excluded.
 
-```sh
-# A new run only: endpoint models must first be verified and saved.
-python3 threshold_validation.py plan runs/NEW_RUN --models models.json --budget-usd 45
-python3 threshold_validation.py run runs/NEW_RUN --stage pilot --live --max-calls 120
-python3 threshold_validation.py run runs/NEW_RUN --stage main --live --max-calls 16572
-python3 threshold_validation.py status runs/NEW_RUN
-# After collection stops, project the ledger into existing native analyzers.
-python3 threshold_validation.py materialize runs/NEW_RUN
-```
+Historical suites remain readable with `threshold_validation.py status` and
+`materialize`; their plans, failed attempts and cost reservations are unchanged.
+Do not resume them. For a future canonical-only study, create a new directory
+with `threshold_validation.py plan`, verify current endpoint settings and the
+remaining shared spending allowance, then freeze its own pilot and main sample.
+The planner makes no API calls. Removing studies does not reset old spending holds.
+
 
 ## Methodological sources and what we borrow
 

@@ -64,9 +64,8 @@ should be added to the explicit publication list.
 
 Report generation and site deployment do not collect new model responses.
 
-The resource-control application is published at `/resource-control.html`.
-It reuses `game-engine.js` exact arithmetic through `uncertainty-engine.js`.
-The static allowlist includes its controller, styles and specification.
-Toy outputs remain separate from the two retained LLM studies. Node checks
-cover exact game rules and controller state before publication. The retired
-off-switch and science-demo pages are excluded from the build.
+Resource control, off-switch and the introductory science demo are excluded
+from the build. Oversight and Lab Notebook Audit remain clearly labeled custom
+prototypes, outside the paper's active experiment suite. Historical oversight
+results remain accessible with that qualification. The [design-source audit](design-sources.md)
+is published alongside the rules. No replacement application has been added.

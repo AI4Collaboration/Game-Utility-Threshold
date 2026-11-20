@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 from tempfile import TemporaryDirectory
 import unittest
+from unittest.mock import Mock, patch
 
 from gut.oversight_experiment import (acknowledge_failure, collect, conditions, load_run,
     make_plan, observations, parse_choice, prompt, reservation, save_plan, synthetic)
@@ -18,6 +19,20 @@ class OversightExperimentTests(unittest.TestCase):
     def plan(self, path, **changes):
         return save_plan(path, **{**dict(models=[MODEL], budget_usd="1", mode="synthetic",
                                         primary_reps=1, framing_reps=1), **changes})
+
+    def test_custom_prototype_paid_calls_blocked_before_credentials_or_transport(self):
+        for design in ('legacy', 'defense', 'attack_cost'):
+            with self.subTest(design=design), TemporaryDirectory() as path:
+                self.plan(path, mode='openrouter', design=design)
+                transport = Mock()
+                with patch('gut.oversight_experiment.local_key') as key:
+                    for override in (None, transport):
+                        with self.assertRaisesRegex(ValueError, 'published-design mapping'):
+                            collect(path, live=True, transport=override)
+                    key.assert_not_called()
+                transport.assert_not_called()
+                self.assertEqual(load_run(path)[1], {})
+                self.assertFalse((Path(path)/'.collect.lock').exists())
 
     def test_frozen_design_labels_and_order(self):
         plan = make_plan([MODEL], "50")

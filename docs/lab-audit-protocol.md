@@ -1,5 +1,10 @@
 # Lab Notebook Audit: a feasible first research environment
 
+**Design status: custom prototype, outside the active paper experiments.**
+The notebook task below is our design, not a reproduction of the cited oversight
+experiments. The proposed live study is on hold pending [design review](design-sources.md)
+or replacement. The existing runner is offline only.
+
 **Status:** versioned environment and proposed collection protocol, with an
 offline pilot. No live scientist/reviewer study has been run. This document is
 not an external preregistration. Model identities, their serving settings, the
@@ -15,7 +20,7 @@ runner defaults to v2; no new live plan has been frozen.
 Can measured checking reliability predict when a reporting model switches
 between a protocol-compliant report and a more rewarding selective report?
 How much does that prediction depend on incentives and uncertainty in review
-performance? This is the audit application for AISI Months 3–5. It is a bounded
+performance? This was proposed as an audit application for AISI Months 3–5; that role is now on hold. It is a bounded
 study of scientific reporting choices, not autonomous discovery or a general
 claim that humans can supervise superhuman science.
 

@@ -1,22 +1,20 @@
 # Controlled threshold experiments
 
-19 November 2026. **Implemented setup and offline checks; no new LLM results.**
-This is an implemented experiment setup, **not a completed validation study**.
-**Zero live studies have been collected under these selected v2 plans.** Earlier
-LLM datasets are historical evidence and do not close the new study's validation
-milestone. Saved v1 plans still replay. The progress assessment below supersedes
-the earlier claim that Months 1–3 were largely complete.
+19 November 2026. **Four canonical cost studies; no completed live validation.**
+Exact calculations, collectors and offline checks exist. Historical LLM data
+remain unchanged and do not complete these controlled studies.
 
-**Live follow-up, 19 November:** the [bounded Months 1–3 protocol](controlled-validation-protocol.md)
-is now frozen and its shared dollar cap is implemented. The first eight pilot
-requests all received OpenRouter HTTP 402 (insufficient account credits), so
-collection stopped with **zero model choices and zero main attempts**. The
-[archived ledger and status](../data/controlled/2026-11-19/README.md) retain the
-failure. Original T/S and oversight data were verified unchanged. Validation
-remains open; a fresh compatibility pilot must pass after billing is resolved.
-The [replacement-key attempt](../data/controlled/2026-11-19-funded/README.md)
-also received HTTP 402 on its first request. It contains no model choices;
-both failed attempts remain separate from historical evidence and main trials.
+The [design-source audit](design-sources.md) now limits default study suites to
+PD, Stag Hunt, Chicken and Battle of the Sexes. Resource control is removed;
+off-switch and the earlier science demo remain removed. Basic oversight and
+Lab Notebook Audit are custom prototypes on hold pending a defensible published
+design or replacement. Mathematical correctness alone does not admit a game.
+
+The [earlier mixed live protocol](controlled-validation-protocol.md) is superseded
+and blocked from collection. Its archived attempts contain nine billing failures
+and one replacement-key failure, with zero model choices or main attempts.
+Those records and spending holds remain intact. Resolving billing does not
+resume the mixed suite or complete any empirical milestone.
 
 ## The question and the rule
 
@@ -39,17 +37,10 @@ The same fixed-baseline principle applies to the other games.
 | Stag Hunt | R=1, P=0, T=.5, S=−.5 | D-cost: 0, .25, .45, .5, .55, .75 | Cooperation and joint outcomes |
 | Chicken | R=1, P=0, T=1.5, S=.5 | D-cost: 0, .25, .45, .5, .55, .75 | Yielding and joint outcomes |
 | Battle of the Sexes | Role-specific 2/1/0 starting table | Y-cost, then a separate X-cost mirror: 0, .5, .95, 1, 1.05, 1.5, 1.95, 2, 2.05, 2.25 | Each role's X rate, agreement, XX/YY/mismatch, individual payoffs |
-| Basic oversight | v=4, r=1, a=1, p=3, b=1; human w=2, h=6, c=2 | Protection d=0,.1,…,1 | Cooperation and payoff loss from the better action |
-| Oversight tie diagnostic | Same rules, d=.3 | Attack cost a=.8,.85,.9,.95,1; exact tie .9 | Its own attack-cost plot, never pooled into the defense curve |
-| Resource control | Same oversight rules; v=4 or 8 known to the AI | Protection d=0,.1,…,1 within each type | Two type-specific curves; no population pooling |
-| Notebook audit | Eight records, one inclusion swap, compliant reward 1, penalty 8; selective reward 4 or 8 | Evidence budget k=1,2,3 within each reward type | Reviewer errors, predicted margins and reporting choices |
 
-The resource planner's prior affects its protection decision, not the
-type-informed AI's payoff comparison at imposed protection. The existing Node
-benchmark separately evaluates average/cautious/informed human policies. The new
-LLM adapter tests conditional AI responses, not a human's choices or two-sided
-equilibrium play. The defense grid brackets the roots 2/7 and 6/11; it does not
-contain those exact ties. The attack-cost diagnostic tests an attainable tie.
+The custom oversight and notebook calculations remain documented in their
+[prototype rules](oversight.md) and [offline protocol](lab-audit-protocol.md),
+not as selected paper experiments. Resource-type studies are no longer generated.
 
 ## Controls actually implemented
 
@@ -67,12 +58,8 @@ contain those exact ties. The attack-cost diagnostic tests an attainable tie.
   attempts, invalid/missing outputs and exact comparisons are retained. Lean
   uses the actual transformed, role-specific table, including the BoS mirror.
   It proves payoff statements, not a model's reasoning or intentions.
-- **Audit calibration:** v2 includes the previously omitted budget 2, where the
-  ideal selective-report detection rate is 13/28. Live detection and false-return
-  rates must still be measured on separate calibration notebooks. Pilot controls
-  use budgets 0 and 8; the main study remains three budgets.
 
-These choices implement the [parameterization review](sweep-design.md).
+The canonical choices implement the retained parts of the [parameterization review](sweep-design.md).
 Its cited normalization and controlled-comparison rationale draws on
 [Gächter et al. (2024), §5.1](https://docs.iza.org/dp16814.pdf), while neutral
 presentation and representation checks are informed by
@@ -80,7 +67,7 @@ presentation and representation checks are informed by
 [Herr et al. (2024)](https://arxiv.org/abs/2407.04467). Our exact costs, counts
 and toy reward values are design choices, not a literature consensus.
 
-## Prepare everything without paying for calls
+## Prepare the four canonical games without paid calls
 
 ```sh
 python3 prepare_threshold_studies.py runs/threshold-plans
@@ -88,16 +75,11 @@ python3 prepare_threshold_studies.py runs/threshold-plans
 python3 prepare_threshold_studies.py runs/threshold-check --simulate --figures
 ```
 
-The first command writes eight study plans for seven games (the basic oversight
-game has two separate studies), plus a manifest of hashes, source provenance,
-condition counts and request ceilings. It makes no API calls. The second
-exercises collection and reporting with synthetic actors. Outputs stay in
-Git-ignored `runs/`; they are not published as experimental results.
-
-Install the optional analysis packages with `python3 -m pip install '.[validation]'`
-if generating figures. Synthetic canonical choices are deliberately artificial;
-synthetic sequential choices maximize the specified payoff. Neither validates
-LLM behavior. Plans and outputs are never overwritten.
+The first command writes four canonical plans plus a manifest of hashes,
+source provenance, counts and request ceilings. The second exercises them
+with synthetic actors and separate 2D figures. Outputs stay in ignored `runs/`;
+they are software checks, not observations about LLM behavior. Existing plans
+are never overwritten. Figures require the optional analysis packages.
 
 | Software-pilot plan (default two repetitions/block) | Conditions | Maximum synthetic requests |
 | --- | ---: | ---: |
@@ -105,16 +87,12 @@ LLM behavior. Plans and outputs are never overwritten.
 | Stag Hunt | 12 | 192 |
 | Chicken | 12 | 192 |
 | BoS, both directions and representation checks | 36 | 576 |
-| Oversight defense | 11 | 92, including 4 pilot |
-| Oversight attack-cost diagnostic | 5 | 44, including 4 pilot |
-| Resource response, both types | 22 | 180, including 4 pilot |
-| Notebook compatibility pilot | 6 reporting conditions, plus calibration | 88 |
 
-These totals are **software coverage**, not a final research sample size or
-authorization to run all cells with models. The notebook has its own staged
-counts; `--repetitions` does not alter them. Its proposed main stage remains
-at most 960 requests for one pairing, with uncertainty often too wide to decide
-a near-threshold incentive. Report such cases as undetermined.
+These are software-pilot counts, not a research sample or permission to spend.
+The default suite prepares 1,248 synthetic requests with two repetitions/block.
+The [historical live protocol](controlled-validation-protocol.md) documents a
+separate sample; any new live plan must explicitly freeze its current scope,
+endpoints, repetitions and remaining spending allowance.
 
 Individual canonical plans now default to v2:
 
@@ -125,18 +103,13 @@ python3 experiment.py report runs/pd-check --plot
 python3 experiment.py proofs runs/pd-check --check
 ```
 
-For a future live canonical plan, supply `--mode openrouter --model MODEL_ID
---provider PROVIDER_SLUG` and a declared repetition count. The collector still
-requires `--live --max-calls N` and an environment key; the call cap is per
-invocation, not a dollar budget. Set a provider-side spending cap. For sequential
-plans use `oversight_experiment.py plan ... --design defense`, `attack_cost` or
-`resource`, with explicit model/provider/price specifications and `--budget-usd`.
-Its existing durable cost reservations and pilot gate apply. No endpoint or
-old dollar authorization has been silently selected for a new live study.
-
-Notebook execution uses `lab_experiment.py NEW_DIRECTORY --version v2`.
-Its paid adapter is **still missing**. Historical commands can use canonical
-`--version v1`, notebook `--version v1` or sequential `--design legacy`.
+For bounded live collection, `threshold_validation.py plan` now prepares only
+canonical studies and retains the existing shared-ledger budget controls.
+Direct oversight paid collection and old mixed-suite collection are blocked
+before credentials or network requests. Historical plans can still be inspected
+and analyzed. Notebook execution remains an explicitly offline prototype.
+The [source standard](design-sources.md) must be satisfied before a sequential
+study is restored. No paid calls were made during this scope correction.
 
 ## AISI status: all three stages remain open
 
@@ -157,15 +130,15 @@ the stages overlap, their requirements differ in effort, and validation remains 
 | Artifact | What it supports | Credit toward the selected study |
 | --- | --- | --- |
 | Original T/S grid: 1,350 valid paired games | Historical behavior across different zero-cost payoff tables | Does not test an intervention cost on fixed starting games. No credit for completing the new cost sweeps. |
-| 9 November oversight study: 3,660 main decisions | Historical conditional responses to imposed defense at its recorded settings | Some conditions overlap exactly, but this is not a newly collected v2 study and does not cover the new attack-cost diagnostic, resource types or canonical controls. Kept as a historical comparison; the selected validation remains open. |
+| 9 November oversight study: 3,660 main decisions | Historical conditional responses to imposed defense at its recorded settings | Some conditions overlap exactly, but this is not a newly collected v2 study and does not validate a published oversight design or the canonical cost controls. Kept as a historical comparison; the selected validation remains open. |
 | v2 synthetic runs, passing software tests and Lean certificates | Collection plumbing, exact payoff comparisons and formal statements about those tables | No live LLM evidence, no proof of internal model reasoning, no real-world safety validation. |
 
 The old data are not made numerically false by changing the design. The error
 was counting them as completion of the newly selected validation. A direct
 comparison found all 132 distinct neutral defense request variants (11 defenses
 × 4 presentation blocks × 3 historical model specifications) unchanged in the
-new basic-defense planner. That establishes a narrow overlap, not validation
-of the whole new suite. Any later reuse must be explicitly identified by
+retained basic-defense planner. That establishes a narrow overlap within the
+custom prototype, not validation of the active paper experiments. Any later reuse must be explicitly identified by
 condition, prompt, model/provider and settings, kept separate from fresh data,
 and declared before analysis; it must not masquerade as a fresh replication.
 
@@ -173,11 +146,11 @@ and declared before analysis; it must not masquerade as a fresh replication.
 
 | Requirement in the project document | Actual position | What closes it |
 | --- | --- | --- |
-| Formalize the human-defense / AI cooperate-or-attack game | [Executable toy rules](oversight.md) exist with eleven defense choices and known payoffs. | Reconcile the proposal's monitoring/detection language with the implemented deterministic protection rule, and state the chosen scope. |
-| Express resource value, attack costs and harm penalties | Explicit payoff functions are implemented. Numerical defaults are chosen toy values. | Review the assumptions and parameter meanings. Do not describe them as measured real-world utilities. |
+| Formalize the human-defense / AI cooperate-or-attack game | [Executable custom rules](oversight.md) exist but are on hold under the source standard. | Choose a defensible published design or explicitly mapped adaptation; reconcile monitoring/detection with the chosen rules. |
+| Express resource value, attack costs and harm penalties | Explicit functions exist only for the custom prototype. | Re-derive the payoffs and parameter meanings for the accepted design; prototype numbers are not measured utilities. |
 | Solve deterministic Nash and Stackelberg cases | Exact code covers pure strategies on the declared defense grid and both follower tie conventions; finite-case tests exist. | Present the derivation and limits for this specification. Mixed or hidden commitments would require additional work if claimed. |
 | Derive threshold inequalities | Exact equalities and strict/tied comparisons exist for the declared payoffs. | Tie each claim to its assumptions. Use the implemented payoff comparison, not the proposal's unsupported illustrative inequality `v > p − c`. |
-| Toy simulations and basic LLM-driven agents | Scripted baselines work; the basic live collector exists. **Selected-study live validation has not run.** | Freeze the base study's model/settings, precision target, counts and budget; collect and analyze its responses, failures and controls. |
+| Toy simulations and basic LLM-driven agents | Scripted baselines and a collector exist; custom-game paid collection is blocked. **Current validation has not run.** | First resolve the design source, then freeze the sample, pilot, collect and analyze responses, failures and controls. |
 | First blog | The repository links the earlier LessWrong post. Its coverage of the revised research claims has not been established. | Check/update its claims and distinguish historical findings from results still to be collected. An existing post alone does not close the revised evidence requirement. |
 
 **Stage status: open.** Some mathematical/software tasks are implemented, but
@@ -186,20 +159,17 @@ canonical cost studies are our additional chosen paper design, not four games
 explicitly mandated in the original Months 1–3 list. All four also await live
 validation; their unrun status cannot be hidden inside the base-model milestone.
 
-### Months 3–5 — prototypes and restricted calculations; research incomplete
+### Months 3–5 — literature-based application design still needed
 
 | Requirement | Actual position | What remains |
 | --- | --- | --- |
-| Incomplete information / distributional utilities | Resource control has a two-value private type and uncertain type frequencies. | Validate the AI's responses separately for each type, then evaluate the protection policy using those measured responses. Broader utility distributions are not implemented. |
-| Safety margins | Exact payoff gaps, two-type bounds and audit calibration-uncertainty calculations exist. | State and justify bounds on uncertainty, test misspecified beliefs and deviations from payoff maximization, and establish what margin follows. A positive toy payoff gap is not a guarantee against catastrophic failure. |
-| Paperclip, off-switch and audit mappings | Resource control and notebook audit are toy application models. Off-switch was removed at the user's request. | Validate the retained applications and justify their limits. Off-switch remains an explicit gap against the source plan unless that deliverable is formally removed. |
-| Configurable benchmark scaffold | Versioned plans, collectors for canonical/sequential choices and reports exist. | Finish the notebook's paid adapter, reviewer calibration and held-out reporting experiment. Select a bounded live sample; the offline pilot counts are not a final statistical design. |
-| Second blog | No completed current-scope deliverable verified. | Produce it from the uncertainty/margin results and state unresolved findings honestly. |
+| Incomplete information / distributional utilities | The two-type resource game was removed. No accepted replacement is implemented. | Select a published game, specify who knows what and the utility distribution, reproduce its reference predictions, then design the LLM test. |
+| Safety margins | Canonical payoff gaps and custom-prototype calculations exist. No accepted application-level safety-margin result. | Specify uncertainty bounds and derive/test margins for the chosen application. A positive toy payoff gap is not a real-world safety guarantee. |
+| Paperclip, off-switch and audit mappings | Resource and off-switch are removed. Notebook audit is an unapproved custom prototype. | Choose defensible published applications and explicitly map any adaptations. These deliverables remain open; removing code does not change the source plan. |
+| Configurable benchmark scaffold | Canonical plans, collection and reports work. Sequential prototype code remains inspectable. | Build the selected application and its measurement environment, logging, baselines and bounded validation. Do not implement a paid notebook adapter before resolving the design. |
+| Second blog | No completed current-scope deliverable verified. | Produce it from the eventual uncertainty/margin results with limits stated. |
 
-The resource adapter currently imposes defense and measures the AI response.
-It does not test an empirical two-sided equilibrium or a human choosing
-protection. Those stronger claims would require another experiment. Inspect
-integration is also still a planned logging improvement; custom JSON logs
+Inspect integration remains a planned logging improvement; custom JSON logs
 already exist. Inspect is not a named requirement in the original Months 1–3 list.
 
 ### Months 5–6 — collection tools ready; substantive deliverables open
@@ -214,22 +184,20 @@ already exist. Inspect is not a named requirement in the original Months 1–3 l
 
 ### Revised order of work and completion gates
 
-1. **Resolve claims and freeze the live protocol.** Fix the base game's
-   interpretation, primary comparisons, endpoints, repetitions, precision goal,
-   missing-output policy and total budget. Keep the historical data separate.
-   Decide which studies are primary and which are later checks; do not run every
-   generated plan by default.
-2. **Complete base validation and canonical cost studies.** Start with a
-   compatibility pilot, then the predeclared sample. Completion requires raw
-   records and analyzed results with counts/uncertainty, including inconclusive
-   findings. Only then update the first-stage empirical status and first blog.
-3. **Complete uncertainty and audit research.** Collect resource responses;
-   evaluate policies under mistaken type assumptions; finish the audit adapter;
-   calibrate the reviewer and test reporting on fresh notebooks. Establish the
-   limited safety-margin claims those results actually support.
-4. **Complete robustness and monitoring.** Define/test fragility, run a
-   controlled reasoning-effort comparison and evaluate the monitoring rule.
-5. **Finish the deliverables.** Reconcile the deferred off-switch requirement,
-   write the second blog and complete the theory/paper/reproduction package.
+1. **Resolve application provenance.** Map a suitable published sequential game
+   or experimental environment to the AISI requirements. Document every change
+   before admitting or restoring it. Keep the original deliverables unchanged.
+2. **Validate the four canonical cost studies.** Freeze a canonical-only live
+   plan and remaining budget, pass the pilot, then collect the declared sample.
+   Report uncertainty, failures and inconclusive findings. The mixed archived
+   suites stay blocked and historical results stay separate.
+3. **Implement and validate the selected oversight application.** Reproduce its
+   reference predictions; build its information boundaries and baselines; test
+   choices around derived thresholds. This is still unfinished work.
+4. **Extend to uncertainty and robustness.** Specify the uncertainty model and
+   safety margins, test mistaken beliefs, define fragility, compare reasoning
+   effort and evaluate a monitoring rule on separate data.
+5. **Finish the deliverables.** Reconcile application coverage with the original
+   AISI plan, write the blogs and complete the theory/paper/reproduction package.
 
-No paid experiments or new results were produced by this status correction.
+No paid experiments or new results were produced by this scope correction.

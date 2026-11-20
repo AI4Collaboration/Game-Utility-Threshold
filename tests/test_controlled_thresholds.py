@@ -4,7 +4,6 @@ from copy import deepcopy
 from fractions import Fraction as F
 import json
 import math
-import shutil
 from pathlib import Path
 import tempfile
 import unittest
@@ -126,24 +125,15 @@ class ControlledThresholdTests(unittest.TestCase):
         self.assertEqual([Oversight(**c['parameters']).margin(c['d']) for c in costs],
                          [F(-1, 10), F(-1, 20), F(0), F(1, 20), F(1, 10)])
 
-    @unittest.skipUnless(shutil.which('node'), 'Node required for browser-engine agreement')
-    def test_resource_types_are_separate_and_match_browser_engine(self):
-        import subprocess
-        root = Path(__file__).resolve().parents[1]
-        js = "const g=require('./web/uncertainty-engine.js'); process.stdout.write(JSON.stringify(g.analyze('resource').curve));"
-        curve = json.loads(subprocess.check_output(['node', '-e', js], cwd=root, text=True))
-        cells = oversight.controlled_conditions('resource', 1)
-        self.assertEqual(len(cells), 22)
-        for c in cells:
-            g = Oversight(**c['parameters'])
-            row = next(r for r in curve if F(r['d']['exact']) == F(c['d']))
-            t = next(t for t in row['types'] if t['type'] == c['type'])
-            self.assertEqual(g.margin(c['d']), F(t['margin']['exact']))
-            self.assertEqual(list(g.best_responses(c['d'])), t['best'])
+    def test_retired_resource_design_cannot_be_prepared(self):
+        with self.assertRaises(ValueError):
+            oversight.make_plan([MODEL], '1', mode='synthetic', design='resource')
+        with self.assertRaises(ValueError):
+            oversight.controlled_conditions('resource', 1)
 
     def test_new_sequential_plans_collect_and_reanalyze_without_pooling(self):
         with tempfile.TemporaryDirectory() as tmp:
-            for design, n in (('defense', 11), ('attack_cost', 5), ('resource', 22)):
+            for design, n in (('defense', 11), ('attack_cost', 5)):
                 directory = Path(tmp)/design
                 plan = oversight.save_plan(directory, models=[MODEL], budget_usd='1', mode='synthetic',
                                            primary_reps=1, framing_reps=1, design=design)
@@ -156,8 +146,6 @@ class ControlledThresholdTests(unittest.TestCase):
                 summary = oversight_summary(loaded, rows)
                 self.assertEqual(len(summary['cells']), n)
                 self.assertTrue(all(r['optimal_rate'] == 1 for r in summary['cells']))
-                if design == 'resource':
-                    self.assertEqual({r['sweep'] for r in summary['cells']}, {'resource_low', 'resource_high'})
 
     def test_notebook_v2_includes_first_crossing_and_controls(self):
         pilot, main = lab.make_plan(version='v2'), lab.make_plan(version='v2', scale='main')
@@ -177,7 +165,7 @@ class ControlledThresholdTests(unittest.TestCase):
             directory = Path(tmp)/'suite'
             manifest = prepare(directory, repetitions=1)
             self.assertEqual(manifest['live_model_calls'], 0)
-            self.assertEqual(len(manifest['studies']), 8)
+            self.assertEqual({s['study'] for s in manifest['studies']}, set(EXAMPLES))
             self.assertFalse(list(directory.rglob('records*')))
             self.assertTrue(all((directory/e['plan']).is_file() for e in manifest['studies']))
             with self.assertRaises(FileExistsError):

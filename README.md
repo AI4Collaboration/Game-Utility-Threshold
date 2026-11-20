@@ -7,7 +7,7 @@ our games, exact calculations, interactive demos, and retained model experiments
 [Play the games](https://ai4collaboration.github.io/Game-Utility-Threshold/games.html)
 · [See experimental results](https://ai4collaboration.github.io/Game-Utility-Threshold/results.html)
 · [Find a game's code](games/README.md)
-· [Sweep design](docs/sweep-design.md)
+· [Design sources and scope](docs/design-sources.md)
 · [Controlled experiment setup and AISI progress](docs/controlled-thresholds.md)
 · [Methods and plans](docs/README.md)
 · [Datasets](data/README.md)
@@ -23,43 +23,45 @@ crossing it can change which choice pays more. Each game has its own assumptions
 | Stag Hunt | The better joint outcome requires trust: cooperating alone is costly. | [Stag Hunt](games/README.md#stag-hunt) |
 | Chicken | Each wants the other to yield; both insisting gives the worst outcome. | [Chicken](games/README.md#chicken) |
 | Battle of the Sexes | Both want to coordinate, but prefer different shared outcomes. | [Coordination game](games/README.md#battle-of-the-sexes) |
-| Human–AI oversight | The human chooses protection; the AI sees it and chooses cooperation or a resource attack. | [Oversight](games/README.md#humanai-oversight) |
-| Resource control | The same protection problem, but the human does not know how strongly the AI values resources. | [Resource control](games/README.md#resource-control) |
-| Lab Notebook Audit | A reporting agent can swap an eligible run for a better-looking ineligible run; a reviewer checks limited evidence. | [Research prototype](games/README.md#lab-notebook-audit) |
 
-These are four small simultaneous games, two protection settings, and one
-science-audit environment. They are not seven completed LLM studies. Shared engines keep the same calculations consistent across games.
+These **four established game families** are the active paper experiments.
+Our particular payoff values, added costs and collection controls are adaptations,
+not a replication of one published experiment. Read the [design-source audit](docs/design-sources.md).
 
-The off-switch game and the earlier science demo were removed from the active
-scope on 19 November 2026; they remain recoverable in Git history. Lab Notebook
-Audit is retained. This intentionally defers the AISI plan’s off-switch example.
+The resource/paperclip game has been removed. Off-switch and the earlier science
+demo remain removed. Two custom prototypes remain available for inspection:
+[protection/attack oversight](games/README.md#humanai-oversight) and
+[Lab Notebook Audit](games/README.md#lab-notebook-audit). They are **excluded
+from new paper-study suites** pending a defensible published-design mapping.
+Paid oversight collection is blocked; the notebook runner is offline only.
 
 ## Current research status
 
-**The selected controlled-study design has no completed live LLM validation.**
-Months 1–3 remain open: implemented equations, solvers and collectors do not
-complete the revised empirical work. Months 3–5 and 5–6 are also incomplete.
-See the [requirement-by-requirement assessment and next steps](docs/controlled-thresholds.md#aisi-status-all-three-stages-remain-open).
+**The controlled cost studies have no completed live LLM validation.** The four
+standard games have exact payoff comparisons, threshold solvers, pure Nash
+calculations, collectors and synthetic checks. Those are mathematical and
+software results, not evidence that models follow the predicted incentives.
+Months 1–3, 3–5 and 5–6 remain open; see the
+[requirement-by-requirement assessment](docs/controlled-thresholds.md#aisi-status-all-three-stages-remain-open).
 
-The [new live protocol](docs/controlled-validation-protocol.md) is frozen.
-Collection was attempted on 19 November, but OpenRouter rejected all eight
-initial pilot requests for insufficient account credits. **No main requests or
-new model choices were collected.** [Failure records and status](data/controlled/2026-11-19/README.md)
-are preserved alongside the unchanged historical datasets.
-The [replacement-key attempt](data/controlled/2026-11-19-funded/README.md)
-was also blocked by account credits on its first request; validation is still pending.
+The [earlier mixed live protocol](docs/controlled-validation-protocol.md) is now
+superseded: it included the custom oversight prototype. New suite plans include
+only the four standard games. The two archived compatibility attempts recorded
+nine billing rejections and one replacement-key rejection, respectively, with
+**zero model choices and zero main attempts**. Their ledgers and spending holds
+remain intact. Fixing billing alone will not resume that superseded suite.
 
 ## Historical model studies
 
 | Historical evidence | What was collected | What it does not establish for the current plan |
 | --- | --- | --- |
 | [Original payoff grid](docs/post-study.md) | Four models; 169 payoff settings; 1,350 valid paired games. Includes PD, Stag Hunt, Chicken, dominance and boundary regions. | No added-cost intervention, Battle of the Sexes study, or precise behavioral threshold estimate. |
-| [Earlier oversight study](docs/oversight-validation-results.md) | Three models; 3,660 main decisions plus 12 pilot decisions, at fixed human protection settings. | Not completion of the selected v2 validation. Some defense conditions overlap; the new diagnostic and broader suite remain unrun. No empirical equilibrium or safety guarantee. |
-| Selected v2 studies | Frozen live protocol, budgeted collector, synthetic checks and archived billing failures. | No live model results under the selected plans. The notebook audit's paid collector is still to be implemented. |
+| [Earlier oversight study](docs/oversight-validation-results.md) | Three models; 3,660 main decisions plus 12 pilot decisions, at fixed human protection settings. | Custom-prototype evidence; not validation of a published oversight design or of the canonical cost studies. No empirical equilibrium or safety guarantee. |
+| Controlled cost studies | Budgeted collector, synthetic checks and archived billing failures. | No live results; the earlier mixed protocol is superseded. New suites contain only the four canonical games. |
 
 Lean checks payoff statements for recorded choices in the four canonical
 games. It does not verify a model's internal reasoning or certify the oversight
-and uncertainty games. See [proof scope](lean/README.md).
+prototype. See [proof scope](lean/README.md).
 
 ## Repository map
 
@@ -94,15 +96,14 @@ Use `--port 8766` if needed. The public site needs no account or API key.
 | Audit the retained original grid | `python3 reproduce.py --data-only` |
 | Rebuild its figures and report | [Post reproduction](docs/post-study.md#reproduce-offline) |
 | Run a synthetic canonical cost study | [Cost-study commands](docs/experiments.md#run-the-offline-demonstration) |
-| Prepare all controlled threshold studies, without API calls | `python3 prepare_threshold_studies.py runs/threshold-plans` |
+| Prepare the four canonical cost studies, without API calls | `python3 prepare_threshold_studies.py runs/threshold-plans` |
 | Reproduce the completed oversight study | [Dataset instructions](data/oversight/2026-11-09/README.md#reproduce-without-paid-calls) |
-| Run resource-control baselines | [Node benchmark commands](docs/uncertainty-games.md#offline-benchmark-and-records) |
 | Run a synthetic notebook-audit pilot | `python3 lab_experiment.py runs/lab-pilot` |
 | Run Python checks | `python3 -m unittest discover -s tests -v` |
 | Build the public site | [Pages instructions](docs/pages.md#build-without-paid-calls) |
 
 Figures need matplotlib; rebuilding the oversight analysis also needs the
 [pinned analysis packages](data/oversight/2026-11-09/analysis-requirements.txt).
-The uncertainty benchmark needs Node 18+. Lean verification needs the pinned
+Browser checks need Node 18+. Lean verification needs the pinned
 [Lean toolchain](lean/README.md). These offline tasks make no model calls.
 GitHub Actions runs the full checks and deploys successful `main` commits.
