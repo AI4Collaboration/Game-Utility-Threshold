@@ -84,6 +84,10 @@ def prepare(directory, smoke=False):
 
 def bundle(directory, output, destination):
     """Allowlist study artifacts only; never archive a checkout, .env or credentials."""
+    if sys.version_info < (3,14):
+        # Inspect's declared dependency adds its native zstd codec to zipfile.
+        # A report-only process has not necessarily imported Inspect's log reader.
+        import zipfile_zstd  # noqa: F401
     directory, output, destination=map(Path,(directory,output,destination))
     files={}
     for name in ('plan.json','operator.json'):

@@ -25,6 +25,7 @@ jobs:
       - run: python inspect_study.py run runs/ci-inspect --stage pilot --max-trials 1
       - run: python inspect_study.py export runs/ci-inspect runs/ci-inspect-export
       - run: python manager_study.py smoke
+      - run: python manager_study.py smoke
       - run: python private_games.py run runs/ci-private --cost 0 1 --figures
       - run: python reproduce.py
       - run: python experiment.py plan runs/ci --repetitions 2

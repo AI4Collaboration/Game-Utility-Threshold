@@ -4,6 +4,8 @@ import importlib.util
 import json
 from pathlib import Path
 import tempfile
+import subprocess
+import sys
 import unittest
 from unittest.mock import patch
 import zipfile
@@ -121,3 +123,19 @@ class ManagerStudyTests(unittest.TestCase):
             result=M.collect_results(self.directory,figures=False)
             self.assertTrue(result['complete'])
             self.assertTrue((self.directory/'results.zip').exists())
+
+    def test_fresh_report_process_reads_zstd_logs_without_prior_collection(self):
+        if sys.version_info < (3,14):
+            import zipfile_zstd
+        self.directory.mkdir()
+        out=self.directory/'report'; out.mkdir()
+        (out/'report.html').write_text('Test')
+        log=self.directory/'logs'; log.mkdir()
+        with zipfile.ZipFile(log/'native.eval','w',compression=zipfile.ZIP_ZSTANDARD) as archive:
+            archive.writestr('payload.json','{"test":"no model calls"}')
+        result=subprocess.run([sys.executable,'-c',
+            'import sys; from gut.manager_study import bundle; bundle(*sys.argv[1:])',
+            str(self.directory),str(out),str(self.directory/'results.zip')],
+            capture_output=True,text=True,cwd=S.ROOT)
+        self.assertEqual(result.returncode,0,result.stderr)
+        self.assertTrue((self.directory/'results.zip').exists())
