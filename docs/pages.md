@@ -9,7 +9,8 @@ The browser uses exact rational arithmetic for decisions, ties, thresholds,
 and equilibria; decimals are only display coordinates. Tests compare the
 browser calculations with the Python reference. The original oversight game
 still uses eleven human defense choices, observed defense, deterministic
-payoffs, and pure strategies. The notebook-audit page uses examples generated from the Python reference model.
+payoffs, and pure strategies. Separate private PD / Stag Hunt and sequential
+audit pages expose their own exact predictions and scripted previews.
 
 ## Build without paid calls
 
@@ -30,9 +31,10 @@ replace an existing nonempty directory unless it has this builder's
 
 * `index.html`, `games.html`, `oversight.html`: interactive mathematical
   explorers and deterministic toy simulations.
-* `lab-design.html`: the notebook-audit environment with sampled evidence,
-  human practice verdicts and a conditional reporting threshold. Its practice
-  records are not an additional LLM experiment.
+* `private-games.html`: separate PD / Stag Hunt games with fixed private reward
+  profiles, matched information conditions and exact equilibrium sets.
+* `audit.html`: the two-target sequential audit game with known/private rewards.
+  Neither page has live LLM results; their previews are synthetic.
 * `results.html`: catalogue and concise explanation of the two retained
   experimental studies, with their separate assumptions and limitations.
 * `report/`: offline reproduction of the original 169-setting, four-model
@@ -64,8 +66,8 @@ should be added to the explicit publication list.
 
 Report generation and site deployment do not collect new model responses.
 
-Resource control, off-switch and the introductory science demo are excluded
-from the build. Oversight and Lab Notebook Audit remain clearly labeled custom
-prototypes, outside the paper's active experiment suite. Historical oversight
-results remain accessible with that qualification. The [design-source audit](design-sources.md)
-is published alongside the rules. No replacement application has been added.
+Resource control, Lab Notebook Audit and the introductory science demo are
+removed from the build. Off-switch remains requested but is not implemented
+with an accepted published experimental setup. The protection/attack oversight
+prototype and its historical results remain labeled outside the active paper
+studies. The [design-source audit](design-sources.md) is published with the rules.

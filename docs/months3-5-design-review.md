@@ -116,7 +116,7 @@ LLM attacker can isolate the response experiment first; an LLM defender is a
 separate later condition. Code can evaluate a defender's uncertainty even when
 the defender is not itself an LLM.
 
-### 3. Off-switch: a complementary application, not a restored game
+### 3. Off-switch: requested application, faithful implementation pending
 
 [Hadfield-Menell et al., IJCAI 2017, §§2–4](https://aima.eecs.berkeley.edu/~russell/papers/ijcai17-offswitch.pdf)
 specify shared utility, robot uncertainty, and a better-informed human. The
@@ -128,7 +128,8 @@ A faithful starting point would reproduce the action-value comparisons and a
 published figure using the paper's human policy. Replacing the human with an
 LLM would then be an explicit experimental adaptation. The old symmetric-error
 policy and added consultation fee are not the original model. No runnable
-author benchmark was verified. This remains a candidate, not active scope.
+author benchmark was verified in this review. Off-switch remains requested;
+selecting and implementing a faithful published experimental setup is unfinished.
 
 ### 4. Bargaining: useful existing code, weaker safety fit
 

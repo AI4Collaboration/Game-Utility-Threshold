@@ -6,9 +6,12 @@ remain unchanged and do not complete these controlled studies.
 
 The [design-source audit](design-sources.md) now limits default study suites to
 PD, Stag Hunt, Chicken and Battle of the Sexes. Resource control is removed;
-off-switch and the earlier science demo remain removed. Basic oversight and
-Lab Notebook Audit are custom prototypes on hold pending a defensible published
-design or replacement. Mathematical correctness alone does not admit a game.
+Lab Notebook Audit and the earlier science demo are removed. Off-switch remains
+requested, with a faithful published experimental setup still to implement. The
+protection/attack oversight prototype remains on hold. Separate private PD /
+Stag Hunt and a sequential audit game now have exact solvers and native Inspect
+checks, but no live validation. Mathematical correctness alone does not validate
+an experimental design.
 
 The [earlier mixed live protocol](controlled-validation-protocol.md) is superseded
 and blocked from collection. Its archived attempts contain nine billing failures
@@ -38,9 +41,10 @@ The same fixed-baseline principle applies to the other games.
 | Chicken | R=1, P=0, T=1.5, S=.5 | D-cost: 0, .25, .45, .5, .55, .75 | Yielding and joint outcomes |
 | Battle of the Sexes | Role-specific 2/1/0 starting table | Y-cost, then a separate X-cost mirror: 0, .5, .95, 1, 1.05, 1.5, 1.95, 2, 2.05, 2.25 | Each role's X rate, agreement, XX/YY/mismatch, individual payoffs |
 
-The custom oversight and notebook calculations remain documented in their
-[prototype rules](oversight.md) and [offline protocol](lab-audit-protocol.md),
-not as selected paper experiments. Resource-type studies are no longer generated.
+The custom oversight calculations remain documented in the [prototype rules](oversight.md),
+not as selected paper experiments. Resource-type and notebook studies are no
+longer available. The [game catalogue](../games/README.md) lists the separate
+private-information games and the sequential audit implementation.
 
 ## Controls actually implemented
 
@@ -159,22 +163,24 @@ canonical cost studies are our additional chosen paper design, not four games
 explicitly mandated in the original Months 1–3 list. All four also await live
 validation; their unrun status cannot be hidden inside the base-model milestone.
 
-### Months 3–5 — literature-based application design still needed
+### Months 3–5 — separate applications implemented; live validation remains open
 
-The [literature and infrastructure review](months3-5-design-review.md) now
-identifies published candidates and a concrete Inspect integration plan.
-Application selection, implementation and validation remain open.
+The [game catalogue](../games/README.md) records the implemented private PD /
+Stag Hunt extensions and the sequential audit game. Their exact solvers and
+native Inspect checks are software results, not live LLM validation. Off-switch
+remains requested and still needs a faithful published experimental setup.
 
 | Requirement | Actual position | What remains |
 | --- | --- | --- |
-| Incomplete information / distributional utilities | The two-type resource game was removed. No accepted replacement is implemented. | Select a published game, specify who knows what and the utility distribution, reproduce its reference predictions, then design the LLM test. |
-| Safety margins | Canonical payoff gaps and custom-prototype calculations exist. No accepted application-level safety-margin result. | Specify uncertainty bounds and derive/test margins for the chosen application. A positive toy payoff gap is not a real-world safety guarantee. |
-| Paperclip, off-switch and audit mappings | Resource and off-switch are removed. Notebook audit is an unapproved custom prototype. | Choose defensible published applications and explicitly map any adaptations. These deliverables remain open; removing code does not change the source plan. |
-| Configurable benchmark scaffold | Canonical plans, collection and reports work. Sequential prototype code remains inspectable. | Build the selected application and its measurement environment, logging, baselines and bounded validation. Do not implement a paid notebook adapter before resolving the design. |
+| Incomplete information / distributional utilities | Separate PD / Stag Hunt games have fixed private reward profiles and matched revealed/hidden conditions. The sequential audit game also has finite private rewards. Exact solvers and Inspect checks exist. | Freeze and run bounded LLM validation; assess information effects and failures. Broader uncertainty settings are not covered. |
+| Safety margins | Private-game dominance bounds and audit all-type deterrence intervals are implemented. | Empirically test these conditional predictions and their assumptions; a positive toy payoff gap is not a real-world safety guarantee. |
+| Paperclip, off-switch and audit mappings | The sequential audit game maps a two-target subcase of published Audit Games. Resource/paperclip and Lab Notebook Audit are removed. Off-switch remains requested but is not currently implemented. | Complete a faithful published off-switch setup and validate the audit application. Removing a prototype does not complete or cancel an AISI deliverable. |
+| Configurable benchmark scaffold | Canonical collectors, separate private-game reporting, native Inspect tasks and scripted baselines exist. | Freeze live protocols and enforce total study budgets for the new tasks, then collect and analyze model choices. |
 | Second blog | No completed current-scope deliverable verified. | Produce it from the eventual uncertainty/margin results with limits stated. |
 
-Inspect integration remains a planned logging improvement; custom JSON logs
-already exist. Inspect is not a named requirement in the original Months 1–3 list.
+Native Inspect integration is implemented and tested for the audit game and
+private PD / Stag Hunt. The canonical collectors retain their own JSON logs.
+Inspect is not a named requirement in the original Months 1–3 list.
 
 ### Months 5–6 — collection tools ready; substantive deliverables open
 
@@ -195,9 +201,10 @@ already exist. Inspect is not a named requirement in the original Months 1–3 l
    plan and remaining budget, pass the pilot, then collect the declared sample.
    Report uncertainty, failures and inconclusive findings. The mixed archived
    suites stay blocked and historical results stay separate.
-3. **Implement and validate the selected oversight application.** Reproduce its
-   reference predictions; build its information boundaries and baselines; test
-   choices around derived thresholds. This is still unfinished work.
+3. **Validate the implemented audit and private-information games.** Their
+   exact solvers, information boundaries and scripted baselines exist; bounded
+   live model studies remain unrun. Off-switch implementation remains separate
+   unfinished work under the published-experiment requirement.
 4. **Extend to uncertainty and robustness.** Specify the uncertainty model and
    safety margins, test mistaken beliefs, define fragility, compare reasoning
    effort and evaluate a monitoring rule on separate data.

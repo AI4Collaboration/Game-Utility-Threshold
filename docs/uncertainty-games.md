@@ -1,9 +1,11 @@
-# Retired resource and off-switch prototypes
+# Removed prototypes and off-switch status
 
 The resource-control game has been removed from active code, UI, planners and
 publication. Its specific rules were our extension of a custom oversight game,
-not a reproduced published experiment. Off-switch and the introductory science
-demo were already removed and remain out of scope.
+not a reproduced published experiment. Lab Notebook Audit and the introductory
+science demo are also removed. Off-switch remains in the requested research
+scope, but its old implementation is inactive pending a faithful published
+experimental setup.
 
 See the [source audit and rule for every game](design-sources.md). The retired
 off-switch version did adapt a published model, but its human-error rule and

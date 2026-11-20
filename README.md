@@ -43,12 +43,12 @@ hidden conditions keep the same rewards and vary the public action cost. They
 have exact equilibrium sets, an independent Inspect runner and UI; current checks
 are synthetic. The original four games and their collectors are unchanged.
 
-The resource/paperclip game has been removed. Off-switch and the earlier science
-demo remain removed. Two custom prototypes remain available for inspection:
-[protection/attack oversight](games/README.md#humanai-oversight) and
-[Lab Notebook Audit](games/README.md#lab-notebook-audit). They are **excluded
-from new paper-study suites** pending a defensible published-design mapping.
-Paid oversight collection is blocked; the notebook runner is offline only.
+The resource/paperclip game, Lab Notebook Audit and earlier science demo are
+removed. **Off-switch remains in the requested research scope**, but its old
+implementation is inactive: a faithful published experimental setup still needs
+to be implemented and validated. The [protection/attack oversight prototype](games/README.md#humanai-oversight)
+remains inspectable and **excluded from new paper-study suites** pending a
+defensible published-design mapping. Paid oversight collection is blocked.
 
 ## Current research status
 
@@ -113,7 +113,6 @@ Use `--port 8766` if needed. The public site needs no account or API key.
 | Run a synthetic canonical cost study | [Cost-study commands](docs/experiments.md#run-the-offline-demonstration) |
 | Prepare the four canonical cost studies, without API calls | `python3 prepare_threshold_studies.py runs/threshold-plans` |
 | Reproduce the completed oversight study | [Dataset instructions](data/oversight/2026-11-09/README.md#reproduce-without-paid-calls) |
-| Run a synthetic notebook-audit pilot | `python3 lab_experiment.py runs/lab-pilot` |
 | Run a synthetic audit game with native Inspect logs | `python3 audit_experiment.py runs/audit-check --setting hidden` |
 | Run both separate Design 1 games, with 2D figures | `python3 private_games.py run runs/private-check --game all --figures` |
 | View Design 1 native traces | `inspect view --log-dir runs/private-check/logs` |

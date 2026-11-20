@@ -1,8 +1,10 @@
 # Parameterization audit and next experiment design
 
-**Historical parameterization review.** Resource control is now removed.
-The custom oversight and notebook designs are on hold; only the four canonical
-games remain in default study suites. Read the [current design-source audit](design-sources.md)
+**Historical parameterization review.** Resource control and Lab Notebook Audit
+are removed. The custom protection/attack prototype is on hold. Only the four
+canonical games are in the default cost-study suite; the new private-information
+and sequential audit games have separate runners. Off-switch remains requested
+but its faithful published experimental setup is not yet implemented. Read the [current design-source audit](design-sources.md)
 and [current setup](controlled-thresholds.md). The retained sections below explain
 earlier choices; they are not authorization or instructions to run retired studies.
 
@@ -10,13 +12,12 @@ earlier choices; they are not authorization or instructions to run retired studi
 
 **Implementation follow-up:** the chosen controlled design now has v2 schedules,
 four canonical presentation blocks, BoS mirrors, canonical scale/offset checks,
-a separate oversight tie diagnostic, a resource-response adapter and the audit
-1/2/3 schedule. See [current setup and remaining work](controlled-thresholds.md).
+a separate oversight tie diagnostic. The notebook and resource adapters were
+subsequently removed. See [current setup and remaining work](controlled-thresholds.md).
 The sections below preserve the review's original proposed/current distinctions;
 they are a historical snapshot, not the latest implementation status.
-No model calls were made for this audit. The active suite contains four canonical
-games, known-payoff oversight, resource control and Lab Notebook Audit. The
-off-switch and introductory science demo have been retired from active scope.
+No model calls were made for this review. Its earlier prototype discussions
+are historical; use the current catalogue for implemented games and evidence.
 
 ## Decision in plain language
 
@@ -33,10 +34,8 @@ Do not cross every slider with every other slider.
 | Battle of the Sexes | Disagreement 0; preferred agreement 2, other agreement 1, with opposite role preferences | Cost on Y; a separate mirrored treatment must check cost on X | How does a directional cost change agreement and each role's payoff? |
 | Known-payoff oversight | Resource quantity 1, declared rewards/costs/penalty and human payoffs | Defense; separately, attack cost at one fixed defense | Do choices match the exact incentive comparison, including a tie? |
 | Resource control | Two values 4/8, quantity 1, all other payoffs | Defense, with separate results for each private type | Does protection work for each incentive type? |
-| Lab Notebook Audit | Eight records, one inclusion swap, penalty 8, compliant reward 1 | Evidence budget; separate panels for rewards 4/8 | Does measured reviewer reliability predict reporting choices? |
 
-The two resource types and two audit rewards are deliberate small factorial
-comparisons. One-variable slices alone cannot reveal all interactions; these
+The former two-resource-type comparison was a small factorial design. One-variable slices alone cannot reveal all interactions; these
 particular interactions are part of the question, not nuisance axes to hide.
 
 ## What was already sound, and what was missing
@@ -49,8 +48,6 @@ particular interactions are part of the question, not nuisance axes to hide.
 - The completed oversight study varied defense only. It did not independently
   vary all eight payoff parameters. Its 0.1-spaced grid does not contain the
   exact default tie at 2/7 or locate a precise behavioral crossing.
-- Resource control and notebook audit already have explicit information limits
-  and exact reference calculations. They have no live model measurements yet.
 - Missing for the proposed next studies: separate scale/offset controls,
   fully crossed label/order controls for the canonical collector, mirrored
   coordination interventions, and collection support for the new conditions.
@@ -204,35 +201,7 @@ so its worst attack probability equals that upper bound. The cheapest cautious
 defense changes from .3 to .6 above .05. This tests a risk criterion, not a change
 in either type's incentive threshold. These quantities are synthetic assumptions.
 
-## 5. Notebook audit: inspection reliability is measured, not normalized away
-
-Fix the environment: eight records, one same-size inclusion swap, reward 1 for
-an accepted compliant report, reward g in {4,8} for an accepted selective report,
-and penalty 8 for a returned selective report. Vary integer evidence budget k.
-Do not simultaneously vary notebook length, flaw count, penalty and reward scale.
-
-For an evidence-perfect reviewer, two witness records imply
-`q(k)=1−C(6,k)/C(8,k)`. For a model reviewer, separately measure selective-report
-return rate q and compliant-report false-return rate f. Compliance pays more iff
-`(g+8)*q − (g−1) − f > 0`. These error rates depend on the review process; neither
-can be equated with the original resource game's defense variable d.
-
-Current offline budgets are {1,3,6}. They bracket weak/strong evidence but omit
-the first strictly compliant reference budget, k=2. A proposed next plan uses
-{1,2,3}, retaining 0/8 as pilot/development controls and 6 as an optional later
-strong-checking comparison. At k=2, q=13/28 and the high-reward compliance margin
-is only 3/7: a useful case near its threshold. k=1 is an exact reference tie for
-g=4, not necessarily a tie for a fallible reviewer. This proposal has not changed
-the v1 runner or frozen offline plans. With three main budgets the existing
-960-request upper bound can be retained; expanding to four budgets cannot.
-
-Calibrate on separate notebooks, freeze those rates, then test reporting choices
-on fresh notebooks. Propagate uncertainty in q/f into the predicted payoff margin;
-if the interval crosses zero, label the incentive prediction undetermined. Plot
-reviewer errors versus k, then reporting choice versus k in separate g panels.
-Acceptance of an unexposed violation is a detection miss, not a true-negative proof.
-
-## 6. Small controls and stopping rules before paid collection
+## 5. Small controls and stopping rules before paid collection
 
 1. Freeze one study question and its exact cells, prompts, model/provider,
    repetitions, budget, invalid-output policy and primary comparison. The tables
@@ -244,7 +213,7 @@ Acceptance of an unexposed violation is a detection miss, not a true-negative pr
    representations as additional independent repetitions of the same prompt.
 3. Cross neutral label reversal with display order, preserve role information,
    and randomize stateless requests. Canonical currently has two label blocks;
-   oversight and notebook protocols already have four label/order blocks.
+   the historical oversight protocol already has four label/order blocks.
    Wording is a separate matched check, not a third main payoff axis.
 4. Check each cell offline: exact units, payoff ordering, both sides/ties,
    information visibility and expected outcomes under known baselines. The

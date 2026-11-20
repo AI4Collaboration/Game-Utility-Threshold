@@ -9,7 +9,6 @@ import unittest
 
 from gut.canonical import EXAMPLES
 from gut.game import Game
-from gut.lab_audit import exact_detection, expected_payoffs
 from gut.oversight import ACTIONS, DEFENSES, Oversight
 
 
@@ -86,16 +85,6 @@ class ParameterizationTests(unittest.TestCase):
             game = Oversight(a=cost)
             self.assertEqual(game.margin(d), margin)
             self.assertEqual(game.best_responses(d), best)
-
-    def test_audit_two_record_condition_is_near_the_high_gain_crossing(self):
-        self.assertEqual(exact_detection(1), F(1, 4))
-        self.assertEqual(exact_detection(2), F(13, 28))
-        self.assertEqual(exact_detection(3), F(9, 14))
-        self.assertEqual(expected_payoffs(4, exact_detection(1))["margin"], "0")
-        self.assertEqual(expected_payoffs(8, exact_detection(1))["margin"], "-3")
-        self.assertEqual(expected_payoffs(8, exact_detection(2))["margin"], "3/7")
-        # The ideal-checker tie does not survive a false rejection probability.
-        self.assertEqual(expected_payoffs(4, exact_detection(1), F(1, 10))["margin"], "-1/10")
 
 
 if __name__ == "__main__":

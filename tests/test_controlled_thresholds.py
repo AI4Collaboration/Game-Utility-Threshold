@@ -10,7 +10,6 @@ import unittest
 
 from gut.canonical import EXAMPLES, controlled_conditions, controlled_matrix
 from gut import experiment as study
-from gut import lab_experiment as lab
 from gut import oversight_experiment as oversight
 from gut.oversight import Oversight
 from gut.oversight_report import summarize as oversight_summary
@@ -146,19 +145,6 @@ class ControlledThresholdTests(unittest.TestCase):
                 summary = oversight_summary(loaded, rows)
                 self.assertEqual(len(summary['cells']), n)
                 self.assertTrue(all(r['optimal_rate'] == 1 for r in summary['cells']))
-
-    def test_notebook_v2_includes_first_crossing_and_controls(self):
-        pilot, main = lab.make_plan(version='v2'), lab.make_plan(version='v2', scale='main')
-        self.assertEqual(pilot['max_requests'], 88)
-        self.assertEqual(main['max_requests'], 960)
-        self.assertEqual({j['budget'] for j in pilot['calibration']}, {0, 1, 2, 3, 8})
-        self.assertEqual({j['budget'] for j in main['evaluation']}, {1, 2, 3})
-        summary = lab.validate_and_analyze(pilot, lab.run(pilot))
-        self.assertEqual({r['budget'] for r in summary['cells']}, {1, 2, 3})
-        # Exact reference: two witnesses in eight records, choose two uniformly.
-        q = 1-F(math.comb(6, 2), math.comb(8, 2))
-        self.assertEqual(q, F(13, 28))
-        self.assertEqual(16*q-7, F(3, 7))
 
     def test_suite_is_offline_and_refuses_overwrite(self):
         with tempfile.TemporaryDirectory() as tmp:

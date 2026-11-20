@@ -15,7 +15,6 @@
 | Which games are established, adapted, held or removed | [Design-source audit](design-sources.md) |
 | Published uncertainty games, recommended next experiment and Inspect plan | [Months 3–5 design review](months3-5-design-review.md) |
 | Existing libraries, inspected source revisions and integration gaps | [Months 3–5 infrastructure audit](months3-5-infrastructure.md) |
-| Custom prototype on hold: reporting/review environment and offline runner | [Lab Notebook Audit protocol](lab-audit-protocol.md) |
 | Building and publishing the site without new model calls | [GitHub Pages](pages.md) |
 | What the proof checker verifies | [Lean guide](../lean/README.md) |
 

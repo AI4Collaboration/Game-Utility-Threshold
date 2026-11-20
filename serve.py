@@ -176,9 +176,11 @@ class Handler(BaseHTTPRequestHandler):
         # A stale generated site must not restore retired games or their assets.
         retired = {"science", "science.html", "science.js", "science-engine.js",
                    "off-switch", "off-switch.html", "resource-control", "resource-control.html",
-                   "uncertainty.js", "uncertainty-engine.js", "uncertainty.css"}
+                   "uncertainty.js", "uncertainty-engine.js", "uncertainty.css",
+                   "lab-design", "lab-design.html", "lab-design.js", "lab-examples.json",
+                   "lab.css", "docs/lab-audit-protocol.md"}
         if url.path.removeprefix("/") in retired:
-            self.reply(404, b"This prototype has been retired. See docs/design-sources.md.", "text/plain")
+            self.reply(404, b"This implementation is unavailable. See docs/design-sources.md.", "text/plain")
             return
         if url.path == "/api/game":
             try:
@@ -206,14 +208,12 @@ class Handler(BaseHTTPRequestHandler):
         web_names = ("index.html", "games.html", "oversight.html", "results.html",
                      "audit.html", "audit.css", "audit.js", "audit-engine.js",
                      "private-games.html", "private-games.css", "private-games.js", "private-engine.js", "private-games.json",
-                     "oversight.js", "game-engine.js", "lab.css",
-                     "lab-design.html", "lab-design.js", "lab-examples.json")
+                     "oversight.js", "game-engine.js")
         web_routes = {f"/{name}": ROOT / "web" / name for name in web_names}
         web_routes.update({"/": ROOT / "web/index.html", "/games": ROOT / "web/games.html",
                            "/audit": ROOT / "web/audit.html",
                            "/private-games": ROOT / "web/private-games.html",
-                           "/oversight": ROOT / "web/oversight.html",
-                           "/lab-design": ROOT / "web/lab-design.html"})
+                           "/oversight": ROOT / "web/oversight.html"})
         allowed = dict(web_routes)
         validation = ROOT / "data/oversight/2026-11-09/analysis"
         validation_names = ["report.html", "summary.json", "cells.csv", "blocks.csv", "observations.csv"]

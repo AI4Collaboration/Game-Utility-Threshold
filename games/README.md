@@ -10,8 +10,9 @@ Use this directory as the entry point for every game. Implementations stay in
 below describe earlier studies or software checks, not completed validation of
 the controlled design. [Current milestone assessment](../docs/controlled-thresholds.md#aisi-status-all-three-stages-remain-open).
 
-Resource control, off-switch and the earlier science demo are removed. Every
-game must meet the [same source standard](../docs/design-sources.md).
+Resource control, Lab Notebook Audit and the earlier science demo are removed.
+Off-switch remains requested, but a faithful published experimental setup is not
+yet implemented. Every game must meet the [same source standard](../docs/design-sources.md).
 
 ## Four simultaneous games
 
@@ -148,26 +149,14 @@ response would choose protection.
 - Evidence: [3,660 main decisions plus 12 pilot decisions](../docs/oversight-validation-results.md).
   Fixed human protection was tested; empirical two-sided equilibrium play was not.
 
-## Lab Notebook Audit
+## Off-switch: in scope, implementation pending
 
-**Custom prototype; not an approved paper experiment.** The proposed task is
-not taken from the cited oversight experiments. It stays offline and outside
-default study suites pending [design review](../docs/design-sources.md).
-
-The research prototype replaces inflated readings with **selective reporting**:
-swap an eligible low-scoring run for an ineligible better-scoring run. The
-reviewer sees only the submitted report, rules and sampled original records.
-An independent evaluator knows the complete truth. The proposed study measures
-review errors first, then tests reporting choices under those measured incentives.
-
-- [Explore the environment](https://ai4collaboration.github.io/Game-Utility-Threshold/lab-design.html) · [Rules, protocol and remaining steps](../docs/lab-audit-protocol.md).
-- Source of truth: [gut/lab_audit.py](../gut/lab_audit.py); offline study [gut/lab_experiment.py](../gut/lab_experiment.py).
-- UI: [lab-design.html](../web/lab-design.html), [lab-design.js](../web/lab-design.js), [fixed examples](../web/lab-examples.json).
-- Runner: [lab_experiment.py](../lab_experiment.py).
-- Checks: [environment](../tests/test_lab_audit.py), [study](../tests/test_lab_experiment.py), [UI/examples](../tests/check_lab_design.cjs).
-- Evidence: offline pilot only; paid model adapter and live collection remain.
-  A swap leaves two possible witnesses, so detection is `1 − C(6,k)/C(8,k)`,
-  where `C(n,k)` counts subsets. Two possible witness records require this formula.
+The requirement is a faithful published experimental setup, not removal of the
+game family. The previous custom implementation is inactive; its two-state
+reward model, symmetric human-error rule and consultation fee were adaptations.
+The original [Off-Switch Game](https://arxiv.org/abs/1611.08219) provides a
+mathematical model and simulations, not a ready-made LLM collection protocol.
+No current runnable off-switch game or retained live off-switch dataset exists.
 
 Before new model collection, read the [implemented controlled setup](../docs/controlled-thresholds.md) and its remaining live-study requirements. The [parameterization audit](../docs/sweep-design.md) records the rationale.
 

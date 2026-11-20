@@ -25,9 +25,7 @@ ROOT = Path(__file__).resolve().parent
 OVERSIGHT = Path("data/oversight/2026-11-09")
 WEB_FILES = ("index.html", "games.html", "oversight.html", "oversight.js", "game-engine.js", "results.html",
              "audit.html", "audit.css", "audit.js", "audit-engine.js",
-             "private-games.html", "private-games.css", "private-games.js", "private-engine.js", "private-games.json",
-             "lab.css",
-             "lab-design.html", "lab-design.js", "lab-examples.json")
+             "private-games.html", "private-games.css", "private-games.js", "private-engine.js", "private-games.json")
 POST_FILES = ("README.md", "manifest.json", "block-0.json", "block-1.json", "records.jsonl.gz")
 OVERSIGHT_FILES = ("README.md", "analysis-requirements.txt", "checksums.json", "models.json", "plan.json.gz",
                    "provenance.json", "records.jsonl.gz", "anthropic--claude-haiku-4.5-endpoints.json",
@@ -36,7 +34,7 @@ ANALYSIS_FILES = ("report.html", "summary.json", "observations.csv", "cells.csv"
     f"{name}.{extension}" for name in ("sweep-defense", "framing", "presentation-blocks", "confusion")
     for extension in ("png", "svg")))
 DOC_FILES = ("games.md", "experiments.md", "oversight.md", "oversight-validation-protocol.md",
-             "oversight-validation-results.md", "pages.md", "design-sources.md", "lab-audit-protocol.md", "sweep-design.md", "controlled-thresholds.md")
+             "oversight-validation-results.md", "pages.md", "design-sources.md", "sweep-design.md", "controlled-thresholds.md")
 SOURCE_FILES = tuple([*(Path("data/post") / name for name in POST_FILES),
                       *(OVERSIGHT / name for name in OVERSIGHT_FILES),
                       *(OVERSIGHT / "analysis" / name for name in ANALYSIS_FILES),

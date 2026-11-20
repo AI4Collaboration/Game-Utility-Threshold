@@ -27,7 +27,8 @@ in their original directory and are never relabeled as successful observations.
 
 When a specified action becomes less profitable, do model choices change in
 the predicted direction? Test four simultaneous games and the known-payoff
-oversight game. Resource uncertainty and Lab Notebook Audit are later work.
+oversight game. Resource uncertainty and Lab Notebook Audit were proposed later
+work in this historical protocol; both implementations have since been removed.
 
 Keep starting payoff tables fixed and vary only the selected intervention.
 The exact tables, costs and controls are in [the design](controlled-thresholds.md).

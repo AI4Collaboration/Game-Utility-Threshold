@@ -7,16 +7,21 @@ background citation alone does not establish that a design was borrowed.
 
 ## Current scope
 
+Updated after the separate-game implementation and notebook removal. The
+original source review is retained below; implementation status is current.
+
 | Game | Design basis and our changes | Decision |
 | --- | --- | --- |
 | Prisoner's Dilemma | Established simultaneous game: defection initially pays more against either choice, despite mutual cooperation being better than mutual defection. Our fixed table and defection-cost schedule are adaptations. | Retain; controlled LLM validation pending. |
 | Stag Hunt | Established coordination game: cooperation is best against cooperation; the less demanding action is best against itself. Our cost treatment changes these incentives. | Retain; controlled LLM validation pending. |
 | Chicken / Hawk–Dove | Established anti-coordination game: each prefers insisting against yielding and yielding against insisting. Our treatment penalizes insisting. | Retain; controlled LLM validation pending. |
 | Battle of the Sexes | Established coordination game with different preferred shared outcomes. Our 2/1/0 table and separate costs on X and Y retain both player roles. | Retain; controlled LLM validation pending. |
+| Private PD / Stag Hunt | Established base-game structures with Harsanyi-style finite private reward types. Our fixed profiles and action-cost treatments are adaptations; revealed/hidden pairs share actual payoffs. | Separate implementations, exact equilibrium sets and native Inspect checks; no live validation. |
+| Sequential audit | Two-target, fixed-punishment subcase of Blocki et al., Audit Games, with abstention; finite private-reward extension using Bayesian commitment. Demo numbers are ours. | Exact solvers, UI and native Inspect checks; no live validation. Known-mean versus hidden-distribution settings are not a matched information-only comparison. |
 | Human–AI protection/attack oversight | Our linear resource, attack, harm and penalty rules; security-game literature supplies background, not this experiment. | Custom prototype only. Excluded from new study suites; paid collection blocked. Historical data retained. |
-| Lab Notebook Audit | Our eight-record generator, inclusion swap, rewards and checking budgets. Published oversight work motivates the question, but does not supply these rules. | Custom prototype only. Excluded from new study suites; offline runner only. Needs a published-design mapping or replacement. |
+| Lab Notebook Audit | Custom eight-record reporting/review prototype. | Removed from code, UI, runners and publication at the user's request; historical implementation remains in Git. |
 | Resource / paperclip game | Our two-private-value extension of the protection game. No documented published experiment supplies its full design. | Removed from code, UI, serving, build and planners. No replacement selected. |
-| Off-switch | The retired implementation adapted Hadfield-Menell et al., but used two utility states, a symmetric human-error rule and an added consultation cost. | Remains removed. Any return must map the published model and explicitly justify changes. |
+| Off-switch | The old implementation adapted Hadfield-Menell et al., but used two utility states, a symmetric human-error rule and an added consultation cost. | Remains in requested scope. A faithful published experimental setup is required; current implementation and live validation are pending. |
 
 The four retained games share two players, two simultaneous actions, and full
 knowledge of the payoff table. Players do not see the other's choice before
@@ -43,8 +48,9 @@ does not make a method suitable; its assumptions must fit our question.
 For the next stage, the [Months 3–5 design review](months3-5-design-review.md)
 compares published security/audit, off-switch, bargaining and AI-control setups,
 including their information assumptions and reusable infrastructure. It
-recommends a security/audit starting point with explicit adaptation boundaries;
-it does not admit a replacement game or validate the removed prototypes.
+motivated the implemented sequential audit game; its exact source mapping and
+limits are in the [game catalogue](../games/README.md#audit-game-known-and-hidden-rewards).
+Neither that implementation nor the review validates model behavior.
 
 ## Before admitting or restoring a game
 
@@ -65,8 +71,9 @@ prototype do not, by themselves, justify its experimental design.
 The default offline and live-suite planners now include only the four canonical
 games. Direct paid oversight collection and frozen mixed-suite collection are
 blocked before credentials or network calls. Historical data and analysis remain
-available. The notebook runner has no paid adapter. Resource, off-switch and
-the earlier science demo are absent from the published build.
+available. Lab Notebook Audit and resource control are removed. Off-switch
+remains requested but has no current faithful implementation. The earlier science
+demo is absent from the published build.
 
 **AISI consequence:** the original project requirements have not changed.
 Choosing and implementing defensible sequential and incomplete-information

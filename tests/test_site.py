@@ -110,15 +110,13 @@ class BuiltSiteTests(unittest.TestCase):
         self.assertIn("Battle of the Sexes", page)
         self.assertNotIn("Resource control · hidden incentives", page)
         self.assertNotIn("Off-switch", page)
-        for prototype in ("oversight.html", "lab-design.html"):
+        for prototype in ("oversight.html",):
             content = (self.site / prototype).read_text()
             self.assertIn("Custom prototype", content)
             self.assertIn("design-sources.md", content)
         self.assertIn("published-design mapping", page)
         self.assertTrue((self.site / "docs/design-sources.md").is_file())
-        for filename in ("lab.css",):
-            self.assertEqual((self.site / filename).read_bytes(), (build_site.ROOT / "web" / filename).read_bytes())
-        for retired in ("science.html", "science.js", "science-engine.js", "off-switch.html", "science.css", "resource-control.html", "uncertainty.css", "uncertainty.js", "uncertainty-engine.js"):
+        for retired in ("science.html", "science.js", "science-engine.js", "off-switch.html", "science.css", "resource-control.html", "uncertainty.css", "uncertainty.js", "uncertainty-engine.js", "lab-design.html", "lab-design.js", "lab-examples.json", "lab.css", "docs/lab-audit-protocol.md"):
             self.assertFalse((self.site / retired).exists())
             for active in self.site.glob("*.html"):
                 self.assertNotIn(retired, active.read_text())

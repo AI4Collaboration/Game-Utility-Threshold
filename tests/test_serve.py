@@ -112,9 +112,6 @@ class HTTPTests(unittest.TestCase):
             (root / "web/games.html").write_text("<h1>Games</h1>")
             (root / "web/results.html").write_text("<h1>Results</h1>")
             (root / "web/game-engine.js").write_text("globalThis.GutEngine = {};")
-            (root / "web/lab.css").write_text("body{margin:0}")
-            for name in ("lab-design.html", "lab-design.js", "lab-examples.json"):
-                (root / "web" / name).write_text("Public uncertainty game fixture")
             (root / "data/oversight/2026-11-09/analysis").mkdir(parents=True)
             (root / "data/oversight/2026-11-09/analysis/report.html").write_text("<h1>Validation</h1>")
             (root / ".env").write_text("private fixture value")
@@ -125,7 +122,9 @@ class HTTPTests(unittest.TestCase):
             (root / "_site/private.txt").symlink_to(root / ".env")
             # A pre-removal build must not revive a retired page or script.
             retired = ("science.html", "off-switch.html", "resource-control.html",
-                       "uncertainty.js", "uncertainty-engine.js", "uncertainty.css")
+                       "uncertainty.js", "uncertainty-engine.js", "uncertainty.css",
+                       "lab-design.html", "lab-design.js", "lab-examples.json", "lab.css",
+                       "docs/lab-audit-protocol.md")
             for name in retired:
                 (root / "_site" / name).write_text("Retired fixture")
             (root / "_site/site-manifest.json").write_text(json.dumps({
@@ -178,11 +177,11 @@ class HTTPTests(unittest.TestCase):
                     self.assertEqual(get("/oversight")[0], 200)
                     self.assertEqual(get("/science")[0], 404)
                     self.assertEqual(get("/off-switch")[0], 404)
-                    for route in ("lab-design", "lab-design.html", "lab-design.js", "lab-examples.json"):
-                        self.assertEqual(get("/" + route)[0], 200)
+                    for route in ("lab-design", "lab-design.html", "lab-design.js", "lab-examples.json",
+                                  "lab.css", "docs/lab-audit-protocol.md"):
+                        self.assertEqual(get("/" + route)[0], 404)
                     for page in ("science.html", "science.js", "science-engine.js", "off-switch.html", "resource-control", "resource-control.html", "uncertainty.js", "uncertainty-engine.js", "uncertainty.css"):
                         self.assertEqual(get("/"+page)[0], 404)
-                    self.assertIn("text/css", get("/lab.css")[1]["Content-Type"])
                     for page in ("index.html", "games.html", "oversight.html", "results.html", "game-engine.js"):
                         self.assertEqual(get("/"+page)[0], 200)
                     status, headers, _ = get("/oversight.js")
