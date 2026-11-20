@@ -26,7 +26,7 @@ only the possibilities and probabilities. There is no mean-table replacement.
 - `solver.py`: complete exact equilibrium sets for one public player and finite
   private column types. Includes pure, mixed, tied and continuous solution sets.
 - `inspect_task.py`: fresh isolated model histories, explicit roles, shuffled
-  matched conditions, two action-label mappings, native events and strict scoring.
+  matched conditions, two action-label mappings crossed independently with two table orders, native events and strict scoring.
 - `report.py`: cells and paired contrasts, validity counts, per-profile 2D plots.
 - `../../private_games.py`: mock-only runner and deterministic UI-theory export.
 

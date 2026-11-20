@@ -113,7 +113,7 @@ Use `--port 8766` if needed. The public site needs no account or API key.
 | Run a synthetic canonical cost study | [Cost-study commands](docs/experiments.md#run-the-offline-demonstration) |
 | Prepare the four canonical cost studies, without API calls | `python3 prepare_threshold_studies.py runs/threshold-plans` |
 | Reproduce the completed oversight study | [Dataset instructions](data/oversight/2026-11-09/README.md#reproduce-without-paid-calls) |
-| Run a synthetic audit game with native Inspect logs | `python3 audit_experiment.py runs/audit-check --setting hidden` |
+| Run a synthetic audit game with native Inspect logs | `python3 audit_experiment.py runs/audit-check --study information` |
 | Run both separate Design 1 games, with 2D figures | `python3 private_games.py run runs/private-check --game all --figures` |
 | View Design 1 native traces | `inspect view --log-dir runs/private-check/logs` |
 | Open the audit traces | `inspect view --log-dir runs/audit-check` |

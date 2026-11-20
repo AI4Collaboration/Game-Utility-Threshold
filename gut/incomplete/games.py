@@ -12,6 +12,7 @@ import hashlib
 import json
 
 from gut.commitment import rational
+from gut.presentation import presentation
 from .solver import solve
 
 SCHEMA = "gut-private-design1-v1"
@@ -86,18 +87,21 @@ class PrivateGame:
     def fingerprint(self):
         return hashlib.sha256(encode(self.config()).encode()).hexdigest()
 
-    def view(self, role, information, kind, z, swapped=False):
+    def view(self, role, information, kind, z, swapped=False, order_reversed=False):
         """Fresh player input, with no actual-type field for hidden row players."""
         self.table(role, kind, z)
-        if information not in INFORMATION or type(swapped) is not bool:
+        if information not in INFORMATION or type(swapped) is not bool or type(order_reversed) is not bool:
             raise ValueError("Unknown information condition or label mapping.")
-        labels = ("B", "A") if swapped else ("A", "B")
+        display = presentation(ACTIONS, 2*int(swapped)+int(order_reversed))
+        labels = display['labels']
+        def ordered(table):
+            return tuple(tuple(table[i][j] for j in display['indices']) for i in display['indices'])
         other_role = "column" if role == "row" else "row"
         possible = TYPES if role == "row" else ("public",)
-        other_tables = [self.table(other_role, k if k != "public" else kind, z) for k in possible]
-        view = {"role": role, "information": information, "action_order": labels,
-                "costed_action": labels[1], "cost": str(self.cost(z)),
-                "own_payoffs": self.table(role, kind, z),
+        other_tables = [ordered(self.table(other_role, k if k != "public" else kind, z)) for k in possible]
+        view = {"role": role, "information": information, "action_order": display['action_order'],
+                "costed_action": labels['D'], "cost": str(self.cost(z)),
+                "own_payoffs": ordered(self.table(role, kind, z)),
                 "table_orientation": "Every table: rows are that owner's actions; columns are the other's actions, both in action_order.",
                 "possible_other_payoffs": dict(zip(possible, other_tables)),
                 "other_profile_probabilities": dict(zip(possible, self.priors if role == "row" else (F(1),))),

@@ -59,7 +59,7 @@ class CommitmentTests(unittest.TestCase):
 
 class AuditTests(unittest.TestCase):
     def test_published_payoff_structure_with_hand_calculated_instance(self):
-        game = demo_game("known")
+        game = demo_game().mean_game()
         row = game.evaluate(F(1, 2))["types"][0]
         self.assertEqual(row["follower"], (0, F(-1, 4), F(-7, 20)))
         self.assertEqual(row["leader"], (F(-1, 20), F(-3, 5), F(-3, 4)))
@@ -67,7 +67,7 @@ class AuditTests(unittest.TestCase):
         self.assertEqual(row["margin"], F(1, 4))
 
     def test_ties_are_ranges_not_guarantees(self):
-        game = demo_game("known", punishment=0)
+        game = demo_game(punishment=0).mean_game()
         row = game.evaluate(F(1, 2))
         self.assertEqual(row["types"][0]["best_responses"], ("abstain", "target_a"))
         self.assertEqual(row["attack_probability"], {"lower": 0, "upper": 1})
@@ -75,7 +75,7 @@ class AuditTests(unittest.TestCase):
         self.assertEqual(row["unfavorable"], F(-11, 20))
 
     def test_hidden_type_mean_preservation_and_robust_infeasibility(self):
-        known, hidden = demo_game("known", 0), demo_game("hidden", 0)
+        known, hidden = demo_game(punishment=0).mean_game(), demo_game("hidden", 0)
         self.assertEqual(hidden.mean_game().types[0].unchecked, known.types[0].unchecked)
         self.assertTrue(known.safe_region()["feasible"])
         self.assertFalse(hidden.safe_region()["feasible"])
@@ -84,10 +84,10 @@ class AuditTests(unittest.TestCase):
                          {"lower": F(1, 2), "upper": F(1, 2)})
         zero = demo_game("hidden", spread=0)
         for q in (0, F(2, 7), 1):
-            self.assertEqual(zero.evaluate(q)["favorable"], demo_game("known").evaluate(q)["favorable"])
+            self.assertEqual(zero.evaluate(q)["favorable"], demo_game().mean_game().evaluate(q)["favorable"])
 
     def test_thresholds_safe_interval_and_strict_slack(self):
-        game = demo_game("known")
+        game = demo_game().mean_game()
         self.assertEqual(game.safe_region()["interval"], (F(1, 3), F(11, 15)))
         self.assertEqual(game.safe_region(F(1, 10))["interval"], (F(2, 5), F(2, 3)))
         for row in game.thresholds():

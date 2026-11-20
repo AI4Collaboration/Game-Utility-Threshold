@@ -123,7 +123,7 @@ possible profiles and their probabilities.
   [Python/browser agreement and UI](../tests/check_audit.cjs). **Synthetic checks only; no live LLM validation.**
 
 From the repository root, install `python3 -m pip install '.[inspect]'`, run
-`python3 audit_experiment.py runs/audit-check --setting hidden`, then
+`python3 audit_experiment.py runs/audit-check --study information`, then
 `inspect view --log-dir runs/audit-check`. Replace `hidden` with `known` for the
 control setting. `--baseline maximize|abstain|target_a|target_b` chooses a scripted
 agent. Samples cover every type and checking condition; aggregate with the

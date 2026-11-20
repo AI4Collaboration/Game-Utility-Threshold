@@ -1,6 +1,6 @@
 """Run the real audit environment through Inspect using scripted mock models.
 
-Usage: python audit_experiment.py runs/audit-check --setting hidden
+Usage: python audit_experiment.py runs/audit-check --study information
        inspect view --log-dir runs/audit-check
 No API keys or network model calls. These are synthetic software checks.
 """
@@ -20,12 +20,24 @@ from gut.audit_inspect import audit_task
 def mock_attacker(game, baseline="maximize"):
     def respond(messages, tools, tool_choice, config):
         view = json.loads(messages[-1].text.split("\n")[-1])
-        row = next(t for t in game.evaluate(view["checking_probabilities"][0])["types"]
-                   if t["name"] == view["private_type"])
+        row = next(t for t in game.evaluate(view["checking_probabilities"]['target_1'])["types"]
+                   if t["name"] == view["actual_type"])
         # Declared tie rule: first legal best response, abstention first.
         action = row["best_responses"][0] if baseline == "maximize" else baseline
-        return ModelOutput.from_content(model="mockllm/attacker", content=json.dumps({"action": action}))
+        meanings = dict(zip(ACTIONS, ('abstain', 'violate target_1', 'violate target_2')))
+        label = next(a['action'] for a in view['actions'] if a['meaning'] == meanings[action])
+        return ModelOutput.from_content(model="mockllm/attacker", content=json.dumps({"action": label}))
     return get_model("mockllm/attacker", custom_outputs=respond)
+
+
+def mock_defender(game):
+    def respond(messages, *args):
+        view = json.loads(messages[-1].text.split('\n')[-1])
+        conditional = game.information_game(view['information'], view.get('actual_type', game.types[0].name))
+        # Explicit scripted convention, not an empirical equilibrium claim.
+        q = conditional.commitment().solve()['favorable']['witnesses'][0]
+        return ModelOutput.from_content('mockllm/defender', json.dumps({'q': str(q)}))
+    return get_model('mockllm/defender', custom_outputs=respond)
 
 
 def export_log(path, destination):
@@ -44,18 +56,19 @@ def export_log(path, destination):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("output", type=Path)
-    parser.add_argument("--setting", choices=("known", "hidden"), default="hidden")
-    parser.add_argument("--punishment", default="1/2")
-    parser.add_argument("--spread", default="3/10")
-    parser.add_argument("--coverage", nargs="+", default=["1/4", "1/2", "3/4"])
+    parser.add_argument('--study', choices=('threshold', 'information'), default='threshold')
+    parser.add_argument("--coverage", nargs="+", help='Optional q subset for a separate software pilot only.')
     parser.add_argument("--baseline", choices=("maximize", *ACTIONS), default="maximize")
     parser.add_argument("--repetitions", type=int, default=1)
     args = parser.parse_args()
-    game = demo_game(args.setting, args.punishment, args.spread)
-    task = audit_task(game, {"attacker": mock_attacker(game, args.baseline)},
-                      coverages=args.coverage, repetitions=args.repetitions)
+    game = demo_game()
+    models = {'attacker': mock_attacker(game, args.baseline)}
+    if args.study == 'information':
+        models['defender'] = mock_defender(game)
+    task = audit_task(game, models, coverages=args.coverage, repetitions=args.repetitions,
+                      defender_mode='model' if args.study == 'information' else 'fixed')
     task.metadata.update(baseline=args.baseline, tie_rule="abstain_first_then_target_a",
-                         seed=100, setting=args.setting, spread=args.spread)
+                         seed=100, study=args.study)
     args.output.mkdir(parents=True, exist_ok=False)
     logs = inspect_eval(task, model=None, log_dir=str(args.output), display="none",
                         max_retries=0, max_tokens=400, max_samples=1, log_model_api=True)

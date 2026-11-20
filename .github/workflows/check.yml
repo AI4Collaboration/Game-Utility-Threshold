@@ -19,7 +19,7 @@ jobs:
       - run: node tests/check_browser_engine.cjs
       - run: node tests/check_audit.cjs
       - run: node tests/check_private_games.cjs
-      - run: python audit_experiment.py runs/ci-audit --setting hidden
+      - run: python audit_experiment.py runs/ci-audit --study information
       - run: python private_games.py run runs/ci-private --cost 0 1 --figures
       - run: python reproduce.py
       - run: python experiment.py plan runs/ci --repetitions 2

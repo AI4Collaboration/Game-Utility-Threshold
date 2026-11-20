@@ -27,7 +27,7 @@ vm.runInNewContext(fs.readFileSync('web/audit.js','utf8'),{document:{getElementB
 const change=(id,value,event='input')=>{get(id).value=String(value);get(id).listeners[event]();};
 assert.equal(get('error').hidden,true);assert.equal((get('charts').innerHTML.match(/<svg/g)||[]).length,2);
 change('punishment',0);assert.match(get('safe').textContent,/No allocation deters/);
-change('setting','known','change');assert.equal(get('spread').disabled,true);assert.match(get('safe').textContent,/at least as rewarding/);
+change('profile','low','change');change('setting','known','change');assert.equal(get('spread').disabled,true);assert.match(get('setting-note').textContent,/identical/);assert.match(get('safe').textContent,/at least as rewarding/);
 assert.equal((get('charts').innerHTML.match(/<svg/g)||[]).length,1);
 get('robust').listeners.click();assert.match(get('verdict').textContent,/pays more/);
 get('play').listeners.click();assert.equal(get('download').disabled,false);const first=get('outcome').textContent;

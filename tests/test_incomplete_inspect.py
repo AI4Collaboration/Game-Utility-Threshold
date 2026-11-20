@@ -33,7 +33,7 @@ class PrivateInspectTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             log, path = self.run_task(task, folder)
             self.assertEqual(log.status, 'success')
-            self.assertEqual(len(log.samples), 8)
+            self.assertEqual(len(log.samples), 16)
             pairs = {}
             for sample in log.samples:
                 record = sample.metadata['record']
@@ -50,11 +50,11 @@ class PrivateInspectTests(unittest.TestCase):
             hidden = [json.loads(p.split('\n')[-1]) for p in prompts['row'] if '"information": "hidden"' in p]
             self.assertTrue(all('actual_column_profile' not in v for v in hidden))
             for label in ('A','B'):
-                same = [v for v in hidden if v['costed_action']==label]
+                same = [v for v in hidden if v['costed_action']==label and v['action_order'][0]=='A']
                 self.assertEqual(same[0], same[1])
             records = export_logs([path], Path(folder)/'observations.jsonl')
             summary = report(records, folder)
-            self.assertEqual(summary['both_conditions_valid'], 4)
+            self.assertEqual(summary['both_conditions_valid'], 8)
 
     def test_invalid_and_provider_failures_are_retained(self):
         game = get_game('private_stag_hunt_v1')
@@ -73,7 +73,7 @@ class PrivateInspectTests(unittest.TestCase):
                 self.assertTrue(all('outcome' not in r['record'] for r in rows))
                 summary = report(rows, folder)
                 self.assertEqual(summary['both_conditions_valid'], 0)
-                self.assertEqual(summary['errors' if failure=='error' else 'invalid_pairs'], 8)
+                self.assertEqual(summary['errors' if failure=='error' else 'invalid_pairs'], 16)
 
     def test_baselines_respect_labels_and_strict_bounds(self):
         game = get_game('private_pd_v1')

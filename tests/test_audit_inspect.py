@@ -8,9 +8,9 @@ if importlib.util.find_spec("inspect_ai"):
     from inspect_ai import eval as inspect_eval
     from inspect_ai.log import read_eval_log
     from inspect_ai.model import ContentReasoning, ContentText, ModelOutput, get_model
-    from gut.audit_inspect import audit_task, parse_choice
+    from gut.audit_inspect import audit_task, audit_samples, parse_choice, player_view
     from gut.audit_game import demo_game
-    from audit_experiment import export_log, mock_attacker
+    from audit_experiment import export_log, mock_attacker, mock_defender
 
 
 @unittest.skipUnless(importlib.util.find_spec("inspect_ai"), "Install the inspect extra")
@@ -31,10 +31,10 @@ class InspectAuditTests(unittest.TestCase):
             attacker_prompts.append(messages[-1].text)
             return ModelOutput.from_content("mockllm/attacker", [
                 ContentReasoning(reasoning="SYNTHETIC_ATTACKER_PRIVATE_REASONING"),
-                ContentText(text='{"action":"abstain"}')])
+                ContentText(text='{"action":"A"}')])
         task = audit_task(demo_game(), {"defender": get_model("mockllm/defender", custom_outputs=defend),
                                        "attacker": get_model("mockllm/attacker", custom_outputs=attack)},
-                          defender_mode="model", coverages=["1/2"])
+                          defender_mode="model", information=["hidden"], presentation_blocks=[0])
         with tempfile.TemporaryDirectory() as folder:
             log, path = self.run_task(task, folder)
             self.assertEqual(log.status, "success")
@@ -44,8 +44,7 @@ class InspectAuditTests(unittest.TestCase):
             for prompt in attacker_prompts:
                 self.assertNotIn("SYNTHETIC_DEFENDER_PRIVATE_REASONING", prompt)
                 self.assertNotIn("inspected_target", prompt)
-            self.assertIn('"private_type": "low"', attacker_prompts[0])
-            self.assertIn('"private_type": "high"', attacker_prompts[1])
+            self.assertEqual({json.loads(p.split('\n')[-1])['actual_type'] for p in attacker_prompts}, {'low', 'high'})
             for sample in log.samples:
                 events = [e for e in sample.events if e.event == "model"]
                 self.assertEqual([e.role for e in events], ["defender", "attacker"])
@@ -64,7 +63,7 @@ class InspectAuditTests(unittest.TestCase):
             roles = {"attacker": bad} if role == "attacker" else {
                 "defender": bad,
                 "attacker": get_model("mockllm/attacker", custom_outputs=[])}
-            task = audit_task(demo_game("known"), roles, coverages=["1/2"],
+            task = audit_task(demo_game("known"), roles, coverages=["1/2"] if role == "attacker" else None, presentation_blocks=[0],
                               defender_mode="fixed" if role == "attacker" else "model")
             with tempfile.TemporaryDirectory() as folder:
                 log, _ = self.run_task(task, folder)
@@ -78,7 +77,7 @@ class InspectAuditTests(unittest.TestCase):
     def test_api_failure_keeps_partial_native_record(self):
         def fail(*args):
             raise RuntimeError("Synthetic provider failure")
-        task = audit_task(demo_game("known"), {"attacker": get_model("mockllm/attacker", custom_outputs=fail)}, coverages=[0])
+        task = audit_task(demo_game("known"), {"attacker": get_model("mockllm/attacker", custom_outputs=fail)}, coverages=[0], presentation_blocks=[0])
         with tempfile.TemporaryDirectory() as folder:
             log, path = self.run_task(task, folder)
             self.assertIsNotNone(log.samples[0].error)
@@ -94,7 +93,7 @@ class InspectAuditTests(unittest.TestCase):
             with tempfile.TemporaryDirectory() as folder:
                 log, _ = self.run_task(task, folder)
                 self.assertEqual(log.status, "success")
-                self.assertEqual(len(log.samples), 4)
+                self.assertEqual(len(log.samples), 36)
                 for sample in log.samples:
                     row = sample.metadata["record"]
                     self.assertEqual(row["status"], "valid")

@@ -18,10 +18,11 @@ function crossings(lines){
  }return sorted(points);
 }
 class Audit {
- constructor(setting='hidden',punishment='0.5',spread='0.3'){
+ constructor(setting='hidden',punishment='0.5',spread='0.3',actualType='high'){
   this.x=f(punishment);this.spread=f(spread);
-  if(!['known','hidden'].includes(setting)||this.x.cmp(Z)<0||this.x.cmp(O)>0||this.spread.cmp(Z)<0||this.spread.cmp(f('.35'))>0)throw Error('Invalid audit parameters.');
-  this.types=(setting==='known'?[['known',Z,O]]:[['low',this.spread.neg(),f('.5')],['high',this.spread,f('.5')]]).map(([name,offset,prior])=>({name,prior,u:[f('.5').add(offset),f('.4').add(offset)],c:[f('-.5'),f('-.6')]}));
+  if(!['known','revealed','hidden'].includes(setting)||!['low','high'].includes(actualType)||this.x.cmp(Z)<0||this.x.cmp(O)>0||this.spread.cmp(Z)<0||this.spread.cmp(f('.35'))>0)throw Error('Invalid audit parameters.');
+  this.population=[['low',this.spread.neg(),f('.5')],['high',this.spread,f('.5')]].map(([name,offset,prior])=>({name,prior,u:[f('.5').add(offset),f('.4').add(offset)],c:[f('-.5'),f('-.6')]}));
+  this.types=setting==='hidden'?this.population:this.population.filter(t=>t.name===actualType).map(t=>({...t,prior:O}));
   this.cost=f('.1').mul(this.x);
  }
  lines(kind,player='follower'){

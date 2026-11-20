@@ -28,17 +28,17 @@ def report(records, output, figures=False):
         for role in ('row', 'column'):
             # Retain label blocks separately rather than pooling presentation effects.
             key = (row['game_id'], row['information'], row['private_type'],
-                   row['cost'], role, row['labels_swapped'])
+                   row['cost'], role, row.get('presentation_block', 2*int(row['labels_swapped'])))
             groups[key].append(item)
     cells = []
     for key, items in sorted(groups.items()):
         choices = [i['record']['choices'][key[4]] for i in items
-                   if i['status'] == 'valid']
+                   if i['record'].get('choices', {}).get(key[4], {}).get('status') == 'valid']
         n = len(choices)
         coop = sum(c['action'] == 'C' for c in choices)
         lo, hi = interval(coop, n)
-        cells.append(dict(zip(('game','information','profile','cost','role','labels_swapped'), key),
-                          planned=len(items), valid_pairs=n,
+        cells.append(dict(zip(('game','information','profile','cost','role','presentation_block'), key),
+                          planned=len(items), valid_choices=n, valid_pairs=sum(i['status']=='valid' for i in items),
                           invalid_pairs=sum(i['status']=='invalid' for i in items),
                           errors=sum(i['status'] not in ('valid','invalid') for i in items),
                           c_count=coop, c_rate=coop/n if n else None, ci_low=lo, ci_high=hi,
@@ -73,7 +73,7 @@ def report(records, output, figures=False):
                'errors': sum(r['status'] not in ('valid','invalid') for r in records),
                'matched_environments': len(comparisons),
                'both_conditions_valid': sum(c['both_valid'] for c in comparisons),
-               'note': 'Each cell is one role/profile/label block. Intervals describe sampling variation, not safety guarantees. No fitted behavioral threshold or causal significance claim.'}
+               'note': 'Each cell is one role/profile/presentation block; individually valid choices are retained even if the partner fails. Intervals describe sampling variation, not safety guarantees. No fitted behavioral threshold or causal significance claim.'}
     (output/'summary.json').write_text(json.dumps(summary, indent=2)+'\n')
     if figures:
         import matplotlib
@@ -81,12 +81,12 @@ def report(records, output, figures=False):
         import matplotlib.pyplot as plt
         from fractions import Fraction
         from .games import get_game
-        panels = sorted({(c['game'], c['profile'], c['role'], c['labels_swapped']) for c in cells})
+        panels = sorted({(c['game'], c['profile'], c['role'], c['presentation_block']) for c in cells})
         for game, profile, role, swapped in panels:
             fig, ax = plt.subplots(figsize=(6.2, 4.2), layout='constrained')
             for info, marker in (('revealed','o'), ('hidden','s')):
-                rows = sorted([c for c in cells if (c['game'],c['profile'],c['role'],c['labels_swapped']) ==
-                               (game,profile,role,swapped) and c['information']==info and c['valid_pairs']],
+                rows = sorted([c for c in cells if (c['game'],c['profile'],c['role'],c['presentation_block']) ==
+                               (game,profile,role,swapped) and c['information']==info and c['valid_choices']],
                               key=lambda c: Fraction(c['cost']))
                 if rows:
                     ax.errorbar([float(Fraction(c['cost'])) for c in rows], [c['c_rate'] for c in rows],
@@ -98,10 +98,10 @@ def report(records, output, figures=False):
             for z in sorted({roots['against_c'], roots['against_d']}):
                 if z >= 0:
                     ax.axvline(float(z), color='0.4', linestyle=':', linewidth=1)
-            counts = [c['valid_pairs'] for c in cells if (c['game'],c['profile'],c['role'],c['labels_swapped']) ==
+            counts = [c['valid_choices'] for c in cells if (c['game'],c['profile'],c['role'],c['presentation_block']) ==
                       (game,profile,role,swapped)]
             ax.set(xlabel='Public cost of D (points)', ylabel='Fraction choosing C', ylim=(-.03,1.03),
-                   title=f"{'SYNTHETIC · ' if summary['synthetic'] else ''}{game}\n{role} · {profile} · label {int(swapped)} · n={min(counts)}–{max(counts)} per cell")
-            ax.legend(); fig.savefig(output/f'{game}-{profile}-{role}-labels{int(swapped)}.png', dpi=170)
+                   title=f"{'SYNTHETIC · ' if summary['synthetic'] else ''}{game}\n{role} · {profile} · presentation {swapped} · n={min(counts)}–{max(counts)} per cell")
+            ax.legend(); fig.savefig(output/f'{game}-{profile}-{role}-block{swapped}.png', dpi=170)
             plt.close(fig)
     return summary

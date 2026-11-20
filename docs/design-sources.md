@@ -79,3 +79,7 @@ demo is absent from the published build.
 Choosing and implementing defensible sequential and incomplete-information
 applications is still unfinished Months 1–3 / Months 3–5 work. Removing a
 prototype does not complete or cancel those deliverables.
+
+### Matched audit information conditions
+
+The audit information study now uses the same low/high realized rewards in both conditions. Revealed defenders learn the actual profile before committing; hidden defenders receive only the fixed equal prior. The penalty and reward spread are fixed. Checking probability is a measured defender choice. A separate threshold study varies only checking probability, with fixed rewards and penalty; it does not claim to measure the effect of hiding information. Neutral action labels and display positions vary independently in nine balanced blocks. These are our collection controls, not claims that the source paper used an LLM protocol.

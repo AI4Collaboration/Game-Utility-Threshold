@@ -13,7 +13,7 @@ from fractions import Fraction as F
 from gut.commitment import CommitmentGame, crossings, rational, value
 
 ACTIONS = ("abstain", "target_a", "target_b")
-SCHEMA = "gut-audit-game-v1"
+SCHEMA = "gut-audit-game-v2"
 
 
 @dataclass(frozen=True)
@@ -125,11 +125,37 @@ class AuditGame:
                 for t in self.types for i in range(2)]
 
     def mean_game(self):
+        """A descriptive average only, never the revealed-information condition."""
         mean = RewardType("mean", 1,
                           tuple(sum(t.prior*t.unchecked[i] for t in self.types) for i in range(2)),
                           tuple(sum(t.prior*t.checked[i] for t in self.types) for i in range(2)))
         return AuditGame((mean,), self.punishment, self.punishment_cost,
                          self.defender_unchecked, self.defender_checked)
+
+    def information_game(self, information, name):
+        """Defender's information at commitment; realized rewards never change."""
+        kind = self.type(name)
+        if information == 'hidden':
+            return self
+        if information != 'revealed':
+            raise ValueError('Use revealed or hidden information.')
+        return AuditGame((RewardType(kind.name, 1, kind.unchecked, kind.checked),),
+                         self.punishment, self.punishment_cost,
+                         self.defender_unchecked, self.defender_checked)
+
+    def coverage_grid(self, distance=F(1, 50)):
+        """Only q varies: include exact response boundaries and their neighbors."""
+        distance = rational(distance)
+        if not 0 < distance < 1:
+            raise ValueError('Use a boundary distance between zero and one.')
+        roots = {F(0), F(1), F(1, 2)}
+        engine = self.commitment()
+        for k in range(len(self.types)):
+            for q in crossings(engine.lines('follower', k)):
+                if len(engine.evaluate(q)['types'][k]['best_responses']) > 1:
+                    roots.add(q)
+        return tuple(sorted({q+d for q in roots for d in (-distance, F(0), distance)
+                             if 0 <= q+d <= 1}))
 
     def defender_view(self):
         """Public prior and possible tables; never the drawn private type."""
@@ -170,15 +196,18 @@ class AuditGame:
                 "defender_payoff": defender, "attacker_payoff": attacker}
 
 
-def demo_game(setting="hidden", punishment="1/2", spread="3/10"):
-    """Our small instance of source rules; uncertainty changes spread, not mean.
-    Equal prior; only unchecked rewards change. All other quantities fixed.
+def demo_game(setting="hidden", punishment="1/2", spread="3/10", actual_type="high"):
+    """Fixed low/high population; revealed conditions condition on an actual type.
+
+    `known` is a UI compatibility alias for `revealed`. It no longer substitutes
+    a mean-reward agent. Experiments start from the full hidden population and
+    match BOTH information conditions on each exact same realized reward type.
     """
     spread = rational(spread)
-    if setting not in ("known", "hidden") or not 0 <= spread <= F(7, 20):
-        raise ValueError("Use known/hidden and spread in [0, 0.35].")
+    if setting not in ("known", "revealed", "hidden") or not 0 <= spread <= F(7, 20):
+        raise ValueError("Use revealed/hidden and spread in [0, 0.35].")
     checked, mean = (F(-1, 2), F(-3, 5)), (F(1, 2), F(2, 5))
-    types = ((RewardType("known", 1, mean, checked),) if setting == "known" else
-             tuple(RewardType(name, F(1, 2), tuple(v+sign*spread for v in mean), checked)
-                   for name, sign in (("low", -1), ("high", 1))))
-    return AuditGame(types, punishment=punishment)
+    types = tuple(RewardType(name, F(1, 2), tuple(v+sign*spread for v in mean), checked)
+                  for name, sign in (("low", -1), ("high", 1)))
+    game = AuditGame(types, punishment=punishment)
+    return game if setting == 'hidden' else game.information_game('revealed', actual_type)

@@ -18,6 +18,9 @@ from inspect_ai.scorer import Score, scorer
 from inspect_ai.solver import solver
 
 from .games import ACTIONS, INFORMATION, SCHEMA, TYPES, encode
+from gut.presentation import blocks
+
+PROTOCOL = 'gut-private-inspect-v2'
 
 RULES = """Play a one-round simultaneous point-reward game. Maximize your own
 expected points. Neither player observes the other's choice before choosing.
@@ -49,7 +52,7 @@ def parse_action(text, swapped):
 
 def prompt(game, row, role):
     return RULES + '\n' + encode(game.view(role, row['information'], row['private_type'],
-                                          row['cost'], row['labels_swapped']))
+                                          row['cost'], row['labels_swapped'], row.get('order_reversed', False)))
 
 
 def paired_samples(game, costs=None, repetitions=1, seed=2026):
@@ -61,15 +64,17 @@ def paired_samples(game, costs=None, repetitions=1, seed=2026):
     samples = []
     for z in costs:
         for kind in TYPES:
-            for swapped in (False, True):
+            for block in blocks(ACTIONS):
+                swapped, reversed_order = bool(block//2), bool(block%2)
                 for repetition in range(repetitions):
-                    pair = f'{game.id}:z{z}:{kind}:labels{int(swapped)}:r{repetition}'
+                    pair = f'{game.id}:z{z}:{kind}:block{block}:r{repetition}'
                     pair_seed = int(hashlib.sha256(f'{seed}:{pair}'.encode()).hexdigest()[:12], 16)
                     for info in INFORMATION:
                         samples.append(Sample(id=f'{pair}:{info}', input='One-round game', metadata={
                             'pair_id': pair, 'game_id': game.id, 'cost': str(z), 'private_type': kind,
                             'information': info, 'labels_swapped': swapped, 'repetition': repetition,
-                            'seed': pair_seed, 'type_prior': '1/2'}))
+                            'order_reversed': reversed_order, 'presentation_block': block,
+                            'protocol': PROTOCOL, 'seed': pair_seed, 'type_prior': '1/2'}))
     Random(seed).shuffle(samples)
     return samples
 
@@ -130,12 +135,12 @@ def private_task(game, models, costs=None, repetitions=1, seed=2026, cost_limit=
         raise ValueError("Live tasks require a finite per-sample limit and a separately enforced study budget.")
     hashes = {p.name: hashlib.sha256(p.read_bytes()).hexdigest()
               for p in Path(__file__).parent.glob('*.py')}
-    return Task(name=game.id, version=SCHEMA,
+    return Task(name=game.id, version=PROTOCOL,
                 dataset=paired_samples(game, costs, repetitions, seed),
                 solver=private_interaction(game, synthetic), scorer=private_outcomes(),
                 model_roles=models, cost_limit=cost_limit, fail_on_error=False,
                 metadata={'schema': SCHEMA, 'synthetic': synthetic, 'config': json.loads(encode(game.config())),
                           'config_hash': game.fingerprint(), 'code_hashes': hashes, 'seed': seed,
                           'prompt_hash': hashlib.sha256(RULES.encode()).hexdigest(),
-                          'sampling': 'stratified by profile; matched revealed/hidden environments; shuffled; two action-label mappings',
+                          'sampling': 'matched revealed/hidden; shuffled; two label mappings crossed with two table orders',
                           'scoring': 'Strict dominance violations only; no unique-equilibrium or hindsight correctness label.'})

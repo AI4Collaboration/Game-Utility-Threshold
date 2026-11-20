@@ -38,7 +38,8 @@ def mock_models(game, baseline='equilibrium', seed=2026):
                 else:
                     p = F({'always_c': 1, 'always_d': 0, 'uniform': '1/2'}[baseline])
                 action = 0 if rng.randrange(p.denominator) < p.numerator else 1
-                return ModelOutput.from_content(f'mockllm/{role}', json.dumps({'action': view['action_order'][action]}))
+                labels = [a for a in ('A', 'B') if a != view['costed_action']] + [view['costed_action']]
+                return ModelOutput.from_content(f'mockllm/{role}', json.dumps({'action': labels[action]}))
             return respond
         models[role] = get_model(f'mockllm/{role}', custom_outputs=callback())
     return models

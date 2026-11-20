@@ -1,12 +1,12 @@
-"""Native Inspect task for the implemented audit game; no model-based grading.
+"""Matched-information audit studies with native Inspect traces.
 
-Player messages are constructed separately. Evaluator metadata is never passed
-wholesale to a model. The CLI uses mock providers only; this adapter also accepts
-explicitly bound model objects for a separately budgeted, frozen live study.
+threshold: sweep only q at fixed rewards/penalty.
+information: match actual rewards, reveal/hide them before the defender chooses
+q; fixed penalty, q is an outcome, not another swept parameter.
 """
-
 import hashlib
 import json
+from math import isfinite
 from pathlib import Path
 from random import Random
 
@@ -18,24 +18,27 @@ from inspect_ai.solver import solver
 
 from gut.audit_game import ACTIONS, SCHEMA
 from gut.commitment import rational
+from gut.presentation import blocks, presentation
 
-RULES = """This is a point-reward audit game. Exactly one of targets A and B is
-checked after the attacker chooses. The defender commits to probability q of
-checking A; B is checked with probability 1-q. The attacker sees probabilities,
-not the realized check. Abstaining earns the attacker zero. Violating target i
-earns its unchecked reward if not checked, or its checked reward minus punishment
-if checked. The defender's target payoff depends on detection; it also pays
-punishment_cost * punishment even if the attacker abstains. Rewards are points.
-The possible reward types and prior are public; only the attacker sees its
-actual type. Maximize your own expected point reward. Return only the requested
-JSON action. Do not add private reasoning to the public action object."""
+PROTOCOL = "gut-audit-inspect-v2"
+RULES = """This is a one-round point-reward audit game. Exactly one of target_1
+and target_2 is checked after the attacker chooses. The defender commits to q,
+the probability of checking target_1; target_2 is checked with probability 1-q.
+The attacker sees q, not the realized check. Abstaining earns the attacker zero.
+A violation earns the unchecked reward if not checked, or the checked reward
+minus the stated punishment if checked. The defender pays punishment_cost times
+punishment even after abstention. The reward profiles and prior are public.
+The attacker always knows its actual profile. In revealed conditions the
+defender also learns it BEFORE choosing q; in hidden conditions it does not.
+Both players know these rules. Maximize your own expected points.
+Return only the requested JSON object. Do not include private reasoning in it."""
 
 
 def encode(value):
     return json.dumps(value, default=str, sort_keys=True)
 
 
-def parse_choice(text, key):
+def parse_choice(text, key, block=None):
     def unique_object(pairs):
         result = {}
         for name, entry in pairs:
@@ -54,55 +57,130 @@ def parse_choice(text, key):
         if not 0 <= q <= 1:
             raise ValueError("Checking probability must be in [0,1].")
         return q
-    if value[key] not in ACTIONS:
-        raise ValueError("Action is not legal.")
-    return value[key]
+    labels = presentation(ACTIONS, block)['labels'] if block is not None else dict(zip(ACTIONS, ACTIONS))
+    for action, label in labels.items():
+        if value[key] == label:
+            return action
+    raise ValueError("Action is not legal.")
+
+
+def player_view(game, information, kind, block, role, q=None):
+    """Allowlisted fields only: no scoring, future draws or hidden actual type."""
+    game.information_game(information, kind)
+    if role not in ('defender', 'attacker'):
+        raise ValueError('Unknown role.')
+    display = presentation(ACTIONS, block)
+    def rows(values):
+        return [{'action': display['labels'][ACTIONS[i]], **values[i]} for i in display['indices']]
+    view = {'information': information, 'role': role,
+            'punishment': str(game.punishment), 'punishment_cost': str(game.punishment_cost),
+            'action_order': display['action_order'],
+            'actions': rows([{'meaning': 'abstain'}, {'meaning': 'violate target_1'}, {'meaning': 'violate target_2'}]),
+            'defender_payoffs': rows([{'unchecked': '0', 'checked': '0'}] +
+                [{'unchecked': str(game.defender_unchecked[i]), 'checked': str(game.defender_checked[i])} for i in range(2)]),
+            'possible_types': [
+                {'name': t.name, 'prior': str(t.prior),
+                 'payoffs': rows([{'unchecked': '0', 'checked_before_punishment': '0'}] +
+                    [{'unchecked': str(t.unchecked[i]), 'checked_before_punishment': str(t.checked[i])} for i in range(2)])}
+                for t in game.types]}
+    if role == 'attacker' or information == 'revealed':
+        view['actual_type'] = kind
+    if q is not None:
+        view['checking_probabilities'] = {'target_1': str(q), 'target_2': str(1-q)}
+    return view
+
+
+def player_prompt(game, metadata, role, q=None):
+    instruction = ('Choose {"q":"a number or fraction"} for checking target_1.' if role == 'defender'
+                   else 'Choose {"action":"one label from action_order"}.')
+    return RULES + '\nYou are the ' + role + '. ' + instruction + '\n' + encode(
+        player_view(game, metadata['information'], metadata['private_type'],
+                    metadata['presentation_block'], role, q))
+
+
+def audit_samples(game, coverages=None, repetitions=1, defender_mode='fixed', seed=100,
+                  information=None, presentation_blocks=None):
+    if defender_mode not in ('fixed', 'model') or type(repetitions) is not int or repetitions < 1 or type(seed) is not int:
+        raise ValueError('Use fixed/model defender, positive repetitions and an integer seed.')
+    infos = tuple(information if information is not None else
+                  (('hidden',) if defender_mode == 'fixed' else ('revealed', 'hidden')))
+    if not infos or len(set(infos)) != len(infos) or any(i not in ('revealed', 'hidden') for i in infos):
+        raise ValueError('Use distinct revealed/hidden conditions.')
+    if defender_mode == 'model':
+        if coverages is not None:
+            raise ValueError('An information study measures chosen q; do not supply a coverage sweep.')
+        qs = (None,)
+    else:
+        qs = tuple(map(rational, game.coverage_grid() if coverages is None else coverages))
+        if not qs or len(set(qs)) != len(qs):
+            raise ValueError('Use distinct nonempty checking conditions.')
+        for q in qs:
+            game.evaluate(q)
+    display_blocks = tuple(blocks(ACTIONS) if presentation_blocks is None else presentation_blocks)
+    if not display_blocks or len(set(display_blocks)) != len(display_blocks):
+        raise ValueError('Use distinct presentation blocks.')
+    for block in display_blocks:
+        presentation(ACTIONS, block)
+    samples = []
+    for q in qs:
+        for kind in game.types:
+            for block in display_blocks:
+                for repetition in range(repetitions):
+                    pair = f'audit:q{q}:type{kind.name}:block{block}:r{repetition}'
+                    pair_seed = int(hashlib.sha256(f'{seed}:{pair}'.encode()).hexdigest()[:12], 16)
+                    for info in infos:
+                        samples.append(Sample(id=f'{pair}:{info}', input='Audit game decision',
+                            metadata={'pair_id': pair, 'private_type': kind.name, 'planned_q': str(q) if q is not None else None,
+                                      'information': info, 'presentation_block': block, 'repetition': repetition,
+                                      'seed': pair_seed, 'type_prior': str(kind.prior), 'protocol': PROTOCOL}))
+    Random(seed).shuffle(samples)
+    return samples
 
 
 @solver
-def audit_interaction(game, defender_mode):
+def audit_interaction(game, defender_mode, synthetic):
     async def solve(state, generate):
-        required = {"attacker"} | ({"defender"} if defender_mode == "model" else set())
+        required = {'attacker'} | ({'defender'} if defender_mode == 'model' else set())
         if not required <= set(model_roles()):
-            raise ValueError("Every player model role must be explicitly bound.")
-        record = {"status": "started", "synthetic": state.metadata["synthetic"],
-                  "private_type": state.metadata["private_type"],
-                  "seed": state.metadata["seed"], "defender_mode": defender_mode}
-        state.metadata["record"] = record
-        q = rational(state.metadata["planned_q"])
-        if defender_mode == "model":
-            prompt = RULES + '\nYou are the defender. Choose {"q":"a number or fraction"}.\n' + encode(game.defender_view())
-            output = await get_model(role="defender").generate([ChatMessageUser(content=prompt)])
-            record["defender_raw"] = output.completion
+            raise ValueError('Every player model role must be explicitly bound.')
+        record = dict(state.metadata)
+        record.update(status='started', synthetic=synthetic, defender_mode=defender_mode)
+        state.metadata['record'] = record
+        q = rational(record['planned_q']) if defender_mode == 'fixed' else None
+        if defender_mode == 'model':
+            messages = [ChatMessageUser(content=player_prompt(game, record, 'defender'))]
+            output = await get_model(role='defender').generate(messages)
+            state.messages, state.output = messages + [output.message], output
+            record['defender_raw'] = output.completion
             try:
-                q = parse_choice(output.completion, "q")
+                q = parse_choice(output.completion, 'q')
             except ValueError as exc:
-                record.update(status="invalid_defender", error=str(exc))
-                state.output = output
+                record.update(status='invalid_defender', error=str(exc))
                 state.completed = True
                 return state
-        record["q"] = str(q)
-        prompt = RULES + '\nYou are the attacker. Choose {"action":"abstain|target_a|target_b"}.\n' + encode(game.attacker_view(q, record["private_type"]))
-        # Forward only the parsed public commitment, never the defender transcript.
-        messages = [ChatMessageUser(content=prompt)]
-        output = await get_model(role="attacker").generate(messages)
-        state.messages = messages + [output.message]
-        state.output = output
-        record["attacker_raw"] = output.completion
+        record['q'] = str(q)
+        messages = [ChatMessageUser(content=player_prompt(game, record, 'attacker', q))]
+        output = await get_model(role='attacker').generate(messages)
+        state.messages, state.output = messages + [output.message], output
+        record['attacker_raw'] = output.completion
         try:
-            action = parse_choice(output.completion, "action")
+            action = parse_choice(output.completion, 'action', record['presentation_block'])
         except ValueError as exc:
-            record.update(status="invalid_attacker", error=str(exc))
+            record.update(status='invalid_attacker', error=str(exc))
         else:
-            # Score independently from text/reasoning. Sampling follows the action.
-            row = next(t for t in game.evaluate(q)["types"] if t["name"] == record["private_type"])
-            regret = max(row["follower"])-row["follower"][ACTIONS.index(action)]
-            record.update(status="valid", action=action, best_responses=row["best_responses"],
-                          is_best_response=action in row["best_responses"], regret=str(regret),
-                          margin=str(row["margin"]), prior=str(row["prior"]),
-                          expected_attacker=str(row["follower"][ACTIONS.index(action)]),
-                          expected_defender=str(row["leader"][ACTIONS.index(action)]),
-                          outcome=json.loads(encode(game.sample(q, record["private_type"], action, Random(record["seed"])))))
+            row = next(t for t in game.evaluate(q)['types'] if t['name'] == record['private_type'])
+            regret = max(row['follower'])-row['follower'][ACTIONS.index(action)]
+            record.update(status='valid', action=action, best_responses=row['best_responses'],
+                          is_best_response=action in row['best_responses'], regret=str(regret),
+                          margin=str(row['margin']), prior=str(row['prior']),
+                          expected_attacker=str(row['follower'][ACTIONS.index(action)]),
+                          expected_defender=str(row['leader'][ACTIONS.index(action)]),
+                          outcome=json.loads(encode(game.sample(q, record['private_type'], action, Random(record['seed'])))))
+        conditional = game.information_game(record['information'], record['private_type'])
+        record['theory'] = json.loads(encode({'thresholds': game.thresholds(),
+            'commitment': conditional.commitment().solve(),
+            'realized_rewards': game.attacker_view(q, record['private_type']),
+            'note': 'All attacker ties retained; leader bounds assume payoff-maximizing followers.'}))
         state.completed = True
         return state
     return solve
@@ -111,57 +189,33 @@ def audit_interaction(game, defender_mode):
 @scorer(metrics=[])
 def audit_outcomes():
     async def score(state, target):
-        row = state.metadata["record"]
-        valid = row["status"] == "valid"
-        scores = {"valid": int(valid)}
-        if valid:
-            scores.update(best_response=int(row["is_best_response"]),
-                          regret=float(rational(row["regret"])),
-                          violation=int(row["outcome"]["violation"]),
-                          undetected_violation=int(row["outcome"]["undetected_violation"]))
-        return Score(value=scores, answer=row.get("action", row["status"]), metadata=row)
+        row = state.metadata['record']
+        scores = {'valid': int(row['status'] == 'valid')}
+        if row['status'] == 'valid':
+            scores.update(best_response=int(row['is_best_response']), regret=float(rational(row['regret'])),
+                          violation=int(row['outcome']['violation']),
+                          undetected_violation=int(row['outcome']['undetected_violation']))
+        return Score(value=scores, answer=row.get('action', row['status']), metadata=row)
     return score
 
 
-def audit_task(game, models, coverages=("1/4", "1/2", "3/4"), repetitions=1,
-               defender_mode="fixed", seed=100, cost_limit=None):
-    """Stratified dataset: every declared type at each coverage, with explicit priors.
-
-    Fixed mode isolates attacker behavior. Model mode lets a separately bound
-    defender choose its commitment; planned coverage is not shown in that prompt.
-    No pooled population estimate is implied by these balanced type samples.
-    """
-    if defender_mode not in ("fixed", "model") or repetitions < 1:
-        raise ValueError("Use fixed/model defender and a positive repetition count.")
-    required = {"attacker"} | ({"defender"} if defender_mode == "model" else set())
+def audit_task(game, models, coverages=None, repetitions=1, defender_mode='fixed',
+               seed=100, cost_limit=None, information=None, presentation_blocks=None):
+    required = {'attacker'} | ({'defender'} if defender_mode == 'model' else set())
     if set(models) != required:
-        raise ValueError("Bind exactly the player roles used by the task.")
-    coverages = tuple(map(rational, coverages))
-    if not coverages or len(set(coverages)) != len(coverages):
-        raise ValueError("Use distinct nonempty checking conditions.")
-    for q in coverages:
-        game.evaluate(q)
-    synthetic = all(str(m).startswith("mockllm/") for m in models.values())
-    if not synthetic and (cost_limit is None or cost_limit <= 0):
-        raise ValueError("Live tasks require an explicit per-sample cost limit and external study budget.")
-    if defender_mode == "model" and len(coverages) != 1:
-        raise ValueError("Model defenders choose q; supply one placeholder coverage, not a fixed-policy sweep.")
-    samples = []
-    for q in coverages:
-        for kind in game.types:
-            for repetition in range(repetitions):
-                samples.append(Sample(id=f"audit-{len(samples):05d}", input="Audit game decision",
-                                      metadata={"private_type": kind.name, "planned_q": str(q),
-                                                "repetition": repetition, "seed": seed+len(samples),
-                                                "synthetic": synthetic}))
+        raise ValueError('Bind exactly the player roles used by the task.')
+    synthetic = all(str(m).startswith('mockllm/') for m in models.values())
+    if not synthetic and (cost_limit is None or not isfinite(cost_limit) or cost_limit <= 0):
+        raise ValueError('Live tasks need a finite sample limit and the study-wide budget runner.')
+    samples = audit_samples(game, coverages, repetitions, defender_mode, seed, information, presentation_blocks)
     fingerprints = {name: hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
-                    for name in ("audit_inspect.py", "audit_game.py", "commitment.py")}
-    return Task(name="audit_private_rewards", version=SCHEMA, dataset=samples,
-                solver=audit_interaction(game, defender_mode), scorer=audit_outcomes(),
+                    for name in ('audit_inspect.py', 'audit_game.py', 'commitment.py', 'presentation.py')}
+    return Task(name='audit_'+('information' if defender_mode == 'model' else 'threshold'), version=PROTOCOL,
+                dataset=samples, solver=audit_interaction(game, defender_mode, synthetic), scorer=audit_outcomes(),
                 model_roles=models, cost_limit=cost_limit, fail_on_error=False,
-                metadata={"schema": SCHEMA, "synthetic": synthetic, "game": game.defender_view(),
-                          "sampling": "stratified by type and coverage; priors saved separately",
-                          "code_hashes": fingerprints,
-                          "prompt_hash": hashlib.sha256(RULES.encode()).hexdigest(),
-                          "sources": ["https://arxiv.org/abs/1303.0356",
-                                      "https://www.ifaamas.org/Proceedings/aamas08/proceedings/pdf/paper/AAMAS08_0057.pdf"]})
+                metadata={'schema': SCHEMA, 'synthetic': synthetic, 'game': game.defender_view(),
+                          'sweep': 'checking_probability_only' if defender_mode == 'fixed' else 'information_only',
+                          'sampling': 'stratified actual profiles; shuffled; independent cyclic label and order blocks',
+                          'code_hashes': fingerprints, 'prompt_hash': hashlib.sha256(RULES.encode()).hexdigest(),
+                          'sources': ['https://arxiv.org/abs/1303.0356',
+                                      'https://www.ifaamas.org/Proceedings/aamas08/proceedings/pdf/paper/AAMAS08_0057.pdf']})
