@@ -205,11 +205,13 @@ class Handler(BaseHTTPRequestHandler):
             return
         web_names = ("index.html", "games.html", "oversight.html", "results.html",
                      "audit.html", "audit.css", "audit.js", "audit-engine.js",
+                     "private-games.html", "private-games.css", "private-games.js", "private-engine.js", "private-games.json",
                      "oversight.js", "game-engine.js", "lab.css",
                      "lab-design.html", "lab-design.js", "lab-examples.json")
         web_routes = {f"/{name}": ROOT / "web" / name for name in web_names}
         web_routes.update({"/": ROOT / "web/index.html", "/games": ROOT / "web/games.html",
                            "/audit": ROOT / "web/audit.html",
+                           "/private-games": ROOT / "web/private-games.html",
                            "/oversight": ROOT / "web/oversight.html",
                            "/lab-design": ROOT / "web/lab-design.html"})
         allowed = dict(web_routes)

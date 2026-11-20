@@ -74,6 +74,24 @@ player's points? X/Y do not mean cooperation/defection here.
   The UI cost favors X; the v2 collector also tests a cost on X favoring Y.
   Report each direction and player separately.
 
+## Separate Design 1 extensions: private PD and Stag Hunt
+
+**New games; the four base experiments above are preserved.** Row has a fixed
+public reward table. Column knows its own low/high reward profile; row sees the
+actual profile only in the revealed condition. The hidden condition uses the
+same actual rewards, with a public 50/50 prior. Only the cost of D is swept.
+
+- [Interactive page](https://ai4collaboration.github.io/Game-Utility-Threshold/private-games.html).
+- IDs: `private_pd_v1` (column's temptation reward is private) and
+  `private_stag_hunt_v1` (column's loss from cooperating alone is private).
+- [Rules, source, module map and commands](../gut/incomplete/README.md).
+- Runner: [private_games.py](../private_games.py); native Inspect and independent
+  game logic live in [gut/incomplete/](../gut/incomplete/).
+- Predictions retain all pure/mixed equilibrium regions and exact dominance
+  thresholds. A single observed action is not an equilibrium test.
+- Evidence: synthetic checks only. [Engine tests](../tests/test_incomplete.py),
+  [Inspect tests](../tests/test_incomplete_inspect.py), [UI/export checks](../tests/check_private_games.cjs).
+
 ## Audit game: known and hidden rewards
 
 **One published game family, two information settings.** The defender commits

@@ -1,0 +1,2 @@
+#private-id{overflow-wrap:anywhere}#private-error{color:var(--rose)}#private-bounds p{padding-left:14px;border-left:2px solid var(--mint)}#private-outcome{margin-top:20px}#private-tables h3{margin-top:8px}.legend{flex-wrap:wrap}.charts{grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr))}details .table-wrap{margin-top:20px}#private-regions td{font-variant-numeric:tabular-nums}#private-charts svg{overflow:visible}header{max-width:950px}
+@media(max-width:480px){#private-charts svg text{font-size:21px}#private-charts{grid-template-columns:1fr}}

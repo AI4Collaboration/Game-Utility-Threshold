@@ -25,6 +25,7 @@ ROOT = Path(__file__).resolve().parent
 OVERSIGHT = Path("data/oversight/2026-11-09")
 WEB_FILES = ("index.html", "games.html", "oversight.html", "oversight.js", "game-engine.js", "results.html",
              "audit.html", "audit.css", "audit.js", "audit-engine.js",
+             "private-games.html", "private-games.css", "private-games.js", "private-engine.js", "private-games.json",
              "lab.css",
              "lab-design.html", "lab-design.js", "lab-examples.json")
 POST_FILES = ("README.md", "manifest.json", "block-0.json", "block-1.json", "records.jsonl.gz")

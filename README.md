@@ -8,6 +8,7 @@ our games, exact calculations, interactive demos, and retained model experiments
 · [See experimental results](https://ai4collaboration.github.io/Game-Utility-Threshold/results.html)
 · [Find a game's code](games/README.md)
 · [Try the audit game](https://ai4collaboration.github.io/Game-Utility-Threshold/audit.html)
+· [Separate private PD / Stag Hunt](https://ai4collaboration.github.io/Game-Utility-Threshold/private-games.html)
 · [Design sources and scope](docs/design-sources.md)
 · [Controlled experiment setup and AISI progress](docs/controlled-thresholds.md)
 · [Months 3–5: literature and Inspect plan](docs/months3-5-design-review.md)
@@ -35,6 +36,12 @@ adds a sequential setting: commit to where to check, then observe a violation or
 abstention. It supports known rewards and a finite private-reward extension,
 exact predictions, an interactive UI and native Inspect tasks. Its checks use
 scripted agents; **there are no live LLM results for this game**.
+
+[Design 1](gut/incomplete/README.md) implements **separate, versioned PD and
+Stag Hunt extensions** with one private reward profile. Their matched revealed/
+hidden conditions keep the same rewards and vary the public action cost. They
+have exact equilibrium sets, an independent Inspect runner and UI; current checks
+are synthetic. The original four games and their collectors are unchanged.
 
 The resource/paperclip game has been removed. Off-switch and the earlier science
 demo remain removed. Two custom prototypes remain available for inspection:
@@ -108,6 +115,8 @@ Use `--port 8766` if needed. The public site needs no account or API key.
 | Reproduce the completed oversight study | [Dataset instructions](data/oversight/2026-11-09/README.md#reproduce-without-paid-calls) |
 | Run a synthetic notebook-audit pilot | `python3 lab_experiment.py runs/lab-pilot` |
 | Run a synthetic audit game with native Inspect logs | `python3 audit_experiment.py runs/audit-check --setting hidden` |
+| Run both separate Design 1 games, with 2D figures | `python3 private_games.py run runs/private-check --game all --figures` |
+| View Design 1 native traces | `inspect view --log-dir runs/private-check/logs` |
 | Open the audit traces | `inspect view --log-dir runs/audit-check` |
 | Run Python checks | `python3 -m unittest discover -s tests -v` |
 | Build the public site | [Pages instructions](docs/pages.md#build-without-paid-calls) |
