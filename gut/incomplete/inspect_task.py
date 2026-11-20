@@ -95,6 +95,8 @@ def private_interaction(game, synthetic):
             choice = {'raw': output.completion, 'status': 'invalid'}
             record['choices'][role] = choice
             try:
+                if output.choices[0].stop_reason != 'stop':
+                    raise ValueError('Incomplete or refused output.')
                 action = parse_action(output.completion, record['labels_swapped'])
             except ValueError as exc:
                 choice['error'] = str(exc)

@@ -4,6 +4,7 @@
 
 | Read this for… | Document |
 | --- | --- |
+| One-command, fixed-settings manager handoff and returned results ZIP | [Run the game study](manager-handoff.md) |
 | The selected controlled experiment, commands and AISI milestone status | [Controlled threshold setup](controlled-thresholds.md) |
 | What to normalize, hold fixed and sweep before new model calls | [Parameterization audit and sweep design](sweep-design.md) |
 | Original post's mathematics, saved payoff grid and reproduction | [Original study](post-study.md) |
@@ -26,4 +27,6 @@ need design review. See the [current assessment](controlled-thresholds.md#aisi-s
 
 The [earlier mixed live protocol](controlled-validation-protocol.md) is superseded
 and blocked from collection. Its [billing-failure records](../data/controlled/2026-11-19/README.md)
-remain unchanged. New suite plans contain only the four canonical games.
+remain unchanged. The older canonical suite contains only the four canonical
+games; the new [manager package](manager-handoff.md) adds the approved private
+extensions and published audit game using the shared Inspect runner.

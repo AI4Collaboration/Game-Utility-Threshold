@@ -14,6 +14,13 @@ our games, exact calculations, interactive demos, and retained model experiments
 · [Months 3–5: literature and Inspect plan](docs/months3-5-design-review.md)
 · [Methods and plans](docs/README.md)
 · [Datasets](data/README.md)
+· [Run the fixed study with an OpenRouter key](docs/manager-handoff.md)
+
+**Operator handoff:** `bash scripts/run_manager_study.sh` installs an isolated
+runtime and runs the frozen eight-study collection, pilots, analysis and ZIP
+export under one $45 budget. Enter your key privately when prompted. The
+[handoff guide](docs/manager-handoff.md) explains every game and the exact sample.
+This package has offline checks; it does not imply new live LLM results.
 
 ## Find a game
 
@@ -41,7 +48,10 @@ scripted agents; **there are no live LLM results for this game**.
 Stag Hunt extensions** with one private reward profile. Their matched revealed/
 hidden conditions keep the same rewards and vary the public action cost. They
 have exact equilibrium sets, an independent Inspect runner and UI; current checks
-are synthetic. The original four games and their collectors are unchanged. The [shared Inspect study runner](docs/inspect-studies.md) freezes one-variable designs, balances labels and display order, and supplies a shared budget, separate pilots, native logs and recovery without duplicate trials.
+are synthetic. The original four games and their collectors are preserved; a
+native Inspect adapter now also runs their existing v2 tables/prompts under the
+[shared study runner](docs/inspect-studies.md), with one budget, separate pilots,
+native logs and recovery without duplicate trials.
 
 The resource/paperclip game, Lab Notebook Audit and earlier science demo are
 removed. **Off-switch remains in the requested research scope**, but its old
@@ -60,8 +70,9 @@ Months 1–3, 3–5 and 5–6 remain open; see the
 [requirement-by-requirement assessment](docs/controlled-thresholds.md#aisi-status-all-three-stages-remain-open).
 
 The [earlier mixed live protocol](docs/controlled-validation-protocol.md) is now
-superseded: it included the custom oversight prototype. New suite plans include
-only the four standard games. The two archived compatibility attempts recorded
+superseded: it included the custom oversight prototype. Its replacement canonical
+collector includes only the four standard games; the manager package additionally
+includes the approved private/audit studies. The two archived compatibility attempts recorded
 nine billing rejections and one replacement-key rejection, respectively, with
 **zero model choices and zero main attempts**. Their ledgers and spending holds
 remain intact. Fixing billing alone will not resume that superseded suite.

@@ -153,6 +153,8 @@ def audit_interaction(game, defender_mode, synthetic):
             state.messages, state.output = messages + [output.message], output
             record['defender_raw'] = output.completion
             try:
+                if output.choices[0].stop_reason != 'stop':
+                    raise ValueError('Incomplete or refused output.')
                 q = parse_choice(output.completion, 'q')
             except ValueError as exc:
                 record.update(status='invalid_defender', error=str(exc))
@@ -164,6 +166,8 @@ def audit_interaction(game, defender_mode, synthetic):
         state.messages, state.output = messages + [output.message], output
         record['attacker_raw'] = output.completion
         try:
+            if output.choices[0].stop_reason != 'stop':
+                raise ValueError('Incomplete or refused output.')
             action = parse_choice(output.completion, 'action', record['presentation_block'])
         except ValueError as exc:
             record.update(status='invalid_attacker', error=str(exc))

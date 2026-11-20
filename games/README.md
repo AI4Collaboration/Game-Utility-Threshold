@@ -6,6 +6,10 @@ Use this directory as the entry point for every game. Implementations stay in
 `gut/` and `web/` so shared calculations are not copied into separate engines.
 **Points are chosen toy rewards, not measured real-world benefits or harms.**
 
+For a fixed collection across all approved runnable studies, start with the
+[one-command manager package](../docs/manager-handoff.md). It includes model
+selection, the shared budget, native logs and automatic reports/ZIP export.
+
 **The four controlled cost studies have not been validated with live LLM data.** Evidence entries
 below describe earlier studies or software checks, not completed validation of
 the controlled design. [Current milestone assessment](../docs/controlled-thresholds.md#aisi-status-all-three-stages-remain-open).

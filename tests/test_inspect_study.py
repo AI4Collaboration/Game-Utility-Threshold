@@ -193,7 +193,8 @@ class InspectStudyTests(unittest.TestCase):
                 'choices':[{'index':0,'finish_reason':'stop','message':{'role':'assistant','content':content}}],
                 'usage':{'prompt_tokens':40,'completion_tokens':10,'total_tokens':50,'cost':.001}})
         with patch.object(S,'endpoint_spec',return_value=SPEC), patch.dict(os.environ,{'OPENROUTER_API_KEY':'test-placeholder'}):
-            plan=self.plan(mode='openrouter',models=[{'id':SPEC['id'],'provider':'openai'}])
+            plan=self.plan(mode='openrouter',models=[{'id':SPEC['id'],'provider':'openai'}],
+                           model_settings={SPEC['id']:{'reasoning_enabled':False}})
             with self.assertRaisesRegex(ValueError,'requires --live'):
                 S.run(self.directory,stage='pilot',max_trials=1)
             with patch.object(OpenRouterAPI,'_generate_completion',completion):
@@ -204,6 +205,7 @@ class InspectStudyTests(unittest.TestCase):
         for request in requests:
             self.assertEqual(request['max_tokens'],512)
             self.assertEqual(request['extra_body']['provider'],S.provider_options(SPEC))
+            self.assertEqual(request['extra_body']['reasoning'],{'enabled':False})
 
     def test_live_endpoint_drift_stops_before_any_reservation(self):
         with patch.object(S,'endpoint_spec',return_value=SPEC):

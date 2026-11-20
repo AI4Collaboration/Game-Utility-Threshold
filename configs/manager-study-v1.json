@@ -1,0 +1,28 @@
+{
+  "name": "manager-study-v1",
+  "budget_usd": "45",
+  "seed": 20261120,
+  "max_tokens": 512,
+  "temperature": 0.7,
+  "models": [
+    {"id": "openai/gpt-4.1-mini", "provider": "openai"},
+    {"id": "anthropic/claude-haiku-4.5", "provider": "anthropic"},
+    {"id": "google/gemini-2.5-flash", "provider": "google-ai-studio"}
+  ],
+  "model_settings": {
+    "anthropic/claude-haiku-4.5": {"reasoning_enabled": false},
+    "google/gemini-2.5-flash": {"reasoning_enabled": false}
+  },
+  "repetitions": 5,
+  "control_repetitions": 2,
+  "repetitions_by_study": {
+    "pd": 5,
+    "stag_hunt": 5,
+    "chicken": 5,
+    "battle_of_sexes": 5,
+    "private_pd_v1": 3,
+    "private_stag_hunt_v1": 3,
+    "audit_threshold": 2,
+    "audit_information": 5
+  }
+}

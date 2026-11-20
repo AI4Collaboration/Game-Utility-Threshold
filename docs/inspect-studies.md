@@ -3,11 +3,15 @@
 This is the operating guide for implemented code in [inspect_study.py](../inspect_study.py)
 and [gut/inspect_study.py](../gut/inspect_study.py). No live results are claimed.
 The four canonical experiments keep their existing collector and separate history.
+A native adapter also makes their existing v2 prompts/tables available under this
+shared budget. For the fully selected models, sample counts, analysis and one-command
+workflow, use the [manager handoff](manager-handoff.md).
 
 ## Exactly what varies
 
 | Study ID | Research comparison | Fixed quantities |
 | --- | --- | --- |
+| `pd`, `stag_hunt`, `chicken`, `battle_of_sexes` | Existing v2 cost conditions; BoS cost directions and sparse scale/offset controls reported separately. | Existing starting tables; no sweep of their base rewards. |
 | `private_pd_v1` | Sweep public defection cost; pair revealed/hidden trials at each cost. | Starting payoff tables, both private profiles, equal prior, payoff units. |
 | `private_stag_hunt_v1` | Same design, with the separate private Stag Hunt tables. | Starting tables, profiles, equal prior, payoff units. |
 | `audit_threshold` | Sweep only checking probability q, including exact response boundaries and points 0.02 to either side. | Unchecked rewards (0.2, 0.1) / (0.8, 0.7), equal prior, checked rewards (−0.5, −0.6), penalty 0.5, defender payoffs. Only the attacker is a model. |
@@ -131,9 +135,11 @@ fake SDK response. No paid calls are used by these tests. The
 [presentation tests](../tests/test_presentation.py) check payoff-preserving
 permutations, information isolation and an independently calculated audit optimum.
 
-These changes finish the collection path, not empirical validation. Statistical
-estimation of information effects/behavioral crossings, sensitivity to failed
-responses, final sample-size choices and live compatibility remain separate work.
+These changes finish the collection path, not empirical validation. The
+[manager package](manager-handoff.md) now fixes the initial sample/models and
+implements descriptive information effects, uncertainty and missing-data bounds.
+Live compatibility and collection still need to run; precise fitted behavioral
+crossings and broader paper-level analyses are not claimed.
 The private-game report now retains individually valid choices and separates
 presentation blocks; its paired comparisons still require valid paired outcomes.
 

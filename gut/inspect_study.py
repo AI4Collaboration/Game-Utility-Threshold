@@ -22,9 +22,10 @@ from uuid import uuid4
 from .experiment import digest, now
 from .audit_game import study_game
 from .incomplete.games import GAMES
+from .canonical import EXAMPLES, controlled_conditions
 
 PROTOCOL = 'gut-inspect-study-v1'
-STUDIES = (*GAMES, 'audit_threshold', 'audit_information')
+STUDIES = (*EXAMPLES, *GAMES, 'audit_threshold', 'audit_information')
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -89,7 +90,8 @@ def study_lock(directory):
 
 def provenance():
     files = [*sorted((ROOT/'gut').rglob('*.py')),
-             *(ROOT/p for p in ('inspect_study.py', 'audit_experiment.py', 'private_games.py', 'pyproject.toml'))]
+             *(ROOT/p for p in ('inspect_study.py', 'audit_experiment.py', 'private_games.py', 'pyproject.toml')),
+             *(p for p in (ROOT/'manager_study.py', ROOT/'configs/manager-study-v1.json') if p.exists())]
     return {'files': {str(p.relative_to(ROOT)): sha256(p.read_bytes()).hexdigest() for p in files},
             'python': sys.version.split()[0],
             'packages': {p: version(p) for p in ('inspect-ai', 'openai', 'agent-client-protocol')}}
@@ -132,9 +134,12 @@ def reserve(model, max_tokens, roles):
                         money(model['completion_price'])*max_tokens + money(model['request_price']))
 
 
-def samples_for(study, repetitions, seed, pilot=False):
+def samples_for(study, repetitions, seed, pilot=False, control_repetitions=None):
     from .audit_inspect import audit_samples
     from .incomplete.inspect_task import paired_samples
+    if study in EXAMPLES:
+        from .canonical_inspect import canonical_samples
+        return canonical_samples(study, repetitions, control_repetitions or repetitions, seed, pilot)
     if study in GAMES:
         game = GAMES[study]
         return paired_samples(game, costs=[game.costs[len(game.costs)//2]] if pilot else None,
@@ -145,17 +150,27 @@ def samples_for(study, repetitions, seed, pilot=False):
 
 
 def roles_for(study):
-    return ('row', 'column') if study in GAMES else (
+    return ('row', 'column') if study in GAMES or study in EXAMPLES else (
         ('defender', 'attacker') if study == 'audit_information' else ('attacker',))
 
 
 def prepare(directory, studies, *, repetitions, budget_usd, models=None, mode='synthetic',
-            seed=2026, max_tokens=512, temperature=0.7):
+            seed=2026, max_tokens=512, temperature=0.7, repetitions_by_study=None,
+            control_repetitions=None, model_settings=None):
     studies = tuple(studies)
     if not studies or len(set(studies)) != len(studies) or any(s not in STUDIES for s in studies):
         raise ValueError('Select distinct supported studies.')
     if mode not in ('synthetic', 'openrouter') or type(repetitions) is not int or not 1 <= repetitions <= 1000:
         raise ValueError('Specify synthetic/openrouter and 1..1000 repetitions per cell/block.')
+    repeats = repetitions_by_study or {}
+    if set(repeats) - set(studies) or any(type(n) is not int or not 1 <= n <= 1000 for n in repeats.values()):
+        raise ValueError('Repetition overrides must name selected studies and positive bounded counts.')
+    if control_repetitions is not None and (type(control_repetitions) is not int or not 1 <= control_repetitions <= 1000):
+        raise ValueError('Control repetitions must be 1..1000.')
+    settings = model_settings or {}
+    if (set(settings) - {m['id'] for m in (models or [])}
+            or any(set(v) != {'reasoning_enabled'} or type(v['reasoning_enabled']) is not bool for v in settings.values())):
+        raise ValueError('Only an explicit reasoning_enabled Boolean per selected model is supported.')
     if type(seed) is not int or not 0 <= seed < 2**32:
         raise ValueError('Seed must be an integer in [0, 2^32).')
     if type(max_tokens) is not int or not 16 <= max_tokens <= 32768:
@@ -185,7 +200,8 @@ def prepare(directory, studies, *, repetitions, budget_usd, models=None, mode='s
             if reservation > budget:
                 raise ValueError('The budget cannot reserve even one complete trial for this endpoint.')
             for stage in ('pilot', 'main'):
-                for sample in samples_for(study, 1 if stage == 'pilot' else repetitions, seed, stage == 'pilot'):
+                for sample in samples_for(study, 1 if stage == 'pilot' else repeats.get(study, repetitions),
+                                          seed, stage == 'pilot', control_repetitions):
                     metadata = dict(sample.metadata)
                     prefix = f'm{model_index}:{study}:{stage}:'
                     metadata['pair_id'] = prefix+metadata['pair_id']
@@ -196,14 +212,17 @@ def prepare(directory, studies, *, repetitions, budget_usd, models=None, mode='s
     Random(seed).shuffle(jobs)
     plan = {'protocol': PROTOCOL, 'mode': mode, 'budget_usd': str(budget), 'studies': list(studies),
             'models': specs, 'repetitions': repetitions, 'seed': seed,
+            'repetitions_by_study': repeats, 'control_repetitions': control_repetitions, 'model_settings': settings,
             'generation': {'max_tokens': max_tokens, 'temperature': temperature, 'max_retries': 0,
                            'timeout': 90, 'cache': False, 'cache_prompt': False, 'num_choices': 1},
-            'design': {'private_games': 'Only public D cost is swept; same actual rewards revealed/hidden.',
+            'design': {'canonical': 'Existing v2 fixed-table costs; BoS directions separate; sparse representation checks separate.',
+                       'private_games': 'Only public D cost is swept; same actual rewards revealed/hidden.',
                        'audit_threshold': 'Only q is swept; penalty=1/2, reward spread=3/10, equal prior.',
                        'audit_information': 'Only information is varied; q is a defender outcome. Fixed target-preference profiles, penalty=0, equal prior.',
                        'presentation': 'Independent cyclic label/order rotations: 4 private-game or 9 audit blocks.',
                        'pilot': 'Separate compatibility trials, never pooled with main results.'},
-            'game_configs': json.loads(json.dumps({s: GAMES[s].config() if s in GAMES else study_game(s).defender_view()
+            'game_configs': json.loads(json.dumps({s: ({'baseline': EXAMPLES[s].baseline, 'conditions': controlled_conditions(s)}
+                                                      if s in EXAMPLES else GAMES[s].config() if s in GAMES else study_game(s).defender_view())
                                                    for s in studies}, default=str)),
             'provenance': provenance(), 'jobs': jobs}
     plan['sha256'] = digest(plan)
@@ -315,11 +334,13 @@ def make_task(plan, job):
     from inspect_ai.model import GenerateConfig, ModelCost, ModelInfo, get_model, set_model_info
     from .audit_inspect import audit_task
     from .incomplete.inspect_task import private_task
+    from .canonical_inspect import canonical_task, mock_models as canonical_mocks
     from audit_experiment import mock_attacker, mock_defender
     from private_games import mock_models
     study = job['study']
     if plan['mode'] == 'synthetic':
-        models = (mock_models(GAMES[study], seed=job['metadata']['seed']) if study in GAMES else
+        models = (canonical_mocks(study, job['metadata']) if study in EXAMPLES else
+                  mock_models(GAMES[study], seed=job['metadata']['seed']) if study in GAMES else
                   {'attacker': mock_attacker(study_game(study))})
         if study == 'audit_information':
             models['defender'] = mock_defender(study_game(study))
@@ -330,7 +351,8 @@ def make_task(plan, job):
         models = {}
         for role in job['roles']:
             model = get_model('openrouter/'+spec['id'], config=GenerateConfig(**plan['generation']),
-                              provider=provider_options(spec), stream=False, max_retries=0)
+                              provider=provider_options(spec), stream=False, max_retries=0,
+                              **plan.get('model_settings', {}).get(spec['id'], {}))
             # Inspect retries AND its underlying OpenAI SDK retries must be off.
             if model.api.client.max_retries != 0:
                 raise ValueError('The underlying provider SDK must not retry requests.')
@@ -341,13 +363,16 @@ def make_task(plan, job):
                 input_cache_write=float(money(spec['prompt_price'])*1000000))))
             models[role] = model
     limit = None if plan['mode'] == 'synthetic' else max(1e-9, float(money(job['reservation_usd'])))
-    if study in GAMES:
+    sample = Sample(id=job['sample_id'], input='One-round game', metadata=job['metadata'])
+    if study in EXAMPLES:
+        task = canonical_task(study, models, sample, cost_limit=limit)
+    elif study in GAMES:
         task = private_task(GAMES[study], models, costs=[job['metadata']['cost']], cost_limit=limit)
     else:
         task = audit_task(study_game(study), models, cost_limit=limit,
                           defender_mode='model' if study == 'audit_information' else 'fixed',
                           coverages=[job['metadata']['planned_q']] if study == 'audit_threshold' else None)
-    task.dataset = MemoryDataset([Sample(id=job['sample_id'], input='One-round game', metadata=job['metadata'])])
+    task.dataset = MemoryDataset([sample])
     task.metadata.update(study_sha256=plan['sha256'], job_id=job['id'], stage=job['stage'],
                          budget_reservation_usd=job['reservation_usd'])
     return task
