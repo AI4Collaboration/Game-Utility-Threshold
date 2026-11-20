@@ -40,6 +40,12 @@ This is a source audit, not a retroactive claim that every cited paper was
 used when the code was first written. Publication venue or popularity alone
 does not make a method suitable; its assumptions must fit our question.
 
+For the next stage, the [Months 3–5 design review](months3-5-design-review.md)
+compares published security/audit, off-switch, bargaining and AI-control setups,
+including their information assumptions and reusable infrastructure. It
+recommends a security/audit starting point with explicit adaptation boundaries;
+it does not admit a replacement game or validate the removed prototypes.
+
 ## Before admitting or restoring a game
 
 Record the exact paper section or released implementation and map its players,

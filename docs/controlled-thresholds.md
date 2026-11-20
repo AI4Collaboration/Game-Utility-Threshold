@@ -161,6 +161,10 @@ validation; their unrun status cannot be hidden inside the base-model milestone.
 
 ### Months 3–5 — literature-based application design still needed
 
+The [literature and infrastructure review](months3-5-design-review.md) now
+identifies published candidates and a concrete Inspect integration plan.
+Application selection, implementation and validation remain open.
+
 | Requirement | Actual position | What remains |
 | --- | --- | --- |
 | Incomplete information / distributional utilities | The two-type resource game was removed. No accepted replacement is implemented. | Select a published game, specify who knows what and the utility distribution, reproduce its reference predictions, then design the LLM test. |

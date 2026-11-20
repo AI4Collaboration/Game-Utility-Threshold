@@ -9,6 +9,7 @@ our games, exact calculations, interactive demos, and retained model experiments
 · [Find a game's code](games/README.md)
 · [Design sources and scope](docs/design-sources.md)
 · [Controlled experiment setup and AISI progress](docs/controlled-thresholds.md)
+· [Months 3–5: literature and Inspect plan](docs/months3-5-design-review.md)
 · [Methods and plans](docs/README.md)
 · [Datasets](data/README.md)
 
