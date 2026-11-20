@@ -29,6 +29,7 @@ only the possibilities and probabilities. There is no mean-table replacement.
   matched conditions, two action-label mappings crossed independently with two table orders, native events and strict scoring.
 - `report.py`: cells and paired contrasts, validity counts, per-profile 2D plots.
 - `../../private_games.py`: mock-only runner and deterministic UI-theory export.
+- `../../inspect_study.py`: frozen live/synthetic studies, shared budgets, native logs and restart; see the [operating guide](../../docs/inspect-studies.md).
 
 From the repository root:
 
@@ -62,6 +63,6 @@ This is an independent finite-private-values adaptation of
 Our numbers, intervention grid and LLM interface are not a reproduction of that
 paper's experimental protocol. The runner makes no live model calls. The native
 task API accepts explicit model roles with a per-sample cost limit, but a live
-study still needs its frozen sampling/repetition choices and total budget control.
+study runner now supplies frozen sampling, total budget control, compatibility pilots and recovery without repeat dispatch. Final model/repetition choices and live validation remain open.
 Noisy signals, private row rewards, Chicken and Battle of the Sexes extensions
 are not implemented. The existing canonical versions of all four remain runnable.

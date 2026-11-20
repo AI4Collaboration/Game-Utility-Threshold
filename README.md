@@ -33,7 +33,7 @@ not a replication of one published experiment. Read the [design-source audit](do
 
 The [published audit-game implementation](games/README.md#audit-game-known-and-hidden-rewards)
 adds a sequential setting: commit to where to check, then observe a violation or
-abstention. It supports known rewards and a finite private-reward extension,
+abstention. Revealed/hidden conditions now match the same actual reward profile,
 exact predictions, an interactive UI and native Inspect tasks. Its checks use
 scripted agents; **there are no live LLM results for this game**.
 
@@ -41,7 +41,7 @@ scripted agents; **there are no live LLM results for this game**.
 Stag Hunt extensions** with one private reward profile. Their matched revealed/
 hidden conditions keep the same rewards and vary the public action cost. They
 have exact equilibrium sets, an independent Inspect runner and UI; current checks
-are synthetic. The original four games and their collectors are unchanged.
+are synthetic. The original four games and their collectors are unchanged. The [shared Inspect study runner](docs/inspect-studies.md) freezes one-variable designs, balances labels and display order, and supplies a shared budget, separate pilots, native logs and recovery without duplicate trials.
 
 The resource/paperclip game, Lab Notebook Audit and earlier science demo are
 removed. **Off-switch remains in the requested research scope**, but its old
@@ -114,6 +114,7 @@ Use `--port 8766` if needed. The public site needs no account or API key.
 | Prepare the four canonical cost studies, without API calls | `python3 prepare_threshold_studies.py runs/threshold-plans` |
 | Reproduce the completed oversight study | [Dataset instructions](data/oversight/2026-11-09/README.md#reproduce-without-paid-calls) |
 | Run a synthetic audit game with native Inspect logs | `python3 audit_experiment.py runs/audit-check --study information` |
+| Prepare/run/resume new Inspect studies with a shared budget | [Study commands and recovery](docs/inspect-studies.md) |
 | Run both separate Design 1 games, with 2D figures | `python3 private_games.py run runs/private-check --game all --figures` |
 | View Design 1 native traces | `inspect view --log-dir runs/private-check/logs` |
 | Open the audit traces | `inspect view --log-dir runs/audit-check` |

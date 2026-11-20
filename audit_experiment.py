@@ -13,7 +13,7 @@ from inspect_ai import eval as inspect_eval
 from inspect_ai.log import read_eval_log
 from inspect_ai.model import ModelOutput, get_model
 
-from gut.audit_game import ACTIONS, demo_game
+from gut.audit_game import ACTIONS, study_game
 from gut.audit_inspect import audit_task
 
 
@@ -61,7 +61,7 @@ def main():
     parser.add_argument("--baseline", choices=("maximize", *ACTIONS), default="maximize")
     parser.add_argument("--repetitions", type=int, default=1)
     args = parser.parse_args()
-    game = demo_game()
+    game = study_game('audit_'+args.study)
     models = {'attacker': mock_attacker(game, args.baseline)}
     if args.study == 'information':
         models['defender'] = mock_defender(game)

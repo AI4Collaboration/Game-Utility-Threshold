@@ -4,7 +4,7 @@ import importlib.util
 import unittest
 
 from gut.presentation import blocks, presentation
-from gut.audit_game import ACTIONS, demo_game
+from gut.audit_game import ACTIONS, demo_game, information_benchmark
 from gut.incomplete.games import GAMES
 
 
@@ -58,6 +58,20 @@ class PresentationTests(unittest.TestCase):
             self.assertIn(q, grid)
             self.assertIn(q-F(1, 50), grid)
             self.assertIn(q+F(1, 50), grid)
+
+    def test_information_benchmark_has_real_decision_value_and_matched_rewards(self):
+        game = information_benchmark()
+        self.assertFalse(game.safe_region()['feasible'])
+        for kind in game.types:
+            revealed = game.information_game('revealed', kind.name)
+            self.assertEqual(revealed.types[0].unchecked, kind.unchecked)
+            self.assertTrue(revealed.safe_region()['feasible'])
+            self.assertEqual(revealed.commitment().solve()['favorable']['value'], 0)
+        # Independent hand calculation: q=6/13 deters type B at a tie.
+        # Type A violates A and gives defender -1 + .9*(6/13) = -38/65.
+        # Equal prior: -19/65. Favorable tie is explicit, not a safety guarantee.
+        self.assertEqual(game.commitment().solve()['favorable']['value'], F(-19,65))
+        self.assertEqual(game.commitment().solve()['favorable']['witnesses'], [F(6,13)])
 
     @unittest.skipUnless(importlib.util.find_spec('inspect_ai'), 'Install inspect extra')
     def test_audit_matched_schedule_and_no_hidden_profile_leak(self):

@@ -211,3 +211,27 @@ def demo_game(setting="hidden", punishment="1/2", spread="3/10", actual_type="hi
                   for name, sign in (("low", -1), ("high", 1)))
     game = AuditGame(types, punishment=punishment)
     return game if setting == 'hidden' else game.information_game('revealed', actual_type)
+
+
+def information_benchmark():
+    """Fixed target-preference instance of the SAME published audit rules.
+
+    The shared-offset demo admits a common optimal defense across its types;
+    hiding its type has zero ideal value-of-information effect. Here the types
+    favor different targets and require disjoint deterrence allocations. This
+    makes the information treatment identifiable without sweeping any rewards.
+    Numbers are ours. Revealed/hidden pairs use exactly the same realized type.
+    Penalty is fixed at zero; the negative checked rewards still deter attacks.
+    """
+    checked = (F(-1, 2), F(-3, 5))
+    return AuditGame((RewardType('prefers_a', F(1, 2), (F(4, 5), F(1, 10)), checked),
+                      RewardType('prefers_b', F(1, 2), (F(1, 5), F(7, 10)), checked)),
+                     punishment=0)
+
+
+def study_game(study):
+    if study == 'audit_information':
+        return information_benchmark()
+    if study == 'audit_threshold':
+        return demo_game()
+    raise ValueError('Select audit_threshold or audit_information.')

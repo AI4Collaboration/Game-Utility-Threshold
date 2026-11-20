@@ -117,15 +117,17 @@ possible profiles and their probabilities.
   Separate player prompts, explicit model roles, native `.eval` traces, exact
   payoff scoring and a JSONL export. Invalid responses and provider failures
   remain visible. Provider-exposed reasoning is logged, not treated as proof
-  of internal reasoning. The CLI is mock-only; live tasks require a separately
-  budgeted study (the adapter's cost limit is per sample, not a total-run cap).
+  of internal reasoning. The [study runner](../docs/inspect-studies.md) adds frozen
+  sampling, a budget shared across roles/studies, and restart without duplicate trials.
 - Checks: [rules/solver](../tests/test_audit_game.py), [native Inspect round-trip](../tests/test_audit_inspect.py),
   [Python/browser agreement and UI](../tests/check_audit.cjs). **Synthetic checks only; no live LLM validation.**
 
 From the repository root, install `python3 -m pip install '.[inspect]'`, run
 `python3 audit_experiment.py runs/audit-check --study information`, then
-`inspect view --log-dir runs/audit-check`. Replace `hidden` with `known` for the
-control setting. `--baseline maximize|abstain|target_a|target_b` chooses a scripted
+`inspect view --log-dir runs/audit-check`. This pairs the same target-preference
+profiles under revealed/hidden information, with penalty fixed at zero. Use
+`--study threshold` for the separate q sweep with the retained low/high profiles
+and penalty fixed at 0.5. `--baseline maximize|abstain|target_a|target_b` chooses a scripted
 agent. Samples cover every type and checking condition; aggregate with the
 declared type probabilities rather than assuming the balanced sample is a
 population draw. Browser rounds are separate, local simulations.

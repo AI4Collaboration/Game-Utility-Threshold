@@ -18,10 +18,11 @@ function crossings(lines){
  }return sorted(points);
 }
 class Audit {
- constructor(setting='hidden',punishment='0.5',spread='0.3',actualType='high'){
+ constructor(setting='hidden',punishment='0.5',spread='0.3',actualType='high',fixture='threshold'){
   this.x=f(punishment);this.spread=f(spread);
-  if(!['known','revealed','hidden'].includes(setting)||!['low','high'].includes(actualType)||this.x.cmp(Z)<0||this.x.cmp(O)>0||this.spread.cmp(Z)<0||this.spread.cmp(f('.35'))>0)throw Error('Invalid audit parameters.');
+  if(!['known','revealed','hidden'].includes(setting)||!['threshold','information'].includes(fixture)||!(fixture==='threshold'?['low','high']:['prefers_a','prefers_b']).includes(actualType)||this.x.cmp(Z)<0||this.x.cmp(O)>0||this.spread.cmp(Z)<0||this.spread.cmp(f('.35'))>0)throw Error('Invalid audit parameters.');
   this.population=[['low',this.spread.neg(),f('.5')],['high',this.spread,f('.5')]].map(([name,offset,prior])=>({name,prior,u:[f('.5').add(offset),f('.4').add(offset)],c:[f('-.5'),f('-.6')]}));
+  if(fixture==='information'){this.x=Z;this.spread=f('.3');this.population=[{name:'prefers_a',prior:f('.5'),u:[f('.8'),f('.1')],c:[f('-.5'),f('-.6')]},{name:'prefers_b',prior:f('.5'),u:[f('.2'),f('.7')],c:[f('-.5'),f('-.6')]}];}
   this.types=setting==='hidden'?this.population:this.population.filter(t=>t.name===actualType).map(t=>({...t,prior:O}));
   this.cost=f('.1').mul(this.x);
  }

@@ -13,7 +13,8 @@
 | How the historical oversight model experiment was designed | [Validation protocol](oversight-validation-protocol.md) |
 | What that experiment found and what it cannot establish | [Validation results](oversight-validation-results.md) |
 | Which games are established, adapted, held or removed | [Design-source audit](design-sources.md) |
-| Published uncertainty games, recommended next experiment and Inspect plan | [Months 3–5 design review](months3-5-design-review.md) |
+| Run the implemented private/audit studies, budget and restart | [Inspect study operating guide](inspect-studies.md) |
+| Published uncertainty games and the historical design review | [Months 3–5 design review](months3-5-design-review.md) |
 | Existing libraries, inspected source revisions and integration gaps | [Months 3–5 infrastructure audit](months3-5-infrastructure.md) |
 | Building and publishing the site without new model calls | [GitHub Pages](pages.md) |
 | What the proof checker verifies | [Lean guide](../lean/README.md) |

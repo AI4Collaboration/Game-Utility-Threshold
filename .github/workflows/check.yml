@@ -20,6 +20,10 @@ jobs:
       - run: node tests/check_audit.cjs
       - run: node tests/check_private_games.cjs
       - run: python audit_experiment.py runs/ci-audit --study information
+      - run: python inspect_study.py prepare runs/ci-inspect --studies audit_information private_pd_v1 --repetitions 1 --budget-usd 1
+      - run: python inspect_study.py run runs/ci-inspect --stage pilot --max-trials 2
+      - run: python inspect_study.py run runs/ci-inspect --stage pilot --max-trials 1
+      - run: python inspect_study.py export runs/ci-inspect runs/ci-inspect-export
       - run: python private_games.py run runs/ci-private --cost 0 1 --figures
       - run: python reproduce.py
       - run: python experiment.py plan runs/ci --repetitions 2

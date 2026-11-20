@@ -34,7 +34,7 @@ ANALYSIS_FILES = ("report.html", "summary.json", "observations.csv", "cells.csv"
     f"{name}.{extension}" for name in ("sweep-defense", "framing", "presentation-blocks", "confusion")
     for extension in ("png", "svg")))
 DOC_FILES = ("games.md", "experiments.md", "oversight.md", "oversight-validation-protocol.md",
-             "oversight-validation-results.md", "pages.md", "design-sources.md", "sweep-design.md", "controlled-thresholds.md")
+             "oversight-validation-results.md", "pages.md", "design-sources.md", "sweep-design.md", "controlled-thresholds.md", "inspect-studies.md")
 SOURCE_FILES = tuple([*(Path("data/post") / name for name in POST_FILES),
                       *(OVERSIGHT / name for name in OVERSIGHT_FILES),
                       *(OVERSIGHT / "analysis" / name for name in ANALYSIS_FILES),

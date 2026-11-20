@@ -1,5 +1,8 @@
 # Months 3–5: choosing a defensible experiment
 
+**Historical literature/design review.** Current implementation and commands are in the [Inspect study operating guide](inspect-studies.md). The implemented design uses a q-only audit threshold sweep and a separate matched information-only comparison. Reward-spread sweeps and mean-reward comparisons below were exploratory proposals, not active collection conditions. Shared budgets and restart are now implemented; live validation remains open.
+
+
 19 November 2026. **Literature and infrastructure review; no new game or LLM
 results.** This is a proposed implementation route through the existing
 [AISI plan](https://docs.google.com/document/d/1NDQEa96_60jxY9EErIWxu6jisrLZxhHVAPT6WHK5qr8/edit),
